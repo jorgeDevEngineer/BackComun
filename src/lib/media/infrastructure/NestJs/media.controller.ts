@@ -38,6 +38,11 @@ export class MediaController {
   @Post('upload')
   @UseInterceptors(FileInterceptor('file'))
   async upload(@UploadedFile() file: UploadedFile) {
+    if (!file) {
+      // Better runtime error for missing file (helps debug client requests)
+      throw new Error('No file received. Ensure the request is multipart/form-data and the field name is "file".');
+    }
+
     const dto: UploadMediaDTO = {
       file: file.buffer,
       fileName: file.originalname,

@@ -1,5 +1,6 @@
 import { Repository, DataSource } from 'typeorm';
 import { TypeOrmMediaEntity } from './TypeOrmMediaEntity';
+import { InjectRepository } from '@nestjs/typeorm';
 import { Media } from '../../domain/entity/Media';
 import { MediaId } from '../../domain/valueObject/Media';
 import { MediaRepository } from '../../domain/port/MediaRepository';
@@ -7,7 +8,10 @@ import { MediaRepository } from '../../domain/port/MediaRepository';
 export class TypeOrmMediaRepository implements MediaRepository {
   private ormRepo: Repository<TypeOrmMediaEntity>;
 
-  constructor(ormRepo: Repository<TypeOrmMediaEntity>) {
+  constructor(
+    @InjectRepository(TypeOrmMediaEntity)
+    ormRepo: Repository<TypeOrmMediaEntity>,
+  ) {
     this.ormRepo = ormRepo;
   }
 
