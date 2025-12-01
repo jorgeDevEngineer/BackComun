@@ -1,4 +1,4 @@
-import { Repository } from 'typeorm';
+import {  In, Like, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { QuizRepository } from '../../domain/port/QuizRepository';
 import { Quiz } from '../../domain/entity/Quiz';
@@ -28,6 +28,7 @@ import {
   AnswerText,
   IsCorrect,
 } from '../../domain/valueObject/Answer';
+import { SearchParamsDto, SearchResultDto } from '../../application/SearchQuizzesUseCase';
 
 export class TypeOrmQuizRepository implements QuizRepository {
   constructor(
@@ -79,25 +80,6 @@ export class TypeOrmQuizRepository implements QuizRepository {
     return quiz;
   }
 
-  async save(quiz: Quiz): Promise<void> {
-    const plainQuiz = quiz.toPlainObject();
-    const entity = this.repository.create({
-      id: plainQuiz.id,
-      userId: plainQuiz.authorId,
-      title: plainQuiz.title,
-      description: plainQuiz.description,
-      visibility: plainQuiz.visibility,
-      status: plainQuiz.status,
-      category: plainQuiz.category,
-      themeId: plainQuiz.themeId,
-      coverImageId: plainQuiz.coverImageId,
-      createdAt: plainQuiz.createdAt,
-      playCount: plainQuiz.playCount,
-      questions: plainQuiz.questions,
-    });
-    await this.repository.save(entity);
-  }
-
   async find(id: QuizId): Promise<Quiz | null> {
     const quizEntity = await this.repository.findOne({
       where: { id: id.value },
@@ -106,14 +88,65 @@ export class TypeOrmQuizRepository implements QuizRepository {
     return this.mapToDomain(quizEntity);
   }
 
-  async searchByAuthor(authorId: UserId): Promise<Quiz[]> {
-    const quizzes = await this.repository.find({
-      where: { userId: authorId.value },
+  async search(params: SearchParamsDto): Promise<SearchResultDto> {
+    // Opciones base
+    const where: any = {
+      visibility: 'public',
+      status: 'published',
+    };
+  
+    // Filtro por categorías
+    if (params.categories?.length) {
+      where.category = In(params.categories);
+    }
+  
+    // patron de busqueda es un or entre el titulo y la descripcion
+    if (params.q) {
+      where.or = [
+        { title: Like(`%${params.q}%`) },
+        { description: Like(`%${params.q}%`) },
+      ];
+    }
+  
+    // Contar total
+    const totalCount = await this.repository.count({
+      where
+      
     });
+  
+    // Obtener datos con paginación y orden
+    const data = await this.repository.find({
+      where,
+      //todo: agregar relacion con user para obtener el nombre del autor
+      skip: params.page * params.limit,
+      take: params.limit,
+    });
+  
+    const totalPages = Math.ceil(totalCount / params.limit);
+  
+    return {
+      data: data.map((q) => this.mapToDomain(q)),
+      pagination: {
+        page: params.page,
+        limit: params.limit,
+        totalCount,
+        totalPages,
+      },
+    };
+  }
+
+  async findFeatured(limit: number): Promise<Quiz[]> {
+    const quizzes = await this.repository.find({
+        where: {
+          visibility: 'public',
+          status: 'published',
+        },
+        order: {
+          playCount: 'DESC',
+        },
+        take: limit,
+      });
     return quizzes.map((q) => this.mapToDomain(q));
   }
 
-  async delete(id: QuizId): Promise<void> {
-    await this.repository.delete(id.value);
-  }
 }
