@@ -14,8 +14,8 @@ export interface CreateQuizDto {
   title: string;
   description: string;
   coverImageId?: string;
-  visibility: 'public' | 'private';
-  status: 'draft' | 'published';
+  visibility: 'Public' | 'Private';
+  status: 'Draft' | 'Published';
   category: string;
   themeId: string;
   questions: Array<{

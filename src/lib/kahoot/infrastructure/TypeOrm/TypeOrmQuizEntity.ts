@@ -31,11 +31,11 @@ export class TypeOrmQuizEntity {
   @Column()
   description: string;
 
-  @Column({ default: 'private' })
-  visibility: 'public' | 'private';
+  @Column({ default: 'Private' })
+  visibility: 'Public' | 'Private';
 
-  @Column({ default: 'draft' })
-  status: 'draft' | 'published';
+  @Column({ default: 'Draft' })
+  status: 'Draft' | 'Published';
 
   @Column()
   category: string;
