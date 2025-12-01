@@ -11,7 +11,7 @@ export class GetUserFavoritesUseCase {
   async execute(userId: UserId, queryInput: QueryParamsInput) {
     const query = new QueryParamsDto(queryInput);
     const criteria = query.toCriteria();
-    const favoriteIds = await this.favoritesRepo.findFavoritesQuizByUser(userId.value);
+    const favoriteIds = await this.favoritesRepo.findFavoritesQuizByUser(userId);
     if (favoriteIds.length === 0) {
       return {
         data: [],

@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, HttpCode, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, HttpCode, Inject, Param, Post } from '@nestjs/common';
 import { FavoriteDTO } from '../../application/DTOs/FavoriteDTO';
 import { AddUserFavoriteQuizUseCase } from '../../application/AddUserFavoriteQuizUseCase';
 import { DeleteUserFavoriteQuizUseCase } from '../../application/DeleteUserFavoriteQuizUseCase';
@@ -7,7 +7,9 @@ import { DeleteUserFavoriteQuizUseCase } from '../../application/DeleteUserFavor
 @Controller('library')
 export class LibraryController {
    constructor(
+       @Inject('AddUserFavoriteQuizUseCase')
        private readonly addUserFavoriteQuizUseCase: AddUserFavoriteQuizUseCase,
+       @Inject('DeleteUserFavoriteQuizUseCase')
        private readonly deleteUserFavoriteQuizUseCase: DeleteUserFavoriteQuizUseCase){}
 
     @Post('favorites/:quizId')

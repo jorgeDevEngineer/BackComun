@@ -16,14 +16,14 @@ import { TypeOrmUserFavoriteQuizEntity } from '../TypeOrm/Entities/TypeOrmUserFa
       useClass: TypeOrmUserFavoriteQuizRepository,
     },
     {
-      provide: 'AddFavoriteQuizUseCase',
-      useFactory: (repository: TypeOrmUserFavoriteQuizRepository) =>
+      provide: 'AddUserFavoriteQuizUseCase',
+      useFactory: (repository: UserFavoriteQuizRepository) =>
         new AddUserFavoriteQuizUseCase(repository),
       inject: ['UserFavoriteQuizRepository'],
     },
     {
-      provide: 'DeleteFavoriteQuizUseCase',
-      useFactory: (repository: TypeOrmUserFavoriteQuizRepository) =>
+      provide: 'DeleteUserFavoriteQuizUseCase',
+      useFactory: (repository: UserFavoriteQuizRepository) =>
         new DeleteUserFavoriteQuizUseCase(repository),
       inject: ['UserFavoriteQuizRepository'],
     },

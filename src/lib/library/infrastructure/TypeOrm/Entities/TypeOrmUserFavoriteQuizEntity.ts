@@ -1,10 +1,10 @@
-import { Entity, Column } from 'typeorm';
+import { Entity, Column, PrimaryColumn } from 'typeorm';
 
 @Entity('user_favorite_quizzes')
 export class TypeOrmUserFavoriteQuizEntity {
-  @Column()
+  @PrimaryColumn('uuid')
   user_id: string;
 
-  @Column()
+  @PrimaryColumn('uuid')
   quiz_id: string;
 }
