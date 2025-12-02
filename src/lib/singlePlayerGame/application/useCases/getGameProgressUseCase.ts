@@ -5,7 +5,7 @@ import { SinglePlayerGameRepository } from "../../domain/repositories/SinglePlay
 import { QuizRepository } from "src/lib/kahoot/domain/port/QuizRepository";
 import { QuestionId } from "src/lib/kahoot/domain/valueObject/Question";
 
-export class getGameProgressUseCase {
+export class GetGameProgressUseCase {
 
     constructor(
         private readonly gameRepo: SinglePlayerGameRepository,

@@ -6,7 +6,7 @@ import { SinglePlayerEvaluationService } from "../../domain/services/SinglePlaye
 import { Optional, PlayerAnswer, SinglePlayerGameId } from "../../domain/valueObjects/asyncGamesVO";
 import { QuestionId } from "src/lib/kahoot/domain/valueObject/Question";
 
-export class submitGameAnswerUseCase {
+export class SubmitGameAnswerUseCase {
 
     constructor(
         private readonly gameRepo: SinglePlayerGameRepository,

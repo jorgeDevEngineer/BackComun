@@ -16,27 +16,27 @@ import {
     GameSummaryResponseDto, 
     StartGameResponseDto 
 } from "../../application/helpers/asyncGameResponses.dto";
-import { startSinglePlayerGameUseCase } from "../../application/useCases/startSinglePlayerGameUseCase";
-import { getGameProgressUseCase } from "../../application/useCases/getGameProgressUseCase";
-import { submitGameAnswerUseCase } from "../../application/useCases/submitGameAnswerUseCase";
-import { getGameSummaryUseCase } from "../../application/useCases/getGameSummaryUseCase";
+import { StartSinglePlayerGameUseCase } from "../../application/useCases/StartSinglePlayerGameUseCase";
+import { GetGameProgressUseCase } from "../../application/useCases/GetGameProgressUseCase";
+import { SubmitGameAnswerUseCase } from "../../application/useCases/SubmitGameAnswerUseCase";
+import { GetGameSummaryUseCase } from "../../application/useCases/GetGameSummaryUseCase";
 import { StartGameRequestDto, SubmitAnswerRequestDto } from "../../application/helpers/asyncGameRequests.dto";
 
 @Controller('attempts')
 export class SinglePlayerGameController {
 
     constructor(
-        @Inject('startSinglePlayerGameUseCase')
-        private readonly startSinglePlayerGameUseCase: startSinglePlayerGameUseCase,
+        @Inject('StartSinglePlayerGameUseCase')
+        private readonly startSinglePlayerGameUseCase: StartSinglePlayerGameUseCase,
 
-        @Inject('getGameProgressUseCase')
-        private readonly getGameProgressUseCase: getGameProgressUseCase,
+        @Inject('GetGameProgressUseCase')
+        private readonly getGameProgressUseCase: GetGameProgressUseCase,
 
-        @Inject('submitGameAnswerUseCase')
-        private readonly submitGameAnswerUseCase: submitGameAnswerUseCase,
+        @Inject('SubmitGameAnswerUseCase')
+        private readonly submitGameAnswerUseCase: SubmitGameAnswerUseCase,
 
-        @Inject('getGameSummaryUseCase')
-        private readonly getGameSummaryUseCase: getGameSummaryUseCase
+        @Inject('GetGameSummaryUseCase')
+        private readonly getGameSummaryUseCase: GetGameSummaryUseCase
     ) {}
 
     //Mientras no esté hecho el modulo de autentición

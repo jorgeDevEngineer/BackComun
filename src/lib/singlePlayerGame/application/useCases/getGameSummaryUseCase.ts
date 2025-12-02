@@ -3,7 +3,7 @@ import { GetGameSummaryCommand } from "../helpers/asyncGameCommands";
 import { GameSummaryResponseDto } from "../helpers/asyncGameResponses.dto";
 import { SinglePlayerGameId } from "../../domain/valueObjects/asyncGamesVO";
 
-export class getGameSummaryUseCase {
+export class GetGameSummaryUseCase {
 
     constructor(private readonly gameRepo:SinglePlayerGameRepository) {}
 

@@ -6,7 +6,7 @@ import { SinglePlayerGameId } from "../../domain/valueObjects/asyncGamesVO";
 import { SinglePlayerGameRepository } from "../../domain/repositories/SinglePlayerGameRepository";
 import { QuizRepository } from "src/lib/kahoot/domain/port/QuizRepository";
 
-export class startSinglePlayerGameUseCase {
+export class StartSinglePlayerGameUseCase {
 
     constructor(
         private readonly gameRepo: SinglePlayerGameRepository,
