@@ -1,8 +1,10 @@
-import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { KahootModule } from './lib/kahoot/infrastructure/NestJs/kahoot.module';
-import { MediaModule } from './lib/media/infrastructure/NestJs/media.module';
+import { Module } from "@nestjs/common";
+import { TypeOrmModule } from "@nestjs/typeorm";
+import { ConfigModule, ConfigService } from "@nestjs/config";
+import { KahootModule } from "./lib/kahoot/infrastructure/NestJs/kahoot.module";
+import { MediaModule } from "./lib/media/infrastructure/NestJs/media.module";
+import { SearchModule } from "./lib/search/infrastructure/NestJs/search.module";
+import { UserModule } from "./lib/user/infrastructure/NestJS/user.module";
 
 @Module({
   imports: [
@@ -12,11 +14,11 @@ import { MediaModule } from './lib/media/infrastructure/NestJs/media.module';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
-        const isProduction = configService.get('NODE_ENV') === 'production';
+        const isProduction = configService.get("NODE_ENV") === "production";
 
         return {
-          type: 'postgres',
-          url: configService.get<string>('DATABASE_URL'),
+          type: "postgres",
+          url: configService.get<string>("DATABASE_URL"),
           autoLoadEntities: true,
           synchronize: true, // Cuidado con esto en producción real
           ssl: isProduction ? { rejectUnauthorized: false } : false, // Solo activa SSL si es prod/nube
@@ -26,6 +28,8 @@ import { MediaModule } from './lib/media/infrastructure/NestJs/media.module';
 
     KahootModule,
     MediaModule,
+    SearchModule,
+    UserModule,
   ],
 })
 export class AppModule {}
