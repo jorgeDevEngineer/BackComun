@@ -18,12 +18,12 @@ export class AddUserFavoriteQuizUseCase {
   
     const exists = await this.quizRepository.quizExists(quizIdVO);
     if (!exists) {
-      return Either.makeLeft<HttpException, void>(new NotFoundException('Quiz not found'));
+      return Either.makeLeft<HttpException, void>(new NotFoundException('El kahoot no existe'));
     }
 
     const alreadyFavorite = await this.userFavoriteQuizRepository.isFavorite(userIdVO, quizIdVO);
     if (alreadyFavorite) {
-      return Either.makeLeft<HttpException, void>(new ConflictException('Quiz already marked as favorite'));
+      return Either.makeLeft<HttpException, void>(new ConflictException('El kahoot ya está en favoritos'));
     }
 
     await this.userFavoriteQuizRepository.addFavoriteQuiz(UserFavoriteQuiz.Of(userIdVO, quizIdVO));
