@@ -135,5 +135,9 @@ export class SinglePlayerGame {
         }
         return new Optional<QuestionId>();
     }
+
+    public hasAnsweredQuestion(id: QuestionId): boolean{
+        return this.questionsResults.some( result => result.getQuestionId().equals(id) )
+    }
     
 }
