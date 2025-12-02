@@ -4,6 +4,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { KahootModule } from './lib/kahoot/infrastructure/NestJs/kahoot.module';
 import { MediaModule } from './lib/media/infrastructure/NestJs/media.module';
 import { SearchModule } from './lib/search/infrastructure/NestJs/search.module';
+import { GroupsModule } from "./lib/groups/infraestructure/NestJs/Group.module";
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { SearchModule } from './lib/search/infrastructure/NestJs/search.module';
     KahootModule,
     MediaModule,
     SearchModule,
+    GroupsModule,
   ],
 })
 export class AppModule {}

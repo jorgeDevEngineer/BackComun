@@ -17,4 +17,8 @@ export class GroupQuizAssignmentId {
   public static of(value: string): GroupQuizAssignmentId {
     return new GroupQuizAssignmentId(value);
   }
+
+  public static create(value: string): GroupQuizAssignmentId {
+    return new GroupQuizAssignmentId(value);
+  }
 }

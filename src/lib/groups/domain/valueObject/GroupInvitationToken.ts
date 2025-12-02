@@ -1,3 +1,5 @@
+import { InvitationTokenGenerator } from "../../domain/port/GroupInvitationTokenGenerator";
+
 export class GroupInvitationToken {
   private constructor(
     private readonly _token: string,
@@ -30,16 +32,13 @@ export class GroupInvitationToken {
   }
 
   // Factory para token random
-  static fromGenerator(
-    generatorFn: () => string,
-    ttlInDays: number,
-    now: Date = new Date(),
+ static fromGenerator(
+    generator: InvitationTokenGenerator,
+    ttlDays: number,
+    now: Date,
   ): GroupInvitationToken {
-    const token = generatorFn();
-
-    const expiresAt = new Date(now.getTime());
-    expiresAt.setDate(expiresAt.getDate() + ttlInDays);
-
+    const token = generator();
+    const expiresAt = new Date(now.getTime() + ttlDays * 24 * 60 * 60 * 1000);
     return GroupInvitationToken.create(token, expiresAt);
   }
 
@@ -66,3 +65,4 @@ export class GroupInvitationToken {
     };
   }
 }
+

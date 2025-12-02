@@ -18,4 +18,8 @@ export class GroupName {
   public static of(value: string): GroupName {
     return new GroupName(value);
   }
+
+  public static create(value: string): GroupName {
+    return new GroupName(value);
+  }
 }

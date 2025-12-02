@@ -11,6 +11,7 @@ import { GroupQuizAssignmentId } from "../valueObject/GroupQuizAssigmentId";
 import { GroupInvitationToken } from "../valueObject/GroupInvitationToken";  
 import { GroupQuizCompletion } from "./GroupQuizCompletion";
 import { SinglePlayerGameId } from "src/lib/asyncGame/domain/valueObjects/asyncGamesVO";
+import { InvitationTokenGenerator } from "../port/GroupInvitationTokenGenerator";
 
 export class Group {
   private _members: GroupMember[];
@@ -77,6 +78,35 @@ export class Group {
       createdAt,
     );
   }
+  
+
+static createFromdb(
+  id: GroupId,
+  name: GroupName,
+  description: GroupDescription | null,
+  adminId: UserId,
+  members: GroupMember[],
+  quizAssignments: GroupQuizAssignment[],
+  completions: GroupQuizCompletion[],
+  invitationToken: GroupInvitationToken | null,
+  createdAt: Date,
+  updatedAt: Date,
+): Group {
+  return new Group(
+    id,
+    name,
+    description,
+    adminId,
+    members,
+    quizAssignments,
+    completions,
+    invitationToken,
+    createdAt,
+    updatedAt,
+  );
+}
+
+
 
   // Getters
   get id(): GroupId {
@@ -350,6 +380,22 @@ validateInvitationToken(
 get invitation(): GroupInvitationToken | null {
   return this._invitationToken;
 }
+
+generateInvitation(
+    generator: InvitationTokenGenerator,
+    ttlDays: number,
+    now: Date,
+  ): void {
+    // Opcional: solo el admin debería poder hacerlo (pero esto normalmente se chequea en el caso de uso)
+    this._invitationToken = GroupInvitationToken.fromGenerator(
+      generator,
+      ttlDays,
+      now,
+    );
+    this._updatedAt = now;
+  }
+
+
 
   
   toPlainObject() {

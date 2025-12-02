@@ -16,4 +16,8 @@ export class GroupId {
   public static of(value: string): GroupId {
     return new GroupId(value);
   }
+
+  public static create(value: string): GroupId {
+    return new GroupId(value);
+  }
 }

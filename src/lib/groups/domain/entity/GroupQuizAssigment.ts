@@ -43,7 +43,6 @@ export class GroupQuizAssignment {
     );
   }
 
-  /** Solo debería ser llamado desde el aggregate Group. */
   _setGroup(groupId: GroupId) {
     this._group = groupId;
   }

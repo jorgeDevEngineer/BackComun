@@ -14,4 +14,8 @@ export class GroupDescription {
   public static of(value: string): GroupDescription {
     return new GroupDescription(value);
   }
+
+  public static create(value: string): GroupDescription {
+    return new GroupDescription(value);
+  }
 }
