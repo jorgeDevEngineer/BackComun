@@ -1,5 +1,5 @@
 import { QuizId } from "src/lib/kahoot/domain/valueObject/Quiz";
-import { EvaluatedAnswer, PlayerAnswer, QuestionResult } from "../valueObjects/asyncGamesVO";
+import { EvaluatedAnswer, PlayerAnswer, QuestionResult } from "../valueObjects/SinglePlayerGameVOs";
 import { QuizRepository } from "src/lib/kahoot/domain/port/QuizRepository";
 import { Quiz } from "src/lib/kahoot/domain/entity/Quiz";
 import { Question } from "src/lib/kahoot/domain/entity/Question";

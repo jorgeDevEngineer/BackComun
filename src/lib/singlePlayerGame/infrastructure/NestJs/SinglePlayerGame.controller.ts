@@ -15,12 +15,12 @@ import {
     GameProgressResponseDto, 
     GameSummaryResponseDto, 
     StartGameResponseDto 
-} from "../../application/helpers/asyncGameResponses.dto";
+} from "../../application/helpers/SinglePlayerGameResponses.dto";
 import { StartSinglePlayerGameUseCase } from "../../application/useCases/StartSinglePlayerGameUseCase";
 import { GetGameProgressUseCase } from "../../application/useCases/GetGameProgressUseCase";
 import { SubmitGameAnswerUseCase } from "../../application/useCases/SubmitGameAnswerUseCase";
 import { GetGameSummaryUseCase } from "../../application/useCases/GetGameSummaryUseCase";
-import { StartGameRequestDto, SubmitAnswerRequestDto } from "../../application/helpers/asyncGameRequests.dto";
+import { StartGameRequestDto, SubmitAnswerRequestDto } from "../../application/helpers/SinglePlayerGameRequests.dto";
 
 @Controller('attempts')
 export class SinglePlayerGameController {

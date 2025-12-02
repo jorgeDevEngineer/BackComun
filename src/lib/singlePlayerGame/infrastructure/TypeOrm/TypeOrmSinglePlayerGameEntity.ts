@@ -10,7 +10,7 @@ import {
     QuestionResult, 
     QuestionResultJSON, 
     SinglePlayerGameId
-} from '../../domain/valueObjects/asyncGamesVO';
+} from '../../domain/valueObjects/SinglePlayerGameVOs';
 import { QuestionId } from 'src/lib/kahoot/domain/valueObject/Question';
 import { QuizId, UserId } from 'src/lib/kahoot/domain/valueObject/Quiz';
 

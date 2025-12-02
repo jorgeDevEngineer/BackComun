@@ -1,9 +1,9 @@
 import { SinglePlayerGameRepository } from "../../domain/repositories/SinglePlayerGameRepository";
 import { QuizRepository } from "src/lib/kahoot/domain/port/QuizRepository";
-import { SubmitAnswerCommand } from "../helpers/asyncGameCommands";
-import { AnswerEvaluationResponseDto } from "../helpers/asyncGameResponses.dto";
+import { SubmitAnswerCommand } from "../helpers/SinglePlayerGameCommands";
+import { AnswerEvaluationResponseDto } from "../helpers/SinglePlayerGameResponses.dto";
 import { SinglePlayerEvaluationService } from "../../domain/services/SinglePlayerEvaluationService";
-import { Optional, PlayerAnswer, SinglePlayerGameId } from "../../domain/valueObjects/asyncGamesVO";
+import { Optional, PlayerAnswer, SinglePlayerGameId } from "../../domain/valueObjects/SinglePlayerGameVOs";
 import { QuestionId } from "src/lib/kahoot/domain/valueObject/Question";
 
 export class SubmitGameAnswerUseCase {

@@ -1,8 +1,8 @@
-import { StartSinglePlayerGameCommand } from "../helpers/asyncGameCommands";
-import { StartGameResponseDto } from "../helpers/asyncGameResponses.dto";
+import { StartSinglePlayerGameCommand } from "../helpers/SinglePlayerGameCommands";
+import { StartGameResponseDto } from "../helpers/SinglePlayerGameResponses.dto";
 import { QuizId, UserId } from "src/lib/kahoot/domain/valueObject/Quiz";
 import { SinglePlayerGame } from "../../domain/aggregates/SinglePlayerGame";
-import { SinglePlayerGameId } from "../../domain/valueObjects/asyncGamesVO";
+import { SinglePlayerGameId } from "../../domain/valueObjects/SinglePlayerGameVOs";
 import { SinglePlayerGameRepository } from "../../domain/repositories/SinglePlayerGameRepository";
 import { QuizRepository } from "src/lib/kahoot/domain/port/QuizRepository";
 

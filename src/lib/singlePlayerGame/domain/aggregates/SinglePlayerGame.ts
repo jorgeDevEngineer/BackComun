@@ -4,7 +4,7 @@ import {
     GameScore,
     Optional,
     QuestionResult
-} from "../valueObjects/asyncGamesVO";
+} from "../valueObjects/SinglePlayerGameVOs";
 import { QuestionId } from "src/lib/kahoot/domain/valueObject/Question";
 import { QuizId } from "src/lib/kahoot/domain/valueObject/Quiz";
 import { UserId } from "src/lib/kahoot/domain/valueObject/Quiz";

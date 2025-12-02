@@ -1,7 +1,7 @@
 import { SinglePlayerGameRepository } from "../../domain/repositories/SinglePlayerGameRepository";
-import { GetGameSummaryCommand } from "../helpers/asyncGameCommands";
-import { GameSummaryResponseDto } from "../helpers/asyncGameResponses.dto";
-import { SinglePlayerGameId } from "../../domain/valueObjects/asyncGamesVO";
+import { GetGameSummaryCommand } from "../helpers/SinglePlayerGameCommands";
+import { GameSummaryResponseDto } from "../helpers/SinglePlayerGameResponses.dto";
+import { SinglePlayerGameId } from "../../domain/valueObjects/SinglePlayerGameVOs";
 
 export class GetGameSummaryUseCase {
 

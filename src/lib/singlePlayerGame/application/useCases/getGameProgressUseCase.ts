@@ -1,6 +1,6 @@
-import { GetGameProgressCommand } from "../helpers/asyncGameCommands";
-import { GameProgressResponseDto } from "../helpers/asyncGameResponses.dto";
-import { Optional, SinglePlayerGameId } from "../../domain/valueObjects/asyncGamesVO";
+import { GetGameProgressCommand } from "../helpers/SinglePlayerGameCommands";
+import { GameProgressResponseDto } from "../helpers/SinglePlayerGameResponses.dto";
+import { Optional, SinglePlayerGameId } from "../../domain/valueObjects/SinglePlayerGameVOs";
 import { SinglePlayerGameRepository } from "../../domain/repositories/SinglePlayerGameRepository";
 import { QuizRepository } from "src/lib/kahoot/domain/port/QuizRepository";
 import { QuestionId } from "src/lib/kahoot/domain/valueObject/Question";
