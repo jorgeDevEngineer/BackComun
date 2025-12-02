@@ -12,7 +12,7 @@ export class TypeOrmUserEntity {
   email: string;
 
   @Column()
-  hasshedPassword: string;
+  hashedPassword: string;
 
   @Column()
   userType: "student" | "teacher" | "personal";

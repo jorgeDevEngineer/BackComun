@@ -14,7 +14,7 @@ export class User {
   readonly id: UserId;
   readonly userName: UserName;
   readonly email: UserEmail;
-  readonly hasshedPassword: UserHashedPassword;
+  readonly hashedPassword: UserHashedPassword;
   readonly userType: UserType;
   readonly avatarUrl: UserAvatarUrl;
   readonly name: UserPlainName;
@@ -27,7 +27,7 @@ export class User {
     id: string,
     userName: string,
     email: string,
-    hasshedPassword: string,
+    hashedPassword: string,
     userType: "student" | "teacher" | "personal",
     avatarUrl: string,
     name?: string,
@@ -40,7 +40,7 @@ export class User {
     this.id = new UserId(id);
     this.userName = new UserName(userName);
     this.email = new UserEmail(email);
-    this.hasshedPassword = new UserHashedPassword(hasshedPassword);
+    this.hashedPassword = new UserHashedPassword(hashedPassword);
     this.userType = new UserType(userType);
     this.avatarUrl = new UserAvatarUrl(avatarUrl);
     if (!name) this.name = new UserPlainName("");
