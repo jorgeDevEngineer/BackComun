@@ -13,6 +13,5 @@ export class SubmitAnswerRequestDto {
   answerIndex?: number | number[];
   
   @IsNumber()
-  @IsOptional()
-  timeElapsedSeconds?: number;
+  timeElapsedSeconds: number;
 }

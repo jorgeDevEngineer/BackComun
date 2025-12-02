@@ -175,7 +175,7 @@ export class Quiz {
   }
 
   public getQuestionById(id: QuestionId):Question {
-    const question: Question = this._questions.find( question => { question.id.equals(id)})
+    const question: Question = this._questions.find(question => question.id.equals(id))
     if (!question){
       throw new Error('No se encontró la pregunta dentro del quiz');
     }

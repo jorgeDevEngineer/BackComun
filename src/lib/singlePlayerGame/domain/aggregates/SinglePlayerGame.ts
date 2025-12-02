@@ -82,7 +82,7 @@ export class SinglePlayerGame {
     }
 
     private updateProgress(): void {
-        const progressPercentage = (this.questionsResults.length / this.totalQuestions) * 100;
+        const progressPercentage = Math.round((this.questionsResults.length / this.totalQuestions) * 100);
         this.gameProgress = GameProgress.create(progressPercentage);
 
         if (this.gameProgress.isCompleted()){
@@ -115,7 +115,7 @@ export class SinglePlayerGame {
             result => result.getQuestionId() === (questionResult.getQuestionId())
         );   
         if (alreadyAnswered) {
-            throw new Error('Question already answered');
+            throw new Error('La pregunta ya ha sido respondida');
         }
 
         this.questionsResults.push(questionResult);

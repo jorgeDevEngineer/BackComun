@@ -21,12 +21,13 @@ export class GetGameSummaryUseCase {
         const correctAnswers:number = game.getCorrectAnswersCount();
         const totalQuestions:number = game.getTotalQuestions();
 
+
         return {
             attemptId: game.getGameId().getId(),
             finalScore: game.getScore().getScore(),
             totalCorrect: correctAnswers,
             totalQuestions: totalQuestions,
-            accuracyPercentage: (correctAnswers / totalQuestions) * 100
+            accuracyPercentage: Math.round((correctAnswers / totalQuestions) * 100)
         };
 
     }

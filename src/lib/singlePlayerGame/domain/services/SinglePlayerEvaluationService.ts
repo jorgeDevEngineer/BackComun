@@ -13,7 +13,7 @@ export class SinglePlayerEvaluationService {
             throw new Error('No se encontró el quiz');
         }
 
-        const question:Question = quiz.getQuestions().find( question => question.id === playerAnswer.getQuestionId());
+        const question:Question = quiz.getQuestions().find( question => question.id.equals(playerAnswer.getQuestionId()));
         if(!question){
             throw new Error('No se encontró la pregunta en el quiz asignado');
         }
@@ -22,7 +22,7 @@ export class SinglePlayerEvaluationService {
         const pointsEarned: number = this.calculatePoints(question, isCorrect, playerAnswer.getTimeUsed());
 
         const evaluatedAnswer: EvaluatedAnswer = EvaluatedAnswer.create(isCorrect, pointsEarned);
-        
+
         return QuestionResult.create(question.id, playerAnswer, evaluatedAnswer);
 
     }
@@ -34,7 +34,7 @@ export class SinglePlayerEvaluationService {
                 //Hay que implementar esto
                 return true;
             } else {
-                return question.getAnswers()[answerIndex as number].isCorrect.getValue();
+                return question.getAnswers()[(answerIndex as number)-1].isCorrect.getValue();
             }
         } else {
             return false;
@@ -48,8 +48,8 @@ export class SinglePlayerEvaluationService {
         const timeLimit: number = question.timeLimit.getValue();
         const basePoints: number = question.getPoints().getValue();
 
-        const timeLeftRatio = (timeLimit - timeUsed) / timeLimit;
-        const speedMultiplier = 1 + Math.pow(timeLeftRatio, 1.5) * 0.8;
+        const timeLeftRatio: number = (timeLimit - (timeUsed/1000)) / timeLimit;
+        const speedMultiplier: number = 1 + Math.pow(timeLeftRatio, 1.5) * 0.8;
 
         return Math.round((basePoints * speedMultiplier)/10) * 10;
     }
