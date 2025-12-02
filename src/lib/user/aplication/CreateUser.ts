@@ -18,7 +18,7 @@ export class CreateUser {
     createdAt?: Date,
     updatedAt?: Date
   ): Promise<void> {
-    const user = new User(
+    const newUser = new User(
       id,
       userName,
       email,
@@ -32,6 +32,16 @@ export class CreateUser {
       createdAt,
       updatedAt
     );
-    await this.userRepository.create(user);
+    const userWithSameId = await this.userRepository.getOneById(newUser.id);
+    const userWithSameUserName = await this.userRepository.getOneByName(
+      newUser.userName
+    );
+    if (userWithSameId) {
+      throw new Error("User with this ID already exists");
+    }
+    if (userWithSameUserName) {
+      throw new Error("User with this username already exists");
+    }
+    await this.userRepository.create(newUser);
   }
 }

@@ -90,30 +90,44 @@ export class UserController {
 
   @Patch(":id")
   async edit(@Param() params: FindByIdParams, @Body() body: Edit) {
-    const user = await this.getOneUserById.run(params.id);
-    if (!user) {
-      throw new NotFoundException("User not found");
+    try {
+      const user = await this.getOneUserById.run(params.id);
+      return await this.editUser.run(
+        user.id.value,
+        body.userName,
+        body.email,
+        body.hashedPassword,
+        body.userType,
+        body.avatarUrl,
+        body.name,
+        body.theme,
+        body.language,
+        body.gameStreak
+      );
+    } catch (error) {
+      if (error instanceof UserNotFoundError) {
+        throw new NotFoundException("User not found");
+      } else {
+        throw new InternalServerErrorException(
+          "Could not edit user : " + error.message
+        );
+      }
     }
-    return await this.editUser.run(
-      user.id.value,
-      body.userName,
-      body.email,
-      body.hashedPassword,
-      body.userType,
-      body.avatarUrl,
-      body.name,
-      body.theme,
-      body.language,
-      body.gameStreak
-    );
   }
 
   @Delete(":id")
   async delete(@Param() params: FindByIdParams) {
-    const user = await this.getOneUserById.run(params.id);
-    if (!user) {
-      throw new NotFoundException("User not found");
+    try {
+      const user = await this.getOneUserById.run(params.id);
+      return await this.deleteUser.run(params.id);
+    } catch (error) {
+      if (error instanceof UserNotFoundError) {
+        throw new NotFoundException("User not found");
+      } else {
+        throw new InternalServerErrorException(
+          "Could not delete user : " + error.message
+        );
+      }
     }
-    return await this.deleteUser.run(params.id);
   }
 }
