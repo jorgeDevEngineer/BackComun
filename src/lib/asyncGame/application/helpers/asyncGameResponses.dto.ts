@@ -1,9 +1,9 @@
 export class SlideResponseDto {
   slideId: string;
-  mediaID?: string | null;
   questionType: string;
   questionText: string;
   timeLimitSeconds: number;
+  mediaID?: string | null;
   options: Array<{
     index: string;
     text?: string | null;

@@ -165,4 +165,8 @@ export class Quiz {
       questions: this._questions.map((q) => q.toPlainObject()),
     };
   }
+
+  public getFirstQuestion(): Question {
+    return this._questions[0];
+  }
 }

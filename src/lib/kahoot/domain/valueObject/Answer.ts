@@ -58,6 +58,10 @@ export class AnswerText {
   public static of(value: string): AnswerText {
     return new AnswerText(value);
   }
+
+  public getValue(): string {
+    return this.value;
+  }
 }
 
 /**

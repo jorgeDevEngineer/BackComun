@@ -60,6 +60,10 @@ export class QuestionText {
   public static of(value: string): QuestionText {
     return new QuestionText(value);
   }
+
+  public getValue(): string {
+    return this.value;
+  }
 }
 
 // --- VOs de Configuración y Estado ---
