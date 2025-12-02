@@ -9,7 +9,7 @@ export class AddUserFavoriteQuizUseCase {
 
     async run(userId: FavoriteDTO, quizId: string): Promise<void> {
         const favoriteQuiz = UserFavoriteQuiz.Of(
-            userId.toValueObject(),
+            UserId.of(userId.userId),
             QuizId.of(quizId)
         );
         await this.userFavoriteQuizRepository.addFavoriteQuiz(favoriteQuiz);

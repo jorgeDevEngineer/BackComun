@@ -6,7 +6,7 @@ export class FavoriteDTO {
     @IsNotEmpty()
     userId!: string;
   
-    toValueObject(): UserId {
+    public toValueObject(): UserId {
       return UserId.of(this.userId);
     }
   }
