@@ -44,7 +44,6 @@ export class StartSinglePlayerGameUseCase {
             attemptId: game.getGameId().getId(),
             firstSlide: quiz.getFirstQuestion().toResponseDto()
         };
-
     }
 
 }

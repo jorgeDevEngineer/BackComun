@@ -14,7 +14,7 @@ import {
 import { QuestionId } from 'src/lib/kahoot/domain/valueObject/Question';
 import { QuizId, UserId } from 'src/lib/kahoot/domain/valueObject/Quiz';
 
-@Entity('single-player-games')
+@Entity('asyncgame')
 export class TypeOrmSinglePlayerGameEntity {
 
     @PrimaryColumn()

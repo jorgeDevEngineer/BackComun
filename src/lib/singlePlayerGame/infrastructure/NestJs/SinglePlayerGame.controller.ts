@@ -42,11 +42,11 @@ export class SinglePlayerGameController {
     //Mientras no esté hecho el modulo de autentición
     private extractUserIdFromToken(authHeader: string): string {
         // Implementación simple - en producción usaremos JWT service
-        if (!authHeader || !authHeader.startsWith('Bearer ')) {
-            throw new HttpException('Token invalido', HttpStatus.UNAUTHORIZED);
-        }
+        //if (!authHeader || !authHeader.startsWith('Bearer ')) {
+           // throw new HttpException('Token invalido', HttpStatus.UNAUTHORIZED);
+        //}
     
-        const token = authHeader.substring(7);
+        //const token = authHeader.substring(7);
         // Aquí iría la lógica para decodificar el JWT y obtener el userId
         // Por ahora retornamos un mock
         return authHeader;

@@ -122,7 +122,7 @@ export class Question {
 
     return {
       slideId: this._id.getValue(),
-      questionType: this._type.getValue().toString(),
+      questionType: this._type.getValue(),
       questionText: this._text.getValue(),
       timeLimitSeconds: this._timeLimit.getValue(),
       mediaId: this._mediaId ? this._mediaId.getValue() : null,

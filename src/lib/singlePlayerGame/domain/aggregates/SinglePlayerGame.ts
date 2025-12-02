@@ -124,12 +124,12 @@ export class SinglePlayerGame {
     }
 
     public findNextQuestionId(ids: QuestionId[]): Optional<QuestionId> {
-        const idsRespondidos:QuestionId[] = this.questionsResults.map( result => {
-            return result.getQuestionId();
+        const idsRespondidos:string[] = this.questionsResults.map( result => {
+            return result.getQuestionId().getValue();
         });
 
         for (const id of ids) {
-            if (!idsRespondidos.includes(id)){
+            if (!idsRespondidos.includes(id.getValue())){
                 return new Optional<QuestionId>(id);
             }
         }
