@@ -66,7 +66,7 @@ export class UserController {
       body.id,
       body.userName,
       body.email,
-      body.hasshedPassword,
+      body.hashedPassword,
       body.userType,
       body.avatarUrl
     );
@@ -82,7 +82,7 @@ export class UserController {
       user.id.value,
       body.userName,
       body.email,
-      body.hasshedPassword,
+      body.hashedPassword,
       body.userType,
       body.avatarUrl,
       body.name,
