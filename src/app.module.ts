@@ -5,6 +5,7 @@ import { KahootModule } from './lib/kahoot/infrastructure/NestJs/kahoot.module';
 import { MediaModule } from './lib/media/infrastructure/NestJs/media.module';
 import { SearchModule } from './lib/search/infrastructure/NestJs/search.module';
 import { GroupsModule } from "./lib/groups/infraestructure/NestJs/Group.module";
+import { UserModule } from "./lib/user/infrastructure/NestJS/user.module";
 
 @Module({
   imports: [
@@ -14,11 +15,11 @@ import { GroupsModule } from "./lib/groups/infraestructure/NestJs/Group.module";
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
-        const isProduction = configService.get('NODE_ENV') === 'production';
+        const isProduction = configService.get("NODE_ENV") === "production";
 
         return {
-          type: 'postgres',
-          url: configService.get<string>('DATABASE_URL'),
+          type: "postgres",
+          url: configService.get<string>("DATABASE_URL"),
           autoLoadEntities: true,
           synchronize: true, // Cuidado con esto en producción real
           ssl: isProduction ? { rejectUnauthorized: false } : false, // Solo activa SSL si es prod/nube
@@ -30,6 +31,7 @@ import { GroupsModule } from "./lib/groups/infraestructure/NestJs/Group.module";
     MediaModule,
     SearchModule,
     GroupsModule,
+    UserModule,
   ],
 })
 export class AppModule {}
