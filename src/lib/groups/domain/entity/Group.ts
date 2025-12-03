@@ -157,9 +157,6 @@ private isMember(userId: UserId): boolean {
     return this._adminId.value === userId.value;
   }
 
-  // --- Comportamiento de dominio ---
-
-
   rename(
     name: GroupName,
     description: GroupDescription,             
@@ -169,8 +166,6 @@ private isMember(userId: UserId): boolean {
     this._description = description;
     this._updatedAt = now;
   }
-
-  /** El límite de miembros por plan (premium / no premium) validar en la capa de aplicación. */
 
   addMember(userId: UserId, role: GroupRole, now: Date = new Date()): void {
     const existing = this._members.find(
@@ -386,7 +381,6 @@ generateInvitation(
     ttlDays: number,
     now: Date,
   ): void {
-    // Opcional: solo el admin debería poder hacerlo (pero esto normalmente se chequea en el caso de uso)
     this._invitationToken = GroupInvitationToken.fromGenerator(
       generator,
       ttlDays,

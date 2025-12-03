@@ -39,12 +39,11 @@ export class JoinGroupByInvitationUseCase {
       throw new Error("Invitation token has expired");
     }
 
-    // Regla de máximo 5 miembros en free 
+    // Regla de máximo 5 miembros en free se debe implementar la validacion
     if (group.members.length >= 5) {
       console.log("Grupo alcanzó el límite free de 5 miembros (dominio no lo rompe).");
     }
 
-    // Agregar como member (dominio valida duplicados)
     group.addMember(userId, GroupRole.member(), now);
 
     await this.groupRepository.save(group);

@@ -5,8 +5,6 @@ function isValidUUID(value: string): boolean {
   return UUID_V4_REGEX.test(value);
 }
 
-// --- ID del grupo ---
-
 export class GroupId {
   private constructor(public readonly value: string) {
     if (!isValidUUID(value)) {

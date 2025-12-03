@@ -23,12 +23,13 @@ export class TypeOrmGroupRepository implements GroupRepository {
   constructor(
     @InjectRepository(GroupOrmEntity)
     private readonly ormRepo: Repository<GroupOrmEntity>,
+
+    @InjectRepository(GroupMemberOrmEntity)
+    private readonly memberRepo: Repository<GroupMemberOrmEntity>,
   ) {}
 
-  // ========= SAVE =========
-
   async save(group: Group): Promise<void> {
-    // 1) Cargar grupo existente con miembros (si existe)
+  
     let groupOrm = await this.ormRepo.findOne({
       where: { id: group.id.value },
       relations: ["members"],
@@ -41,7 +42,7 @@ export class TypeOrmGroupRepository implements GroupRepository {
       groupOrm.members = [];
     }
 
-    // 2) Campos básicos
+
     groupOrm.name = group.name.value;
     groupOrm.description = group.description?.value ?? "";
     groupOrm.adminId = group.adminId.value;
@@ -49,10 +50,20 @@ export class TypeOrmGroupRepository implements GroupRepository {
     groupOrm.invitationToken = group.invitationToken?.token ?? null;
     groupOrm.invitationExpiresAt = group.invitationToken?.expiresAt ?? null;
 
-    // 3) Sincronizar miembros (update-style)
+    const existingMembers = groupOrm.members ?? [];
+    const domainUserIds = new Set(group.members.map((m) => m.userId.value));
+
+    const membersToDelete = existingMembers.filter(
+      (m) => !domainUserIds.has(m.userId),
+    );
+
+    if (membersToDelete.length > 0) {
+      await this.memberRepo.remove(membersToDelete);
+    }
+
     groupOrm.members = this.syncMembers(groupOrm, group.members);
 
-    // 4) Guardar
+  
     await this.ormRepo.save(groupOrm);
   }
 
@@ -91,8 +102,7 @@ export class TypeOrmGroupRepository implements GroupRepository {
     return nextMembers;
   }
 
-  // ========= HELPERS MAPPING =========
-
+  
   private mapInvitationFromOrm(
     orm: GroupOrmEntity,
   ): GroupInvitationToken | null {
@@ -180,7 +190,6 @@ export class TypeOrmGroupRepository implements GroupRepository {
 
     const ids = rows.map((r) => r.id);
 
-    // 2) Cargar grupos completos con todos sus miembros
     const orms = await this.ormRepo.find({
       where: { id: In(ids) },
       relations: ["members"],

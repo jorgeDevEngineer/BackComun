@@ -19,7 +19,6 @@ export class GroupMember {
     return new GroupMember(userId, role, joinedAt, 0);
   }
 
-  /** Este método solo debería ser llamado por el aggregate Group. */
   _setGroup(groupId: GroupId) {
     this._group = groupId;
   }
@@ -41,7 +40,6 @@ export class GroupMember {
     return this._completedQuizzes;
   }
 
-  // Comportamiento de dominio
   changeRole(role: GroupRole): void {
     this._role = role;
   }

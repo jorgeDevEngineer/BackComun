@@ -36,7 +36,6 @@ export class GenerateGroupInvitationUseCase {
       throw new Error("Group not found");
     }
 
-    // Solo el admin puede generar el link
     if (group.adminId.value !== currentUserId.value) {
       throw new Error("solo el administrador del grupo puede generar invitaciones");
     }

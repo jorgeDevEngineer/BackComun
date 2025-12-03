@@ -11,12 +11,10 @@ export class GroupInvitationToken {
       throw new Error("El token de invitación es inválido.");
     }
 
-    // Validar expiresAt 
     if (!expiresAt || typeof expiresAt.getTime !== "function") {
       throw new Error("La fecha de expiración es inválida.");
     }
 
-    // Validar tiempo
     const now = Date.now();
     const expiresTime = expiresAt.getTime();
 
@@ -31,7 +29,6 @@ export class GroupInvitationToken {
     return new GroupInvitationToken(token, expiresAt);
   }
 
-  // Factory para token random
  static fromGenerator(
     generator: InvitationTokenGenerator,
     ttlDays: number,

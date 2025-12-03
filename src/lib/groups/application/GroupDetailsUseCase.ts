@@ -35,8 +35,6 @@ export class GetGroupDetailUseCase {
     if (!group) {
       throw new Error("Group not found");
     }
-
-    // Regla de seguridad mínima: debe ser miembro para ver el grupo
     const plain = group.toPlainObject();
     const isMember = plain.members.some(
       (m) => m.userId === currentUserId.value,

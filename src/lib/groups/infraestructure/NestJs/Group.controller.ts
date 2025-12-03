@@ -1,10 +1,12 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   HttpStatus,
   Param,
+  Patch,
   Post,
   Req,
 } from "@nestjs/common";
@@ -18,6 +20,10 @@ import { GenerateGroupInvitationUseCase } from "../../application/GenerateGroupI
 import { CreateGroupRequestDto } from "../../application/CrearteGroupUseCase";
 import { CreateGroupResponseDto } from "../../application/CrearteGroupUseCase";
 import { JoinGroupByInvitationUseCase } from "../../application/JoinGroupByInvitation";
+import { RemoveGroupMemberUseCase } from "../../application/RemoveGroupMemberUseCase";
+import { UpdateGroupInfoUseCase } from "../../application/UpdateGroupDetailsUseCase";
+import { LeaveGroupUseCase } from "../../application/LeaveGroupUseCase";
+import { TransferGroupAdminUseCase } from "../../application/TransferGroupAdminUseCase";
 
 @Controller("groups")
 export class GroupsController {
@@ -27,6 +33,10 @@ export class GroupsController {
     private readonly getGroupDetailUseCase: GetGroupDetailUseCase,
     private readonly generateGroupInvitationUseCase: GenerateGroupInvitationUseCase,
     private readonly joinGroupByInvitationUseCase: JoinGroupByInvitationUseCase,
+    private readonly leaveGroupUseCase: LeaveGroupUseCase,
+    private readonly removeGroupMemberUseCase: RemoveGroupMemberUseCase,
+    private readonly updateGroupInfoUseCase: UpdateGroupInfoUseCase,
+    private readonly transferGroupAdminUseCase: TransferGroupAdminUseCase,
   ) {}
 
   private getCurrentUserId(req: Request): string {
@@ -34,7 +44,7 @@ export class GroupsController {
 
     if (!currentUserId) {
       //  SOLO PARA PRUEBAS
-      currentUserId = "123e4567-e89b-42d3-a456-426614174000";
+      currentUserId = "123e4567-e89b-42d3-a456-426614174123";
       console.log(" Usando userId de prueba:", currentUserId);
     }
 
@@ -96,6 +106,59 @@ export class GroupsController {
       currentUserId,
     });
   }
+  @Post(":id/leave")
+  async leaveGroup(@Param("id") id: string, @Req() req: Request) {
+    const currentUserId = this.getCurrentUserId(req);
+
+    return this.leaveGroupUseCase.execute({
+      groupId: id,
+      currentUserId,
+    });
+  }
+  @Delete(":id/members/:memberId")
+  async removeMember(
+    @Param("id") id: string,
+    @Param("memberId") memberId: string,
+    @Req() req: Request,
+  ) {
+    const currentUserId = this.getCurrentUserId(req);
+
+    return this.removeGroupMemberUseCase.execute({
+      groupId: id,
+      targetUserId: memberId,
+      currentUserId,
+    });
+  }
+  @Patch(":id")
+  async updateGroupInfo(
+    @Param("id") id: string,
+    @Body() body: { name?: string; description?: string },
+    @Req() req: Request,
+  ) {
+    const currentUserId = this.getCurrentUserId(req);
+
+    return this.updateGroupInfoUseCase.execute({
+      groupId: id,
+      currentUserId,
+      name: body.name,
+      description: body.description,
+    });
+  }
+  @Post(":id/transfer-admin")
+  async transferAdmin(
+    @Param("id") id: string,
+    @Body() body: { newAdminUserId: string },
+    @Req() req: Request,
+) {
+  const currentUserId = this.getCurrentUserId(req);
+
+  return this.transferGroupAdminUseCase.execute({
+    groupId: id,
+    currentUserId,
+    newAdminUserId: body.newAdminUserId,
+  });
+}
+
 }
 
 

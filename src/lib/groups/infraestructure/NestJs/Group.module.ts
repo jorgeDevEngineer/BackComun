@@ -15,6 +15,10 @@ import { GenerateGroupInvitationUseCase } from "../../application/GenerateGroupI
 import { cryptoInvitationTokenGenerator } from "../token/InvitationTokenGeenerator";
 import { InvitationTokenGenerator } from "../../domain/port/GroupInvitationTokenGenerator";
 import { JoinGroupByInvitationUseCase } from "../../application/JoinGroupByInvitation";
+import { LeaveGroupUseCase } from "../../application/LeaveGroupUseCase";
+import { RemoveGroupMemberUseCase } from "../../application/RemoveGroupMemberUseCase";
+import { UpdateGroupInfoUseCase } from "../../application/UpdateGroupDetailsUseCase";
+import { TransferGroupAdminUseCase } from "../../application/TransferGroupAdminUseCase";
 
 @Module({
   imports: [TypeOrmModule.forFeature([GroupOrmEntity, GroupMemberOrmEntity])],
@@ -54,7 +58,30 @@ import { JoinGroupByInvitationUseCase } from "../../application/JoinGroupByInvit
       useFactory: (repo: GroupRepository) =>
         new JoinGroupByInvitationUseCase(repo),
       inject: ["GroupRepository"],
+    },{
+      provide: LeaveGroupUseCase,
+      useFactory: (repo: GroupRepository) => new LeaveGroupUseCase(repo),
+      inject: ["GroupRepository"],
     },
+    {
+      provide: RemoveGroupMemberUseCase,
+      useFactory: (repo: GroupRepository) =>
+        new RemoveGroupMemberUseCase(repo),
+      inject: ["GroupRepository"],
+    },
+    {
+      provide: UpdateGroupInfoUseCase,
+      useFactory: (repo: GroupRepository) =>
+        new UpdateGroupInfoUseCase(repo),
+      inject: ["GroupRepository"],
+    },
+    {
+      provide: TransferGroupAdminUseCase,
+      useFactory: (repo: GroupRepository) =>
+        new TransferGroupAdminUseCase(repo),
+      inject: ["GroupRepository"],
+},
   ],
 })
 export class GroupsModule {}
+ 

@@ -21,7 +21,7 @@ export class GroupMemberOrmEntity {
   userId!: string;
 
   @Column({ type: "varchar", length: 20 })
-  role!: string; // "admin" | "member"
+  role!: string;
 
   @CreateDateColumn()
   joinedAt!: Date;

@@ -1,5 +1,3 @@
-// --- Rol del miembro dentro del grupo ---
-
 type GroupRoleValue = "admin" | "member";
 
 export class GroupRole {

@@ -9,7 +9,7 @@ import { UserId } from "src/lib/kahoot/domain/valueObject/Quiz";
 
 
 export class CreateGroupRequestDto {
-  name!: string; // requerido por la API única
+  name!: string; 
 }
 
 export class CreateGroupResponseDto {
@@ -40,20 +40,11 @@ export class CreateGroupUseCase {
   async execute(input: CreateGroupInput): Promise<CreateGroupOutput> {
     const now = input.now ?? new Date();
 
-    // 1) Generar ID fuera del dominio y validarlo con el VO
     const rawId = randomUUID();
-    const groupId = GroupId.of(rawId); // tu VO valida UUID v4
-
-    // 2) Value Object del nombre
+    const groupId = GroupId.of(rawId); 
     const groupName = GroupName.of(input.name);
-
-    // 3) Descripción, por ahora vacía por defecto
     const groupDescription = GroupDescription.of("");
-
-    // 4) adminId = usuario actual
     const adminId = UserId.of(input.currentUserId);
-
-    // Crear el aggregate (aquí se crea también el miembro admin dentro del grupo)
     const group = Group.create(
       groupId,
       groupName,
@@ -61,11 +52,8 @@ export class CreateGroupUseCase {
       adminId,
       now,
     );
-
-    //Persistir en el repositorio
     await this.groupRepository.save(group);
 
-    //Armar respuesta plana para el controller / API única
     return {
       id: group.id.value,
       name: group.name.value,

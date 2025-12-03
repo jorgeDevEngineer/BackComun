@@ -37,6 +37,7 @@ export class GroupOrmEntity {
   @OneToMany(() => GroupMemberOrmEntity, (m) => m.group, {
     cascade: true,
     eager: true,
+    orphanedRowAction: "delete",
   })
   members!: GroupMemberOrmEntity[];
 }
