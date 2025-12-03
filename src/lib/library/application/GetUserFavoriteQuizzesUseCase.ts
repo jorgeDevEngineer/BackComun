@@ -33,7 +33,7 @@ export class GetUserFavoriteQuizzesUseCase {
       };
     }
     
-
+    let contador: number = 0;
     let dataElement: Quiz;
     let quizAuthor: User;
     for(const quizId of favoriteIds){
@@ -43,11 +43,9 @@ export class GetUserFavoriteQuizzesUseCase {
       quizzesAuthor.push(quizAuthor);
     }
 
-    console.log(quizFinded);
-    console.log(quizzesAuthor);
-
-    for(let i=0; i<quizFinded.length; i++){
-      data[i] = toQuizResponse(quizFinded[i], quizzesAuthor[i]);
+    while(contador < quizFinded.length){
+      data[contador] = toQuizResponse(quizFinded[contador], quizzesAuthor[contador]);
+      contador++;
     }
 
     return {
