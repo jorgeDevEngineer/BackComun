@@ -3,7 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { UserFavoriteQuizRepository } from '../../../domain/port/UserFavoriteQuizRepository';
 import { UserFavoriteQuiz } from '../../../domain/valueObject/UserFavoriteQuiz';
 import { TypeOrmUserFavoriteQuizEntity } from '../Entities/TypeOrmUserFavoriteQuizEntity';
-import { QuizId, UserId } from 'src/lib/kahoot/domain/valueObject/Quiz';
+import { QuizId } from 'src/lib/kahoot/domain/valueObject/Quiz';
+import { UserId } from 'src/lib/user/domain/valueObject/UserId';
 
 export class TypeOrmUserFavoriteQuizRepository
   implements UserFavoriteQuizRepository
@@ -28,7 +29,7 @@ export class TypeOrmUserFavoriteQuizRepository
   }
 
   async isFavorite(userId: UserId, quizId: QuizId): Promise<boolean> {
-    return this.repository.exist({ where: { user_id: userId.value, quiz_id: quizId.value } });
+    return this.repository.exists({ where: { user_id: userId.value, quiz_id: quizId.value } });
   }
   
   async findFavoritesQuizByUser(userId: UserId): Promise<QuizId[]> {

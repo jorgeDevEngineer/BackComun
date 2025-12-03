@@ -25,7 +25,7 @@ export class LibraryController {
     @Delete('favorites/:quizId')
     @HttpCode(204)
     async deleteFavorite(@Param('quizId') quizId: string, @Body() dto: FavoriteDTO): Promise<void> {
-        const result = await this.addUserFavoriteQuizUseCase.run(dto, quizId);
+        const result = await this.deleteUserFavoriteQuizUseCase.run(dto, quizId);
         if(result.isLeft()){
             throw result.getLeft();
         }

@@ -1,6 +1,6 @@
 import { QuizRepository } from '../domain/port/QuizRepository';
-import { Quiz } from '../domain/entity/Quiz';
-import { QuizId } from '../domain/valueObject/Quiz';
+import { Quiz } from 'src/lib/kahoot/domain/entity/Quiz';
+import {QuizId} from "src/lib/kahoot/domain/valueObject/Quiz";
 
 export class GetQuizUseCase {
   constructor(private readonly quizRepository: QuizRepository) {}

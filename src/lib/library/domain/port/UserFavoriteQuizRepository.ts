@@ -1,5 +1,6 @@
 import {UserFavoriteQuiz} from "../valueObject/UserFavoriteQuiz";
-import { QuizId, UserId } from "../valueObject/Quiz";
+import { QuizId} from "../../../kahoot/domain/valueObject/Quiz";
+import { UserId } from "src/lib/user/domain/valueObject/UserId";
 
 export interface UserFavoriteQuizRepository {
  addFavoriteQuiz(favorite: UserFavoriteQuiz): Promise<void>;

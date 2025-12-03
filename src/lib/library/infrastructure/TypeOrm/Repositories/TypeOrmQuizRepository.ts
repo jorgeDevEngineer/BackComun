@@ -1,7 +1,7 @@
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { QuizRepository } from '../../../domain/port/QuizRepository';
-import { Quiz } from '../../../domain/entity/Quiz';
+import { Quiz } from '../../../../kahoot/domain/entity/Quiz';
 import {
   QuizId,
   UserId,
@@ -11,23 +11,23 @@ import {
   ThemeId,
   QuizStatus,
   QuizCategory,
-} from '../../../domain/valueObject/Quiz';
+} from '../../../../kahoot/domain/valueObject/Quiz';
 import { TypeOrmQuizEntity } from '../../../../kahoot/infrastructure/TypeOrm/TypeOrmQuizEntity';
-import { Question } from '../../../domain/entity/Question';
-import { Answer } from '../../../domain/entity/Answer';
+import { Question } from '../../../../kahoot/domain/entity/Question';
+import { Answer } from '../../../../kahoot/domain/entity/Answer';
 import {
   QuestionId,
   QuestionText,
   QuestionType,
   TimeLimit,
   Points,
-} from '../../../domain/valueObject/Question';
+} from '../../../../kahoot/domain/valueObject/Question';
 import { MediaId as MediaIdVO } from '../../../../media/domain/valueObject/Media';
 import {
   AnswerId,
   AnswerText,
   IsCorrect,
-} from '../../../domain/valueObject/Answer';
+} from '../../../../kahoot/domain/valueObject/Answer';
 
 export class TypeOrmQuizRepository implements QuizRepository {
   constructor(

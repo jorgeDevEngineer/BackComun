@@ -1,13 +1,13 @@
 import { QuizRepository } from '../domain/port/QuizRepository';
-import { Quiz } from '../domain/entity/Quiz';
-import { QuizId, UserId } from '../domain/valueObject/Quiz';
+import { Quiz } from 'src/lib/kahoot/domain/entity/Quiz';
+import { UserId } from 'src/lib/user/domain/valueObject/UserId';
 
 export class GetAllUserQuizzesUseCase {
 constructor(private readonly quizRepository: QuizRepository) {}
 
   async run(id: string): Promise<Quiz[]> {
     // 1. Convertir string a Value Object
-     const userId = UserId.of(id);
+     const userId = new UserId(id);
     
         // 2. Llamar al método de búsqueda del repositorio
         const quizzes = await this.quizRepository.searchByAuthor(userId);

@@ -1,7 +1,8 @@
 import {UserFavoriteQuiz} from "../domain/valueObject/UserFavoriteQuiz";
 import {UserFavoriteQuizRepository} from "../domain/port/UserFavoriteQuizRepository";
 import {QuizRepository} from "../domain/port/QuizRepository";
-import {QuizId, UserId} from "src/lib/kahoot/domain/valueObject/Quiz";
+import {QuizId} from "src/lib/kahoot/domain/valueObject/Quiz";
+import {UserId} from "src/lib/user/domain/valueObject/UserId";
 import { FavoriteDTO } from "./DTOs/FavoriteDTO";
 import { Either } from "src/lib/shared/Either";
 import { QuizNotFoundException } from "../domain/exceptions/QuizNotFoundException";
@@ -15,7 +16,7 @@ export class AddUserFavoriteQuizUseCase {
    }
 
    async run(userId: FavoriteDTO, quizId: string): Promise<Either<HttpException, void>> {
-    const userIdVO = UserId.of(userId.userId);
+    const userIdVO = new UserId(userId.userId);
     const quizIdVO = QuizId.of(quizId);
   
     const exists = await this.quizRepository.quizExists(quizIdVO);
