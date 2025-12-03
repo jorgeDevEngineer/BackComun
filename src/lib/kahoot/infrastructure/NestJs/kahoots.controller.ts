@@ -16,7 +16,6 @@ import { ListUserQuizzesUseCase } from '../../application/ListUserQuizzesUseCase
 import { UpdateQuizUseCase } from '../../application/UpdateQuizUseCase';
 import { DeleteQuizUseCase } from '../../application/DeleteQuizUseCase';
 import { IsString, Length } from 'class-validator';
-import { QuizNotFoundError } from '../../domain/QuizNotFoundError';
 
 export class FindOneParams {
   @IsString()
@@ -47,15 +46,8 @@ export class KahootController {
 
   @Get(':id')
   async getOneById(@Param() params: FindOneParams) {
-    try {
-      const quiz = await this.getQuizUseCase.run(params.id);
-      return quiz.toPlainObject();
-    } catch (error) {
-      if (error instanceof QuizNotFoundError) {
-        throw new NotFoundException(error.message);
-      }
-      throw error;
-    }
+    const quiz = await this.getQuizUseCase.run(params.id);
+    return quiz.toPlainObject();
   }
 
   @Post()
@@ -66,15 +58,8 @@ export class KahootController {
 
   @Put(':id')
   async edit(@Param() params: FindOneParams, @Body() body: CreateQuizDto) {
-    try {
-      const quiz = await this.updateQuizUseCase.run(params.id, body);
-      return quiz.toPlainObject();
-    } catch (error) {
-      if (error instanceof QuizNotFoundError) {
-        throw new NotFoundException(error.message);
-      }
-      throw error;
-    }
+    const quiz = await this.updateQuizUseCase.run(params.id, body);
+    return quiz.toPlainObject();
   }
 
   @Delete(':id')

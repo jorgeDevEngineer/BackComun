@@ -88,7 +88,7 @@ export class Question {
       id: this._id.value,
       quizId: this._quiz.value,
       text: this._text ? this._text.value : null,
-      mediaId: this._mediaId ? this._mediaId.value : null,
+      mediaId: this._mediaId ? `${process.env.BASE_URL}/media/${this._mediaId.value}` : null,
       type: this._type.value,
       timeLimit: this._timeLimit.value,
       points: this._points ? this._points.value : null,
