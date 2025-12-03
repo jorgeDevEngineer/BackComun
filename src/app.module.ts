@@ -29,6 +29,7 @@ import { SinglePlayerGameModule } from './lib/singlePlayerGame/infrastructure/Ne
 
     KahootModule,
     MediaModule,
+    SinglePlayerGameModule,
     SearchModule,
     UserModule,
     SinglePlayerGameModule,
