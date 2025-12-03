@@ -97,5 +97,4 @@ export class TypeOrmQuizRepository implements QuizRepository {
     async quizExists(quizId: QuizId): Promise<boolean> {
       return await this.repository.exists({ where: { id: quizId.value } });
     }
-      
 }
