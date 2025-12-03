@@ -22,7 +22,7 @@ import {
     GetGameProgressUseCase,
     GetGameSummaryUseCase,
     SubmitGameAnswerUseCase,
-} from "../../application/usecases";
+} from "../../application/useCases";
 
 @Controller('attempts')
 export class SinglePlayerGameController {
