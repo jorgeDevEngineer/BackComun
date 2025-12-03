@@ -45,7 +45,7 @@ export type QuizResponse = {
     status: 'draft' | 'published';
   };
 
-  function toQuizResponse(quiz: Quiz, author: User): QuizResponse{
+  export function toQuizResponse(quiz: Quiz, author: User): QuizResponse{
     const plainQuiz = quiz.toPlainObject();
     return {
        id: plainQuiz.id,

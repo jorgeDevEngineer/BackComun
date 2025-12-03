@@ -21,7 +21,7 @@ import { LibraryModule } from './lib/library/infrastructure/NestJS/library.modul
           type: "postgres",
           url: configService.get<string>("DATABASE_URL"),
           autoLoadEntities: true,
-          synchronize: true, // Cuidado con esto en producción real
+          synchronize: false, // Cuidado con esto en producción real
           ssl: isProduction ? { rejectUnauthorized: false } : false, // Solo activa SSL si es prod/nube
         };
       },

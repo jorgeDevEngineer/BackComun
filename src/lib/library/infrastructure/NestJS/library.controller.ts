@@ -1,8 +1,9 @@
-import { Body, Controller, Delete, HttpCode, Inject, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Inject, Param, Post } from '@nestjs/common';
 import { FavoriteDTO } from '../../application/DTOs/FavoriteDTO';
 import { AddUserFavoriteQuizUseCase } from '../../application/AddUserFavoriteQuizUseCase';
 import { DeleteUserFavoriteQuizUseCase } from '../../application/DeleteUserFavoriteQuizUseCase';
-
+import { In } from 'typeorm';
+import { GetUserFavoriteQuizzesUseCase } from '../../application/GetUserFavoriteQuizzesUseCase';
 
 @Controller('library')
 export class LibraryController {
@@ -10,7 +11,10 @@ export class LibraryController {
        @Inject('AddUserFavoriteQuizUseCase')
        private readonly addUserFavoriteQuizUseCase: AddUserFavoriteQuizUseCase,
        @Inject('DeleteUserFavoriteQuizUseCase')
-       private readonly deleteUserFavoriteQuizUseCase: DeleteUserFavoriteQuizUseCase){}
+       private readonly deleteUserFavoriteQuizUseCase: DeleteUserFavoriteQuizUseCase,
+       @Inject('GetUserFavoriteQuizzesUseCase')
+       private readonly getUserFavoriteQuizzesUseCase: GetUserFavoriteQuizzesUseCase,
+    ){}
 
     @Post('favorites/:quizId')
     @HttpCode(201)
@@ -30,5 +34,12 @@ export class LibraryController {
             throw result.getLeft();
         }
         return result.getRight();
+    }
+
+    @Get('favorites')
+    @HttpCode(200)
+    async getFavorites(@Body() dto: FavoriteDTO): Promise<any> {
+        const result = await this.getUserFavoriteQuizzesUseCase.execute(dto.userId);
+        return result;
     }
 }
