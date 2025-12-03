@@ -1,9 +1,10 @@
-import { Module } from "@nestjs/common";
-import { TypeOrmModule } from "@nestjs/typeorm";
-import { ConfigModule, ConfigService } from "@nestjs/config";
-import { KahootModule } from "./lib/kahoot/infrastructure/NestJs/kahoot.module";
-import { MediaModule } from "./lib/media/infrastructure/NestJs/media.module";
-import { SearchModule } from "./lib/search/infrastructure/NestJs/search.module";
+import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { KahootModule } from './lib/kahoot/infrastructure/NestJs/kahoot.module';
+import { MediaModule } from './lib/media/infrastructure/NestJs/media.module';
+import { SearchModule } from './lib/search/infrastructure/NestJs/search.module';
+import { GroupsModule } from "./lib/groups/infraestructure/NestJs/Group.module";
 import { UserModule } from "./lib/user/infrastructure/NestJS/user.module";
 import { LibraryModule } from './lib/library/infrastructure/NestJS/library.module';
 
@@ -21,8 +22,8 @@ import { LibraryModule } from './lib/library/infrastructure/NestJS/library.modul
           type: "postgres",
           url: configService.get<string>("DATABASE_URL"),
           autoLoadEntities: true,
-          synchronize: false, // Cuidado con esto en producción real
-          ssl: isProduction ? { rejectUnauthorized: false } : false, // Solo activa SSL si es prod/nube
+          synchronize: true, 
+          ssl: isProduction ? { rejectUnauthorized: false } : false, 
         };
       },
     }),
@@ -30,6 +31,7 @@ import { LibraryModule } from './lib/library/infrastructure/NestJS/library.modul
     KahootModule,
     MediaModule,
     SearchModule,
+    GroupsModule,
     LibraryModule,
     UserModule,
   ],
