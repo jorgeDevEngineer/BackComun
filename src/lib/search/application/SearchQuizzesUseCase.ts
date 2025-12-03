@@ -5,14 +5,28 @@ import { Quiz } from "../domain/entity/Quiz";
 export interface SearchParamsDto {
     q?: string,
     categories?: string[],
-    limit: number,
-    page: number,
-    orderBy: string
-    order: 'asc' | 'desc',
+    limit?: number,
+    page?: number,
+    orderBy?: string,
+    order: 'asc' | 'desc'
 }
 
 export interface SearchResultDto {
-    data: Quiz[];
+    data: {
+        id: string;
+        title: string;
+        description: string;
+        themeId: string;
+        category: string;
+        author: {
+            id: string;
+            name: string;
+        }
+        coverImageId: string;
+        createdAt: Date;
+        visibility: string;
+        Status: string;
+    }[]; 
     pagination: {
       page: number;
       limit: number;

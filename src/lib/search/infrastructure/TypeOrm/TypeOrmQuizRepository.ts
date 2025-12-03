@@ -1,6 +1,8 @@
-import {  In, Like, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Inject } from '@nestjs/common';
 import { QuizRepository } from '../../domain/port/QuizRepository';
+import { UserRepository } from '../../domain/port/UserRepository';
 import { Quiz } from '../../domain/entity/Quiz';
 import {
   QuizId,
@@ -29,12 +31,13 @@ import {
   IsCorrect,
 } from '../../domain/valueObject/Answer';
 import { SearchParamsDto, SearchResultDto } from '../../application/SearchQuizzesUseCase';
-import { CategoriesDTO } from '../../application/GetCategoriesUseCase';
 
 export class TypeOrmQuizRepository implements QuizRepository {
   constructor(
     @InjectRepository(TypeOrmQuizEntity)
     private readonly repository: Repository<TypeOrmQuizEntity>,
+    @Inject('UserRepository')
+    private readonly userRepository: UserRepository,
   ) {}
 
   private mapToDomain(q: TypeOrmQuizEntity): Quiz {
@@ -90,43 +93,45 @@ export class TypeOrmQuizRepository implements QuizRepository {
   }
 
   async search(params: SearchParamsDto): Promise<SearchResultDto> {
-    // Opciones base
-    const where: any = {
-      visibility: 'public',
-      status: 'published',
-    };
-  
-    // Filtro por categorías
+    const qb = this.repository.createQueryBuilder('quiz');
+
     if (params.categories?.length) {
-      where.category = In(params.categories);
+      qb.andWhere('quiz.category IN (:...categories)', { categories: params.categories });
     }
-  
-    // patron de busqueda es un or entre el titulo y la descripcion
+
     if (params.q) {
-      where.or = [
-        { title: Like(`%${params.q}%`) },
-        { description: Like(`%${params.q}%`) },
-      ];
+      qb.andWhere('(quiz.title LIKE :q OR quiz.description LIKE :q)', { q: `%${params.q}%` });
     }
-  
-    // Contar total
-    const totalCount = await this.repository.count({
-      where
-      
-    });
-  
-    // Obtener datos con paginación y orden
-    const data = await this.repository.find({
-      where,
-      //todo: agregar relacion con user para obtener el nombre del autor
-      skip: params.page * params.limit,
-      take: params.limit,
-    });
-  
+
+    const totalCount = await qb.getCount();
+
+    const data = await qb
+      .skip(params.page * params.limit)
+      .take(params.limit)
+      .getMany();
+
+    const resultData = await Promise.all(
+      data.map(async (q) => ({
+        id: q.id,
+        title: q.title,
+        description: q.description,
+        themeId: q.themeId,
+        category: q.category,
+        author: {
+          id: q.userId,
+          name: await this.userRepository.getNameById(q.userId),
+        },
+        coverImageId: q.coverImageId,
+        createdAt: q.createdAt,
+        visibility: q.visibility,
+        Status: q.status,
+      })),
+    );
+
     const totalPages = Math.ceil(totalCount / params.limit);
-  
+
     return {
-      data: data.map((q) => this.mapToDomain(q)),
+      data: resultData,
       pagination: {
         page: params.page,
         limit: params.limit,
