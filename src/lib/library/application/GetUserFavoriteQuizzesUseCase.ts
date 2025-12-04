@@ -7,6 +7,8 @@ import { QuizResponse, toQuizResponse} from "./QuizResponse";
 import { UserRepository } from "src/lib/user/domain/port/UserRepository";
 import { User } from "src/lib/user/domain/entity/User";
 import { UserId } from "src/lib/user/domain/valueObject/UserId";
+import { CriteriaApplier } from "../domain/port/CriteriaApplier";
+import { SelectQueryBuilder } from "typeorm";
 
 export class GetUserFavoriteQuizzesUseCase {
   constructor(private readonly favoritesRepo: UserFavoriteQuizRepository, 
@@ -14,48 +16,42 @@ export class GetUserFavoriteQuizzesUseCase {
     private readonly userRepo: UserRepository
   ) {}
 
-  async execute(userId: string /*queryInput: QueryParamsInput*/) {
-    let quizFinded: Quiz[] = [];
-    let quizzesAuthor: User[] = [];
-    let data: QuizResponse[] = [];
-    //const query = new QueryParamsDto(queryInput);
-    //const criteria = query.toCriteria();
-    const favoriteIds:QuizId[] = await this.favoritesRepo.findFavoritesQuizByUser(new UserId(userId));
+  async execute(userId: string, queryInput: QueryParamsInput) {
+    const query = new QueryParamsDto(queryInput);
+    const criteria = query.toCriteria();
+    const [favoriteIds, totalCount] = await this.favoritesRepo.findFavoritesQuizByUser(
+      new UserId(userId),
+      criteria,
+    );
+
     if (favoriteIds.length === 0) {
       return {
-        data: []
-        /*pagination: {
+        data: [],
+        pagination: {
           page: criteria.page,
           limit: criteria.limit,
           totalCount: 0,
           totalPages: 0,
-        },*/
+        },
       };
     }
-    
-    let contador: number = 0;
-    let dataElement: Quiz;
-    let quizAuthor: User;
-    for(const quizId of favoriteIds){
-      dataElement = await this.quizRepo.find(quizId);
-      quizAuthor = await this.userRepo.getOneById(new UserId(dataElement.authorId.value));
-      quizFinded.push(dataElement);
-      quizzesAuthor.push(quizAuthor);
-    }
 
-    while(contador < quizFinded.length){
-      data[contador] = toQuizResponse(quizFinded[contador], quizzesAuthor[contador]);
-      contador++;
+    // 2. Traer quizzes completos y autores
+    const data: QuizResponse[] = [];
+    for (const quizId of favoriteIds) {
+      const quiz = await this.quizRepo.find(quizId); // devuelve entidad de dominio Quiz
+      const author = await this.userRepo.getOneById(new UserId(quiz.authorId.value));
+      data.push(toQuizResponse(quiz, author));
     }
 
     return {
-      data: data
-      /*pagination: {
+      data,
+      pagination: {
         page: criteria.page,
         limit: criteria.limit,
         totalCount,
         totalPages: Math.ceil(totalCount / criteria.limit),
-      },*/
+      }
     };
   }
 }

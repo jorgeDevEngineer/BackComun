@@ -5,7 +5,7 @@ import { DeleteUserFavoriteQuizUseCase } from '../../application/DeleteUserFavor
 import { GetUserFavoriteQuizzesUseCase } from '../../application/GetUserFavoriteQuizzesUseCase';
 import { UserFavoriteQuizRepository } from "../../domain/port/UserFavoriteQuizRepository";
 import { TypeOrmUserFavoriteQuizRepository } from '../TypeOrm/Repositories/TypeOrmUserFavoriteQuizRepository';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
 import { TypeOrmUserFavoriteQuizEntity } from '../TypeOrm/Entities/TypeOrmUserFavoriteQuizEntity';
 import { TypeOrmQuizEntity } from '../../../kahoot/infrastructure/TypeOrm/TypeOrmQuizEntity';
 import { TypeOrmQuizRepository } from '../TypeOrm/Repositories/TypeOrmQuizRepository';
@@ -13,14 +13,25 @@ import { UserRepository } from '../../../user/domain/port/UserRepository';
 import { TypeOrmUserEntity } from '../../../user/infrastructure/TypeOrm//TypeOrmUserEntity';
 import { TypeOrmUserRepository } from '../../../user/infrastructure/TypeOrm/TypeOrmUserRepository';
 import { QuizRepository } from '../../domain/port/QuizRepository';
+import { CriteriaApplier } from '../../domain/port/CriteriaApplier';
+import { Repository, SelectQueryBuilder } from 'typeorm';
+import { TypeOrmCriteriaApplier } from '../TypeOrm/TypeOrmCriteriaApplier';
 
 @Module({
   imports: [TypeOrmModule.forFeature([TypeOrmUserFavoriteQuizEntity, TypeOrmQuizEntity, TypeOrmUserEntity])],
   controllers: [LibraryController],
   providers: [
     {
+      provide: 'CriteriaApplier',
+      useClass: TypeOrmCriteriaApplier, // tu implementación genérica
+    },
+    {
       provide: 'UserFavoriteQuizRepository',
-      useClass: TypeOrmUserFavoriteQuizRepository,
+      useFactory: (
+        ormRepo: Repository<TypeOrmUserFavoriteQuizEntity>,
+        criteriaApplier: CriteriaApplier<SelectQueryBuilder<TypeOrmUserFavoriteQuizEntity>>,
+      ) => new TypeOrmUserFavoriteQuizRepository(ormRepo, criteriaApplier),
+      inject: [getRepositoryToken(TypeOrmUserFavoriteQuizEntity), 'CriteriaApplier'],
     },
     {
       provide: 'QuizRepository',

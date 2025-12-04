@@ -1,9 +1,11 @@
-import { Body, Controller, Delete, Get, HttpCode, Inject, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Inject, Param, Post, Query } from '@nestjs/common';
 import { FavoriteDTO } from '../../application/DTOs/FavoriteDTO';
 import { AddUserFavoriteQuizUseCase } from '../../application/AddUserFavoriteQuizUseCase';
 import { DeleteUserFavoriteQuizUseCase } from '../../application/DeleteUserFavoriteQuizUseCase';
 import { In } from 'typeorm';
 import { GetUserFavoriteQuizzesUseCase } from '../../application/GetUserFavoriteQuizzesUseCase';
+import { QuizResponse } from '../../application/QuizResponse';
+import { QueryParamsInput } from '../../application/DTOs/QueryParamsDTO';
 
 @Controller('library')
 export class LibraryController {
@@ -38,8 +40,8 @@ export class LibraryController {
 
     @Get('favorites')
     @HttpCode(200)
-    async getFavorites(@Body() dto: FavoriteDTO): Promise<any> {
-        const result = await this.getUserFavoriteQuizzesUseCase.execute(dto.userId);
-        return result;
+    async getFavorites(@Body() dto: FavoriteDTO, @Query() queryParams: QueryParamsInput): Promise<any> {
+        const result = await this.getUserFavoriteQuizzesUseCase.execute(dto.userId, queryParams);
+        return null;
     }
 }
