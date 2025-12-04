@@ -10,8 +10,12 @@ import { GroupDescription } from "../../domain/valueObject/GroupDescription";
 import { GroupMember } from "../../domain/entity/GroupMember";
 import { GroupRole } from "../../domain/valueObject/GroupMemberRole";
 import { GroupQuizAssignment } from "../../domain/entity/GroupQuizAssigment";
+import { GroupQuizAssignmentId } from "../../domain/valueObject/GroupQuizAssigmentId";
+import { GroupQuizAssignmentOrmEntity } from "./GroupQuizAssigmentOrmEntity";
+import { QuizId } from "src/lib/kahoot/domain/valueObject/Quiz";
 import { GroupQuizCompletion } from "../../domain/entity/GroupQuizCompletion";
 import { GroupInvitationToken } from "../../domain/valueObject/GroupInvitationToken";
+
 
 import { UserId } from "src/lib/kahoot/domain/valueObject/Quiz";
 
@@ -62,6 +66,10 @@ export class TypeOrmGroupRepository implements GroupRepository {
     }
 
     groupOrm.members = this.syncMembers(groupOrm, group.members);
+    groupOrm.assignments = this.syncAssignments(
+      groupOrm,
+      group.quizAssignments,
+    );
 
   
     await this.ormRepo.save(groupOrm);
@@ -102,6 +110,70 @@ export class TypeOrmGroupRepository implements GroupRepository {
     return nextMembers;
   }
 
+  private syncAssignments(
+    groupOrm: GroupOrmEntity,
+    domainAssignments: GroupQuizAssignment[],
+  ): GroupQuizAssignmentOrmEntity[] {
+    const existingById = new Map<string, GroupQuizAssignmentOrmEntity>();
+
+    for (const a of groupOrm.assignments ?? []) {
+      existingById.set(a.id, a);
+    }
+
+    const nextAssignments: GroupQuizAssignmentOrmEntity[] = [];
+
+    for (const assignment of domainAssignments) {
+      const id = assignment.id.value;
+      const existing = existingById.get(id);
+
+      if (existing) {
+        existing.quizId = assignment.quizId.value;
+        existing.assignedBy = assignment.assignedBy.value;
+        existing.availableFrom = assignment.availableFrom;
+        existing.availableUntil = assignment.availableUntil;
+        existing.isActive = assignment.isActive;
+        nextAssignments.push(existing);
+      } 
+      else {
+        const a = new GroupQuizAssignmentOrmEntity();
+        a.id = id;
+        a.group = groupOrm;
+        a.quizId = assignment.quizId.value;
+        a.assignedBy = assignment.assignedBy.value;   
+        a.availableFrom = assignment.availableFrom;
+        a.availableUntil = assignment.availableUntil;
+        a.isActive = assignment.isActive;
+        nextAssignments.push(a);
+      }
+    }
+    return nextAssignments;
+  }
+
+  private mapAssignmentsFromOrm(orm: GroupOrmEntity): GroupQuizAssignment[] {
+    if (!orm.assignments || orm.assignments.length === 0) return [];
+
+    const groupId = GroupId.of(orm.id);
+
+    return orm.assignments.map((a) => {
+      const assignment = GroupQuizAssignment.create(
+        GroupQuizAssignmentId.of(a.id),
+        QuizId.of(a.quizId),
+        UserId.of(a.assignedBy),
+        a.availableFrom,
+        a.availableUntil,
+        a.createdAt,
+      );
+
+      assignment._setGroup(groupId);
+
+      if (!a.isActive) {
+        assignment.deactivate();
+      }
+
+      return assignment;
+    });
+  }
+
   
   private mapInvitationFromOrm(
     orm: GroupOrmEntity,
@@ -139,9 +211,6 @@ export class TypeOrmGroupRepository implements GroupRepository {
     });
   }
 
-  private emptyAssignments(): GroupQuizAssignment[] {
-    return [];
-  }
 
   private emptyCompletions(): GroupQuizCompletion[] {
     return [];
@@ -149,6 +218,7 @@ export class TypeOrmGroupRepository implements GroupRepository {
 
   private mapToDomain(orm: GroupOrmEntity): Group {
     const members = this.mapMembersFromOrm(orm);
+    const assignments = this.mapAssignmentsFromOrm(orm);
     const invitation = this.mapInvitationFromOrm(orm);
 
     return Group.createFromdb(
@@ -157,7 +227,7 @@ export class TypeOrmGroupRepository implements GroupRepository {
       GroupDescription.of(orm.description ?? ""),
       UserId.of(orm.adminId),
       members,
-      this.emptyAssignments(),
+      assignments,
       this.emptyCompletions(),
       invitation,
       orm.createdAt,
@@ -177,7 +247,7 @@ export class TypeOrmGroupRepository implements GroupRepository {
   }
 
   async findByMember(userId: UserId): Promise<Group[]> {
-    // 1) Buscar IDs de grupos donde el user es miembro
+
     const rows = await this.ormRepo
       .createQueryBuilder("g")
       .innerJoin("g.members", "m", "m.userId = :userId", {

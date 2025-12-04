@@ -12,7 +12,7 @@ export interface GenerateGroupInvitationInput {
 
 export interface GenerateGroupInvitationOutput {
   groupId: string;
-  token: string;
+  Link: string;
   expiresAt: string;
 }
 
@@ -44,10 +44,13 @@ export class GenerateGroupInvitationUseCase {
 
     await this.groupRepository.save(group);
 
+    const Base_URL ='http://QuizGo.app/groups/join/';
     const token = group.invitationToken!;
+    const fullInvitationLink = `${Base_URL}${token.token}`;
+
     return {
       groupId: group.id.value,
-      token: token.token,
+      Link: fullInvitationLink,
       expiresAt: token.expiresAt.toISOString(),
     };
   }

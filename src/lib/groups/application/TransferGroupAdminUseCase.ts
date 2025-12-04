@@ -1,7 +1,7 @@
 import { GroupRepository } from "../domain/port/GroupRepository";
 import { GroupId } from "../domain/valueObject/GroupId";
 import { UserId } from "src/lib/kahoot/domain/valueObject/Quiz";
-import { GroupNotFoundError, UserNotMemberOfGroupError } from "./LeaveGroupUseCase";
+import { GroupNotFoundError } from "../domain/GroupNotFoundError";
 import { NotGroupAdminError } from "./RemoveGroupMemberUseCase";
 
 export interface TransferGroupAdminInput {
@@ -38,7 +38,7 @@ export class TransferGroupAdminUseCase {
 
     const group = await this.groupRepository.findById(groupId);
     if (!group) {
-      throw new GroupNotFoundError();
+      throw new GroupNotFoundError(input.groupId);
     }
     if (group.adminId.value !== currentAdminId.value) {
       throw new NotGroupAdminError("Only current admin can transfer admin role");

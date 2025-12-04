@@ -4,7 +4,7 @@ import { GroupId } from "../domain/valueObject/GroupId";
 import { GroupName } from "../domain/valueObject/GroupName";
 import { GroupDescription } from "../domain/valueObject/GroupDescription";
 import { UserId } from "src/lib/kahoot/domain/valueObject/Quiz";
-import { GroupNotFoundError } from "./LeaveGroupUseCase";
+import { GroupNotFoundError } from "../domain/GroupNotFoundError";
 import { NotGroupAdminError } from "./RemoveGroupMemberUseCase";
 
 export interface UpdateGroupInfoInput {
@@ -45,7 +45,7 @@ export class UpdateGroupInfoUseCase {
 
     const group = await this.groupRepository.findById(groupId);
     if (!group) {
-      throw new GroupNotFoundError();
+      throw new GroupNotFoundError(input.groupId);
     }
 
     if (group.adminId.value !== userId.value) {

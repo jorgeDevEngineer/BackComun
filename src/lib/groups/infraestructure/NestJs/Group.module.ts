@@ -6,7 +6,10 @@ import { GroupsController } from "./Group.controller";
 import { GroupOrmEntity } from "../TypeOrm/GroupOrmEntity";
 import { GroupMemberOrmEntity } from "../TypeOrm/GroupOrnMember";
 import { TypeOrmGroupRepository } from "../TypeOrm/TypeOrmGroupRepository";
+import { AssignQuizToGroupUseCase } from "../../application/AssignQuizToGroupUseCase";
 import { GroupRepository } from "../../domain/port/GroupRepository";
+import { GroupQuizAssignmentOrmEntity } from "../TypeOrm/GroupQuizAssigmentOrmEntity";
+
 
 import { CreateGroupUseCase } from "../../application/CrearteGroupUseCase";
 import { GetUserGroupsUseCase } from "../../application/GetUserGroupsUseCase";
@@ -19,9 +22,10 @@ import { LeaveGroupUseCase } from "../../application/LeaveGroupUseCase";
 import { RemoveGroupMemberUseCase } from "../../application/RemoveGroupMemberUseCase";
 import { UpdateGroupInfoUseCase } from "../../application/UpdateGroupDetailsUseCase";
 import { TransferGroupAdminUseCase } from "../../application/TransferGroupAdminUseCase";
+import { GetGroupMembersUseCase } from "../../application/GetGroupMembers";
 
 @Module({
-  imports: [TypeOrmModule.forFeature([GroupOrmEntity, GroupMemberOrmEntity])],
+  imports: [TypeOrmModule.forFeature([GroupOrmEntity, GroupMemberOrmEntity,GroupQuizAssignmentOrmEntity])],
   controllers: [GroupsController],
   providers: [
     {
@@ -46,7 +50,13 @@ import { TransferGroupAdminUseCase } from "../../application/TransferGroupAdminU
       provide: GetGroupDetailUseCase,
       useFactory: (repo: GroupRepository) => new GetGroupDetailUseCase(repo),
       inject: ["GroupRepository"],
-    },{
+    },
+    {
+      provide: GetGroupMembersUseCase,
+      useFactory: (repo: GroupRepository) => new GetGroupMembersUseCase(repo),
+      inject: ["GroupRepository"],
+    },
+    {
       provide: GenerateGroupInvitationUseCase,
       useFactory: (
         repo: GroupRepository,
@@ -81,6 +91,13 @@ import { TransferGroupAdminUseCase } from "../../application/TransferGroupAdminU
         new TransferGroupAdminUseCase(repo),
       inject: ["GroupRepository"],
 },
+{
+      provide: AssignQuizToGroupUseCase,
+      useFactory: (groupRepo: GroupRepository) =>
+        new AssignQuizToGroupUseCase(groupRepo),
+      inject: ["GroupRepository"],
+    },
+  
   ],
 })
 export class GroupsModule {}
