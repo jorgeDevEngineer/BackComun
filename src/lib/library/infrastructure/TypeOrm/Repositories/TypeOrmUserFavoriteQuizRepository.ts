@@ -47,6 +47,4 @@ export class TypeOrmUserFavoriteQuizRepository
 
     return [quizIds, totalCount];
   }
-
-
 }

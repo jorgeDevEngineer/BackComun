@@ -28,6 +28,7 @@ import {
   AnswerText,
   IsCorrect,
 } from '../../../../kahoot/domain/valueObject/Answer';
+import { UserId as UserIdVO } from '../../../../user/domain/valueObject/UserId';
 
 export class TypeOrmQuizRepository implements QuizRepository {
   constructor(
@@ -87,7 +88,7 @@ export class TypeOrmQuizRepository implements QuizRepository {
     return this.mapToDomain(quizEntity);
   }
 
-  async searchByAuthor(authorId: UserId): Promise<Quiz[]> {
+  async searchByAuthor(authorId: UserIdVO): Promise<Quiz[]> {
       const quizzes = await this.repository.find({
         where: { userId: authorId.value },
       });
