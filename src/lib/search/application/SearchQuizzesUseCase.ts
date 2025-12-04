@@ -21,8 +21,9 @@ export interface SearchResultDto {
         author: {
             id: string;
             name: string;
-        }
-        coverImageId: string;
+        };
+        coverImageId: string | null;
+        playCount: number;
         createdAt: Date;
         visibility: string;
         Status: string;
@@ -46,9 +47,7 @@ export class SearchQuizzesUseCase {
 
     async run(params: SearchParamsDto): Promise<SearchResultDto> {
         const result = await this.quizRepository.search(params);
-        if (!result) {
-            throw new NotFoundException('Quizzes not found');
-        }
+        // Devolver el resultado incluso si data está vacío (es válido)
         return result;
     }
 }

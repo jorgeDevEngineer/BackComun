@@ -22,8 +22,9 @@ export interface QuizRepository {
                 author: {
                     id: string;
                     name: string;
-                }
-                coverImageId: string;
+                };
+                coverImageId: string | null;
+                playCount: number;
                 createdAt: Date;
                 visibility: string;
                 Status: string;
@@ -39,9 +40,32 @@ export interface QuizRepository {
     /**
     * Busca los Quizzes mas destacados segun el limite de quizzes.
     */
-    findFeatured(limit: number): Promise<Quiz[]>;
+    findFeatured(limit: number): Promise<{
+        data: {
+            id: string;
+            title: string;
+            description: string;
+            themeId: string;
+            category: string;
+            author: {
+                id: string;
+                name: string;
+            };
+            coverImageId: string | null;
+            playCount: number;
+            createdAt: Date;
+            visibility: string;
+            Status: string;
+        }[];
+        pagination: {
+            page: number;
+            limit: number;
+            totalCount: number;
+            totalPages: number;
+        };
+   }>;
 
-    getCategories(): Promise<QuizCategory[]>;
+    getCategories(): Promise<{ name: string }[]>;
     
 
 }

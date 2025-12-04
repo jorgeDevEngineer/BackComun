@@ -66,6 +66,7 @@ export class TypeOrmQuizRepository implements QuizRepository {
         answers,
       );
     });
+    
 
     const quiz = Quiz.fromDb(
       QuizId.of(q.id),
@@ -103,10 +104,21 @@ export class TypeOrmQuizRepository implements QuizRepository {
       qb.andWhere('(quiz.title LIKE :q OR quiz.description LIKE :q)', { q: `%${params.q}%` });
     }
 
+    // Aplicar ordenamiento
+    if (params.orderBy) {
+      const orderDirection = params.order?.toUpperCase() === 'DESC' ? 'DESC' : 'ASC';
+      qb.orderBy(`quiz.${params.orderBy}`, orderDirection);
+    } else {
+      // Ordenamiento por defecto
+      qb.orderBy('quiz.createdAt', 'DESC');
+    }
+
     const totalCount = await qb.getCount();
 
+    // Corregir el cálculo del skip: página 1 debe empezar en índice 0
+    const skip = (params.page - 1) * params.limit;
     const data = await qb
-      .skip(params.page * params.limit)
+      .skip(skip)
       .take(params.limit)
       .getMany();
 
@@ -122,6 +134,7 @@ export class TypeOrmQuizRepository implements QuizRepository {
           name: await this.userRepository.getNameById(q.userId),
         },
         coverImageId: q.coverImageId,
+        playCount: q.playCount,
         createdAt: q.createdAt,
         visibility: q.visibility,
         Status: q.status,
@@ -141,9 +154,8 @@ export class TypeOrmQuizRepository implements QuizRepository {
     };
   }
 
-  async findFeatured(limit: number): Promise<Quiz[]> {
+  async findFeatured(limit: number): Promise<SearchResultDto> {
     const quizzes = await this.repository.find({
-
         where: {
           visibility: 'public',
           status: 'published',
@@ -153,15 +165,41 @@ export class TypeOrmQuizRepository implements QuizRepository {
         },
         take: limit,
       });
-    return quizzes.map((q) => this.mapToDomain(q));
+    const resultData = await Promise.all(
+      quizzes.map(async (q) => ({
+        id: q.id,
+        title: q.title,
+        description: q.description,
+        themeId: q.themeId,
+        category: q.category,
+        author: {
+          id: q.userId,
+          name: await this.userRepository.getNameById(q.userId),
+        },
+        coverImageId: q.coverImageId,
+        playCount: q.playCount,
+        createdAt: q.createdAt,
+        visibility: q.visibility,
+        Status: q.status,
+      })),
+    );
+    return {
+      data: resultData,
+      pagination: {
+        page: 1,
+        limit: limit,
+        totalCount: quizzes.length,
+        totalPages: 1,
+      },
+    };
   }
 
-  async getCategories(): Promise<QuizCategory[]> {
+  async getCategories(): Promise<{ name: string }[]> {
     const categories = await this.repository.createQueryBuilder('quiz')
     .select('category')
     .distinct(true)
     .getRawMany();
-    return categories.map((c) => QuizCategory.of(c.category));
+    return categories.map((c) => ({ name: c.category }));
   }
 
 }

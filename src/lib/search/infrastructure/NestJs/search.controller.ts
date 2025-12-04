@@ -29,14 +29,31 @@ export class SearchController {
     @Get()
     async search(
         @Query('q') q?: string,
-        @Query('categories') categories?: string[],
+        @Query('categories') categories?: string | string[],
         @Query('limit', new DefaultValuePipe(10)) limit?: number,
         @Query('page', new DefaultValuePipe(1)) page?: number,
         @Query('orderBy', new DefaultValuePipe('createdAt')) orderBy?: string,
-        @Query('order', new DefaultValuePipe('asc')) order: 'asc' | 'desc' = 'asc'
+        @Query('order', new DefaultValuePipe('desc')) order: 'asc' | 'desc' = 'desc'
     ) {
         try {
-            const result = await this.searchQuizzesUseCase.run({ q, categories, limit, page, orderBy, order });
+            // Normalizar categorías: convertir string a array si es necesario
+            let normalizedCategories: string[] | undefined;
+            if (categories) {
+                if (Array.isArray(categories)) {
+                    normalizedCategories = categories.filter(c => c && typeof c === 'string' && c.trim().length > 0);
+                } else if (typeof categories === 'string' && categories.trim().length > 0) {
+                    normalizedCategories = [categories];
+                }
+            }
+
+            const result = await this.searchQuizzesUseCase.run({ 
+                q, 
+                categories: normalizedCategories, 
+                limit, 
+                page, 
+                orderBy, 
+                order 
+            });
             
             return result;
         } catch (e) {

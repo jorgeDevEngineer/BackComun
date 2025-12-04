@@ -3,7 +3,9 @@ import { QuizRepository } from "../domain/port/QuizRepository";
 import { QuizCategory } from "../domain/valueObject/Quiz";
 
 export interface CategoriesDTO {
-    categories: QuizCategory[];
+    categories: {
+        name: string;
+    }[];
 }
 
 @Injectable()

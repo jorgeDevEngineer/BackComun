@@ -1,7 +1,6 @@
 import { Inject, Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
 import { QuizRepository } from "../domain/port/QuizRepository";
-import { Quiz } from "../domain/entity/Quiz";
-
+import { SearchResultDto} from "./SearchQuizzesUseCase";
 
 @Injectable()
 export class GetFeaturedQuizzesUseCase {
@@ -10,11 +9,11 @@ export class GetFeaturedQuizzesUseCase {
         private readonly quizRepository: QuizRepository,
     ) {}
 
-    async run(limit: number): Promise<Quiz[]> {
+    async run(limit: number): Promise<SearchResultDto> {
         // Limitar el limite maximo de quizzes a 10
         const safeLimit = Math.min(limit, 10);
         const result = await this.quizRepository.findFeatured(safeLimit);
-        if (!result || result.length === 0) {
+        if (!result) {
             throw new InternalServerErrorException('Featured quizzes not found');
         }
         return result;
