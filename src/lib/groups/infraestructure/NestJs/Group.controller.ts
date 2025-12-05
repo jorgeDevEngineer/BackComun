@@ -83,7 +83,7 @@ export class GroupsController {
     const currentUserId = this.getCurrentUserId(req);
 
     if (!body.availableUntil) {
-      throw new Error("availableUntil is required");
+      throw new Error("es necesario proporcionar availableUntil");
     }
 
     const availableUntil = new Date(body.availableUntil);
@@ -198,12 +198,3 @@ export class GroupsController {
 }
 
 }
-
-
-
-
-
-
-
-
-

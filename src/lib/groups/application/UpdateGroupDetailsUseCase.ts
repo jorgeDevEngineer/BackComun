@@ -5,7 +5,7 @@ import { GroupName } from "../domain/valueObject/GroupName";
 import { GroupDescription } from "../domain/valueObject/GroupDescription";
 import { UserId } from "src/lib/kahoot/domain/valueObject/Quiz";
 import { GroupNotFoundError } from "../domain/GroupNotFoundError";
-import { NotGroupAdminError } from "./RemoveGroupMemberUseCase";
+import { Group } from "../domain/entity/Group";
 
 export interface UpdateGroupInfoInput {
   groupId: string;
@@ -21,13 +21,6 @@ export interface UpdateGroupInfoOutput {
   description: string;
 }
 
-export class InvalidGroupUpdatePayloadError extends Error {
-  constructor(message = "At least one of name or description must be provided") {
-    super(message);
-    this.name = "InvalidGroupUpdatePayloadError";
-  }
-}
-
 export class UpdateGroupInfoUseCase {
   constructor(private readonly groupRepository: GroupRepository) {}
 
@@ -37,7 +30,7 @@ export class UpdateGroupInfoUseCase {
     const now = input.now ?? new Date();
 
     if (!input.name && input.description === undefined) {
-      throw new InvalidGroupUpdatePayloadError();
+      throw new Error("al menos un campo (nombre o descripción) debe ser proporcionado para la actualización");
     }
 
     const groupId = GroupId.of(input.groupId);
@@ -49,17 +42,18 @@ export class UpdateGroupInfoUseCase {
     }
 
     if (group.adminId.value !== userId.value) {
-      throw new NotGroupAdminError("Only admin can edit group info");
+      throw new Error("Solo el administrador puede editar la información del grupo");
     }
 
-    const newName = input.name
-      ? GroupName.of(input.name)
-      : group.name;
-
-    const newDescription =
-      input.description !== undefined
-        ? GroupDescription.of(input.description)
-        : group.description ?? GroupDescription.of("");
+    let newName = group.name;
+    if (input.name) {
+      newName = GroupName.of(input.name);
+    }
+    
+    let newDescription = group.description ?? GroupDescription.of("");
+    if (input.description !== undefined) {
+      newDescription = GroupDescription.of(input.description);
+    }
 
     group.rename(newName, newDescription, now);
 

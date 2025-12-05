@@ -15,14 +15,6 @@ export interface LeaveGroupOutput {
   left: boolean;
 }
 
-export class CannotLeaveAsAdminError extends Error {
-  constructor(message = "Admin cannot leave the group without transferring admin role") {
-    super(message);
-    this.name = "CannotLeaveAsAdminError";
-  }
-}
-
-
 export class LeaveGroupUseCase {
   constructor(private readonly groupRepository: GroupRepository) {}
 
@@ -38,7 +30,7 @@ export class LeaveGroupUseCase {
     }
 
     if (group.adminId.value === userId.value) {
-      throw new CannotLeaveAsAdminError();
+      throw new Error("El administrador no puede abandonar el grupo sin transferir el rol de administrador");
     }
 
     const isMember = group.members.some(

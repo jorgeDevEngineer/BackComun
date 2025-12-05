@@ -1,3 +1,5 @@
+import { GroupNotFoundError } from "../domain/GroupNotFoundError";
+import { UserNotMemberOfGroupError } from "../domain/NotMemberGroupError";
 import { GroupRepository } from "../domain/port/GroupRepository";
 import { GroupId } from "../domain/valueObject/GroupId";
 import { UserId } from "src/lib/kahoot/domain/valueObject/Quiz";
@@ -28,16 +30,15 @@ export class GetGroupMembersUseCase {
 
     const group = await this.groupRepository.findById(groupId);
     if (!group) {
-      throw new Error("Group not found");
+      throw new GroupNotFoundError(groupId.value);
     }
     const plain = group.toPlainObject();
     const isMember = plain.members.some(
       (m) => m.userId === currentUserId.value,
     );
     if (!isMember) {
-      throw new Error("Forbidden: user is not a member of this group");
+      throw new UserNotMemberOfGroupError(currentUserId.value, groupId.value);
     }
-
     return {
       name: plain.name,
       members: plain.members.map((m) => ({

@@ -22,12 +22,9 @@ export class GenerateGroupInvitationUseCase {
     private readonly tokenGenerator: InvitationTokenGenerator,
   ) {}
 
-  async execute(
-    input: GenerateGroupInvitationInput,
-  ): Promise<GenerateGroupInvitationOutput> {
+  async execute(input: GenerateGroupInvitationInput): Promise<GenerateGroupInvitationOutput> {
     const now = input.now ?? new Date();
     const ttlDays = input.ttlDays ?? 7;
-
     const groupId = GroupId.of(input.groupId);
     const currentUserId = UserId.of(input.currentUserId);
 

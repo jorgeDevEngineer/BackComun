@@ -39,9 +39,7 @@ export class GetGroupDetailUseCase {
       throw new GroupNotFoundError(input.groupId);
     }
     const plain = group.toPlainObject();
-    const isMember = plain.members.some(
-      (m) => m.userId === currentUserId.value,
-    );
+    const isMember = plain.members.some((m) => m.userId === currentUserId.value);
     if (!isMember) {
       throw new UserNotMemberOfGroupError(input.currentUserId, input.groupId);
     }

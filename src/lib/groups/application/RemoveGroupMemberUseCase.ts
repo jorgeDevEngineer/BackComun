@@ -4,20 +4,6 @@ import { UserId } from "src/lib/kahoot/domain/valueObject/Quiz";
 import { GroupNotFoundError } from "../domain/GroupNotFoundError";
 import { UserNotMemberOfGroupError } from "../domain/NotMemberGroupError";
 
-export class NotGroupAdminError extends Error {
-  constructor(message = "Only group admin can perform this action") {
-    super(message);
-    this.name = "NotGroupAdminError";
-  }
-}
-
-export class CannotRemoveAdminError extends Error {
-  constructor(message = "Admin cannot remove themselves from the group") {
-    super(message);
-    this.name = "CannotRemoveAdminError";
-  }
-}
-
 export interface RemoveGroupMemberInput {
   groupId: string;
   targetUserId: string;   
@@ -48,11 +34,11 @@ export class RemoveGroupMemberUseCase {
     }
 
     if (group.adminId.value !== adminId.value) {
-      throw new NotGroupAdminError();
+      throw new Error("Solo el administrador del grupo puede realizar esta acción");
     }
 
     if (adminId.value === targetId.value) {
-      throw new CannotRemoveAdminError();
+      throw new Error("El administrador no puede eliminarse a sí mismo del grupo");
     }
 
     const isMember = group.members.some(
@@ -61,7 +47,7 @@ export class RemoveGroupMemberUseCase {
     if (!isMember) {
       throw new UserNotMemberOfGroupError(input.targetUserId, input.groupId);
     }
-
+    
     group.removeMember(targetId, now);
 
     await this.groupRepository.save(group);
