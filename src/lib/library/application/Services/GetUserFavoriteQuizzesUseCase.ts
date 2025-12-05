@@ -19,7 +19,7 @@ export class GetUserFavoriteQuizzesUseCase {
     private readonly userRepo: UserRepository
   ) {}
 
-  async execute(
+  async run(
     userId: string,
     queryInput: QueryParamsInput
   ): Promise<Either<HttpException, QueryResponse<QuizResponse>>> {
