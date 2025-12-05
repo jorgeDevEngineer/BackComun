@@ -5,6 +5,15 @@ import { UserRepository } from "../../domain/port/UserRepository";
 import { UserName } from "../../domain/valueObject/UserName";
 import { TypeOrmUserEntity } from "./TypeOrmUserEntity";
 import { UserId } from "../../domain/valueObject/UserId";
+import { UserEmail } from "../../domain/valueObject/UserEmail";
+import { UserHashedPassword } from "../../domain/valueObject/UserHashedPassword";
+import { UserType } from "../../domain/valueObject/UserType";
+import { UserAvatarUrl } from "../../domain/valueObject/UserAvatarUrl";
+import { UserPlainName } from "../../domain/valueObject/UserPlainName";
+import { UserTheme } from "../../domain/valueObject/UserTheme";
+import { UserLanguage } from "../../domain/valueObject/UserLanguaje";
+import { UserGameStreak } from "../../domain/valueObject/UserGameStreak";
+import { UserDate } from "../../domain/valueObject/UserDate";
 
 export class TypeOrmUserRepository implements UserRepository {
   constructor(
@@ -14,18 +23,18 @@ export class TypeOrmUserRepository implements UserRepository {
 
   private mapToDomain(entity: TypeOrmUserEntity): User {
     return new User(
-      entity.userName,
-      entity.email,
-      entity.hashedPassword,
-      entity.userType,
-      entity.avatarUrl,
-      entity.id,
-      entity.name,
-      entity.theme,
-      entity.language,
-      entity.gameStreak,
-      entity.createdAt,
-      entity.updatedAt
+      new UserName(entity.userName),
+      new UserEmail(entity.email),
+      new UserHashedPassword(entity.hashedPassword),
+      new UserType(entity.userType),
+      new UserAvatarUrl(entity.avatarUrl),
+      new UserId(entity.id),
+      new UserPlainName(entity.name),
+      new UserTheme(entity.theme),
+      new UserLanguage(entity.language),
+      new UserGameStreak(entity.gameStreak),
+      new UserDate(entity.createdAt),
+      new UserDate(entity.updatedAt)
     );
   }
 

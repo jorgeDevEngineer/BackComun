@@ -2,6 +2,15 @@ import { User } from "../domain/aggregate/User";
 import { UserRepository } from "../domain/port/UserRepository";
 import { UserDate } from "../domain/valueObject/UserDate";
 import { UserId } from "../domain/valueObject/UserId";
+import { UserName } from "../domain/valueObject/UserName";
+import { UserEmail } from "../domain/valueObject/UserEmail";
+import { UserHashedPassword } from "../domain/valueObject/UserHashedPassword";
+import { UserType } from "../domain/valueObject/UserType";
+import { UserAvatarUrl } from "../domain/valueObject/UserAvatarUrl";
+import { UserPlainName } from "../domain/valueObject/UserPlainName";
+import { UserTheme } from "../domain/valueObject/UserTheme";
+import { UserLanguage } from "../domain/valueObject/UserLanguaje";
+import { UserGameStreak } from "../domain/valueObject/UserGameStreak";
 
 export class EditUser {
   constructor(private readonly userRepository: UserRepository) {}
@@ -18,22 +27,23 @@ export class EditUser {
     language: string,
     gameStreak: number
   ): Promise<void> {
-    const createdAt = (await this.userRepository.getOneById(new UserId(id)))
-      ?.createdAt.value;
-    const updatedAt = new Date();
+    const existing = await this.userRepository.getOneById(new UserId(id));
+    const createdAtVO = existing ? existing.createdAt : undefined;
+    const updatedAtVO = new UserDate(new Date());
+
     const user = new User(
-      userName,
-      email,
-      hashedPassword,
-      userType,
-      avatarUrl,
-      id,
-      name,
-      theme,
-      language,
-      gameStreak,
-      createdAt,
-      updatedAt
+      new UserName(userName),
+      new UserEmail(email),
+      new UserHashedPassword(hashedPassword),
+      new UserType(userType),
+      new UserAvatarUrl(avatarUrl),
+      new UserId(id),
+      new UserPlainName(name),
+      new UserTheme(theme),
+      new UserLanguage(language),
+      new UserGameStreak(gameStreak),
+      createdAtVO,
+      updatedAtVO
     );
     await this.userRepository.edit(user);
   }

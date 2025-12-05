@@ -9,7 +9,6 @@ import { UserGameStreak } from "../valueObject/UserGameStreak";
 import { UserDate } from "../valueObject/UserDate";
 import { UserId } from "../valueObject/UserId";
 import { UserPlainName } from "../valueObject/UserPlainName";
-import { create } from "domain";
 
 export class User {
   readonly id: UserId;
@@ -25,39 +24,31 @@ export class User {
   readonly createdAt: UserDate;
   readonly updatedAt: UserDate;
   constructor(
-    userName: string,
-    email: string,
-    hashedPassword: string,
-    userType: "student" | "teacher" | "personal",
-    avatarUrl: string,
-    id?: string,
-    name?: string,
-    theme?: string,
-    language?: string,
-    gameStreak?: number,
-    createdAt?: Date,
-    updatedAt?: Date
+    userName: UserName,
+    email: UserEmail,
+    hashedPassword: UserHashedPassword,
+    userType: UserType,
+    avatarUrl: UserAvatarUrl,
+    id?: UserId,
+    name?: UserPlainName,
+    theme?: UserTheme,
+    language?: UserLanguage,
+    gameStreak?: UserGameStreak,
+    createdAt?: UserDate,
+    updatedAt?: UserDate
   ) {
-    this.userName = new UserName(userName);
-    this.email = new UserEmail(email);
-    this.hashedPassword = new UserHashedPassword(hashedPassword);
-    this.userType = new UserType(userType);
-    this.avatarUrl = new UserAvatarUrl(avatarUrl);
-    this.id = id ? new UserId(id) : UserId.generateId();
-    this.name = name ? new UserPlainName(name) : new UserPlainName("");
-    this.theme = theme ? new UserTheme(theme) : new UserTheme("light");
-    this.language = language
-      ? new UserLanguage(language)
-      : new UserLanguage("es");
-    this.gameStreak = gameStreak
-      ? new UserGameStreak(gameStreak)
-      : new UserGameStreak(0);
-    this.createdAt = createdAt
-      ? new UserDate(createdAt)
-      : new UserDate(new Date());
-    this.updatedAt = updatedAt
-      ? new UserDate(updatedAt)
-      : new UserDate(this.createdAt.value);
+    this.userName = userName;
+    this.email = email;
+    this.hashedPassword = hashedPassword;
+    this.userType = userType;
+    this.avatarUrl = avatarUrl;
+    this.id = id ? id : UserId.generateId();
+    this.name = name ? name : new UserPlainName("");
+    this.theme = theme ? theme : new UserTheme("light");
+    this.language = language ? language : new UserLanguage("es");
+    this.gameStreak = gameStreak ? gameStreak : new UserGameStreak(0);
+    this.createdAt = createdAt ? createdAt : new UserDate(new Date());
+    this.updatedAt = updatedAt ? updatedAt : new UserDate(this.createdAt.value);
   }
 
   toPlainObject() {
