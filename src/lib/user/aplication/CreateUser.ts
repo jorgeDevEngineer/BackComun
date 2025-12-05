@@ -11,6 +11,9 @@ import { UserTheme } from "../domain/valueObject/UserTheme";
 import { UserLanguage } from "../domain/valueObject/UserLanguaje";
 import { UserGameStreak } from "../domain/valueObject/UserGameStreak";
 import { UserDate } from "../domain/valueObject/UserDate";
+import { Membership } from "../domain/entity/Membership.js";
+import { MembershipType } from "../domain/valueObject/MembershipType.js";
+import { MembershipDate } from "../domain/valueObject/MembershipDate.js";
 
 export class CreateUser {
   constructor(private readonly userRepository: UserRepository) {}
@@ -26,6 +29,7 @@ export class CreateUser {
     theme?: string,
     language?: string,
     gameStreak?: number,
+    membership?: { type: "free" | "premium"; startedAt: Date; expiresAt: Date },
     createdAt?: Date,
     updatedAt?: Date
   ): Promise<void> {
@@ -41,6 +45,13 @@ export class CreateUser {
       language ? new UserLanguage(language) : undefined,
       typeof gameStreak === "number"
         ? new UserGameStreak(gameStreak)
+        : undefined,
+      membership
+        ? new Membership(
+            new MembershipType(membership.type),
+            new MembershipDate(membership.startedAt),
+            new MembershipDate(membership.expiresAt)
+          )
         : undefined,
       createdAt ? new UserDate(createdAt) : undefined,
       updatedAt ? new UserDate(updatedAt) : undefined

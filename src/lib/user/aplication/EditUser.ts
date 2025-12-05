@@ -11,6 +11,7 @@ import { UserPlainName } from "../domain/valueObject/UserPlainName";
 import { UserTheme } from "../domain/valueObject/UserTheme";
 import { UserLanguage } from "../domain/valueObject/UserLanguaje";
 import { UserGameStreak } from "../domain/valueObject/UserGameStreak";
+import { UserNotFoundError } from "./error/UserNotFoundError";
 
 export class EditUser {
   constructor(private readonly userRepository: UserRepository) {}
@@ -28,8 +29,9 @@ export class EditUser {
     gameStreak: number
   ): Promise<void> {
     const existing = await this.userRepository.getOneById(new UserId(id));
-    const createdAtVO = existing ? existing.createdAt : undefined;
-    const updatedAtVO = new UserDate(new Date());
+    if (!existing) {
+      throw new UserNotFoundError("User not found");
+    }
 
     const user = new User(
       new UserName(userName),
@@ -42,8 +44,9 @@ export class EditUser {
       new UserTheme(theme),
       new UserLanguage(language),
       new UserGameStreak(gameStreak),
-      createdAtVO,
-      updatedAtVO
+      existing.membership,
+      existing.createdAt,
+      new UserDate(new Date())
     );
     await this.userRepository.edit(user);
   }

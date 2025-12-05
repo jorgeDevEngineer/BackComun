@@ -6,10 +6,14 @@ export class Membership {
   readonly startedAt: MembershipDate;
   readonly expiresAt: MembershipDate;
 
-  constructor(type: "free" | "premium", startedAt: Date, expiresAt: Date) {
-    this.type = new MembershipType(type);
-    this.startedAt = new MembershipDate(new Date());
-    this.expiresAt = new MembershipDate(new Date());
+  constructor(
+    type: MembershipType,
+    startedAt: MembershipDate,
+    expiresAt: MembershipDate
+  ) {
+    this.type = type;
+    this.startedAt = startedAt;
+    this.expiresAt = expiresAt;
   }
   toPlainObject() {
     return {
@@ -17,5 +21,12 @@ export class Membership {
       startedAt: this.startedAt.value,
       expiresAt: this.expiresAt.value,
     };
+  }
+  public static createFreeMembership() {
+    return new Membership(
+      new MembershipType("free"),
+      new MembershipDate(new Date()),
+      new MembershipDate(new Date())
+    );
   }
 }

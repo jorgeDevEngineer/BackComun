@@ -14,6 +14,9 @@ import { UserTheme } from "../../domain/valueObject/UserTheme";
 import { UserLanguage } from "../../domain/valueObject/UserLanguaje";
 import { UserGameStreak } from "../../domain/valueObject/UserGameStreak";
 import { UserDate } from "../../domain/valueObject/UserDate";
+import { Membership } from "../../domain/entity/Membership";
+import { MembershipType } from "../../domain/valueObject/MembershipType";
+import { MembershipDate } from "../../domain/valueObject/MembershipDate";
 
 export class TypeOrmUserRepository implements UserRepository {
   constructor(
@@ -33,6 +36,11 @@ export class TypeOrmUserRepository implements UserRepository {
       new UserTheme(entity.theme),
       new UserLanguage(entity.language),
       new UserGameStreak(entity.gameStreak),
+      new Membership(
+        new MembershipType(entity.membershipType),
+        new MembershipDate(entity.membershipStartedAt),
+        new MembershipDate(entity.membershipExpiresAt)
+      ),
       new UserDate(entity.createdAt),
       new UserDate(entity.updatedAt)
     );

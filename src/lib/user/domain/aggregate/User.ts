@@ -9,6 +9,7 @@ import { UserGameStreak } from "../valueObject/UserGameStreak";
 import { UserDate } from "../valueObject/UserDate";
 import { UserId } from "../valueObject/UserId";
 import { UserPlainName } from "../valueObject/UserPlainName";
+import { Membership } from "../entity/Membership.js";
 
 export class User {
   readonly id: UserId;
@@ -21,6 +22,7 @@ export class User {
   readonly theme: UserTheme; // Default: 'light'
   readonly language: UserLanguage; // Default: 'es'
   readonly gameStreak: UserGameStreak; // Default: 0
+  readonly membership: Membership;
   readonly createdAt: UserDate;
   readonly updatedAt: UserDate;
   constructor(
@@ -34,6 +36,7 @@ export class User {
     theme?: UserTheme,
     language?: UserLanguage,
     gameStreak?: UserGameStreak,
+    membership?: Membership,
     createdAt?: UserDate,
     updatedAt?: UserDate
   ) {
@@ -47,6 +50,9 @@ export class User {
     this.theme = theme ? theme : new UserTheme("light");
     this.language = language ? language : new UserLanguage("es");
     this.gameStreak = gameStreak ? gameStreak : new UserGameStreak(0);
+    this.membership = membership
+      ? membership
+      : Membership.createFreeMembership();
     this.createdAt = createdAt ? createdAt : new UserDate(new Date());
     this.updatedAt = updatedAt ? updatedAt : new UserDate(this.createdAt.value);
   }
@@ -62,6 +68,7 @@ export class User {
       theme: this.theme.value,
       language: this.language.value,
       gameStreak: this.gameStreak.value,
+      membership: this.membership.toPlainObject(),
       createdAt: this.createdAt.value,
       updatedAt: this.updatedAt.value,
     };
