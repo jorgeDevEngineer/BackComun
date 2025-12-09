@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  # ============================================
+  # Base de datos PostgreSQL
+  # ============================================
+  postgres:
+    image: postgres:17.7-alpine
+    container_name: quiz-go-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-quiz_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-quiz_password}
+      POSTGRES_DB: ${POSTGRES_DB:-quiz_db}
+    volumes:
+      # Persistencia de datos
+      - postgres_data:/var/lib/postgresql/data
+      # Carpeta para archivos de inicialización (backups)
+      - ./docker/init-db:/docker-entrypoint-initdb.d:ro
+    ports:
+    # cambiar a 5432 si no se tiene instalado postgres localmente, sino usar el puerto 5433 para evitar conflictos
+      - "${POSTGRES_PORT:-5433}:5433"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-quiz_user} -d ${POSTGRES_DB:-quiz_db}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ============================================
+  # Aplicación NestJS
+  # ============================================
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: quiz-go-api
+    restart: unless-stopped
+    environment:
+      NODE_ENV: ${NODE_ENV:-production}
+      PORT: ${PORT:-3000}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-quiz_user}:${POSTGRES_PASSWORD:-quiz_password}@postgres:5432/${POSTGRES_DB:-quiz_db}
+    ports:
+      - "${PORT:-3000}:3000"
+    volumes:
+      # Persistir uploads
+      - ./uploads:/app/uploads
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
+    driver: local
+
