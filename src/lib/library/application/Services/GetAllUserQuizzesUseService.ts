@@ -19,7 +19,7 @@ constructor(private readonly getQuizDService: GetUserQuizzesDomainService
       const criteria = query.toCriteria();
       // 1. Convertir string a Value Object
       const userId = new UserId(id.userId);
-      const dServiceResponse = await this.getQuizDService.getQuizzesForUser(userId, criteria);
+      const dServiceResponse = await this.getQuizDService.execute(userId, criteria);
       if (dServiceResponse.isLeft()) {
         return Either.makeLeft(dServiceResponse.getLeft());
       }

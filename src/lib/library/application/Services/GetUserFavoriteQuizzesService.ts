@@ -1,57 +1,38 @@
 import { QuizQueryParamsDto, QuizQueryParamsInput } from "../DTOs/QuizQueryParamsDTO";
-import { UserFavoriteQuizRepository } from "../../domain/port/UserFavoriteQuizRepository";
-import { QuizRepository } from "../../domain/port/QuizRepository";
-import { Quiz } from "../../../kahoot/domain/entity/Quiz";
 import { QuizResponse, toQuizResponse } from "../Response Types/QuizResponse";
-import { UserRepository } from "src/lib/user/domain/port/UserRepository";
-import { User } from "src/lib/user/domain/aggregate/User";
-import { UserId } from "src/lib/user/domain/valueObject/UserId";
+import { UserId as UserIdVO} from "src/lib/kahoot/domain/valueObject/Quiz";
 import { QueryResponse } from "../Response Types/QueryResponse";
 import { Either } from "src/lib/shared/Either";
-import { QuizzesNotFoundException } from "../../domain/exceptions/QuizzesNotFoundException";
-import { UserNotFoundException } from "../../domain/exceptions/UserNotFoundException";
 import { DomainUnexpectedException } from "../../domain/exceptions/DomainUnexpectedException";
 import { DomainException } from "../../domain/exceptions/DomainException";
+import { UserIdDTO } from "../DTOs/UserIdDTO";
+import { GetUserFavoriteQuizzesDomainService } from "../../domain/services/GetUserFavoriteQuizzesDomainService";
 
 export class GetUserFavoriteQuizzesService {
   constructor(
-    private readonly favoritesRepo: UserFavoriteQuizRepository,
-    private readonly quizRepo: QuizRepository,
-    private readonly userRepo: UserRepository
+    private readonly domainService: GetUserFavoriteQuizzesDomainService
   ) {}
 
-  async run(
-    userId: string,
-    queryInput: QuizQueryParamsInput
-  ): Promise<Either<DomainException, QueryResponse<QuizResponse>>> {
-    try{
-      const query = new QuizQueryParamsDto(queryInput);
-      const criteria = query.toCriteria();
-      const favoriteIds = await this.favoritesRepo.findFavoritesQuizByUser(
-        new UserId(userId),
+  async execute(id: UserIdDTO, queryInput: QuizQueryParamsInput)
+    : Promise<Either<DomainException, QueryResponse<QuizResponse>>> {
+    try {
+      const params = new QuizQueryParamsDto(queryInput);
+      const criteria = params.toCriteria();
+      const result = await this.domainService.execute(
+        UserIdVO.of(id.userId),
         criteria
       );
 
-      if (favoriteIds.length === 0) {
-        return Either.makeLeft(new QuizzesNotFoundException());
-      }
+      if (result.isLeft()) return Either.makeLeft(result.getLeft());
 
-      const favoriteQuizzes: Quiz[] = await this.quizRepo.findByIds(
-        favoriteIds,
-        criteria
-      );
-      const data: QuizResponse[] = [];
-      for (const quiz of favoriteQuizzes) {
-        const author: User | null = await this.userRepo.getOneById(
-          new UserId(quiz.authorId.value)
-        );
-        if (!author) {
-          return Either.makeLeft(new UserNotFoundException());
-        }
-        data.push(toQuizResponse(quiz, author));
-      }
+      const { quizzes, authors } = result.getRight();
 
-      const totalCount = favoriteQuizzes.length;
+      const data: QuizResponse[] = quizzes.map(quiz => {
+        const author = authors.find(u => u.id.value === quiz.authorId.value)!;
+        return toQuizResponse(quiz, author);
+      });
+
+      const totalCount = quizzes.length;
 
       const answer: QueryResponse<QuizResponse> = {
         data,
@@ -63,10 +44,10 @@ export class GetUserFavoriteQuizzesService {
         },
       };
 
-      return Either.makeRight<DomainException, QueryResponse<QuizResponse>>(answer);
-    }catch(err){
+      return Either.makeRight(answer);
+    } catch (err) {
       console.error(err);
-       return Either.makeLeft(new DomainUnexpectedException());
+      return Either.makeLeft(new DomainUnexpectedException());
     }
   }
 }

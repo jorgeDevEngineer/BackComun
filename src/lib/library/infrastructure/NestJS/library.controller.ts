@@ -50,7 +50,7 @@ export class LibraryController {
     @Get('favorites')
     @HttpCode(200)
     async getFavorites(@Body() dto: UserIdDTO, @Query() queryParams: QuizQueryParamsInput): Promise<QueryResponse<QuizResponse>> {
-        const result = await this.getUserFavoriteQuizzesService.run(dto.userId, queryParams);
+        const result = await this.getUserFavoriteQuizzesService.execute(dto, queryParams);
         if(result.isLeft()){
             throw result.getLeft();
         }
@@ -70,7 +70,7 @@ export class LibraryController {
     @Get('in-progress')
     @HttpCode(200)
     async getInProgressQuizzes(@Body() dto: UserIdDTO, @Query() queryParams: QuizQueryParamsInput): Promise<QueryResponse<PlayingQuizResponse>> {
-       const result = await this.getInProgressQuizzesService.run(dto, queryParams);
+       const result = await this.getInProgressQuizzesService.execute(dto, queryParams);
        if(result.isLeft()){
          throw result.getLeft();
        }
@@ -80,7 +80,7 @@ export class LibraryController {
     @Get('completed')
     @HttpCode(200)
     async getCompletedQuizzes(@Body() dto: UserIdDTO, @Query() queryParams: QuizQueryParamsInput): Promise<QueryResponse<PlayingQuizResponse>> {
-       const result = await this.getCompletedQuizzesService.run(dto, queryParams);
+       const result = await this.getCompletedQuizzesService.execute(dto, queryParams);
        if(result.isLeft()){
          throw result.getLeft();
        }

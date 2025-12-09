@@ -12,7 +12,7 @@ import { QuizQueryCriteria } from '../valueObject/QuizQueryCriteria';
 export class GetUserQuizzesDomainService {
     constructor(private readonly quizRepo: QuizRepository, private readonly userRepo: UserRepository) {}
   
-    async getQuizzesForUser(userId: UserId, criteria: QuizQueryCriteria)
+    async execute(userId: UserId, criteria: QuizQueryCriteria)
       : Promise<Either<DomainException, { quizzes: Quiz[], user: User, totalCount: number }>> {
   
       const user = await this.userRepo.getOneById(userId);
