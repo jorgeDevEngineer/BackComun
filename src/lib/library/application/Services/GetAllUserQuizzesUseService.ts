@@ -13,7 +13,7 @@ export class GetAllUserQuizzesService {
 constructor(private readonly getQuizDService: GetUserQuizzesDomainService
 ) {}
 
-  async run(id: UserIdDTO, queryInput: QuizQueryParamsInput): Promise<Either<DomainException, QueryResponse<QuizResponse>>> {
+  async execute(id: UserIdDTO, queryInput: QuizQueryParamsInput): Promise<Either<DomainException, QueryResponse<QuizResponse>>> {
     try{
       const query = new QuizQueryParamsDto(queryInput);
       const criteria = query.toCriteria();

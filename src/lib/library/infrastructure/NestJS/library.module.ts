@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 import { LibraryController } from './library.controller';
-import { AddUserFavoriteQuizService } from '../../application/Services/AddUserFavoriteQuizUseService';
-import { DeleteUserFavoriteQuizService } from '../../application/Services/DeleteUserFavoriteQuizUseService';
+import { AddUserFavoriteQuizService } from '../../application/Services/AddUserFavoriteQuizService';
+import { DeleteUserFavoriteQuizService } from '../../application/Services/DeleteUserFavoriteQuizService';
 import { GetUserFavoriteQuizzesService } from '../../application/Services/GetUserFavoriteQuizzesService';
 import { GetAllUserQuizzesService } from '../../application/Services/GetAllUserQuizzesUseService';
 import { GetInProgressQuizzesService} from '../../application/Services/GetInProgessQuizzesService';
-import { GetCompletedQuizzesService } from '../../application/Services/GetCompletedQuizzesSerice';
+import { GetCompletedQuizzesService } from '../../application/Services/GetCompletedQuizzesService';
 import { UserFavoriteQuizRepository } from "../../domain/port/UserFavoriteQuizRepository";
 import { TypeOrmUserFavoriteQuizRepository } from '../TypeOrm/Repositories/TypeOrmUserFavoriteQuizRepository';
 import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
@@ -27,6 +27,9 @@ import { QuizQueryCriteria } from "../../domain/valueObject/QuizQueryCriteria";
 import { GetUserQuizzesDomainService } from '../../domain/services/GetUserQuizzesDomainService';
 import { GetInProgressQuizzesDomainService } from '../../domain/services/GetInProgressQuizzesDomainService';
 import { GetUserFavoriteQuizzesDomainService } from '../../domain/services/GetUserFavoriteQuizzesDomainService';
+import { GetCompletedQuizzesDomainService } from '../../domain/services/GetCompletedQuizzesDomainService';
+import { AddUserFavoriteQuizDomainService } from '../../domain/services/AddUserFavoriteQuizDomainService';
+import { DeleteUserFavoriteQuizDomainService } from '../../domain/services/DeleteUserFavoriteQuizDomainService';
 
 @Module({
   imports: [TypeOrmModule.forFeature([TypeOrmUserFavoriteQuizEntity, TypeOrmQuizEntity, TypeOrmUserEntity, TypeOrmSinglePlayerGameEntity])],
@@ -68,18 +71,32 @@ import { GetUserFavoriteQuizzesDomainService } from '../../domain/services/GetUs
       inject: [getRepositoryToken(TypeOrmSinglePlayerGameEntity), 'AdvancedCriteriaApplier'],
     },
     {
-      provide: 'AddUserFavoriteQuizService',
+      provide: 'AddUserFavoriteQuizDomainService',
       useFactory: (userFavoriteRepository: UserFavoriteQuizRepository,
-        quizRepository: QuizRepository
+        quizRepository: QuizRepository,
+        userRepository: UserRepository
       ) =>
-        new AddUserFavoriteQuizService(userFavoriteRepository, quizRepository),
-      inject: ['UserFavoriteQuizRepository', 'QuizRepository'],
+        new AddUserFavoriteQuizDomainService(userFavoriteRepository, quizRepository, userRepository),
+      inject: ['UserFavoriteQuizRepository', 'QuizRepository', 'UserRepository'],
+    },
+    {
+      provide: 'AddUserFavoriteQuizService',
+      useFactory: (domainService: AddUserFavoriteQuizDomainService
+      ) =>
+        new AddUserFavoriteQuizService(domainService),
+      inject: ['AddUserFavoriteQuizDomainService'],
+    },
+    {
+      provide: 'DeleteUserFavoriteQuizDomainService',
+      useFactory: (repository: UserFavoriteQuizRepository) =>
+        new DeleteUserFavoriteQuizDomainService(repository),
+      inject: ['UserFavoriteQuizRepository'],
     },
     {
       provide: 'DeleteUserFavoriteQuizService',
-      useFactory: (repository: UserFavoriteQuizRepository) =>
-        new DeleteUserFavoriteQuizService(repository),
-      inject: ['UserFavoriteQuizRepository'],
+      useFactory: (domainService: DeleteUserFavoriteQuizDomainService) =>
+        new DeleteUserFavoriteQuizService(domainService),
+      inject: ['DeleteUserFavoriteQuizDomainService'],
     },
     {
       provide: 'GetUserFavoriteQuizzesDomainService',
@@ -122,12 +139,17 @@ import { GetUserFavoriteQuizzesDomainService } from '../../domain/services/GetUs
       inject: ['GetInProgressQuizzesDomainService'],
     },
     {
-      provide: 'GetCompletedQuizzesService',
+      provide: 'GetCompletedQuizzesDomainService',
       useFactory: (quizRepository: QuizRepository,
         userRepo: UserRepository,
         singlePlayerRepo: SinglePlayerGameRepository) =>
-        new GetCompletedQuizzesService(quizRepository, userRepo, singlePlayerRepo),
+        new GetCompletedQuizzesDomainService(quizRepository, userRepo, singlePlayerRepo),
       inject: ['QuizRepository', 'UserRepository', 'SinglePlayerGameRepository'],
+    },
+    {
+      provide: 'GetCompletedQuizzesService',
+      useFactory: (domainService: GetCompletedQuizzesDomainService) => new GetCompletedQuizzesService(domainService),
+      inject: ['GetCompletedQuizzesDomainService'],
     },
   ],
 

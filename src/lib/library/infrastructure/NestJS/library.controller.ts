@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, HttpCode, HttpException, Inject, Param, Post, Query } from '@nestjs/common';
 import { UserIdDTO } from '../../application/DTOs/UserIdDTO';
-import { AddUserFavoriteQuizService } from '../../application/Services/AddUserFavoriteQuizUseService';
-import { DeleteUserFavoriteQuizService } from '../../application/Services/DeleteUserFavoriteQuizUseService';
+import { AddUserFavoriteQuizService } from '../../application/Services/AddUserFavoriteQuizService';
+import { DeleteUserFavoriteQuizService } from '../../application/Services/DeleteUserFavoriteQuizService';
 import { GetAllUserQuizzesService } from '../../application/Services/GetAllUserQuizzesUseService';
 import { GetUserFavoriteQuizzesService } from '../../application/Services/GetUserFavoriteQuizzesService';
 import { QuizResponse } from '../../application/Response Types/QuizResponse';
@@ -9,6 +9,7 @@ import { QuizQueryParamsInput } from '../../application/DTOs/QuizQueryParamsDTO'
 import { QueryResponse } from '../../application/Response Types/QueryResponse';
 import { PlayingQuizResponse } from '../../application/Response Types/PlayingQuizResponse';
 import { GetInProgressQuizzesService } from '../../application/Services/GetInProgessQuizzesService';
+import { GetCompletedQuizzesService } from '../../application/Services/GetCompletedQuizzesService';
 
 @Controller('library')
 export class LibraryController {
@@ -24,13 +25,13 @@ export class LibraryController {
        @Inject('GetInProgressQuizzesService')
        private readonly getInProgressQuizzesService: GetInProgressQuizzesService,
        @Inject('GetCompletedQuizzesService')
-       private readonly getCompletedQuizzesService: GetInProgressQuizzesService,
+       private readonly getCompletedQuizzesService: GetCompletedQuizzesService,
     ){}
 
     @Post('favorites/:quizId')
     @HttpCode(201)
     async addFavorite(@Param('quizId') quizId: string, @Body() dto: UserIdDTO): Promise<void> {
-        const result = await this.addUserFavoriteQuizService.run(dto, quizId);
+        const result = await this.addUserFavoriteQuizService.execute(dto, quizId);
         if(result.isLeft()){
             throw result.getLeft();
         }
@@ -40,7 +41,7 @@ export class LibraryController {
     @Delete('favorites/:quizId')
     @HttpCode(204)
     async deleteFavorite(@Param('quizId') quizId: string, @Body() dto: UserIdDTO): Promise<void> {
-        const result = await this.deleteUserFavoriteQuizService.run(dto, quizId);
+        const result = await this.deleteUserFavoriteQuizService.execute(dto, quizId);
         if(result.isLeft()){
             throw result.getLeft();
         }
@@ -60,7 +61,7 @@ export class LibraryController {
     @Get('my-creations')
     @HttpCode(200)
     async getMyCreations(@Body() dto: UserIdDTO, @Query() queryParams: QuizQueryParamsInput): Promise<QueryResponse<QuizResponse>> {
-        const result = await this.getAllUserQuizzesService.run(dto, queryParams);
+        const result = await this.getAllUserQuizzesService.execute(dto, queryParams);
         if(result.isLeft()){
             throw result.getLeft();
         }
