@@ -1,29 +1,30 @@
-import { QuizQueryParamsDto, QuizQueryParamsInput } from "../../DTOs/QuizQueryParamsDTO";
+import { QuizQueryParamsDto } from "../../DTOs/QuizQueryParamsDTO";
 import { QuizResponse, toQuizResponse } from "../../Response Types/QuizResponse";
 import { UserId as UserIdVO} from "src/lib/kahoot/domain/valueObject/Quiz";
 import { QueryWithPaginationResponse } from "../../Response Types/QueryWithPaginationResponse";
 import { Either } from "src/lib/shared/Either";
 import { DomainUnexpectedException } from "../../../domain/exceptions/DomainUnexpectedException";
 import { DomainException } from "../../../domain/exceptions/DomainException";
-import { UserIdDTO } from "../../DTOs/UserIdDTO";
 import { GetUserFavoriteQuizzesDomainService } from "../../../domain/services/GetUserFavoriteQuizzesDomainService";
+import { IHandler } from "src/lib/shared/IHandler";
+import { GetUserQuizzes as GetUserFavoriteQuizzes} from '../../Parameter Objects/GetUserQuizzes';
 
 /**
  * Obtiene los kahoots favoritos de un usuario.
  */
 
-export class GetUserFavoriteQuizzesQueryHandler {
+export class GetUserFavoriteQuizzesQueryHandler implements IHandler<GetUserFavoriteQuizzes, Either<DomainException, QueryWithPaginationResponse<QuizResponse>>> {
   constructor(
     private readonly domainService: GetUserFavoriteQuizzesDomainService
   ) {}
 
-  async execute(id: UserIdDTO, queryInput: QuizQueryParamsInput)
+  async execute(command: GetUserFavoriteQuizzes)
     : Promise<Either<DomainException, QueryWithPaginationResponse<QuizResponse>>> {
     try {
-      const params = new QuizQueryParamsDto(queryInput);
+      const params = new QuizQueryParamsDto(command.queryInput);
       const criteria = params.toCriteria();
       const result = await this.domainService.execute(
-        UserIdVO.of(id.userId),
+        UserIdVO.of(command.userId),
         criteria
       );
 

@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpException, Inject, Param, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Inject, Param, Post, Query } from '@nestjs/common';
 import { UserIdDTO } from '../../application/DTOs/UserIdDTO';
 import { AddUserFavoriteQuizCommandHanlder } from '../../application/Handlers/Commands/AddUserFavoriteQuizCommandHandler';
 import { DeleteUserFavoriteQuizCommandHandler } from '../../application/Handlers/Commands/DeleteUserFavoriteQuizCommandHandler';
@@ -12,6 +12,7 @@ import { GetUserInProgressQuizzesQueryHandler } from '../../application/Handlers
 import { GetUserCompletedQuizzesQueryHandler } from '../../application/Handlers/Querys/GetUserCompletedQuizzesQueryHandler';
 import { DeleteUserFavoriteQuiz } from '../../application/Parameter Objects/DeleteUserFavoriteQuiz';
 import { AddUserFavoriteQuiz } from '../../application/Parameter Objects/AddUserFavoriteQuiz';
+import { GetUserQuizzes } from '../../application/Parameter Objects/GetUserQuizzes';
 
 @Controller('library')
 export class LibraryController {
@@ -37,7 +38,7 @@ export class LibraryController {
         const result = await this.addUserFavoriteQuizService.execute(command);
         if(result.isLeft()){
             throw result.getLeft();
-        }
+         }
         return result.getRight();
     }
 
@@ -48,48 +49,54 @@ export class LibraryController {
         const result = await this.deleteUserFavoriteQuizService.execute(command);
         if(result.isLeft()){
             throw result.getLeft();
-        }
+         }
         return result.getRight();
     }
 
     @Get('favorites')
     @HttpCode(200)
-    async getFavorites(@Body() dto: UserIdDTO, @Query() queryParams: QuizQueryParamsInput): Promise<QueryWithPaginationResponse<QuizResponse>> {
-        const result = await this.getUserFavoriteQuizzesService.execute(dto, queryParams);
+    async getFavorites(@Body() dto: UserIdDTO, @Query() queryParams: QuizQueryParamsInput): Promise<
+    QueryWithPaginationResponse<QuizResponse>> {
+        const command = new GetUserQuizzes(dto.userId, queryParams);
+        const result = await this.getUserFavoriteQuizzesService.execute(command);
         if(result.isLeft()){
             throw result.getLeft();
-        }
+         }
         return result.getRight();
     }
 
     @Get('my-creations')
     @HttpCode(200)
-    async getMyCreations(@Body() dto: UserIdDTO, @Query() queryParams: QuizQueryParamsInput): Promise<QueryWithPaginationResponse<QuizResponse>> {
-        const result = await this.getAllUserQuizzesService.execute(dto, queryParams);
+    async getMyCreations(@Body() dto: UserIdDTO, @Query() queryParams: QuizQueryParamsInput): Promise<
+    QueryWithPaginationResponse<QuizResponse>> {
+        const command = new GetUserQuizzes(dto.userId, queryParams);
+        const result = await this.getAllUserQuizzesService.execute(command);
         if(result.isLeft()){
             throw result.getLeft();
-        }
+         }
         return result.getRight();
     }
     
     @Get('in-progress')
     @HttpCode(200)
-    async getInProgressQuizzes(@Body() dto: UserIdDTO, @Query() queryParams: QuizQueryParamsInput): Promise<QueryWithPaginationResponse<PlayingQuizResponse>> {
-       const result = await this.getInProgressQuizzesService.execute(dto, queryParams);
-       if(result.isLeft()){
+    async getInProgressQuizzes(@Body() dto: UserIdDTO, @Query() queryParams: QuizQueryParamsInput): Promise<
+    QueryWithPaginationResponse<PlayingQuizResponse>> {
+        const command = new GetUserQuizzes(dto.userId, queryParams);
+        const result = await this.getInProgressQuizzesService.execute(command);
+        if(result.isLeft()){
          throw result.getLeft();
-       }
-       return result.getRight();
+         }
+        return result.getRight();
     }
 
     @Get('completed')
     @HttpCode(200)
     async getCompletedQuizzes(@Body() dto: UserIdDTO, @Query() queryParams: QuizQueryParamsInput): Promise<QueryWithPaginationResponse<PlayingQuizResponse>> {
-       const result = await this.getCompletedQuizzesService.execute(dto, queryParams);
-       if(result.isLeft()){
+        const command = new GetUserQuizzes(dto.userId, queryParams);
+        const result = await this.getCompletedQuizzesService.execute(command);
+        if(result.isLeft()){
          throw result.getLeft();
-       }
+        }
        return result.getRight();
     }
-
 }
