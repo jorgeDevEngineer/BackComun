@@ -8,7 +8,7 @@ export type QuizQueryParamsInput = {
   visibility?: 'public' | 'private' | 'all';
   categories?: string[];
 
-  orderBy?: 'createdAt' | 'title' | 'likesCount' | 'recent';
+  orderBy?: 'createdAt' | 'title' | 'likesCount';
   order?: 'asc' | 'desc' | 'ASC' | 'DESC';
 
   search?: string;
@@ -26,7 +26,7 @@ export class QuizQueryParamsDto {
   categories?: string[];
 
   // Ordenamiento
-  orderBy?: 'createdAt' | 'title' | 'likesCount' | 'recent';
+  orderBy?: 'createdAt' | 'title' | 'likesCount';
   order?: 'asc' | 'desc' | 'ASC' | 'DESC';
 
   // Búsqueda
@@ -46,19 +46,19 @@ export class QuizQueryParamsDto {
         : 20;
 
     // Status: default "all"
-    this.status = input.status ?? 'all';
+    this.status = input.status || 'all';
 
     // Visibility: default "all"
-    this.visibility = input.visibility ?? 'all';
+    this.visibility = input.visibility || 'all';
 
     // Categories: default []
     this.categories = Array.isArray(input.categories) ? input.categories : [];
 
-    // OrderBy: default "recent"
-    this.orderBy = input.orderBy ?? 'createdAt';
+    // OrderBy: default "createdAt"
+    this.orderBy = input.orderBy || 'createdAt';
 
     // Order: default "asc"
-    const normalizedOrder = (input.order ?? 'asc').toString().toUpperCase();
+    const normalizedOrder = (input.order || 'asc').toString().toUpperCase();
     this.order =
       normalizedOrder === 'ASC' || normalizedOrder === 'DESC'
         ? normalizedOrder

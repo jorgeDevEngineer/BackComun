@@ -11,7 +11,7 @@ import { IHandler} from "../.././../../shared/IHandler";
 import { GetUserQuizzes as GetUserInProgressQuizzes} from "../../Parameter Objects/GetUserQuizzes"
 
 /**
- * Obtiene los kahoots en progreso(solo singleplayer), de un usuario.
+ * Query Handler que obtiene los kahoots en progreso(solo singleplayer), de un usuario.
  */
 export class GetUserInProgressQuizzesQueryHandler implements IHandler<GetUserInProgressQuizzes, 
 Either<DomainException, QueryWithPaginationResponse<PlayingQuizResponse>>>{

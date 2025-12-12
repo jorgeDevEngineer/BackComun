@@ -11,7 +11,7 @@ import { GetUserQuizzes as GetAllUserQuizzes} from '../../Parameter Objects/GetU
 import { IHandler } from 'src/lib/shared/IHandler';
 
 /**
- * Obtiene todos los kahoots de un usuario(publicados y drafts).
+ * Query Handler obtiene todos los kahoots de un usuario(publicados y drafts).
  */
 export class GetAllUserQuizzesQueryHandler implements IHandler<GetAllUserQuizzes, Either<DomainException, QueryWithPaginationResponse<QuizResponse>>> {
 constructor(private readonly getQuizDService: GetUserQuizzesDomainService
@@ -43,7 +43,7 @@ constructor(private readonly getQuizDService: GetUserQuizzesDomainService
   
       return Either.makeRight<DomainException, QueryWithPaginationResponse<QuizResponse>>(answer);
     } catch(error){
-      return Either.makeLeft(new DomainUnexpectedException());
+      return Either.makeLeft(new DomainUnexpectedException(error.message));
     }
   } 
 }
