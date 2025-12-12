@@ -11,7 +11,7 @@ import { IHandler } from "src/lib/shared/IHandler";
 import { GetUserQuizzes as GetUserCompletedQuizzes } from "../../Parameter Objects/GetUserQuizzes";
 
 /**
- * Obtiene los kahoots completados(multipalyer o singleplayer), de un usuario.
+ * Query Hanlder que obtiene los kahoots completados(multipalyer o singleplayer), de un usuario.
  */
 export class GetUserCompletedQuizzesQueryHandler implements IHandler<GetUserCompletedQuizzes, Either<DomainException, QueryWithPaginationResponse<PlayingQuizResponse>>> {
   constructor(

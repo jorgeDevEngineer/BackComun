@@ -1,3 +1,6 @@
+/** 
+ *Tipo para paginación de resultados 
+*/
 export type Pagination = {
     page: number;
     limit: number;

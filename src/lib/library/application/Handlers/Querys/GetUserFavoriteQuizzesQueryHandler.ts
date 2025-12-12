@@ -10,7 +10,7 @@ import { IHandler } from "src/lib/shared/IHandler";
 import { GetUserQuizzes as GetUserFavoriteQuizzes} from '../../Parameter Objects/GetUserQuizzes';
 
 /**
- * Obtiene los kahoots favoritos de un usuario.
+ * Query Handler que obtiene los kahoots favoritos de un usuario.
  */
 
 export class GetUserFavoriteQuizzesQueryHandler implements IHandler<GetUserFavoriteQuizzes, Either<DomainException, QueryWithPaginationResponse<QuizResponse>>> {
