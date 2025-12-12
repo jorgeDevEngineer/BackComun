@@ -1,24 +1,24 @@
-import { QuizQueryParamsDto, QuizQueryParamsInput } from "../DTOs/QuizQueryParamsDTO";
-import { QuizResponse, toQuizResponse } from "../Response Types/QuizResponse";
+import { QuizQueryParamsDto, QuizQueryParamsInput } from "../../DTOs/QuizQueryParamsDTO";
+import { QuizResponse, toQuizResponse } from "../../Response Types/QuizResponse";
 import { UserId as UserIdVO} from "src/lib/kahoot/domain/valueObject/Quiz";
-import { QueryResponse } from "../Response Types/QueryResponse";
+import { QueryWithPaginationResponse } from "../../Response Types/QueryWithPaginationResponse";
 import { Either } from "src/lib/shared/Either";
-import { DomainUnexpectedException } from "../../domain/exceptions/DomainUnexpectedException";
-import { DomainException } from "../../domain/exceptions/DomainException";
-import { UserIdDTO } from "../DTOs/UserIdDTO";
-import { GetUserFavoriteQuizzesDomainService } from "../../domain/services/GetUserFavoriteQuizzesDomainService";
+import { DomainUnexpectedException } from "../../../domain/exceptions/DomainUnexpectedException";
+import { DomainException } from "../../../domain/exceptions/DomainException";
+import { UserIdDTO } from "../../DTOs/UserIdDTO";
+import { GetUserFavoriteQuizzesDomainService } from "../../../domain/services/GetUserFavoriteQuizzesDomainService";
 
 /**
  * Obtiene los kahoots favoritos de un usuario.
  */
 
-export class GetUserFavoriteQuizzesService {
+export class GetUserFavoriteQuizzesQueryHandler {
   constructor(
     private readonly domainService: GetUserFavoriteQuizzesDomainService
   ) {}
 
   async execute(id: UserIdDTO, queryInput: QuizQueryParamsInput)
-    : Promise<Either<DomainException, QueryResponse<QuizResponse>>> {
+    : Promise<Either<DomainException, QueryWithPaginationResponse<QuizResponse>>> {
     try {
       const params = new QuizQueryParamsDto(queryInput);
       const criteria = params.toCriteria();
@@ -38,7 +38,7 @@ export class GetUserFavoriteQuizzesService {
 
       const totalCount = quizzes.length;
 
-      const answer: QueryResponse<QuizResponse> = {
+      const answer: QueryWithPaginationResponse<QuizResponse> = {
         data,
         pagination: {
           page: criteria.page,

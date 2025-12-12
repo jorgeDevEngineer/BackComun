@@ -1,22 +1,22 @@
 import { Quiz } from 'src/lib/kahoot/domain/entity/Quiz';
 import { UserId } from 'src/lib/user/domain/valueObject/UserId';
-import { QuizQueryParamsDto, QuizQueryParamsInput } from '../DTOs/QuizQueryParamsDTO';
-import { UserIdDTO } from "../DTOs/UserIdDTO";
-import { QuizResponse, toQuizResponse } from '../Response Types/QuizResponse';
+import { QuizQueryParamsDto, QuizQueryParamsInput } from '../../DTOs/QuizQueryParamsDTO';
+import { UserIdDTO } from "../../DTOs/UserIdDTO";
+import { QuizResponse, toQuizResponse } from '../../Response Types/QuizResponse';
 import { Either } from 'src/lib/shared/Either';
-import { QueryResponse} from '../Response Types/QueryResponse';
-import { DomainUnexpectedException } from "../../domain/exceptions/DomainUnexpectedException";
-import { DomainException } from '../../domain/exceptions/DomainException';
-import { GetUserQuizzesDomainService } from '../../domain/services/GetUserQuizzesDomainService';
+import { QueryWithPaginationResponse} from '../../Response Types/QueryWithPaginationResponse';
+import { DomainUnexpectedException } from "../../../domain/exceptions/DomainUnexpectedException";
+import { DomainException } from '../../../domain/exceptions/DomainException';
+import { GetUserQuizzesDomainService } from '../../../domain/services/GetUserQuizzesDomainService';
 
 /**
  * Obtiene todos los kahoots de un usuario(publicados y drafts).
  */
-export class GetAllUserQuizzesService {
+export class GetAllUserQuizzesQueryHandler {
 constructor(private readonly getQuizDService: GetUserQuizzesDomainService
 ) {}
 
-  async execute(id: UserIdDTO, queryInput: QuizQueryParamsInput): Promise<Either<DomainException, QueryResponse<QuizResponse>>> {
+  async execute(id: UserIdDTO, queryInput: QuizQueryParamsInput): Promise<Either<DomainException, QueryWithPaginationResponse<QuizResponse>>> {
     try{
       const query = new QuizQueryParamsDto(queryInput);
       const criteria = query.toCriteria();
@@ -30,7 +30,7 @@ constructor(private readonly getQuizDService: GetUserQuizzesDomainService
       const { quizzes, user, totalCount } = dServiceResponse.getRight();
       const data:QuizResponse[] = quizzes.map((quiz:Quiz) => toQuizResponse(quiz, user));
   
-      const answer:QueryResponse<QuizResponse>= {
+      const answer:QueryWithPaginationResponse<QuizResponse>= {
         data,
         pagination:{
           page: criteria.page,
@@ -40,7 +40,7 @@ constructor(private readonly getQuizDService: GetUserQuizzesDomainService
          }
         };
   
-      return Either.makeRight<DomainException, QueryResponse<QuizResponse>>(answer);
+      return Either.makeRight<DomainException, QueryWithPaginationResponse<QuizResponse>>(answer);
     } catch(error){
       return Either.makeLeft(new DomainUnexpectedException());
     }

@@ -1,17 +1,17 @@
 import { UserId as UserIdQuizVo } from "src/lib/kahoot/domain/valueObject/Quiz";
-import { UserIdDTO } from "../DTOs/UserIdDTO";
-import { PlayingQuizResponse } from "../Response Types/PlayingQuizResponse";
-import { QueryResponse } from "../Response Types/QueryResponse";
+import { UserIdDTO } from "../../DTOs/UserIdDTO";
+import { PlayingQuizResponse } from "../../Response Types/PlayingQuizResponse";
+import { QueryWithPaginationResponse } from "../../Response Types/QueryWithPaginationResponse";
 import { HttpException } from "@nestjs/common";
 import { Either } from "src/lib/shared/Either";
-import { QuizQueryParamsDto, QuizQueryParamsInput } from "../DTOs/QuizQueryParamsDTO";
-import { DomainUnexpectedException } from "../../domain/exceptions/DomainUnexpectedException";
-import { GetCompletedQuizzesDomainService } from "../../domain/services/GetCompletedQuizzesDomainService";
+import { QuizQueryParamsDto, QuizQueryParamsInput } from "../../DTOs/QuizQueryParamsDTO";
+import { DomainUnexpectedException } from "../../../domain/exceptions/DomainUnexpectedException";
+import { GetCompletedQuizzesDomainService } from "../../../domain/services/GetCompletedQuizzesDomainService";
 
 /**
  * Obtiene los kahoots completados(multipalyer o singleplayer), de un usuario.
  */
-export class GetCompletedQuizzesService {
+export class GetUserCompletedQuizzesQueryHandler {
   constructor(
     private readonly domainService: GetCompletedQuizzesDomainService
   ) {}
@@ -19,7 +19,7 @@ export class GetCompletedQuizzesService {
   async execute(
     id: UserIdDTO,
     queryInput: QuizQueryParamsInput
-  ): Promise<Either<HttpException, QueryResponse<PlayingQuizResponse>>> {
+  ): Promise<Either<HttpException, QueryWithPaginationResponse<PlayingQuizResponse>>> {
     try {
       const query = new QuizQueryParamsDto(queryInput);
       const criteria = query.toCriteria();
@@ -35,7 +35,7 @@ export class GetCompletedQuizzesService {
 
       const { responses, totalCount } = result.getRight();
 
-      const answer: QueryResponse<PlayingQuizResponse> = {
+      const answer: QueryWithPaginationResponse<PlayingQuizResponse> = {
         data: responses,
         pagination: {
           page: criteria.page,
