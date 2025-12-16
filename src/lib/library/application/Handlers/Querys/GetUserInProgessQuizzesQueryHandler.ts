@@ -3,9 +3,9 @@ import {
   PlayingQuizResponse,
 } from "../../Response Types/PlayingQuizResponse";
 import { QueryWithPaginationResponse } from "../../Response Types/QueryWithPaginationResponse";
-import { Either } from "../../../../shared/Either";
-import { QuizQueryParamsDto } from "../../DTOs/QuizQueryParamsDTO";
-import { DomainException } from "../../../domain/exceptions/DomainException";
+import { Either } from "../../../../shared/Type Helpers/Either";
+import { QuizQueryParamsDTO } from "../../DTOs/QuizQueryParamsDTO";
+import { DomainException } from "../../../../shared/exceptions/DomainException";
 import { GetInProgressQuizzesDomainService } from "../../../domain/services/GetInProgressQuizzesDomainService";
 import { IHandler} from "../.././../../shared/IHandler";
 import { GetUserQuizzes as GetUserInProgressQuizzes} from "../../Parameter Objects/GetUserQuizzes"
@@ -22,7 +22,7 @@ Either<DomainException, QueryWithPaginationResponse<PlayingQuizResponse>>>{
   async execute(command: GetUserInProgressQuizzes)
   : Promise<Either<DomainException, QueryWithPaginationResponse<PlayingQuizResponse>>> {
     
-  const params = new QuizQueryParamsDto(command.queryInput);
+  const params = new QuizQueryParamsDTO(command.queryInput);
   const criteria = params.toCriteria();
 
   const result = await this.domainService.execute(

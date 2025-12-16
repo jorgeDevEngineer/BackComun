@@ -1,11 +1,11 @@
 import { Quiz } from 'src/lib/kahoot/domain/entity/Quiz';
 import { UserId } from 'src/lib/user/domain/valueObject/UserId';
-import { QuizQueryParamsDto } from '../../DTOs/QuizQueryParamsDTO';
+import { QuizQueryParamsDTO } from '../../DTOs/QuizQueryParamsDTO';
 import { QuizResponse, toQuizResponse } from '../../Response Types/QuizResponse';
-import { Either } from 'src/lib/shared/Either';
+import { Either } from 'src/lib/shared/Type Helpers/Either';
 import { QueryWithPaginationResponse} from '../../Response Types/QueryWithPaginationResponse';
-import { DomainUnexpectedException } from "../../../domain/exceptions/DomainUnexpectedException";
-import { DomainException } from '../../../domain/exceptions/DomainException';
+import { DomainUnexpectedException } from "../../../../shared/exceptions/DomainUnexpectedException";
+import { DomainException } from '../../../../shared/exceptions/DomainException';
 import { GetUserQuizzesDomainService } from '../../../domain/services/GetUserQuizzesDomainService';
 import { GetUserQuizzes as GetAllUserQuizzes} from '../../Parameter Objects/GetUserQuizzes';
 import { IHandler } from 'src/lib/shared/IHandler';
@@ -19,7 +19,7 @@ constructor(private readonly getQuizDService: GetUserQuizzesDomainService
 
   async execute(command: GetAllUserQuizzes): Promise<Either<DomainException, QueryWithPaginationResponse<QuizResponse>>> {
     try{
-      const query = new QuizQueryParamsDto(command.queryInput);
+      const query = new QuizQueryParamsDTO(command.queryInput);
       const criteria = query.toCriteria();
       // 1. Convertir string a Value Object
       const userId = new UserId(command.userId);

@@ -7,7 +7,7 @@ import { GameProgressStatus} from "src/lib/singlePlayerGame/domain/valueObjects/
 import { UserId } from "src/lib/kahoot/domain/valueObject/Quiz";
 import { Repository, SelectQueryBuilder } from "typeorm";
 import { CriteriaApplier } from "src/lib/library/domain/port/CriteriaApplier";
-import { QuizQueryCriteria } from "src/lib/library/domain/valueObject/QuizQueryCriteria";
+import { QuizQueryCriteria } from "src/lib/library/application/Response Types/QuizQueryCriteria";
 
 @Injectable()
 export class TypeOrmSinglePlayerGameRepository implements SinglePlayerGameRepository {

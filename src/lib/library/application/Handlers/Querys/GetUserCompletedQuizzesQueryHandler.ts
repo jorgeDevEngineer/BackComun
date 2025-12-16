@@ -2,11 +2,11 @@ import { UserId as UserIdQuizVo } from "src/lib/kahoot/domain/valueObject/Quiz";
 import { UserIdDTO } from "../../DTOs/UserIdDTO";
 import { PlayingQuizResponse } from "../../Response Types/PlayingQuizResponse";
 import { QueryWithPaginationResponse } from "../../Response Types/QueryWithPaginationResponse";
-import { Either } from "src/lib/shared/Either";
-import { QuizQueryParamsDto, QuizQueryParamsInput } from "../../DTOs/QuizQueryParamsDTO";
-import { DomainUnexpectedException } from "../../../domain/exceptions/DomainUnexpectedException";
+import { Either } from "src/lib/shared/Type Helpers/Either";
+import { QuizQueryParamsDTO, QuizQueryParamsInput } from "../../DTOs/QuizQueryParamsDTO";
+import { DomainUnexpectedException } from "../../../../shared/exceptions/DomainUnexpectedException";
 import { GetCompletedQuizzesDomainService } from "../../../domain/services/GetCompletedQuizzesDomainService";
-import { DomainException } from "src/lib/library/domain/exceptions/DomainException";
+import { DomainException } from "src/lib/shared/exceptions/DomainException";
 import { IHandler } from "src/lib/shared/IHandler";
 import { GetUserQuizzes as GetUserCompletedQuizzes } from "../../Parameter Objects/GetUserQuizzes";
 
@@ -22,7 +22,7 @@ export class GetUserCompletedQuizzesQueryHandler implements IHandler<GetUserComp
     command: GetUserCompletedQuizzes
   ): Promise<Either<DomainException, QueryWithPaginationResponse<PlayingQuizResponse>>> {
     try {
-      const query = new QuizQueryParamsDto(command.queryInput);
+      const query = new QuizQueryParamsDTO(command.queryInput);
       const criteria = query.toCriteria();
 
       const result = await this.domainService.execute(
