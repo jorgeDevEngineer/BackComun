@@ -1,34 +1,31 @@
 import { Body, Controller, Delete, Get, HttpCode, Inject, Param, Post, Query } from '@nestjs/common';
 import { UserIdDTO } from '../../application/DTOs/UserIdDTO';
-import { AddUserFavoriteQuizCommandHanlder } from '../../application/Handlers/Commands/AddUserFavoriteQuizCommandHandler';
-import { DeleteUserFavoriteQuizCommandHandler } from '../../application/Handlers/Commands/DeleteUserFavoriteQuizCommandHandler';
-import { GetAllUserQuizzesQueryHandler } from '../../application/Handlers/Querys/GetAllUserQuizzesQueryHandler';
-import { GetUserFavoriteQuizzesQueryHandler } from '../../application/Handlers/Querys/GetUserFavoriteQuizzesQueryHandler';
 import { QuizResponse } from '../../application/Response Types/QuizResponse';
 import { QuizQueryParamsInput } from '../../application/DTOs/QuizQueryParamsDTO';
 import { QueryWithPaginationResponse } from '../../application/Response Types/QueryWithPaginationResponse';
 import { PlayingQuizResponse } from '../../application/Response Types/PlayingQuizResponse';
-import { GetUserInProgressQuizzesQueryHandler } from '../../application/Handlers/Querys/GetUserInProgessQuizzesQueryHandler';
-import { GetUserCompletedQuizzesQueryHandler } from '../../application/Handlers/Querys/GetUserCompletedQuizzesQueryHandler';
 import { DeleteUserFavoriteQuiz } from '../../application/Parameter Objects/DeleteUserFavoriteQuiz';
 import { AddUserFavoriteQuiz } from '../../application/Parameter Objects/AddUserFavoriteQuiz';
 import { GetUserQuizzes } from '../../application/Parameter Objects/GetUserQuizzes';
+import { IHandler } from '../../../shared/IHandler';
+import { DomainException } from '../../domain/exceptions/DomainException';
+import { Either } from 'src/lib/shared/Either';
 
 @Controller('library')
 export class LibraryController {
    constructor(
        @Inject('AddUserFavoriteQuizService')
-       private readonly addUserFavoriteQuizHandler: AddUserFavoriteQuizCommandHanlder,
+       private readonly addUserFavoriteQuizHandler: IHandler<AddUserFavoriteQuiz, Either<DomainException, void>>,
        @Inject('DeleteUserFavoriteQuizService')
-       private readonly deleteUserFavoriteQuizHandler: DeleteUserFavoriteQuizCommandHandler,
+       private readonly deleteUserFavoriteQuizHandler: IHandler<DeleteUserFavoriteQuiz, Either<DomainException, void>>,
        @Inject('GetUserFavoriteQuizzesService')
-       private readonly getUserFavoriteQuizzesHandler: GetUserFavoriteQuizzesQueryHandler,
+       private readonly getUserFavoriteQuizzesHandler: IHandler<GetUserQuizzes, Either<DomainException, QueryWithPaginationResponse<QuizResponse>>>,
        @Inject('GetAllUserQuizzesService')
-       private readonly getAllUserQuizzesHandler: GetAllUserQuizzesQueryHandler,
+       private readonly getAllUserQuizzesHandler: IHandler<GetUserQuizzes, Either<DomainException, QueryWithPaginationResponse<QuizResponse>>>,
        @Inject('GetInProgressQuizzesService')
-       private readonly getInProgressQuizzesHandler: GetUserInProgressQuizzesQueryHandler,
+       private readonly getInProgressQuizzesHandler: IHandler<GetUserQuizzes, Either<DomainException, QueryWithPaginationResponse<PlayingQuizResponse>>>,
        @Inject('GetCompletedQuizzesService')
-       private readonly getCompletedQuizzesHandler: GetUserCompletedQuizzesQueryHandler,
+       private readonly getCompletedQuizzesHandler: IHandler<GetUserQuizzes, Either<DomainException, QueryWithPaginationResponse<PlayingQuizResponse>>>,
     ){}
 
     @Post('favorites/:quizId')
