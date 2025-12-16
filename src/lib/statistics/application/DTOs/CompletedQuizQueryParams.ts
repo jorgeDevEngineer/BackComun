@@ -1,12 +1,13 @@
 import { QuizQueryParamsInput} from '../../../library/application/DTOs/QuizQueryParamsDTO';
 import { CompletedQuizQueryCriteria } from "../Response Types/CompletedQuizQueryCriteria";
 
-export type CompletedQuizQueryParams = Pick<QuizQueryParamsInput, 'page' | 'limit' | 'order'>;
+export type CompletedQuizQueryParams = Pick<QuizQueryParamsInput, 'page' | 'limit' | 'order' | 'orderBy'>;
 
 export class CompletedQuizQueryParamsDTO {
   page?: number;
   limit?: number;
   order?: 'asc' | 'desc' | 'ASC' | 'DESC';
+  orderBy?: string;
 
   constructor(input: CompletedQuizQueryParams = {}) {
      // Page: default 1
@@ -25,7 +26,10 @@ export class CompletedQuizQueryParamsDTO {
     this.order =
       normalizedOrder === 'ASC' || normalizedOrder === 'DESC'
         ? normalizedOrder
-        : 'ASC';     
+        : 'ASC';
+    
+    // OrderBy: default "completionDate"
+    this.orderBy = input.orderBy || 'completionDate';    
   }
 
   toCriteria(params: CompletedQuizQueryParamsDTO){
@@ -33,9 +37,8 @@ export class CompletedQuizQueryParamsDTO {
          this.page!,
          this.limit!,
          this.order! as 'ASC' | 'DESC',
+         this.orderBy,
      );
  }
 
 }
-
- 
