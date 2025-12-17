@@ -9,10 +9,12 @@ import { DomainException } from '../../../../shared/exceptions/DomainException';
 import { GetUserQuizzesDomainService } from '../../../domain/services/GetUserQuizzesDomainService';
 import { GetUserQuizzes as GetAllUserQuizzes} from '../../Parameter Objects/GetUserQuizzes';
 import { IHandler } from 'src/lib/shared/IHandler';
+import { Injectable } from '@nestjs/common';
 
 /**
  * Query Handler obtiene todos los kahoots de un usuario(publicados y drafts).
  */
+@Injectable()
 export class GetAllUserQuizzesQueryHandler implements IHandler<GetAllUserQuizzes, Either<DomainException, QueryWithPaginationResponse<QuizResponse>>> {
 constructor(private readonly getQuizDService: GetUserQuizzesDomainService
 ) {}

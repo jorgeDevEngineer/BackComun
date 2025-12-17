@@ -9,10 +9,12 @@ import { DomainException } from "../../../../shared/exceptions/DomainException";
 import { GetInProgressQuizzesDomainService } from "../../../domain/services/GetInProgressQuizzesDomainService";
 import { IHandler} from "../.././../../shared/IHandler";
 import { GetUserQuizzes as GetUserInProgressQuizzes} from "../../Parameter Objects/GetUserQuizzes"
+import { Injectable } from "@nestjs/common";
 
 /**
  * Query Handler que obtiene los kahoots en progreso(solo singleplayer), de un usuario.
  */
+@Injectable()
 export class GetUserInProgressQuizzesQueryHandler implements IHandler<GetUserInProgressQuizzes, 
 Either<DomainException, QueryWithPaginationResponse<PlayingQuizResponse>>>{
   constructor(

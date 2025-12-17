@@ -9,10 +9,12 @@ import { GetCompletedQuizzesDomainService } from "../../../domain/services/GetCo
 import { DomainException } from "src/lib/shared/exceptions/DomainException";
 import { IHandler } from "src/lib/shared/IHandler";
 import { GetUserQuizzes as GetUserCompletedQuizzes } from "../../Parameter Objects/GetUserQuizzes";
+import { Injectable } from "@nestjs/common";
 
 /**
  * Query Hanlder que obtiene los kahoots completados(multipalyer o singleplayer), de un usuario.
  */
+@Injectable()
 export class GetUserCompletedQuizzesQueryHandler implements IHandler<GetUserCompletedQuizzes, Either<DomainException, QueryWithPaginationResponse<PlayingQuizResponse>>> {
   constructor(
     private readonly domainService: GetCompletedQuizzesDomainService

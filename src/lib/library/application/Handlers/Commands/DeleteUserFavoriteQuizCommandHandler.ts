@@ -7,10 +7,12 @@ import { DeleteUserFavoriteQuizDomainService } from "../../../domain/services/De
 import { DomainException } from "../../../../shared/exceptions/DomainException";
 import { IHandler } from "src/lib/shared/IHandler";
 import { DeleteUserFavoriteQuiz } from "../../Parameter Objects/DeleteUserFavoriteQuiz";
+import { Injectable } from "@nestjs/common";
 
 /**
  * Comand Handler que elimina como favorito un quiz para un usuario.
  */
+@Injectable()
 export class DeleteUserFavoriteQuizCommandHandler implements IHandler<DeleteUserFavoriteQuiz, Either<DomainException, void>> {
     constructor(
       private readonly domainService: DeleteUserFavoriteQuizDomainService

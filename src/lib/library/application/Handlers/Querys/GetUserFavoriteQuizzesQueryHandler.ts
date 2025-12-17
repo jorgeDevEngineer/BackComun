@@ -8,11 +8,13 @@ import { DomainException } from "../../../../shared/exceptions/DomainException";
 import { GetUserFavoriteQuizzesDomainService } from "../../../domain/services/GetUserFavoriteQuizzesDomainService";
 import { IHandler } from "src/lib/shared/IHandler";
 import { GetUserQuizzes as GetUserFavoriteQuizzes} from '../../Parameter Objects/GetUserQuizzes';
+import { Injectable } from "@nestjs/common";
 
 /**
  * Query Handler que obtiene los kahoots favoritos de un usuario.
  */
 
+@Injectable()
 export class GetUserFavoriteQuizzesQueryHandler implements IHandler<GetUserFavoriteQuizzes, Either<DomainException, QueryWithPaginationResponse<QuizResponse>>> {
   constructor(
     private readonly domainService: GetUserFavoriteQuizzesDomainService

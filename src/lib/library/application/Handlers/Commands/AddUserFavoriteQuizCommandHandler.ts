@@ -6,10 +6,12 @@ import { AddUserFavoriteQuizDomainService } from "../../../domain/services/AddUs
 import { DomainException } from "../../../../shared/exceptions/DomainException";
 import { AddUserFavoriteQuiz } from "../../Parameter Objects/AddUserFavoriteQuiz";
 import { IHandler } from "src/lib/shared/IHandler";
+import { Injectable } from "@nestjs/common";
 
 /**
  * Command Handler que marca como favorito un kahoot para un usuario.
  */
+@Injectable()
 export class AddUserFavoriteQuizCommandHanlder implements IHandler<AddUserFavoriteQuiz, Either<DomainException, void>> {
   constructor(private readonly domainService: AddUserFavoriteQuizDomainService) {}
 

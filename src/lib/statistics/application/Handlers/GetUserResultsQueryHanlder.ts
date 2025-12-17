@@ -6,7 +6,9 @@ import { DomainUnexpectedException } from 'src/lib/shared/exceptions/DomainUnexp
 import { UserId } from "src/lib/kahoot/domain/valueObject/Quiz";; 
 import { GetUserResultsDomainService } from '../../domain/services/GetUserResultsDomainService';
 import { Either } from 'src/lib/shared/Type Helpers/Either';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class GetUserResultsQueryHandler implements IHandler <GetUserResults, Either<DomainException, CompletedQuizResponse[]>> {
     constructor(
         private getUserResultsDomainService: GetUserResultsDomainService
@@ -19,10 +21,7 @@ export class GetUserResultsQueryHandler implements IHandler <GetUserResults, Eit
 
         try {
             const result = await this.getUserResultsDomainService.execute(userId, command.criteria);
-            if(result.isLeft()){
-                return Either.makeLeft(result.getLeft());
-            }
-            return Either.makeRight(result.getRight());
+            return result;
         } catch (error) {
             return Either.makeLeft(new DomainUnexpectedException());
         }
