@@ -32,7 +32,7 @@ export class CompletedQuizQueryParamsDTO {
     this.orderBy = input.orderBy || 'completionDate';    
   }
 
-  toCriteria(params: CompletedQuizQueryParamsDTO){
+  toCriteria(){
     return new CompletedQuizQueryCriteria(
          this.page!,
          this.limit!,

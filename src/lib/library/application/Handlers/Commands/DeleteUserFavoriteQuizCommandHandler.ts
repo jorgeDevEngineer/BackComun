@@ -29,10 +29,10 @@ export class DeleteUserFavoriteQuizCommandHandler implements IHandler<DeleteUser
       const result = await this.domainService.removeFavorite(userFavoriteQuiz);
 
       if (result.isLeft()) {
-        return Either.makeLeft(result.getLeft());
+        return result;
       }
 
-      return Either.makeRight(undefined);
+      return result;
     } catch (error) {
       return Either.makeLeft(new DomainUnexpectedException());
     }

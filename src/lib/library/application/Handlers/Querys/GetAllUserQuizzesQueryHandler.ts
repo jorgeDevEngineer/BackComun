@@ -45,7 +45,7 @@ constructor(private readonly getQuizDService: GetUserQuizzesDomainService
   
       return Either.makeRight<DomainException, QueryWithPaginationResponse<QuizResponse>>(answer);
     } catch(error){
-      return Either.makeLeft(new DomainUnexpectedException(error.message));
+      return Either.makeLeft(new DomainUnexpectedException());
     }
   } 
 }

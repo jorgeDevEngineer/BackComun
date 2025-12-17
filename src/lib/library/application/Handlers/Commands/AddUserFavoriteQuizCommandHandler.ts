@@ -24,10 +24,10 @@ export class AddUserFavoriteQuizCommandHanlder implements IHandler<AddUserFavori
       const result = await this.domainService.execute(userIdVO, quizIdVO);
 
       if (result.isLeft()) {
-        return Either.makeLeft(result.getLeft());
+        return result;
       }
 
-      return Either.makeRight(undefined);
+      return result;
     } catch (error) {
       return Either.makeLeft(new DomainUnexpectedException());
     }

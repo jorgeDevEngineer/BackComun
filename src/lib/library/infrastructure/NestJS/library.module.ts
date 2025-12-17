@@ -80,7 +80,7 @@ import { DeleteUserFavoriteQuizDomainService } from '../../domain/services/Delet
       inject: ['UserFavoriteQuizRepository', 'QuizRepository', 'UserRepository'],
     },
     {
-      provide: 'AddUserFavoriteQuizService',
+      provide: 'AddUserFavoriteQuizCommandHandler',
       useFactory: (domainService: AddUserFavoriteQuizDomainService
       ) =>
         new AddUserFavoriteQuizCommandHanlder(domainService),
@@ -93,7 +93,7 @@ import { DeleteUserFavoriteQuizDomainService } from '../../domain/services/Delet
       inject: ['UserFavoriteQuizRepository'],
     },
     {
-      provide: 'DeleteUserFavoriteQuizService',
+      provide: 'DeleteUserFavoriteQuizCommandHandler',
       useFactory: (domainService: DeleteUserFavoriteQuizDomainService) =>
         new DeleteUserFavoriteQuizCommandHandler(domainService),
       inject: ['DeleteUserFavoriteQuizDomainService'],
@@ -106,7 +106,7 @@ import { DeleteUserFavoriteQuizDomainService } from '../../domain/services/Delet
       inject: ['UserFavoriteQuizRepository', 'UserRepository', 'QuizRepository'],
     },
     {
-      provide: 'GetUserFavoriteQuizzesService',
+      provide: 'GetUserFavoriteQuizzesQueryHandler',
       useFactory: (domainService: GetUserFavoriteQuizzesDomainService,
       ) =>
         new GetUserFavoriteQuizzesQueryHandler(domainService),
@@ -119,7 +119,7 @@ import { DeleteUserFavoriteQuizDomainService } from '../../domain/services/Delet
       inject: ['QuizRepository', 'UserRepository'],
     },
     {
-      provide: 'GetAllUserQuizzesService',
+      provide: 'GetAllUserQuizzesQueryHandler',
       useFactory: (domainService: GetUserQuizzesDomainService) =>
         new GetAllUserQuizzesQueryHandler(domainService),
       inject: ['GetUserQuizzesDomainService'],
@@ -133,7 +133,7 @@ import { DeleteUserFavoriteQuizDomainService } from '../../domain/services/Delet
       inject: ['SinglePlayerGameRepository', 'QuizRepository', 'UserRepository'],
     },
     {
-      provide: 'GetInProgressQuizzesService',
+      provide: 'GetInProgressQuizzesQueryHandler',
       useFactory: ( domainService: GetInProgressQuizzesDomainService) =>
         new GetUserInProgressQuizzesQueryHandler(domainService),
       inject: ['GetInProgressQuizzesDomainService'],
@@ -147,7 +147,7 @@ import { DeleteUserFavoriteQuizDomainService } from '../../domain/services/Delet
       inject: ['QuizRepository', 'UserRepository', 'SinglePlayerGameRepository'],
     },
     {
-      provide: 'GetCompletedQuizzesService',
+      provide: 'GetCompletedQuizzesQueryHandler',
       useFactory: (domainService: GetCompletedQuizzesDomainService) => new GetUserCompletedQuizzesQueryHandler(domainService),
       inject: ['GetCompletedQuizzesDomainService'],
     },
