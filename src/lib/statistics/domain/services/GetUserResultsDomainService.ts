@@ -1,13 +1,13 @@
 import { Either } from "../../../shared/Type Helpers/Either";
 import { DomainException } from "../../../shared/exceptions/DomainException";
 import { QuizzesNotFoundException } from "../../../shared/exceptions/QuizzesNotFoundException";
-import { DomainUnexpectedException } from "../../../shared/exceptions/DomainUnexpectedException";
 import { CompletedQuizResponse, toSingleCompletedQuizResponse } from "../../application/Response Types/CompletedQuizResponse";
 import { SinglePlayerGameRepository } from "../port/SinglePlayerRepository";
 import { CompletedQuizQueryCriteria } from "../../application/Response Types/CompletedQuizQueryCriteria";
 import { UserId } from "src/lib/kahoot/domain/valueObject/Quiz";; 
 import { QuizRepository } from "../../../kahoot/domain/port/QuizRepository";
 import { QuizId } from "../../../kahoot/domain/valueObject/Quiz";
+import { QuizNotFoundException } from "src/lib/shared/exceptions/QuizNotFoundException";
 
 export class GetUserResultsDomainService {
     constructor(
@@ -33,7 +33,7 @@ export class GetUserResultsDomainService {
         const quizData = await this.quizRepository.find(quizId);
 
         if (!quizData) {
-                return Either.makeLeft(new DomainUnexpectedException());
+                return Either.makeLeft(new QuizNotFoundException());
             }
 
         results.push(toSingleCompletedQuizResponse(quiz, quizData));

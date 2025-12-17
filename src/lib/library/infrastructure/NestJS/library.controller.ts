@@ -14,17 +14,17 @@ import { Either } from 'src/lib/shared/Type Helpers/Either';
 @Controller('library')
 export class LibraryController {
    constructor(
-       @Inject('AddUserFavoriteQuizService')
+       @Inject('AddUserFavoriteQuizCommandHandler')
        private readonly addUserFavoriteQuizHandler: IHandler<AddUserFavoriteQuiz, Either<DomainException, void>>,
-       @Inject('DeleteUserFavoriteQuizService')
+       @Inject('DeleteUserFavoriteQuizCommandHandler')
        private readonly deleteUserFavoriteQuizHandler: IHandler<DeleteUserFavoriteQuiz, Either<DomainException, void>>,
-       @Inject('GetUserFavoriteQuizzesService')
+       @Inject('GetUserFavoriteQuizzesQueryHandler')
        private readonly getUserFavoriteQuizzesHandler: IHandler<GetUserQuizzes, Either<DomainException, QueryWithPaginationResponse<QuizResponse>>>,
-       @Inject('GetAllUserQuizzesService')
+       @Inject('GetAllUserQuizzesQueryHandler')
        private readonly getAllUserQuizzesHandler: IHandler<GetUserQuizzes, Either<DomainException, QueryWithPaginationResponse<QuizResponse>>>,
-       @Inject('GetInProgressQuizzesService')
+       @Inject('GetUserInProgressQuizzesQueryHandler')
        private readonly getInProgressQuizzesHandler: IHandler<GetUserQuizzes, Either<DomainException, QueryWithPaginationResponse<PlayingQuizResponse>>>,
-       @Inject('GetCompletedQuizzesService')
+       @Inject('GetUserCompletedQuizzesQueryHandler')
        private readonly getCompletedQuizzesHandler: IHandler<GetUserQuizzes, Either<DomainException, QueryWithPaginationResponse<PlayingQuizResponse>>>,
     ){}
 

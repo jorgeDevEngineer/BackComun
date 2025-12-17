@@ -2,7 +2,7 @@ import {QuizId} from "src/lib/kahoot/domain/valueObject/Quiz";
 import {UserId} from "src/lib/user/domain/valueObject/UserId";
 import { Either } from "src/lib/shared/Type Helpers/Either";
 import { DomainUnexpectedException } from "../../../../shared/exceptions/DomainUnexpectedException";
-import { AddUserFavoriteQuizDomainService } from "../../../domain/services/AddUserFavoriteQuizDomainService";
+import { AddUserFavoriteQuizDomainService } from "../../../domain/services/Commands/AddUserFavoriteQuizDomainService";
 import { DomainException } from "../../../../shared/exceptions/DomainException";
 import { AddUserFavoriteQuiz } from "../../Parameter Objects/AddUserFavoriteQuiz";
 import { IHandler } from "src/lib/shared/IHandler";
@@ -24,10 +24,10 @@ export class AddUserFavoriteQuizCommandHanlder implements IHandler<AddUserFavori
       const result = await this.domainService.execute(userIdVO, quizIdVO);
 
       if (result.isLeft()) {
-        return Either.makeLeft(result.getLeft());
+        return result;
       }
 
-      return Either.makeRight(undefined);
+      return result;
     } catch (error) {
       return Either.makeLeft(new DomainUnexpectedException());
     }

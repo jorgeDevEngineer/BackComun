@@ -3,7 +3,7 @@ import {QuizId} from "src/lib/kahoot/domain/valueObject/Quiz";
 import {UserId} from "src/lib/user/domain/valueObject/UserId";
 import { DomainUnexpectedException } from "../../../../shared/exceptions/DomainUnexpectedException";
 import { Either } from "src/lib/shared/Type Helpers/Either";
-import { DeleteUserFavoriteQuizDomainService } from "../../../domain/services/DeleteUserFavoriteQuizDomainService";
+import { DeleteUserFavoriteQuizDomainService } from "../../../domain/services/Commands/DeleteUserFavoriteQuizDomainService";
 import { DomainException } from "../../../../shared/exceptions/DomainException";
 import { IHandler } from "src/lib/shared/IHandler";
 import { DeleteUserFavoriteQuiz } from "../../Parameter Objects/DeleteUserFavoriteQuiz";
@@ -29,10 +29,10 @@ export class DeleteUserFavoriteQuizCommandHandler implements IHandler<DeleteUser
       const result = await this.domainService.removeFavorite(userFavoriteQuiz);
 
       if (result.isLeft()) {
-        return Either.makeLeft(result.getLeft());
+        return result;
       }
 
-      return Either.makeRight(undefined);
+      return result;
     } catch (error) {
       return Either.makeLeft(new DomainUnexpectedException());
     }

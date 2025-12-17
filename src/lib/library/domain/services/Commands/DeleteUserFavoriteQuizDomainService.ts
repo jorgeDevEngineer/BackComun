@@ -1,8 +1,8 @@
 import { Either } from "src/lib/shared/Type Helpers/Either";
-import { DomainException } from "../../../shared/exceptions/DomainException";
-import { UserFavoriteQuizNotFoundException } from "../../../shared/exceptions/UserFavoriteQuizNotFoundException";
-import { UserFavoriteQuizRepository } from "../port/UserFavoriteQuizRepository";
-import { UserFavoriteQuiz } from "../valueObject/UserFavoriteQuiz";
+import { DomainException } from "../../../../shared/exceptions/DomainException";
+import { UserFavoriteQuizNotFoundException } from "../../../../shared/exceptions/UserFavoriteQuizNotFoundException";
+import { UserFavoriteQuizRepository } from "../../port/UserFavoriteQuizRepository";
+import { UserFavoriteQuiz } from "../../valueObject/UserFavoriteQuiz";
 
 export class DeleteUserFavoriteQuizDomainService {
     constructor(private readonly userFavoriteQuizRepository: UserFavoriteQuizRepository) {}

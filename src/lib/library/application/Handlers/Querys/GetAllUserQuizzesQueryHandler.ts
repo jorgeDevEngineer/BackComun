@@ -6,7 +6,7 @@ import { Either } from 'src/lib/shared/Type Helpers/Either';
 import { QueryWithPaginationResponse} from '../../Response Types/QueryWithPaginationResponse';
 import { DomainUnexpectedException } from "../../../../shared/exceptions/DomainUnexpectedException";
 import { DomainException } from '../../../../shared/exceptions/DomainException';
-import { GetUserQuizzesDomainService } from '../../../domain/services/GetUserQuizzesDomainService';
+import { GetAllUserQuizzesDomainService } from '../../../domain/services/Queries/GetAllUserQuizzesDomainService';
 import { GetUserQuizzes as GetAllUserQuizzes} from '../../Parameter Objects/GetUserQuizzes';
 import { IHandler } from 'src/lib/shared/IHandler';
 import { Injectable } from '@nestjs/common';
@@ -16,7 +16,7 @@ import { Injectable } from '@nestjs/common';
  */
 @Injectable()
 export class GetAllUserQuizzesQueryHandler implements IHandler<GetAllUserQuizzes, Either<DomainException, QueryWithPaginationResponse<QuizResponse>>> {
-constructor(private readonly getQuizDService: GetUserQuizzesDomainService
+constructor(private readonly getQuizDService: GetAllUserQuizzesDomainService
 ) {}
 
   async execute(command: GetAllUserQuizzes): Promise<Either<DomainException, QueryWithPaginationResponse<QuizResponse>>> {
@@ -45,7 +45,7 @@ constructor(private readonly getQuizDService: GetUserQuizzesDomainService
   
       return Either.makeRight<DomainException, QueryWithPaginationResponse<QuizResponse>>(answer);
     } catch(error){
-      return Either.makeLeft(new DomainUnexpectedException(error.message));
+      return Either.makeLeft(new DomainUnexpectedException());
     }
   } 
 }

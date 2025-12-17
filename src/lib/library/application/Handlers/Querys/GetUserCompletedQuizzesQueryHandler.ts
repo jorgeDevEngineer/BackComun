@@ -1,11 +1,10 @@
 import { UserId as UserIdQuizVo } from "src/lib/kahoot/domain/valueObject/Quiz";
-import { UserIdDTO } from "../../DTOs/UserIdDTO";
-import { PlayingQuizResponse } from "../../Response Types/PlayingQuizResponse";
+import { PlayingQuizResponse, toPlayingQuizResponse } from "../../Response Types/PlayingQuizResponse";
 import { QueryWithPaginationResponse } from "../../Response Types/QueryWithPaginationResponse";
 import { Either } from "src/lib/shared/Type Helpers/Either";
 import { QuizQueryParamsDTO, QuizQueryParamsInput } from "../../DTOs/QuizQueryParamsDTO";
 import { DomainUnexpectedException } from "../../../../shared/exceptions/DomainUnexpectedException";
-import { GetCompletedQuizzesDomainService } from "../../../domain/services/GetCompletedQuizzesDomainService";
+import { GetUserCompletedQuizzesDomainService } from "../../../domain/services/Queries/GetUserCompletedQuizzesDomainService";
 import { DomainException } from "src/lib/shared/exceptions/DomainException";
 import { IHandler } from "src/lib/shared/IHandler";
 import { GetUserQuizzes as GetUserCompletedQuizzes } from "../../Parameter Objects/GetUserQuizzes";
@@ -17,7 +16,7 @@ import { Injectable } from "@nestjs/common";
 @Injectable()
 export class GetUserCompletedQuizzesQueryHandler implements IHandler<GetUserCompletedQuizzes, Either<DomainException, QueryWithPaginationResponse<PlayingQuizResponse>>> {
   constructor(
-    private readonly domainService: GetCompletedQuizzesDomainService
+    private readonly domainService: GetUserCompletedQuizzesDomainService
   ) {}
 
   async execute(
@@ -36,10 +35,18 @@ export class GetUserCompletedQuizzesQueryHandler implements IHandler<GetUserComp
         return Either.makeLeft(result.getLeft());
       }
 
-      const { responses, totalCount } = result.getRight();
+      const { completedGames, quizzes, quizAuthors,totalCount } = result.getRight();
+
+       const data: PlayingQuizResponse[] = completedGames.flatMap(game => {
+        const quiz = quizzes.find(q => q.id.value === game.getQuizId().value);
+        if (!quiz) return [];
+        const author = quizAuthors.find(u => u.id.value === quiz.authorId.value);
+        if (!author) return [];
+        return [toPlayingQuizResponse(quiz, author, game, "singleplayer")];
+      });
 
       const answer: QueryWithPaginationResponse<PlayingQuizResponse> = {
-        data: responses,
+        data,
         pagination: {
           page: criteria.page,
           limit: criteria.limit,

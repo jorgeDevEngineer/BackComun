@@ -1,5 +1,5 @@
-import { CompletedQuizQueryCriteria } from "../Response Types/CompletedQuizQueryCriteria";
+import { CompletedQuizQueryParams } from "../DTOs/CompletedQuizQueryParams";
 
 export class GetUserResults {
-    constructor(public readonly userId: string, public readonly criteria: CompletedQuizQueryCriteria){}
+    constructor(public readonly userId: string, public readonly criteria: CompletedQuizQueryParams){}
 }
