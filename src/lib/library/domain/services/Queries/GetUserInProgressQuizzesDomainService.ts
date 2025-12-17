@@ -2,17 +2,18 @@ import { QuizId, UserId as UserIdQuizVo} from "src/lib/kahoot/domain/valueObject
 import { User } from "src/lib/user/domain/aggregate/User";
 import { UserRepository } from "src/lib/user/domain/port/UserRepository";
 import { Either } from "src/lib/shared/Type Helpers/Either";
-import { PlayingQuizResponse, toPlayingQuizResponse } from "../../application/Response Types/PlayingQuizResponse";
-import { DomainException } from "../../../shared/exceptions/DomainException";
-import { NotInProgressQuizzesException } from "../../../shared/exceptions/NotInProgressQuizzesException";
-import { QuizzesNotFoundException } from "../../../shared/exceptions/QuizzesNotFoundException";
-import { UserNotFoundException } from "../../../shared/exceptions/UserNotFoundException";
-import { QuizRepository } from "../port/QuizRepository";
-import { SinglePlayerGameRepository } from "../port/SinglePlayerRepository";
-import { QuizQueryCriteria } from "../../application/Response Types/QuizQueryCriteria";
+import { DomainException } from "../../../../shared/exceptions/DomainException";
+import { NotInProgressQuizzesException } from "../../../../shared/exceptions/NotInProgressQuizzesException";
+import { QuizzesNotFoundException } from "../../../../shared/exceptions/QuizzesNotFoundException";
+import { UserNotFoundException } from "../../../../shared/exceptions/UserNotFoundException";
+import { QuizRepository } from "../../port/QuizRepository";
+import { SinglePlayerGameRepository } from "../../port/SinglePlayerRepository";
+import { QuizQueryCriteria } from "../../../application/Response Types/QuizQueryCriteria";
 import { UserId } from "src/lib/user/domain/valueObject/UserId";
+import { SinglePlayerGame } from "src/lib/singlePlayerGame/domain/aggregates/SinglePlayerGame";
+import { Quiz } from "src/lib/kahoot/domain/entity/Quiz";
 
-export class GetInProgressQuizzesDomainService {
+export class GetUserInProgressQuizzesDomainService {
     constructor(
       private readonly singlePlayerRepo: SinglePlayerGameRepository,
       private readonly quizRepo: QuizRepository,
@@ -20,7 +21,7 @@ export class GetInProgressQuizzesDomainService {
     ) {}
   
     async execute(userId: UserIdQuizVo, criteria: QuizQueryCriteria)
-      : Promise<Either<DomainException, { responses: PlayingQuizResponse[], totalCount: number }>> {
+      : Promise<Either<DomainException, { inProgressGames: SinglePlayerGame[], quizzes: Quiz[], quizAuthors: User[], totalCount: number }>> {
   
       const [inProgressGames, totalCount] = await this.singlePlayerRepo.findInProgressGames(userId, criteria);
       if (inProgressGames.length === 0) {
@@ -42,14 +43,7 @@ export class GetInProgressQuizzesDomainService {
         quizAuthors.push(user);
       }
   
-      const responses: PlayingQuizResponse[] = inProgressGames.flatMap(game => {
-        const quiz = quizzes.find(q => q.id.value === game.getQuizId().value);
-        if (!quiz) return [];
-        const author = quizAuthors.find(u => u.id.value === quiz.authorId.value);
-        if (!author) return [];
-        return [toPlayingQuizResponse(quiz, author, game, "singleplayer")];
-      });
   
-      return Either.makeRight({ responses, totalCount });
+      return Either.makeRight({ inProgressGames, quizzes, quizAuthors, totalCount });
     }
   }

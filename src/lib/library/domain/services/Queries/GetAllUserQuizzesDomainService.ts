@@ -1,15 +1,15 @@
-import { QuizRepository } from '../../domain/port/QuizRepository';
+import { QuizRepository } from '../../port/QuizRepository';
 import { Quiz } from 'src/lib/kahoot/domain/entity/Quiz';
 import { UserId } from 'src/lib/user/domain/valueObject/UserId';
 import { UserRepository } from 'src/lib/user/domain/port/UserRepository';
 import { Either } from 'src/lib/shared/Type Helpers/Either';
 import { User } from 'src/lib/user/domain/aggregate/User';
-import { DomainException } from '../../../shared/exceptions/DomainException';
-import { QuizzesNotFoundException } from '../../../shared/exceptions/QuizzesNotFoundException';
-import { UserNotFoundException } from '../../../shared/exceptions/UserNotFoundException';
-import { QuizQueryCriteria } from '../../application/Response Types/QuizQueryCriteria';
+import { DomainException } from '../../../../shared/exceptions/DomainException';
+import { QuizzesNotFoundException } from '../../../../shared/exceptions/QuizzesNotFoundException';
+import { UserNotFoundException } from '../../../../shared/exceptions/UserNotFoundException';
+import { QuizQueryCriteria } from '../../../application/Response Types/QuizQueryCriteria';
 
-export class GetUserQuizzesDomainService {
+export class GetAllUserQuizzesDomainService {
     constructor(private readonly quizRepo: QuizRepository, private readonly userRepo: UserRepository) {}
   
     async execute(userId: UserId, criteria: QuizQueryCriteria)

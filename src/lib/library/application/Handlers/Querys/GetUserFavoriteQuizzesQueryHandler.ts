@@ -5,7 +5,7 @@ import { QueryWithPaginationResponse } from "../../Response Types/QueryWithPagin
 import { Either } from "src/lib/shared/Type Helpers/Either";
 import { DomainUnexpectedException } from "../../../../shared/exceptions/DomainUnexpectedException";
 import { DomainException } from "../../../../shared/exceptions/DomainException";
-import { GetUserFavoriteQuizzesDomainService } from "../../../domain/services/GetUserFavoriteQuizzesDomainService";
+import { GetUserFavoriteQuizzesDomainService } from "../../../domain/services/Queries/GetUserFavoriteQuizzesDomainService";
 import { IHandler } from "src/lib/shared/IHandler";
 import { GetUserQuizzes as GetUserFavoriteQuizzes} from '../../Parameter Objects/GetUserQuizzes';
 import { Injectable } from "@nestjs/common";

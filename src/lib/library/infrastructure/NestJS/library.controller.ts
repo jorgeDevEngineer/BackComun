@@ -22,9 +22,9 @@ export class LibraryController {
        private readonly getUserFavoriteQuizzesHandler: IHandler<GetUserQuizzes, Either<DomainException, QueryWithPaginationResponse<QuizResponse>>>,
        @Inject('GetAllUserQuizzesQueryHandler')
        private readonly getAllUserQuizzesHandler: IHandler<GetUserQuizzes, Either<DomainException, QueryWithPaginationResponse<QuizResponse>>>,
-       @Inject('GetInProgressQuizzesQueryHandler')
+       @Inject('GetUserInProgressQuizzesQueryHandler')
        private readonly getInProgressQuizzesHandler: IHandler<GetUserQuizzes, Either<DomainException, QueryWithPaginationResponse<PlayingQuizResponse>>>,
-       @Inject('GetCompletedQuizzesQueryHandler')
+       @Inject('GetUserCompletedQuizzesQueryHandler')
        private readonly getCompletedQuizzesHandler: IHandler<GetUserQuizzes, Either<DomainException, QueryWithPaginationResponse<PlayingQuizResponse>>>,
     ){}
 
