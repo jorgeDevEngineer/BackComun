@@ -38,7 +38,8 @@ import { DeleteUserFavoriteQuizDomainService } from '../../domain/services/Delet
     {
       provide: 'CriteriaApplier',
       useClass: TypeOrmCriteriaApplier, // implementación genérica
-    },{
+    },
+    {
       provide: 'AdvancedCriteriaApplier',
       useClass: TypeOrmQuizCriteriaApplier, // implementación avanzada
     },
