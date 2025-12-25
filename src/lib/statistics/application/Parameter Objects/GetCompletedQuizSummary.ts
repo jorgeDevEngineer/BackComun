@@ -1,3 +1,6 @@
+import { SinglePlayerGameId } from "src/lib/singlePlayerGame/domain/valueObjects/SinglePlayerGameVOs";
+
 export class GetCompletedQuizSummary {
-    constructor(public readonly userId: string, public readonly gameId: string){}
+    constructor(public readonly gameId: SinglePlayerGameId
+    ){}
 }

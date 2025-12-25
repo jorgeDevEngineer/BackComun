@@ -1,43 +1,36 @@
 import { Either } from "../../../shared/Type Helpers/Either";
 import { DomainException } from "../../../shared/exceptions/DomainException";
-import { QuizzesNotFoundException } from "../../../shared/exceptions/QuizzesNotFoundException";
 import { QuizPersonalResult, toQuizPersonalResult } from "../../application/Response Types/QuizPersonalResult";
 import { SinglePlayerGameRepository } from "../port/SinglePlayerRepository";
-import { CompletedQuizQueryCriteria } from "../../application/Response Types/CompletedQuizQueryCriteria";
-import { UserId } from "src/lib/kahoot/domain/valueObject/Quiz";; 
 import { QuizRepository } from "../../../kahoot/domain/port/QuizRepository";
-import { QuizId } from "../../../kahoot/domain/valueObject/Quiz";
 import { QuizNotFoundException } from "src/lib/shared/exceptions/QuizNotFoundException";
+import { GameNotFoundException } from "src/lib/shared/exceptions/GameNotFoundException";
+import { SinglePlayerGameId } from "src/lib/singlePlayerGame/domain/valueObjects/SinglePlayerGameVOs";
 
 export class GetCompletedQuizSummaryDomainService {
     constructor(
-        private singlePlayerGameRepository: SinglePlayerGameRepository,
-        private quizRepository: QuizRepository
+        private readonly singlePlayerGameRepository: SinglePlayerGameRepository,
+        private readonly quizRepository: QuizRepository
     ) {}
 
     public async execute(
-        userId: UserId,
-        criteria: CompletedQuizQueryCriteria
-    ): Promise<Either<DomainException, QuizPersonalResult[]>>{
-        
-        const completedQuizzes = await this.singlePlayerGameRepository.findCompletedGames(userId, criteria);
+        gameId: SinglePlayerGameId
+    ): Promise<Either<DomainException, QuizPersonalResult>>{
 
-        const results: QuizPersonalResult[] = [];
+    const completedGame = await this.singlePlayerGameRepository.findById(gameId);
 
-        if (completedQuizzes.length === 0) {
-                return Either.makeLeft(new QuizzesNotFoundException("El usuario no ha completado nigun kahoot."));
-          }
-
-        for (const quiz of completedQuizzes) {
-            const quizId = QuizId.of(quiz.getQuizId().getValue());
-            const quizData =  await this.quizRepository.find(quizId);
-
-            if (!quizData) {
-                return Either.makeLeft(new QuizNotFoundException());
-            }
-
-            results.push(toQuizPersonalResult(quizData, quiz));
+     if (!completedGame) {
+        return Either.makeLeft(new GameNotFoundException("No se ha encontrado al partida solicitada."));
        }
+        
+     let results: QuizPersonalResult;  
+     const quizId = completedGame.getQuizId();
+     const quizData =  await this.quizRepository.find(quizId);
+
+     if (!quizData) {
+            return Either.makeLeft(new QuizNotFoundException());
+         }
+     results = toQuizPersonalResult(quizData, completedGame); 
      return Either.makeRight(results);
-  } 
+   } 
 }

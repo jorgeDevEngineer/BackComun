@@ -51,15 +51,16 @@ function getAnswerTextOrMedia(questionResult: QuestionResult, kahoot: Quiz): Opt
         if(answer.getText()){
             isText = true;
             results.push(answer.getText()!.getValue());
-        }
-        results.push(answer.getMediaId().value);
+        }else{
+            results.push(answer.getMediaId().value);
+        }  
         return new Optional({results: results, isText: isText});
     }
 }
 
 function calculateAverageTime(questionResults: questionData[]): number {
     const totalTime = questionResults.reduce((acc, curr) => acc + curr.timeTakenMs, 0);
-    return totalTime / questionResults.length;
+    return Math.round(totalTime / questionResults.length);
 }
 
 export function toQuizPersonalResult(kahoot: Quiz, game: SinglePlayerGame): QuizPersonalResult {
