@@ -30,6 +30,9 @@ export class MediaId {
     }
     return new MediaId(value);
   }
+  public getValue():string {
+    return this.value;
+  }
 }
 
 export class MimeType {
