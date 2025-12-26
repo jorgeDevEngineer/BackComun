@@ -13,6 +13,7 @@ import { QuizRepository } from '../../domain/port/QuizRepository';
 import { LoggerModule } from '../../../../aspects/logger/infrastructure/logger.module';
 import { ILoggerPort } from '../../../../aspects/logger/domain/ports/logger.port';
 import { LoggingUseCaseDecorator } from '../../../../aspects/logger/application/decorators/logging.decorator';
+import { ErrorHandlingDecorator } from '../../../../aspects/error-handling/application/decorators/error-handling.decorator';
 
 @Module({
   imports: [TypeOrmModule.forFeature([TypeOrmQuizEntity]), LoggerModule],
@@ -23,42 +24,47 @@ import { LoggingUseCaseDecorator } from '../../../../aspects/logger/application/
       useClass: TypeOrmQuizRepository,
     },
     {
-      provide: 'CreateQuizUseCase',
+      provide: CreateQuizUseCase,
       useFactory: (logger: ILoggerPort, repo: QuizRepository) => {
         const useCase = new CreateQuizUseCase(repo);
-        return new LoggingUseCaseDecorator(useCase, logger, 'CreateQuizUseCase');
+        const withErrorHandling = new ErrorHandlingDecorator(useCase, logger, 'CreateQuizUseCase');
+        return new LoggingUseCaseDecorator(withErrorHandling, logger, 'CreateQuizUseCase');
       },
       inject: ['ILoggerPort', 'QuizRepository'],
     },
     {
-      provide: 'GetQuizUseCase',
+      provide: GetQuizUseCase,
       useFactory: (logger: ILoggerPort, repo: QuizRepository) => {
         const useCase = new GetQuizUseCase(repo);
-        return new LoggingUseCaseDecorator(useCase, logger, 'GetQuizUseCase');
+        const withErrorHandling = new ErrorHandlingDecorator(useCase, logger, 'GetQuizUseCase');
+        return new LoggingUseCaseDecorator(withErrorHandling, logger, 'GetQuizUseCase');
       },
       inject: ['ILoggerPort', 'QuizRepository'],
     },
     {
-      provide: 'ListUserQuizzesUseCase',
+      provide: ListUserQuizzesUseCase,
       useFactory: (logger: ILoggerPort, repo: QuizRepository) => {
         const useCase = new ListUserQuizzesUseCase(repo);
-        return new LoggingUseCaseDecorator(useCase, logger, 'ListUserQuizzesUseCase');
+        const withErrorHandling = new ErrorHandlingDecorator(useCase, logger, 'ListUserQuizzesUseCase');
+        return new LoggingUseCaseDecorator(withErrorHandling, logger, 'ListUserQuizzesUseCase');
       },
       inject: ['ILoggerPort', 'QuizRepository'],
     },
     {
-      provide: 'UpdateQuizUseCase',
+      provide: UpdateQuizUseCase,
       useFactory: (logger: ILoggerPort, repo: QuizRepository) => {
         const useCase = new UpdateQuizUseCase(repo);
-        return new LoggingUseCaseDecorator(useCase, logger, 'UpdateQuizUseCase');
+        const withErrorHandling = new ErrorHandlingDecorator(useCase, logger, 'UpdateQuizUseCase');
+        return new LoggingUseCaseDecorator(withErrorHandling, logger, 'UpdateQuizUseCase');
       },
       inject: ['ILoggerPort', 'QuizRepository'],
     },
     {
-      provide: 'DeleteQuizUseCase',
+      provide: DeleteQuizUseCase,
       useFactory: (logger: ILoggerPort, repo: QuizRepository) => {
         const useCase = new DeleteQuizUseCase(repo);
-        return new LoggingUseCaseDecorator(useCase, logger, 'DeleteQuizUseCase');
+        const withErrorHandling = new ErrorHandlingDecorator(useCase, logger, 'DeleteQuizUseCase');
+        return new LoggingUseCaseDecorator(withErrorHandling, logger, 'DeleteQuizUseCase');
       },
       inject: ['ILoggerPort', 'QuizRepository'],
     },

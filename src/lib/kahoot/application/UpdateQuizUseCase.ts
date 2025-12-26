@@ -11,94 +11,99 @@ import {
   AnswerText,
 } from '../domain/valueObject/Answer';
 import { MediaId as MediaIdVO } from '../../media/domain/valueObject/Media';
-import { CreateQuizDto } from './CreateQuizUseCase';
+import { CreateQuiz, CreateQuestion as CreateQuestionDto, CreateAnswerDto } from './CreateQuizUseCase'; // CORRECTED IMPORT
 import { IUseCase } from '../../../common/use-case.interface';
+import { Result } from '../../../common/domain/result';
 
-export interface UpdateQuizDto extends CreateQuizDto {
+// El DTO de Update extiende el de Create y añade el ID del quiz a actualizar
+export interface UpdateQuizDto extends CreateQuiz {
   quizId: string;
 }
 
-export class UpdateQuizUseCase implements IUseCase<UpdateQuizDto, Quiz>{
+export class UpdateQuizUseCase implements IUseCase<UpdateQuizDto, Result<Quiz>>{
   constructor(private readonly quizRepository: QuizRepository) {}
 
-  async execute(request: UpdateQuizDto): Promise<Quiz> {
-    const quizId = QuizId.of(request.quizId);
-    const quiz = await this.quizRepository.find(quizId);
+  async execute(request: UpdateQuizDto): Promise<Result<Quiz>> {
+    try {
+      const quizId = QuizId.of(request.quizId);
+      const quiz = await this.quizRepository.find(quizId);
 
-    if (!quiz) {
-      throw new Error('Quiz not found');
-    }
-    
-    const isdraft = request.status === 'draft';
-
-    if (!isdraft && (!request.title || !request.description || !request.category)) {
-      throw new Error(
-        'Title, description, and category are required for published quizzes.',
-      );
-    }
-
-    quiz.updateMetadata(
-      QuizTitle.of(request.title),
-      QuizDescription.of(request.description),
-      Visibility.fromString(request.visibility),
-      QuizStatus.fromString(request.status),
-      QuizCategory.of(request.category),
-      ThemeId.of(request.themeId),
-      request.coverImageId ? MediaIdVO.of(request.coverImageId) : null,
-    );
-
-    const newQuestions: Question[] = request.questions.map((qData) => {
-      if (!isdraft && !qData.text) {
-        throw new Error('Question text is required for published quizzes.');
+      if (!quiz) {
+        return Result.fail<Quiz>('Quiz not found');
       }
       
-      const answers = qData.answers.map((aData) => {
-        if (!isdraft && !aData.text && !aData.mediaId) {
-          throw new Error(
-            'Answer text or mediaId is required for published quizzes.',
-          );
-        }
+      // La lógica de validación ahora usa las propiedades correctas del DTO
+      const isDraft = request.status === 'draft';
 
-        if ((aData.text && aData.mediaId)) {
-          throw new Error(
-            'Cada respuesta debe tener text o mediaId, pero no ambos.',
-          );
-        }
+      if (!isDraft && (!request.title || !request.description || !request.category)) {
+        return Result.fail<Quiz>(
+          'Title, description, and category are required for published quizzes.',
+        );
+      }
 
-        try {
-          if (aData.text) {
-            return Answer.createTextAnswer(
-              AnswerId.generate(),
-              AnswerText.of(aData.text),
-              IsCorrect.fromBoolean(aData.isCorrect),
-            );
-          } else {
-            return Answer.createMediaAnswer(
-              AnswerId.generate(),
-              aData.mediaId ? MediaIdVO.of(aData.mediaId) : null,
-              IsCorrect.fromBoolean(aData.isCorrect),
+      // Actualización de Metadatos del Quiz
+      quiz.updateMetadata(
+        QuizTitle.of(request.title),
+        QuizDescription.of(request.description),
+        Visibility.fromString(request.visibility),
+        QuizStatus.fromString(request.status),
+        QuizCategory.of(request.category),
+        ThemeId.of(request.themeId),
+        request.coverImageId ? MediaIdVO.of(request.coverImageId) : null
+      );
+
+      // Reemplazo de las preguntas del Quiz
+      const newQuestions: Question[] = request.questions.map((qData) => {
+        if (!isDraft && !qData.text) {
+          throw new Error('Question text is required for published quizzes.');
+        }
+        
+        const answers = qData.answers.map((aData) => {
+          if (!isDraft && !aData.text && !aData.mediaId) {
+            throw new Error(
+              'Answer text or mediaId is required for published quizzes.',
             );
           }
-        } catch (error) {
-          throw new Error(`Invalid answer data provided: ${error.message}`);
-        }
+
+          if (aData.text && aData.mediaId) {
+            throw new Error(
+              'Cada respuesta debe tener text o mediaId, pero no ambos.',
+            );
+          }
+
+          let answer: Answer;
+          const answerId = AnswerId.generate();
+          const isCorrect = IsCorrect.fromBoolean(aData.isCorrect);
+
+          if (aData.text) {
+            answer = Answer.createTextAnswer(answerId, AnswerText.of(aData.text), isCorrect);
+          } else if (aData.mediaId) {
+            answer = Answer.createMediaAnswer(answerId, MediaIdVO.of(aData.mediaId), isCorrect);
+          } else {
+             throw new Error('Answer must have either text or mediaId');
+          }
+
+          return answer;
+        });
+
+        return Question.create(
+          QuestionId.generate(),
+          QuestionText.of(qData.text),
+          qData.mediaId ? MediaIdVO.of(qData.mediaId) : null,
+          QuestionType.fromString(qData.questionType),
+          TimeLimit.of(qData.timeLimit),
+          Points.of(qData.points),
+          answers,
+        );
       });
 
-      return Question.create(
-        QuestionId.generate(),
-        QuestionText.of(qData.text),
-        qData.mediaId ? MediaIdVO.of(qData.mediaId) : null,
-        QuestionType.fromString(qData.questionType),
-        TimeLimit.of(qData.timeLimit),
-        Points.of(qData.points),
-        answers,
-      );
-    });
+      quiz.replaceQuestions(newQuestions);
 
-    quiz.replaceQuestions(newQuestions);
+      await this.quizRepository.save(quiz);
 
-    await this.quizRepository.save(quiz);
-
-    return quiz;
+      return Result.ok<Quiz>(quiz);
+    } catch (error: any) {
+      return Result.fail<Quiz>(error.message);
+    }
   }
 }

@@ -1,8 +1,8 @@
 
 import { MediaRepository } from '../domain/port/MediaRepository';
 import { IUseCase } from '../../../common/use-case.interface';
+import { Result } from '../../../common/domain/result';
 
-// El DTO para la respuesta, que coincide con el nuevo método de la entidad
 export type ListMediaResponseDTO = {
   id: string;
   mimeType: string;
@@ -12,13 +12,16 @@ export type ListMediaResponseDTO = {
   thumbnail: string | null;
 }[];
 
-export class ListMediaUseCase implements IUseCase<void, ListMediaResponseDTO> {
+export class ListMediaUseCase implements IUseCase<void, Result<ListMediaResponseDTO>> {
   constructor(private readonly mediaRepository: MediaRepository) {}
 
-  async execute(): Promise<ListMediaResponseDTO> {
-    const mediaList = await this.mediaRepository.findAll();
-    
-    // Usamos el método `toListResponse` para transformar cada entidad
-    return mediaList.map(media => media.toListResponse());
+  async execute(): Promise<Result<ListMediaResponseDTO>> {
+    try {
+      const mediaList = await this.mediaRepository.findAll();
+      const response = mediaList.map(media => media.toListResponse());
+      return Result.ok<ListMediaResponseDTO>(response);
+    } catch (error: any) {
+      return Result.fail<ListMediaResponseDTO>(error.message);
+    }
   }
 }

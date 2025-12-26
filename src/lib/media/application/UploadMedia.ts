@@ -3,6 +3,7 @@ import { Media } from '../domain/entity/Media';
 import { MediaRepository } from '../domain/port/MediaRepository';
 import { ImageOptimizer } from '../domain/port/ImageOptimizer';
 import { IUseCase } from '../../../common/use-case.interface';
+import { Result } from '../../../common/domain/result';
 
 export interface UploadMediaDTO {
   file: Buffer;
@@ -11,38 +12,42 @@ export interface UploadMediaDTO {
   size: number;
 }
 
-export class UploadMedia implements IUseCase<UploadMediaDTO, Media> {
+export class UploadMedia implements IUseCase<UploadMediaDTO, Result<Media>> {
   constructor(
     private readonly mediaRepository: MediaRepository,
     private readonly imageOptimizer: ImageOptimizer,
   ) {}
 
-  async execute(request: UploadMediaDTO): Promise<Media> {
-    let fileBuffer = request.file;
-    let fileSize = request.size;
-    let thumbnailBuffer: Buffer | null = null;
+  async execute(request: UploadMediaDTO): Promise<Result<Media>> {
+    try {
+      let fileBuffer = request.file;
+      let fileSize = request.size;
+      let thumbnailBuffer: Buffer | null = null;
 
-    const optimizationResult = await this.imageOptimizer.optimize(
-      request.file,
-      request.mimeType,
-    );
+      const optimizationResult = await this.imageOptimizer.optimize(
+        request.file,
+        request.mimeType,
+      );
 
-    if (optimizationResult) {
-      fileBuffer = optimizationResult.buffer;
-      fileSize = optimizationResult.size;
-      thumbnailBuffer = optimizationResult.thumbnailBuffer;
+      if (optimizationResult) {
+        fileBuffer = optimizationResult.buffer;
+        fileSize = optimizationResult.size;
+        thumbnailBuffer = optimizationResult.thumbnailBuffer;
+      }
+
+      const media = Media.create(
+        fileBuffer,
+        request.mimeType,
+        fileSize,
+        request.fileName,
+        thumbnailBuffer,
+      );
+
+      await this.mediaRepository.save(media);
+
+      return Result.ok<Media>(media);
+    } catch (error: any) {
+      return Result.fail<Media>(error.message);
     }
-
-    const media = Media.create(
-      fileBuffer,
-      request.mimeType,
-      fileSize,
-      request.fileName,
-      thumbnailBuffer,
-    );
-
-    await this.mediaRepository.save(media);
-
-    return media;
   }
 }

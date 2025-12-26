@@ -1,129 +1,118 @@
 
 import { QuizRepository } from '../domain/port/QuizRepository';
 import { Quiz } from '../domain/entity/Quiz';
+import { IUseCase } from '../../../common/use-case.interface';
+import { Result } from '../../../common/domain/result';
 import { Question } from '../domain/entity/Question';
 import { Answer } from '../domain/entity/Answer';
+import { MediaId as MediaIdVO } from '../../media/domain/valueObject/Media'; // CORRECTED PATH & ALIAS
 import {
-  QuizId,
-  UserId,
-  QuizTitle,
-  QuizDescription,
-  Visibility,
-  ThemeId,
-  QuizStatus,
-  QuizCategory,
+    QuizId, UserId, QuizTitle, QuizDescription, Visibility, QuizStatus, 
+    QuizCategory, ThemeId
 } from '../domain/valueObject/Quiz';
 import {
-  QuestionId,
-  QuestionText,
-  QuestionType,
-  TimeLimit,
-  Points,
+    QuestionId, QuestionText, QuestionType, TimeLimit, Points
 } from '../domain/valueObject/Question';
-import { AnswerId, IsCorrect, AnswerText } from '../domain/valueObject/Answer';
-import { MediaId as MediaIdVO } from '../../media/domain/valueObject/Media';
-import { IUseCase } from '../../../common/use-case.interface';
+import {
+    AnswerId, AnswerText, IsCorrect
+} from '../domain/valueObject/Answer';
 
-export interface CreateQuizDto {
-  authorId: string;
-  title: string | null;
-  description: string | null;
-  coverImageId?: string;
-  visibility: 'public' | 'private';
-  status: 'draft' | 'published';
-  category: string | null;
-  themeId: string;
-  questions: Array<{
+// DTOs para la entrada de datos.
+export interface CreateAnswerDto {
     text: string | null;
-    mediaId?: string;
-    questionType: 'quiz' | 'true_false';
-    timeLimit: number;
-    points: number | null;
-    answers: Array<{
-      text: string | null;
-      mediaId: string | null;
-      isCorrect: boolean;
-    }>;
-  }>;
+    isCorrect: boolean;
+    mediaId: string | null;
 }
 
-export class CreateQuizUseCase implements IUseCase<CreateQuizDto, Quiz> {
+export interface CreateQuestion {
+    text: string;
+    questionType: 'quiz' | 'true_false';
+    timeLimit: number;
+    points: number;
+    mediaId: string | null;
+    answers: CreateAnswerDto[];
+}
+
+export interface CreateQuiz {
+    authorId: string;
+    title: string;
+    description: string;
+    visibility: 'public' | 'private';
+    status: 'draft' | 'published';
+    category: string;
+    themeId: string;
+    coverImageId: string | null;
+    questions: CreateQuestion[];
+}
+
+export class CreateQuizUseCase implements IUseCase<CreateQuiz, Result<Quiz>> {
   constructor(private readonly quizRepository: QuizRepository) {}
 
-  async execute(request: CreateQuizDto): Promise<Quiz> {
-    const isdraft = request.status === 'draft';
+  async execute(dto: CreateQuiz): Promise<Result<Quiz>> {
 
-    if (!isdraft && (!request.title || !request.description || !request.category)) {
-      throw new Error(
-        'Title, description, and category are required for published quizzes.',
-      );
-    }
+    // 1. Crear Value Objects para la entidad Quiz
+    const authorId = UserId.of(dto.authorId);
+    const title = QuizTitle.of(dto.title);
+    const description = QuizDescription.of(dto.description);
+    const visibility = Visibility.fromString(dto.visibility);
+    const status = QuizStatus.fromString(dto.status);
+    const category = QuizCategory.of(dto.category);
+    const themeId = ThemeId.of(dto.themeId);
+    const coverImageId = dto.coverImageId ? MediaIdVO.of(dto.coverImageId) : null;
 
-    const questionsEntities: Question[] = (request.questions || []).map(
-      (qData) => {
-        if (!isdraft && !qData.text) {
-          throw new Error('Question text is required for published quizzes.');
+    // 2. Crear Entidades Answer y Question a partir del DTO
+    const questions: Question[] = [];
+    for (const qDto of dto.questions) {
+        const answers: Answer[] = [];
+        for (const aDto of qDto.answers) {
+            const answerId = AnswerId.generate();
+            const isCorrect = IsCorrect.fromBoolean(aDto.isCorrect); // CORRECTED METHOD
+
+            let answer: Answer;
+            if (aDto.text && aDto.mediaId) {
+                 return Result.fail<Quiz>('Answer cannot have both text and mediaId');
+            }
+            if (aDto.text) {
+                answer = Answer.createTextAnswer(answerId, AnswerText.of(aDto.text), isCorrect);
+            } else if (aDto.mediaId) {
+                answer = Answer.createMediaAnswer(answerId, MediaIdVO.of(aDto.mediaId), isCorrect);
+            } else {
+                return Result.fail<Quiz>('Answer must have either text or mediaId');
+            }
+            answers.push(answer);
         }
 
-        const answersEntities: Answer[] = (qData.answers || []).map((aData) => {
-          if (!isdraft && !aData.text && !aData.mediaId) {
-            throw new Error(
-              'Answer text or mediaId is required for published quizzes.',
-            );
-          }
-          if ((aData.text && aData.mediaId)) {
-            throw new Error(
-              'Cada respuesta debe tener text o mediaId, pero no ambos.',
-            );
-          }
+        const questionId = QuestionId.generate();
+        const questionText = QuestionText.of(qDto.text);
+        const questionType = QuestionType.fromString(qDto.questionType);
+        const timeLimit = TimeLimit.of(qDto.timeLimit);
+        const points = Points.of(qDto.points);
+        const questionMediaId = qDto.mediaId ? MediaIdVO.of(qDto.mediaId) : null;
 
-          try {
-            if (aData.text) {
-              return Answer.createTextAnswer(
-                AnswerId.generate(),
-                AnswerText.of(aData.text),
-                IsCorrect.fromBoolean(aData.isCorrect),
-              );
-            } else {
-              return Answer.createMediaAnswer(
-                AnswerId.generate(),
-                aData.mediaId ? MediaIdVO.of(aData.mediaId) : null,
-                IsCorrect.fromBoolean(aData.isCorrect),
-              );
-            }
-          } catch (error) {
-            throw new Error(`Invalid answer data provided: ${error.message}`);
-          }
-        });
-
-        return Question.create(
-          QuestionId.generate(),
-          qData.text ? QuestionText.of(qData.text) : null,
-          qData.mediaId ? MediaIdVO.of(qData.mediaId) : null,
-          QuestionType.fromString(qData.questionType),
-          TimeLimit.of(qData.timeLimit),
-          qData.points ? Points.of(qData.points) : null,
-          answersEntities,
+        const question = Question.create(
+            questionId, questionText, questionMediaId, questionType, 
+            timeLimit, points, answers
         );
-      },
-    );
+        questions.push(question);
+    }
 
+    // 3. Crear la entidad Raíz del Agregado (Quiz)
     const quiz = Quiz.create(
-      QuizId.generate(),
-      UserId.of(request.authorId),
-      request.title ? QuizTitle.of(request.title) : null,
-      request.description ? QuizDescription.of(request.description) : null,
-      Visibility.fromString(request.visibility),
-      QuizStatus.fromString(request.status),
-      request.category ? QuizCategory.of(request.category) : null,
-      ThemeId.of(request.themeId),
-      request.coverImageId ? MediaIdVO.of(request.coverImageId) : null,
-      questionsEntities,
-      0, // playCount
+        QuizId.generate(),
+        authorId,
+        title,
+        description,
+        visibility,
+        status,
+        category,
+        themeId,
+        coverImageId,
+        questions
     );
 
+    // 4. Persistir el agregado
     await this.quizRepository.save(quiz);
 
-    return quiz;
+    return Result.ok<Quiz>(quiz);
   }
 }
