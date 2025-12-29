@@ -36,12 +36,23 @@ export class MediaId {
   }
 }
 
+const SUPPORTED_MIME_TYPES = [
+    'image/jpeg',
+    'image/png',
+    'image/gif',
+    'video/mp4',
+    'video/quicktime', // .mov
+];
+
 export class MimeType {
   readonly value: string;
 
   constructor(value: string) {
     if (!value || !value.includes('/')) {
         throw new DomainException(`Invalid MimeType format: ${value}`);
+    }
+    if (!SUPPORTED_MIME_TYPES.includes(value)) {
+        throw new DomainException(`Unsupported MIME type: ${value}`);
     }
     this.value = value;
   }

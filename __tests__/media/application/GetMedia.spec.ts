@@ -21,21 +21,23 @@ const createDummyMedia = (id: string): Media => {
 };
 
 describe('GetMedia Use Case (Application Layer)', () => {
-    let mediaRepositoryStub: MediaRepository;
+    let mediaRepositoryStub: jest.Mocked<MediaRepository>;
 
     beforeEach(() => {
-        // STUB the repository
+        // STUB the repository with all its methods
         mediaRepositoryStub = {
             findById: jest.fn(),
-            save: jest.fn(), // not used in this use case
+            save: jest.fn(),
+            delete: jest.fn(),
+            findAll: jest.fn(),
         };
     });
 
     it('should return a SUCCESS Result with Media and Buffer when found', async () => {
         // ARRANGE
-        const mediaId = 'existent-media-uuid';
+        const mediaId = '123e4567-e89b-42d3-a456-426614174001'; // Valid UUID
         const dummyMedia = createDummyMedia(mediaId);
-        (mediaRepositoryStub.findById as jest.Mock).mockResolvedValue(dummyMedia);
+        mediaRepositoryStub.findById.mockResolvedValue(dummyMedia);
 
         const useCase = new GetMedia(mediaRepositoryStub);
 
@@ -58,9 +60,9 @@ describe('GetMedia Use Case (Application Layer)', () => {
 
     it('should THROW a DomainException if the media is not found', async () => {
         // ARRANGE
-        const nonExistentMediaId = 'non-existent-media-uuid';
+        const nonExistentMediaId = '123e4567-e89b-42d3-a456-426614174002'; // Valid UUID
         // Configure stub to simulate not finding the media
-        (mediaRepositoryStub.findById as jest.Mock).mockResolvedValue(null);
+        mediaRepositoryStub.findById.mockResolvedValue(null);
 
         const useCase = new GetMedia(mediaRepositoryStub);
 

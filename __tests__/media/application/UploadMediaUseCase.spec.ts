@@ -1,102 +1,96 @@
 
-import { UploadMediaUseCase, UploadMediaDto } from '../../../src/lib/media/application/UploadMedia';
+import { UploadMedia, UploadMediaDTO } from '../../../src/lib/media/application/UploadMedia';
 import { MediaRepository } from '../../../src/lib/media/domain/port/MediaRepository';
-import { IMediaStorageService } from '../../../src/lib/media/domain/port/IMediaStorageService';
-import { ILoggerPort } from '../../../src/lib/aspects/logger/domain/ports/logger.port';
+import { ImageOptimizer } from '../../../src/lib/media/domain/port/ImageOptimizer';
 import { Media } from '../../../src/lib/media/domain/entity/Media';
 import { Result } from '../../../src/common/domain/result';
-import { MediaUrl } from '../../../src/lib/media/domain/valueObject/Media';
 
-describe('UploadMediaUseCase (Application Layer)', () => {
-  let mediaRepositoryStub: MediaRepository;
-  let storageServiceStub: IMediaStorageService;
-  let loggerMock: ILoggerPort;
+describe('UploadMedia UseCase (Application Layer)', () => {
+  let mediaRepositoryStub: jest.Mocked<MediaRepository>;
+  let imageOptimizerStub: jest.Mocked<ImageOptimizer>;
+  let uploadMediaUseCase: UploadMedia;
 
   const fileBuffer = Buffer.from('fake-image-data');
 
-  const createValidDto = (): UploadMediaDto => ({
-    userId: 'user-uuid-1',
+  const createValidDto = (): UploadMediaDTO => ({
+    file: fileBuffer,
     fileName: 'test-image.png',
     mimeType: 'image/png',
-    buffer: fileBuffer,
+    size: fileBuffer.length,
   });
 
   beforeEach(() => {
-    // 1. STUB the Repository (Managed Dependency)
     mediaRepositoryStub = {
       findById: jest.fn(),
       save: jest.fn().mockImplementation((media: Media) => Promise.resolve(media)),
+      delete: jest.fn(),
+      findAll: jest.fn(),
     };
 
-    // 2. STUB the Storage Service (Managed Dependency)
-    storageServiceStub = {
-      upload: jest.fn().mockResolvedValue(new MediaUrl('https://s3.aws.com/fake-bucket/test-image.png')),
+    imageOptimizerStub = {
+      optimize: jest.fn().mockResolvedValue(null), // Default to no optimization
     };
 
-    // 3. MOCK the Logger (Ambient/External Dependency)
-    loggerMock = {
-      info: jest.fn(),
-      warn: jest.fn(),
-      error: jest.fn(),
-      debug: jest.fn(),
-    };
+    uploadMediaUseCase = new UploadMedia(mediaRepositoryStub, imageOptimizerStub);
   });
 
   it('should return a SUCCESS Result with a Media entity for a valid upload', async () => {
     // ARRANGE
-    const useCase = new UploadMediaUseCase(mediaRepositoryStub, storageServiceStub);
     const validDto = createValidDto();
 
     // ACT
-    const result = await useCase.execute(validDto);
+    const result = await uploadMediaUseCase.execute(validDto);
 
-    // ASSERT (State-Based Testing)
-    // a. Check for success
+    // ASSERT
     expect(result.isSuccess).toBe(true);
-    
-    // b. Check the output value
     const returnedMedia = result.getValue();
     expect(returnedMedia).toBeInstanceOf(Media);
-    expect(returnedMedia.toPlainObject().url).toBe('https://s3.aws.com/fake-bucket/test-image.png');
-    expect(returnedMedia.toPlainObject().mimeType).toBe('image/png');
-    
-    // c. (Forbidden) Do not verify calls to stubs
-    // expect(storageServiceStub.upload).toHaveBeenCalled();
-    // expect(mediaRepositoryStub.save).toHaveBeenCalled();
+    expect(returnedMedia.properties().originalName).toBe('test-image.png');
+    expect(mediaRepositoryStub.save).toHaveBeenCalledWith(returnedMedia);
   });
 
-  it('should return a FAILURE Result if the storage service fails', async () => {
+  it('should optimize the image if the image optimizer returns an optimized version', async () => {
     // ARRANGE
-    // Sabotage the stub to simulate an external failure
-    storageServiceStub.upload = jest.fn().mockRejectedValue(new Error('S3 Bucket is on fire'));
-    const useCase = new UploadMediaUseCase(mediaRepositoryStub, storageServiceStub);
+    const optimizedBuffer = Buffer.from('optimized-data');
+    const thumbnailBuffer = Buffer.from('thumbnail-data');
+    imageOptimizerStub.optimize.mockResolvedValue({
+      buffer: optimizedBuffer,
+      size: optimizedBuffer.length,
+      thumbnailBuffer: thumbnailBuffer,
+    });
     const validDto = createValidDto();
 
     // ACT
-    const result = await useCase.execute(validDto);
+    const result = await uploadMediaUseCase.execute(validDto);
 
     // ASSERT
-    expect(result.isFailure).toBe(true);
-    expect(result.error).toBe('S3 Bucket is on fire');
-    // Verify NO attempt was made to save to the DB if the upload failed
-    expect(mediaRepositoryStub.save).not.toHaveBeenCalled(); 
+    expect(imageOptimizerStub.optimize).toHaveBeenCalledWith(fileBuffer, 'image/png');
+    const returnedMedia = result.getValue();
+    expect(returnedMedia.properties().data).toBe(optimizedBuffer);
+    expect(returnedMedia.properties().thumbnail).toBe(thumbnailBuffer);
+    expect(mediaRepositoryStub.save).toHaveBeenCalledWith(returnedMedia);
   });
-  
-  it('should return a FAILURE Result if a domain invariant is broken', async () => {
-    // ARRANGE: Pass an unsupported MIME type to trigger a DomainException
-    const useCase = new UploadMediaUseCase(mediaRepositoryStub, storageServiceStub);
-    const invalidDto: UploadMediaDto = {
+
+  it('should return a FAILURE Result if a domain invariant is broken (e.g., invalid MIME type)', async () => {
+    // ARRANGE
+    const invalidDto: UploadMediaDTO = {
       ...createValidDto(),
-      mimeType: 'application/x-zip-compressed',
+      mimeType: 'application/pdf', // Invalid MIME type
     };
-    
-    // ACT
-    const result = await useCase.execute(invalidDto);
-    
-    // ASSERT
-    expect(result.isFailure).toBe(true);
-    expect(result.error).toBe('Unsupported MIME type.');
-    expect(storageServiceStub.upload).not.toHaveBeenCalled();
+
+    // ACT & ASSERT
+    await expect(uploadMediaUseCase.execute(invalidDto)).rejects.toThrow(
+      'Unsupported MIME type: application/pdf'
+    );
     expect(mediaRepositoryStub.save).not.toHaveBeenCalled();
+  });
+
+  it('should allow repository errors to bubble up', async () => {
+    // ARRANGE
+    mediaRepositoryStub.save.mockRejectedValue(new Error('Database error'));
+    const validDto = createValidDto();
+
+    // ACT & ASSERT
+    await expect(uploadMediaUseCase.execute(validDto)).rejects.toThrow('Database error');
   });
 });

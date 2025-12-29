@@ -6,50 +6,43 @@ import { MediaId } from '../../../src/lib/media/domain/valueObject/Media';
 import { Result } from '../../../src/common/domain/result';
 import { DomainException } from '../../../src/common/domain/domain.exception';
 
-// Minimal Media entity mock for repository stub
-const dummyMedia = { id: MediaId.of('existent-media-uuid') } as Media;
+const validMediaId = '123e4567-e89b-42d3-a456-426614174003';
+const dummyMedia = { id: MediaId.of(validMediaId) } as jest.Mocked<Media>;
 
 describe('DeleteMedia Use Case (Application Layer)', () => {
-    let mediaRepositoryStub: MediaRepository;
+    let mediaRepositoryStub: jest.Mocked<MediaRepository>;
 
     beforeEach(() => {
-        // STUB the repository
         mediaRepositoryStub = {
-            findById: jest.fn().mockResolvedValue(dummyMedia), // By default, assume media exists
-            delete: jest.fn().mockResolvedValue(undefined),   // Assume delete is successful
-            save: jest.fn(), // Not used
+            findById: jest.fn().mockResolvedValue(dummyMedia),
+            delete: jest.fn().mockResolvedValue(undefined),
+            save: jest.fn(),
+            findAll: jest.fn(), // Added missing method
         };
     });
 
     it('should return a SUCCESS Result when media is successfully deleted', async () => {
         // ARRANGE
-        const mediaId = 'existent-media-uuid';
         const useCase = new DeleteMedia(mediaRepositoryStub);
 
         // ACT
-        const result = await useCase.execute(mediaId);
+        const result = await useCase.execute(validMediaId);
 
         // ASSERT
-        // a. Check for success
         expect(result.isSuccess).toBe(true);
-
-        // b. Verify collaborators were called correctly (Interaction Testing)
-        expect(mediaRepositoryStub.findById).toHaveBeenCalledWith(MediaId.of(mediaId));
-        expect(mediaRepositoryStub.delete).toHaveBeenCalledWith(MediaId.of(mediaId));
+        expect(mediaRepositoryStub.findById).toHaveBeenCalledWith(MediaId.of(validMediaId));
+        expect(mediaRepositoryStub.delete).toHaveBeenCalledWith(MediaId.of(validMediaId));
     });
 
     it('should THROW a DomainException if the media to delete is not found', async () => {
         // ARRANGE
-        const nonExistentMediaId = 'non-existent-media-uuid';
-        // Sabotage the stub to simulate media not being found
-        (mediaRepositoryStub.findById as jest.Mock).mockResolvedValue(null);
+        const nonExistentMediaId = '123e4567-e89b-42d3-a456-426614174004'; // Valid UUID
+        mediaRepositoryStub.findById.mockResolvedValue(null);
         const useCase = new DeleteMedia(mediaRepositoryStub);
 
         // ACT & ASSERT
         await expect(useCase.execute(nonExistentMediaId)).rejects.toThrow(DomainException);
         await expect(useCase.execute(nonExistentMediaId)).rejects.toThrow('Media not found');
-        
-        // Ensure we do not attempt to delete if it was never found
         expect(mediaRepositoryStub.delete).not.toHaveBeenCalled();
     });
 
@@ -60,8 +53,6 @@ describe('DeleteMedia Use Case (Application Layer)', () => {
 
         // ACT & ASSERT
         await expect(useCase.execute(invalidId)).rejects.toThrow(DomainException);
-        
-        // Ensure no repository methods were called
         expect(mediaRepositoryStub.findById).not.toHaveBeenCalled();
         expect(mediaRepositoryStub.delete).not.toHaveBeenCalled();
     });

@@ -14,33 +14,33 @@ import { MediaId as MediaIdVO } from '../../../../src/lib/media/domain/valueObje
 import { DomainException } from '../../../../src/common/domain/domain.exception';
 
 // Helper to create mock answers for tests
-const createMockAnswer = (id: string, isCorrect: boolean): Answer => {
+const createMockAnswer = (isCorrect: boolean): Answer => {
   return Answer.createTextAnswer(
-    AnswerId.of(`answer-${id}`),
-    new AnswerText(`Answer text ${id}`),
-    new IsCorrect(isCorrect)
+    AnswerId.generate(),
+    AnswerText.of('Answer text'),
+    IsCorrect.fromBoolean(isCorrect)
   );
 };
 
 describe('Question Entity (Domain Layer)', () => {
   // ARRANGE: Create real Value Objects for reuse
-  const validQuestionId = QuestionId.of('question-uuid-1');
-  const validText = new QuestionText('What is the capital of Spain?');
-  const validQuizType = new QuestionType('quiz');
-  const validTimeLimit = new TimeLimit(30);
-  const validPoints = new Points(2000);
-  const validMediaId = MediaIdVO.of('media-uuid-for-question');
-  const parentQuizId = QuizId.of('quiz-uuid-parent');
+  const validQuestionId = QuestionId.of('123e4567-e89b-42d3-a456-426614174123');
+  const validText = QuestionText.of('What is the capital of Spain?');
+  const validQuizType = QuestionType.fromString('quiz');
+  const validTimeLimit = TimeLimit.of(30);
+  const validPoints = Points.of(2000);
+  const validMediaId = MediaIdVO.of('123e4567-e89b-42d3-a456-426614174124');
+  const parentQuizId = QuizId.of('123e4567-e89b-42d3-a456-426614174125');
 
   describe('create Factory', () => {
     it('should create a "quiz" type question successfully with 2 to 4 answers', () => {
       // ARRANGE
-      const twoAnswers = [createMockAnswer('1', true), createMockAnswer('2', false)];
+      const twoAnswers = [createMockAnswer(true), createMockAnswer(false)];
       const fourAnswers = [
-        createMockAnswer('1', true),
-        createMockAnswer('2', false),
-        createMockAnswer('3', false),
-        createMockAnswer('4', false),
+        createMockAnswer(true),
+        createMockAnswer(false),
+        createMockAnswer(false),
+        createMockAnswer(false),
       ];
 
       // ACT
@@ -56,8 +56,8 @@ describe('Question Entity (Domain Layer)', () => {
 
     it('should THROW DomainException for a "quiz" type question with less than 2 or more than 4 answers', () => {
       // ARRANGE
-      const oneAnswer = [createMockAnswer('1', true)];
-      const fiveAnswers = Array.from({ length: 5 }, (_, i) => createMockAnswer(i.toString(), i === 0));
+      const oneAnswer = [createMockAnswer(true)];
+      const fiveAnswers = Array.from({ length: 5 }, (_, i) => createMockAnswer(i === 0));
 
       // ACT & ASSERT
       expect(() => Question.create(validQuestionId, validText, null, validQuizType, validTimeLimit, validPoints, oneAnswer))
@@ -68,8 +68,8 @@ describe('Question Entity (Domain Layer)', () => {
 
     it('should create a "true_false" type question successfully with exactly 2 answers', () => {
         // ARRANGE
-        const tfAnswers = [createMockAnswer('1', true), createMockAnswer('2', false)];
-        const tfType = new QuestionType('true_false');
+        const tfAnswers = [createMockAnswer(true), createMockAnswer(false)];
+        const tfType = QuestionType.fromString('true_false');
 
         // ACT
         const question = Question.create(validQuestionId, validText, null, tfType, validTimeLimit, validPoints, tfAnswers);
@@ -81,7 +81,7 @@ describe('Question Entity (Domain Layer)', () => {
 
     it('should THROW DomainException if a question has no correct answer', () => {
       // ARRANGE
-      const allIncorrect = [createMockAnswer('1', false), createMockAnswer('2', false)];
+      const allIncorrect = [createMockAnswer(false), createMockAnswer(false)];
       
       // ACT & ASSERT
       expect(() => Question.create(validQuestionId, validText, null, validQuizType, validTimeLimit, validPoints, allIncorrect))
@@ -96,7 +96,7 @@ describe('Question Entity (Domain Layer)', () => {
 
     beforeEach(() => {
       // ARRANGE
-      const answers = [createMockAnswer('1', true), createMockAnswer('2', false)];
+      const answers = [createMockAnswer(true), createMockAnswer(false)];
       question = Question.create(validQuestionId, validText, validMediaId, validQuizType, validTimeLimit, validPoints, answers);
       // We must call the internal `_setQuiz` to test the DTOs that depend on this internal state.
       question._setQuiz(parentQuizId);
@@ -107,10 +107,10 @@ describe('Question Entity (Domain Layer)', () => {
       const plain = question.toPlainObject();
 
       // ASSERT
-      expect(plain.id).toBe('question-uuid-1');
-      expect(plain.quizId).toBe('quiz-uuid-parent');
+      expect(plain.id).toBe('123e4567-e89b-42d3-a456-426614174123');
+      expect(plain.quizId).toBe('123e4567-e89b-42d3-a456-426614174125');
       expect(plain.text).toBe('What is the capital of Spain?');
-      expect(plain.mediaId).toBe('media-uuid-for-question');
+      expect(plain.mediaId).toBe('123e4567-e89b-42d3-a456-426614174124');
       expect(plain.answers).toHaveLength(2);
       expect(plain.answers[0].isCorrect).toBe(true);
     });
@@ -120,14 +120,14 @@ describe('Question Entity (Domain Layer)', () => {
         const responseDto = question.toResponseDto();
 
         // ASSERT
-        expect(responseDto.slideId).toBe('question-uuid-1');
+        expect(responseDto.slideId).toBe('123e4567-e89b-42d3-a456-426614174123');
         expect(responseDto.questionType).toBe('quiz');
         expect(responseDto.questionText).toBe('What is the capital of Spain?');
         expect(responseDto.timeLimitSeconds).toBe(30);
-        expect(responseDto.mediaId).toBe('media-uuid-for-question');
+        expect(responseDto.mediaId).toBe('123e4567-e89b-42d3-a456-426614174124');
         expect(responseDto.options).toHaveLength(2);
         expect(responseDto.options[0].index).toBe('1');
-        expect(responseDto.options[0].text).toBe('Answer text 1');
+        expect(responseDto.options[0].text).toBe('Answer text');
     });
   });
 });
