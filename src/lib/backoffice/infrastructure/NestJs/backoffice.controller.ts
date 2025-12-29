@@ -4,11 +4,13 @@ import {
     Get,
     InternalServerErrorException,
     NotFoundException,
+    Param,
+    Patch,
     Query,
   } from '@nestjs/common';
   import { IsString, Length } from 'class-validator';
   import { SearchUsersUseCase } from '../../application/SearchUsersUseCase';
-
+  import { BlockUserUseCase } from '../../application/BlockUserUseCase';
 
 
 export class FindOneParams {
@@ -21,6 +23,7 @@ export class FindOneParams {
 export class BackofficeController {
     constructor(
         private readonly searchUsersUseCase: SearchUsersUseCase,
+        private readonly blockUserUseCase: BlockUserUseCase,
     ){}
 
     @Get('users')
@@ -47,5 +50,15 @@ export class BackofficeController {
         }
     }
 
-    
+    @Patch('users/:userId')
+    async blockUser(
+        @Param('userId') userId: string,
+    ) {
+        try {
+            const result = await this.blockUserUseCase.run(userId);
+            return result;
+        } catch (e) {
+            throw new Error(e.message);
+        }
+    }
 }

@@ -1,3 +1,4 @@
+import { Injectable } from "@nestjs/common";
 import { Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { User } from "../../domain/aggregate/User";
@@ -18,7 +19,9 @@ import { Membership } from "../../domain/entity/Membership";
 import { MembershipType } from "../../domain/valueObject/MembershipType";
 import { MembershipDate } from "../../domain/valueObject/MembershipDate";
 import { SearchParamsDto, SearchResultDto } from "../../application/SearchUsersUseCase";
+import { UserNotFoundException } from "../../../shared/exceptions/UserNotFoundException";
 
+@Injectable()
 export class TypeOrmUserRepository implements UserRepository {
   constructor(
     @InjectRepository(TypeOrmUserEntity)
@@ -113,7 +116,7 @@ export class TypeOrmUserRepository implements UserRepository {
   }> {
 
     const user = await this.repository.findOne({ where: { id: id.value } });
-    if (!user) throw new Error('User not found');
+    if (!user) throw new UserNotFoundException('User not found');
     user.Status = 'Blocked';
     await this.repository.save(user);
     return {
