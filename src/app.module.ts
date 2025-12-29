@@ -9,6 +9,7 @@ import { UserModule } from "./lib/user/infrastructure/NestJS/user.module";
 import { LibraryModule } from "./lib/library/infrastructure/NestJS/library.module";
 import { SinglePlayerGameModule } from "./lib/singlePlayerGame/infrastructure/NestJs/SinglePlayerGame.module";
 import { StatisticsModule } from "./lib/statistics/infrastructure/NestJS/statistics.module";
+import { BackofficeModule } from "./lib/backoffice/infrastructure/NestJs/backoffice.module";
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { StatisticsModule } from "./lib/statistics/infrastructure/NestJS/statist
     UserModule,
     SinglePlayerGameModule,
     StatisticsModule,
+    BackofficeModule,
   ],
 })
 export class AppModule {}
