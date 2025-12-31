@@ -208,17 +208,17 @@ export class TypeOrmQuizRepository implements QuizRepository {
     }
   }
 
-  async searchByAuthor(authorId: UserId): Promise<Quiz[]> {
+  async searchByAuthor(authorId?: UserId): Promise<Quiz[]> {
+    const query = authorId ? { authorId: authorId.value } : {};
     try {
         const collection = await this.getMongoCollection();
-        const quizzesCursor = await collection.find({ authorId: authorId.value });
+        const quizzesCursor = await collection.find(query);
         const quizzesDocs = await quizzesCursor.toArray();
         return quizzesDocs.map(doc => this.mapMongoToDomain(doc));
     } catch (error) {
         console.error("Failed to search in MongoDB, falling back to PostgreSQL.", error);
-        const quizzes = await this.pgRepository.find({
-            where: { userId: authorId.value },
-        });
+        const findOptions = authorId ? { where: { userId: authorId.value } } : {};
+        const quizzes = await this.pgRepository.find(findOptions);
         return quizzes.map((q) => this.mapPgToDomain(q));
     }
   }

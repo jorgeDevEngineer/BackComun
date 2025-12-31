@@ -20,6 +20,7 @@ import { UpdateQuizUseCase, UpdateQuizDto } from '../../application/UpdateQuizUs
 import { DeleteQuizUseCase } from '../../application/DeleteQuizUseCase';
 import { IsString, Length } from 'class-validator';
 import { Result } from '../../../shared/Type Helpers/result';
+import { GetAllKahootsUseCase } from '../../application/GetAllKahootsUseCase';
 
 export class FindOneParams {
   @IsString()
@@ -40,6 +41,8 @@ export class KahootController {
     private readonly updateQuizUseCase: UpdateQuizUseCase,
     @Inject(DeleteQuizUseCase)
     private readonly deleteQuizUseCase: DeleteQuizUseCase,
+    @Inject(GetAllKahootsUseCase)
+    private readonly getAllKahootsUseCase: GetAllKahootsUseCase,
   ) {}
 
   private handleResult<T>(result: Result<T>) {
@@ -50,6 +53,13 @@ export class KahootController {
       throw new BadRequestException(result.error);
     }
     return result.getValue();
+  }
+
+  @Get('all')
+  async getAllKahoots() {
+    const result = await this.getAllKahootsUseCase.execute();
+    const quizzes = this.handleResult(result);
+    return quizzes.map((q) => q.toPlainObject());
   }
 
   @Get('user/:userId')
