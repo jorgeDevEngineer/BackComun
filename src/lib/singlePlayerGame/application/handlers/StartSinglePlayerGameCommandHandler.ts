@@ -6,12 +6,14 @@ import { SinglePlayerGameId } from "../../domain/valueObjects/SinglePlayerGameVO
 import { SinglePlayerGameRepository } from "../../domain/repositories/SinglePlayerGameRepository";
 import { QuizRepository } from "src/lib/kahoot/domain/port/QuizRepository";
 import { IHandler } from "src/lib/shared/IHandler";
+import { UuidGenerator } from "src/lib/shared/domain/ports/UuuidGenerator";
 
 export class StartSinglePlayerGameCommandHandler implements IHandler<StartSinglePlayerGameCommand, StartGameResponseDto>{
 
     constructor(
         private readonly gameRepo: SinglePlayerGameRepository,
-        private readonly quizRepo: QuizRepository
+        private readonly quizRepo: QuizRepository,
+        private readonly uuidGenerator: UuidGenerator
     ) {}
 
     async execute(command: StartSinglePlayerGameCommand): Promise<StartGameResponseDto> { 
@@ -33,7 +35,7 @@ export class StartSinglePlayerGameCommandHandler implements IHandler<StartSingle
         }
 
         const game = SinglePlayerGame.create(
-            SinglePlayerGameId.generate(),
+            SinglePlayerGameId.generate(this.uuidGenerator),
             QuizId.of(command.kahootId),
             quiz.getTotalQuestions(),
             UserId.of(command.playerId)

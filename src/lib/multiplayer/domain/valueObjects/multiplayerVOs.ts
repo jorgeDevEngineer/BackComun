@@ -5,12 +5,15 @@ import { UuidGenerator } from "src/lib/shared/domain/ports/UuuidGenerator";
  */
 export class PlayerId {
     
-    private constructor(private readonly playerId: string) {}
+    private static readonly UUID_V4_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
-    public static of(playerId: string, uuidGenerator: UuidGenerator): PlayerId {
-        if (!uuidGenerator.isValid(playerId)) {
-            throw new Error(`PlayerId does not have a valid UUID v4 format: ${playerId}`);
+    private constructor(private readonly playerId: string) {
+        if (!PlayerId.UUID_V4_REGEX.test(playerId)) {
+            throw new Error(`SinglePlayerGameId does not have valid UUID v4 format: ${playerId}`);
         }
+    }
+
+    public static of(playerId: string): PlayerId {
         return new PlayerId(playerId);
     }
 
@@ -22,5 +25,4 @@ export class PlayerId {
     public getId(): string {
         return this.playerId;
     }
-
 }
