@@ -1,4 +1,4 @@
-import { UserId } from "src/lib/kahoot/domain/valueObject/Quiz";
+import { UserId } from "src/lib/user/domain/valueObject/UserId";
 import { GroupId } from "../valueObject/GroupId";
 import { GroupName } from "../valueObject/GroupName";
 import {
@@ -22,7 +22,7 @@ export class Group {
   private constructor(
     private readonly _id: GroupId,
     private _name: GroupName,
-    private _description: GroupDescription, 
+    private _description: GroupDescription | null, 
     private _adminId: UserId,
     members: GroupMember[],
     quizAssignments: GroupQuizAssignment[],
@@ -167,19 +167,12 @@ static createFromdb(
     this._updatedAt = now;
   }
 
-  addMember(userId: UserId, role: GroupRole, now: Date = new Date()): void {
+  addMember(userId: UserId, now: Date = new Date()): void {
     const existing = this._members.find(
       (m) => m.userId.value === userId.value,
     );
     if (existing) {
       throw new Error("El usuario ya es miembro de este grupo.");
-    }
-
-// Regla: ningún miembro nuevo entra como admin.
-    if (role.value === GroupRole.admin().value) {
-      throw new Error(
-        "No se puede agregar un miembro directamente como admin. Usa transferAdmin para cambiar el administrador."
-      );
     }
 
     const member = GroupMember.create(userId, GroupRole.member(), now);
@@ -349,7 +342,7 @@ removeQuizAssignment(
 
 
 
-  // Invitaciones al grupo
+// Invitaciones al grupo
 setInvitation(invitation: GroupInvitationToken, now: Date = new Date()): void {
   this._invitationToken = invitation;
   this._updatedAt = now;

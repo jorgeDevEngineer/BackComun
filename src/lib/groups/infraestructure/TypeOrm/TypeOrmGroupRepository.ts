@@ -14,7 +14,7 @@ import { GroupQuizAssignmentOrmEntity } from "./GroupQuizAssigmentOrmEntity";
 import { QuizId } from "src/lib/kahoot/domain/valueObject/Quiz";
 import { GroupQuizCompletion } from "../../domain/entity/GroupQuizCompletion";
 import { GroupInvitationToken } from "../../domain/valueObject/GroupInvitationToken";
-import { UserId } from "src/lib/kahoot/domain/valueObject/Quiz";
+import { UserId } from "src/lib/user/domain/valueObject/UserId";
 import { GroupOrmEntity } from "./GroupOrmEntity";
 import { GroupMemberOrmEntity } from "./GroupOrnMember";
 
@@ -63,10 +63,7 @@ export class TypeOrmGroupRepository implements GroupRepository {
     }
   //sincronizar los miembros y asignaciones con el estado en el domain
     groupOrm.members = this.syncMembers(groupOrm, group.members);
-    groupOrm.assignments = this.syncAssignments(
-      groupOrm,
-      group.quizAssignments,
-    );
+    groupOrm.assignments = this.syncAssignments(groupOrm, group.quizAssignments);
   //guardar los cambios en la base de datos
     await this.ormRepo.save(groupOrm);
   }
@@ -136,7 +133,7 @@ export class TypeOrmGroupRepository implements GroupRepository {
         existing.joinedAt = member.joinedAt;
         existing.completedQuizzes = member.completedQuizzes;
         nextMembers.push(existing);
-      } else {/// crear nuevo registro
+      } else {// crear nuevo registro
         const m = new GroupMemberOrmEntity();
         m.group = groupOrm;
         m.userId = userId;
@@ -192,7 +189,7 @@ export class TypeOrmGroupRepository implements GroupRepository {
       const assignment = GroupQuizAssignment.create(
         GroupQuizAssignmentId.of(a.id),
         QuizId.of(a.quizId),
-        UserId.of(a.assignedBy),
+        new UserId(a.assignedBy),
         a.availableFrom,
         a.availableUntil,
         a.createdAt,
@@ -226,7 +223,7 @@ export class TypeOrmGroupRepository implements GroupRepository {
 
     return orm.members.map((m) => {
       const member = GroupMember.create(
-        UserId.of(m.userId),
+        new UserId(m.userId),
         GroupRole.fromString(m.role),
         m.joinedAt,
       );
@@ -252,7 +249,8 @@ export class TypeOrmGroupRepository implements GroupRepository {
       GroupId.of(orm.id),
       GroupName.of(orm.name),
       GroupDescription.of(orm.description ?? ""),
-      UserId.of(orm.adminId),
+      new UserId(orm.adminId),
+
       members,
       assignments,
       this.emptyCompletions(),
@@ -261,5 +259,4 @@ export class TypeOrmGroupRepository implements GroupRepository {
       orm.updatedAt,
     );
   }
-  
 }

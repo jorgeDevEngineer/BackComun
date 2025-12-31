@@ -1,5 +1,5 @@
 import { GroupRepository } from "../domain/port/GroupRepository";
-import { UserId } from "src/lib/kahoot/domain/valueObject/Quiz";
+import { UserId } from "src/lib/user/domain/valueObject/UserId";
 import { GroupRole } from "../domain/valueObject/GroupMemberRole";
 
 export interface JoinGroupByInvitationInput {
@@ -19,7 +19,7 @@ export class JoinGroupByInvitationUseCase {
   async execute(input: JoinGroupByInvitationInput,): Promise<JoinGroupByInvitationOutput> {
     const now = input.now ?? new Date();
 
-    const userId = UserId.of(input.currentUserId);
+    const userId = new UserId(input.currentUserId);
 
     const group = await this.groupRepository.findByInvitationToken(
       input.token,
@@ -42,7 +42,7 @@ export class JoinGroupByInvitationUseCase {
       console.log("Grupo alcanzó el límite free de 5 miembros (dominio no lo rompe).");
     }
 
-    group.addMember(userId, GroupRole.member(), now);
+    group.addMember(userId, now);
 
     await this.groupRepository.save(group);
 
