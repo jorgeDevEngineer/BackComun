@@ -4,11 +4,9 @@ import { TypeOrmQuizEntity } from 'src/lib/kahoot/infrastructure/TypeOrm/TypeOrm
 import { TypeOrmSinglePlayerGameEntity } from 'src/lib/singlePlayerGame/infrastructure/TypeOrm/TypeOrmSinglePlayerGameEntity';
 import { StatisticsController } from './statistics.controller';
 import { TypeOrmCriteriaApplier } from '../TypeORM/Criteria Appliers/TypeOrmCriteriaApplier';
-import { TypeOrmQuizRepository } from 'src/lib/kahoot/infrastructure/TypeOrm/TypeOrmQuizRepository';
 import { Repository, SelectQueryBuilder } from 'typeorm';
 import { CriteriaApplier } from 'src/lib/library/domain/port/CriteriaApplier';
 import { CompletedQuizQueryCriteria } from '../../application/Response Types/CompletedQuizQueryCriteria';
-import { TypeOrmSinglePlayerGameRepository } from '../TypeORM/Repositories/TypeOrmSinglePlayerGameRepository';
 import { SinglePlayerGameRepository } from '../../domain/port/SinglePlayerRepository';
 import { QuizRepository } from 'src/lib/kahoot/domain/port/QuizRepository';
 import { GetUserResultsDomainService } from '../../domain/services/GetUserResultsDomainService';
@@ -19,6 +17,7 @@ import { LoggerModule } from 'src/lib/shared/aspects/logger/infrastructure/logge
 import { LoggingUseCaseDecorator } from 'src/lib/shared/aspects/logger/application/decorators/logging.decorator';
 import { ILoggerPort } from 'src/lib/shared/aspects/logger/domain/ports/logger.port';
 import { ErrorHandlingDecoratorWithEither } from 'src/lib/shared/aspects/error-handling/application/decorators/error-handling-either';
+import { StatisticsRepositoryBuilder } from '../TypeORM/statisticsBuilder';
 
 @Module({
     imports: [TypeOrmModule.forFeature([TypeOrmQuizEntity, TypeOrmSinglePlayerGameEntity]), LoggerModule],
@@ -29,17 +28,36 @@ import { ErrorHandlingDecoratorWithEither } from 'src/lib/shared/aspects/error-h
           useClass: TypeOrmCriteriaApplier,
         },
         {
+          provide: 'StatisticsRepositoryBuilder',
+          useFactory: (
+            quizRepo: Repository<TypeOrmQuizEntity>,
+            singleGameRepo: Repository<TypeOrmSinglePlayerGameEntity>,
+          ) => {
+            const dbType: 'postgres' | 'mongo' =
+              (process.env.STATISTICS_DB_TYPE as 'postgres' | 'mongo') || 'postgres';
+    
+            return new StatisticsRepositoryBuilder(dbType)
+              .withQuizRepo(quizRepo)
+              .withSinglePlayerGameRepo(singleGameRepo);
+          },
+          inject: [
+            getRepositoryToken(TypeOrmQuizEntity),
+            getRepositoryToken(TypeOrmSinglePlayerGameEntity),
+          ],
+        },
+        {
           provide: 'QuizRepository',
-          useClass: TypeOrmQuizRepository,
+          useFactory: (builder: StatisticsRepositoryBuilder) => builder.buildQuizRepository(),
+          inject: ['StatisticsRepositoryBuilder'],
         },
         {
           provide: 'SinglePlayerGameRepository',
           useFactory: (
-            ormRepo: Repository<TypeOrmSinglePlayerGameEntity>,
-            criteriaApplier: CriteriaApplier<SelectQueryBuilder<TypeOrmSinglePlayerGameEntity>, CompletedQuizQueryCriteria>
-          ) => new TypeOrmSinglePlayerGameRepository(ormRepo, criteriaApplier),
-          inject: [getRepositoryToken(TypeOrmSinglePlayerGameEntity), 'CriteriaApplier'],
-        },
+            builder: StatisticsRepositoryBuilder,
+            criteriaApplier: CriteriaApplier<SelectQueryBuilder<TypeOrmSinglePlayerGameEntity>, CompletedQuizQueryCriteria>,
+          ) => builder.buildSinglePlayerGameRepository(criteriaApplier),
+          inject: ['StatisticsRepositoryBuilder', 'CriteriaApplier'],
+        },    
         {
           provide: 'GetUserResultsDomainService',
           useFactory: (

@@ -7,16 +7,12 @@ import { GetAllUserQuizzesQueryHandler } from '../../application/Handlers/Querys
 import { GetUserInProgressQuizzesQueryHandler} from '../../application/Handlers/Querys/GetUserInProgessQuizzesQueryHandler';
 import { GetUserCompletedQuizzesQueryHandler } from '../../application/Handlers/Querys/GetUserCompletedQuizzesQueryHandler';
 import { UserFavoriteQuizRepository } from "../../domain/port/UserFavoriteQuizRepository";
-import { TypeOrmUserFavoriteQuizRepository } from '../TypeOrm/Repositories/TypeOrmUserFavoriteQuizRepository';
 import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
 import { TypeOrmUserFavoriteQuizEntity } from '../TypeOrm/Entities/TypeOrmUserFavoriteQuizEntity';
 import { TypeOrmQuizEntity } from '../../../kahoot/infrastructure/TypeOrm/TypeOrmQuizEntity';
-import { TypeOrmQuizRepository } from '../TypeOrm/Repositories/TypeOrmQuizRepository';
 import { UserRepository } from '../../../user/domain/port/UserRepository';
 import { TypeOrmUserEntity } from '../../../user/infrastructure/TypeOrm//TypeOrmUserEntity';
-import { TypeOrmUserRepository } from '../../../user/infrastructure/TypeOrm/TypeOrmUserRepository';
 import { SinglePlayerGameRepository} from '../../domain/port/SinglePlayerRepository';
-import { TypeOrmSinglePlayerGameRepository } from '../TypeOrm/Repositories/TypeOrmSinglePlayerGameRepository';
 import { TypeOrmSinglePlayerGameEntity } from "src/lib/singlePlayerGame/infrastructure/TypeOrm/TypeOrmSinglePlayerGameEntity";
 import { QuizRepository } from '../../domain/port/QuizRepository';
 import { CriteriaApplier } from '../../domain/port/CriteriaApplier';
@@ -34,6 +30,7 @@ import { ILoggerPort } from 'src/lib/shared/aspects/logger/domain/ports/logger.p
 import { LoggingUseCaseDecorator } from 'src/lib/shared/aspects/logger/application/decorators/logging.decorator';
 import { ErrorHandlingDecoratorWithEither } from 'src/lib/shared/aspects/error-handling/application/decorators/error-handling-either';
 import { LoggerModule } from 'src/lib/shared/aspects/logger/infrastructure/logger.module';
+import { LibraryRepositoryBuilder } from '../TypeOrm/libraryBuilder';
 
 @Module({
   imports: [TypeOrmModule.forFeature([TypeOrmUserFavoriteQuizEntity, TypeOrmQuizEntity, TypeOrmUserEntity, TypeOrmSinglePlayerGameEntity]), 
@@ -48,34 +45,62 @@ LoggerModule],
       provide: 'AdvancedCriteriaApplier',
       useClass: TypeOrmQuizCriteriaApplier, // implementación avanzada
     },
-    {
-      provide: 'UserFavoriteQuizRepository',
-      useFactory: (
-        ormRepo: Repository<TypeOrmUserFavoriteQuizEntity>,
-        criteriaApplier: CriteriaApplier<SelectQueryBuilder<TypeOrmUserFavoriteQuizEntity>, QuizQueryCriteria>,
-      ) => new TypeOrmUserFavoriteQuizRepository(ormRepo, criteriaApplier),
-      inject: [getRepositoryToken(TypeOrmUserFavoriteQuizEntity), 'CriteriaApplier'],
+   // Builder configurado con el motor desde variable de entorno
+   {
+    provide: 'LibraryRepositoryBuilder',
+    useFactory: (
+      quizRepo: Repository<TypeOrmQuizEntity>,
+      userRepo: Repository<TypeOrmUserEntity>,
+      userFavRepo: Repository<TypeOrmUserFavoriteQuizEntity>,
+      singleGameRepo: Repository<TypeOrmSinglePlayerGameEntity>,
+    ) => {
+      const dbType: 'postgres' | 'mongo' =
+        (process.env.LIBRARY_DB_TYPE as 'postgres' | 'mongo') || 'postgres';
+
+      return new LibraryRepositoryBuilder(dbType)
+        .withQuizRepo(quizRepo)
+        .withUserRepo(userRepo)
+        .withUserFavoriteRepo(userFavRepo)
+        .withSinglePlayerGameRepo(singleGameRepo);
     },
-    {
-      provide: 'QuizRepository',
-      useFactory: (
-        ormRepo: Repository<TypeOrmQuizEntity>,
-        advancedCriteriaApplier: CriteriaApplier<SelectQueryBuilder<TypeOrmQuizEntity>, QuizQueryCriteria>,
-      ) => new TypeOrmQuizRepository(ormRepo, advancedCriteriaApplier),
-      inject: [getRepositoryToken(TypeOrmQuizEntity), 'AdvancedCriteriaApplier'],
-    },
-    {
-      provide: 'UserRepository',
-      useClass: TypeOrmUserRepository,
-    },
-    {
-      provide: 'SinglePlayerGameRepository',
-      useFactory: (
-        ormRepo: Repository<TypeOrmSinglePlayerGameEntity>,
-        advancedCriteriaApplier: CriteriaApplier<SelectQueryBuilder<TypeOrmSinglePlayerGameEntity>, QuizQueryCriteria>
-      ) => new TypeOrmSinglePlayerGameRepository(ormRepo, advancedCriteriaApplier),
-      inject: [getRepositoryToken(TypeOrmSinglePlayerGameEntity), 'AdvancedCriteriaApplier'],
-    },
+    inject: [
+      getRepositoryToken(TypeOrmQuizEntity),
+      getRepositoryToken(TypeOrmUserEntity),
+      getRepositoryToken(TypeOrmUserFavoriteQuizEntity),
+      getRepositoryToken(TypeOrmSinglePlayerGameEntity),
+    ],
+  },
+
+  // Repositorios construidos con sus criteria appliers correspondientes
+  {
+    provide: 'UserFavoriteQuizRepository',
+    useFactory: (
+      builder: LibraryRepositoryBuilder,
+      criteriaApplier: CriteriaApplier<SelectQueryBuilder<TypeOrmUserFavoriteQuizEntity>, QuizQueryCriteria>,
+    ) => builder.buildUserFavoriteQuizRepository(criteriaApplier),
+    inject: ['LibraryRepositoryBuilder', 'CriteriaApplier'],
+  },
+  {
+    provide: 'QuizRepository',
+    useFactory: (
+      builder: LibraryRepositoryBuilder,
+      advancedCriteriaApplier: CriteriaApplier<SelectQueryBuilder<TypeOrmQuizEntity>, QuizQueryCriteria>,
+    ) => builder.buildQuizRepository(advancedCriteriaApplier),
+    inject: ['LibraryRepositoryBuilder', 'AdvancedCriteriaApplier'],
+  },
+  {
+    provide: 'UserRepository',
+    useFactory: (builder: LibraryRepositoryBuilder) => builder.buildUserRepository(),
+    inject: ['LibraryRepositoryBuilder'],
+  },
+  {
+    provide: 'SinglePlayerGameRepository',
+    useFactory: (
+      builder: LibraryRepositoryBuilder,
+      advancedCriteriaApplier: CriteriaApplier<SelectQueryBuilder<TypeOrmSinglePlayerGameEntity>, QuizQueryCriteria>,
+    ) => builder.buildSinglePlayerGameRepository(advancedCriteriaApplier),
+    inject: ['LibraryRepositoryBuilder', 'AdvancedCriteriaApplier'],
+  },
     {
       provide: 'AddUserFavoriteQuizDomainService',
       useFactory: (userFavoriteRepository: UserFavoriteQuizRepository,
