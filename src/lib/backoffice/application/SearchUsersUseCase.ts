@@ -17,7 +17,7 @@ export interface SearchResultDto {
         email: string;
         userType: string;
         createdAt: Date;
-        Status: string;
+        status: string;
     }[]; 
     pagination: {
       page: number;

@@ -9,7 +9,7 @@ export interface BlockedUserDto {
         email: string;
         userType: string;
         createdAt: Date;
-        Status: string;
+        status: string;
     };
 }
 

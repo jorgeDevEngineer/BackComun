@@ -17,7 +17,7 @@ export interface UserRepository {
         email: string;
         userType: string;
         createdAt: Date;
-        Status: string;
+        status: string;
     }[];
     pagination: {
         page: number;
@@ -36,7 +36,7 @@ export interface UserRepository {
       email: string;
       userType: string;
       createdAt: Date;
-      Status: string;
+      status: string;
     };
   }>;
 }

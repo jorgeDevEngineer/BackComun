@@ -49,5 +49,5 @@ export class TypeOrmUserEntity {
 
 
   @Column()
-  Status: string;
+  status: 'Active' | 'Blocked';
 }

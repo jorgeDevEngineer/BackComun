@@ -47,7 +47,7 @@ export class TypeOrmUserRepository implements UserRepository {
       ),
       new UserDate(entity.createdAt),
       new UserDate(entity.updatedAt),
-      entity.Status
+      entity.status
       
     );
   }
@@ -78,16 +78,16 @@ export class TypeOrmUserRepository implements UserRepository {
     const totalPages = Math.ceil(totalCount / params.limit);
     const data = await qb.getMany();
 
-    const resultData = await Promise.all(
-      data.map(async (user) => ({
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        userType: user.userType,
-        createdAt: user.createdAt,
-        Status: user.Status,
-      })),
-    );
+    const resultData = data.map((user) => ({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      userType: user.userType,
+      createdAt: user.createdAt,
+      status: user.status,
+    }));
+
+
 
     return {
       data: resultData,
@@ -111,13 +111,13 @@ export class TypeOrmUserRepository implements UserRepository {
       email: string;
       userType: string;
       createdAt: Date;
-      Status: string;
+      status: string;
     };
   }> {
 
     const user = await this.repository.findOne({ where: { id: id.value } });
     if (!user) throw new UserNotFoundException('User not found');
-    user.Status = 'Blocked';
+    user.status = 'Blocked';
     await this.repository.save(user);
     return {
       user: {
@@ -126,7 +126,7 @@ export class TypeOrmUserRepository implements UserRepository {
         email: user.email,
         userType: user.userType,
         createdAt: user.createdAt,
-        Status: user.Status,
+        status: user.status,
       },
     };
   }
