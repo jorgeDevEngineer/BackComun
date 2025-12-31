@@ -1,6 +1,5 @@
 import { randomUUID } from "crypto";
 import { QuestionId } from "src/lib/kahoot/domain/valueObject/Question";
-import { Optional } from "src/lib/shared/Type Helpers/Optional";
 
 const UUID_V4_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 function isValidUUID(value: string): boolean {
