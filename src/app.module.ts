@@ -1,5 +1,4 @@
-
-import { Module } from "@nestjs/common";
+import { Module, OnApplicationBootstrap } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import * as Joi from 'joi';
@@ -15,16 +14,17 @@ import { LoggerModule } from "./lib/shared/aspects/logger/infrastructure/logger.
 import { BackofficeModule } from "./lib/backoffice/infrastructure/NestJs/backoffice.module";
 import { DatabaseModule } from "./lib/shared/infrastructure/database/database.module";
 import { AdminModule } from "./lib/admin/infrastructure/admin.module";
+import { DynamicMongoAdapter } from "./lib/shared/infrastructure/database/dynamic-mongo.adapter";
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ 
+    ConfigModule.forRoot({
       isGlobal: true,
       validationSchema: Joi.object({
         DATABASE_URL_POSTGRES: Joi.string().required(),
         DATABASE_URL_MONGO: Joi.string().required(),
         DATABASE_SSL: Joi.boolean().default(false),
-        DATABASE_SYNCHRONIZE: Joi.boolean(),
+        DATABASE_SYNCHRONIZE: Joi.boolean().default(false), // Por defecto false para seguridad
       }),
     }),
 
@@ -32,14 +32,15 @@ import { AdminModule } from "./lib/admin/infrastructure/admin.module";
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
-        const useSSL = configService.get("DATABASE_SSL") === "true";
-        const synchronize = configService.get("DATABASE_SYNCHRONIZE") === true;
+        // Obtenemos las configuraciones del entorno
+        const useSSL = configService.get("DATABASE_SSL") === "true" || configService.get("DATABASE_SSL") === true;
+        const synchronize = configService.get("DATABASE_SYNCHRONIZE") === "true" || configService.get("DATABASE_SYNCHRONIZE") === true;
 
         return {
           type: "postgres",
           url: configService.get<string>("DATABASE_URL_POSTGRES"),
           autoLoadEntities: true,
-          synchronize,
+          synchronize: synchronize, // ¡CORREGIDO! Ya no es true fijo
           ssl: useSSL ? { rejectUnauthorized: false } : false,
         };
       },
@@ -58,4 +59,15 @@ import { AdminModule } from "./lib/admin/infrastructure/admin.module";
     BackofficeModule,
   ],
 })
-export class AppModule {}
+export class AppModule implements OnApplicationBootstrap {
+  constructor(
+    private readonly mongoAdapter: DynamicMongoAdapter,
+    private readonly configService: ConfigService,
+  ) {}
+
+  async onApplicationBootstrap() {
+    const mongoUrl = this.configService.get<string>('DATABASE_URL_MONGO');
+    await this.mongoAdapter.reconnect('kahoot', mongoUrl);
+    await this.mongoAdapter.reconnect('media', mongoUrl);
+  }
+}

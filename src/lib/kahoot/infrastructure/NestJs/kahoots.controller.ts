@@ -9,26 +9,32 @@ import {
   Param,
   Post,
   Put,
-  HttpException,
-  HttpStatus,
-  BadRequestException
+  BadRequestException,
+  UsePipes,
+  ValidationPipe,
+  Req,
+  UseGuards
 } from '@nestjs/common';
+import { FakeCurrentUserGuard } from '../../../groups/infraestructure/NestJs/FakeCurrentUser.guard';
 import { CreateQuizUseCase, CreateQuiz } from '../../application/CreateQuizUseCase'; 
 import { GetQuizUseCase } from '../../application/GetQuizUseCase';
 import { ListUserQuizzesUseCase } from '../../application/ListUserQuizzesUseCase';
-import { UpdateQuizUseCase, UpdateQuizDto } from '../../application/UpdateQuizUseCase';
+import { UpdateQuizUseCase, UpdateQuiz } from '../../application/UpdateQuizUseCase';
 import { DeleteQuizUseCase } from '../../application/DeleteQuizUseCase';
 import { IsString, Length } from 'class-validator';
 import { Result } from '../../../shared/Type Helpers/result';
 import { GetAllKahootsUseCase } from '../../application/GetAllKahootsUseCase';
+import { CreateQuizDto } from './DTOs/create-quiz.dto';
+import { UpdateQuizDto } from './DTOs/update-quiz.dto';
 
 export class FindOneParams {
   @IsString()
-  @Length(5, 255)
+  @Length(36, 36)
   id: string;
 }
 
 @Controller('kahoots')
+@UseGuards(FakeCurrentUserGuard)
 export class KahootController {
   constructor(
     @Inject(CreateQuizUseCase)
@@ -70,19 +76,39 @@ export class KahootController {
   }
 
   @Post()
-  async create(@Body() body: CreateQuiz) { 
-    const result = await this.createQuizUseCase.execute(body);
+  @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
+  async create(
+    @Body() createQuizDto: CreateQuizDto,
+    @Req() req: any
+  ) { 
+    const authorId = req.user.id;
+
+    const createQuizData: CreateQuiz = {
+      ...createQuizDto,
+      authorId: authorId,
+      questions: createQuizDto.questions,
+    };
+
+    const result = await this.createQuizUseCase.execute(createQuizData);
     const quiz = this.handleResult(result);
     return quiz.toPlainObject();
   }
 
   @Put(':id')
-  async edit(@Param() params: FindOneParams, @Body() body: CreateQuiz) { 
-    const updateQuizDto: UpdateQuizDto = {
-      ...body,
-      quizId: params.id
+  @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
+  async edit(
+    @Param() params: FindOneParams, 
+    @Body() updateQuizDto: UpdateQuizDto,
+    @Req() req: any
+  ) { 
+    const authorId = req.user.id;
+
+    const updateQuizData: UpdateQuiz = {
+      quizId: params.id,
+      authorId: authorId,
+      ...updateQuizDto
     };
-    const result = await this.updateQuizUseCase.execute(updateQuizDto);
+    const result = await this.updateQuizUseCase.execute(updateQuizData);
     const quiz = this.handleResult(result);
     return quiz.toPlainObject();
   }
