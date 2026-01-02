@@ -22,7 +22,7 @@ import { ListUserQuizzesUseCase } from '../../application/ListUserQuizzesUseCase
 import { UpdateQuizUseCase, UpdateQuiz } from '../../application/UpdateQuizUseCase';
 import { DeleteQuizUseCase } from '../../application/DeleteQuizUseCase';
 import { IsString, Length } from 'class-validator';
-import { Result } from '../../../shared/TypeHelpers/result';
+import { Result } from '../../../shared/Type Helpers/result';
 import { GetAllKahootsUseCase } from '../../application/GetAllKahootsUseCase';
 import { CreateQuizDto } from './DTOs/create-quiz.dto';
 import { UpdateQuizDto } from './DTOs/update-quiz.dto';
