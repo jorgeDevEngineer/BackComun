@@ -8,9 +8,8 @@ const allowedTimeLimits = [5, 10, 20, 30, 45, 60, 90, 120, 180, 240];
 const allowedPoints = [0, 500, 1000, 2000];
 
 export class UpdateQuestionDto {
-    @IsOptional()
     @IsUUID()
-    id?: string; // El ID es opcional; si no se provee, es una pregunta nueva.
+    id: string; // El ID es obligatorio para identificar la pregunta a actualizar.
 
     @IsString()
     text: string;
