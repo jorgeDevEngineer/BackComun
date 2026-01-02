@@ -12,7 +12,13 @@ export class GetAllKahootsUseCase implements IHandler<void, Result<Quiz[]>> {
   ) {}
 
   async execute(): Promise<Result<Quiz[]>> {
-    const quizzes = await this.quizRepository.searchByAuthor();
-    return Result.ok<Quiz[]>(quizzes);
+    try {
+      const quizzes = await this.quizRepository.searchByAuthor();
+      return Result.ok<Quiz[]>(quizzes);
+    } catch (error) {
+      // Si ocurre cualquier error inesperado, lo capturamos y devolvemos un fallo
+      console.error("Error inesperado en GetAllKahootsUseCase:", error);
+      return Result.fail<Quiz[]>('Ocurrió un error inesperado al obtener los quizzes.');
+    }
   }
 }

@@ -29,91 +29,37 @@ export class Quiz {
     private _playCount: number,
     private _questions: Question[] = []
   ) {
-    // Asignamos la referencia de este quiz (this) a cada una de sus preguntas.
     this._questions.forEach((question) => question._setQuiz(this._id));
   }
 
-  public get id(): QuizId {
-    return this._id;
-  }
-
-  public getQuestions(): Question[]{
-    return this._questions;
-  }
-
-  // El método de factoría ahora exige los Value Objects correctos.
   public static create(
-    id: QuizId,
-    authorId: UserId,
-    title: QuizTitle,
-    description: QuizDescription,
-    visibility: Visibility,
-    status: QuizStatus,
-    category: QuizCategory,
-    themeId: ThemeId,
-    coverImageId: MediaIdVO | null,
-    questions: Question[],
-    playCount: number = 0
+    id: QuizId, authorId: UserId, title: QuizTitle, description: QuizDescription,
+    visibility: Visibility, status: QuizStatus, category: QuizCategory, themeId: ThemeId,
+    coverImageId: MediaIdVO | null, questions: Question[], playCount: number = 0
   ): Quiz {
     if (questions.length === 0) {
         throw new DomainException('A quiz must have at least one question.');
     }
     const createdAt = new Date();
-    return new Quiz(
-      id,
-      authorId,
-      title,
-      description,
-      visibility,
-      status,
-      category,
-      themeId,
-      coverImageId,
-      createdAt,
-      playCount,
-      questions
-    );
+    return new Quiz(id, authorId, title, description, visibility, status, category, themeId, coverImageId, createdAt, playCount, questions);
   }
 
   public static fromDb(
-    id: QuizId,
-    authorId: UserId,
-    title: QuizTitle,
-    description: QuizDescription,
-    visibility: Visibility,
-    status: QuizStatus,
-    category: QuizCategory,
-    themeId: ThemeId,
-    coverImageId: MediaIdVO | null,
-    createdAt: Date,
-    playCount: number,
-    questions: Question[]
+    id: QuizId, authorId: UserId, title: QuizTitle, description: QuizDescription,
+    visibility: Visibility, status: QuizStatus, category: QuizCategory, themeId: ThemeId,
+    coverImageId: MediaIdVO | null, createdAt: Date, playCount: number, questions: Question[]
   ): Quiz {
-    return new Quiz(
-      id,
-      authorId,
-      title,
-      description,
-      visibility,
-      status,
-      category,
-      themeId,
-      coverImageId,
-      createdAt,
-      playCount,
-      questions
-    );
+    return new Quiz(id, authorId, title, description, visibility, status, category, themeId, coverImageId, createdAt, playCount, questions);
   }
 
-  public updateMetadata(
-    title: QuizTitle,
-    description: QuizDescription,
-    visibility: Visibility,
-    status: QuizStatus,
-    category: QuizCategory,
-    themeId: ThemeId,
-    coverImageId: MediaIdVO | null
+  public update(
+    authorId: UserId, title: QuizTitle, description: QuizDescription, visibility: Visibility,
+    status: QuizStatus, category: QuizCategory, themeId: ThemeId, coverImageId: MediaIdVO | null,
+    newQuestions: Question[]
   ): void {
+    if (!this._authorId.equals(authorId)) {
+      throw new DomainException("Only the author can update the quiz.");
+    }
     this._title = title;
     this._description = description;
     this._visibility = visibility;
@@ -121,29 +67,45 @@ export class Quiz {
     this._category = category;
     this._themeId = themeId;
     this._coverImageId = coverImageId;
+    this.syncQuestions(newQuestions);
   }
 
-  public replaceQuestions(newQuestions: Question[]): void {
+  private syncQuestions(newQuestions: Question[]): void {
     if (newQuestions.length === 0) {
-        throw new DomainException('A quiz must have at least one question.');
+      throw new DomainException('A quiz must have at least one question.');
     }
-    // Asignamos el ID de este quiz a las nuevas preguntas para mantener la referencia
-    newQuestions.forEach((q) => q._setQuiz(this._id));
+    const newQuestionIds = newQuestions.map(q => q.id.getValue());
+    this._questions = this._questions.filter(q => newQuestionIds.includes(q.id.getValue()));
+    newQuestions.forEach((newQ) => {
+      const existingQuestion = this._questions.find(q => q.id.equals(newQ.id));
+      if (existingQuestion) {
+        existingQuestion.update(newQ.text, newQ.mediaId, newQ.type, newQ.timeLimit, newQ.points, newQ.getAnswers());
+      } else {
+        newQ._setQuiz(this._id);
+        this._questions.push(newQ);
+      }
+    });
+  }
+  
+  public get id(): QuizId { return this._id; }
+  public get authorId(): UserId { return this._authorId; }
+  public get themeId(): ThemeId { return this._themeId; }
+  public getQuestions(): Question[] { return this._questions; }
+  public getTotalQuestions(): number { return this._questions.length; }
 
-    // Reemplazamos el array
-    this._questions = newQuestions;
+  public getFirstQuestion(): Question {
+    if(this._questions.length === 0) throw new DomainException("Quiz has no questions.");
+    return this._questions[0];
   }
 
-  public get authorId(): UserId {
-    return this._authorId;
+  public getQuestionIds(): QuestionId[] {
+    return this._questions.map( question => question.id);
   }
 
-  public get themeId(): ThemeId {
-    return this._themeId;
-  }
-
-  public getTotalQuestions(){
-    return this._questions.length;
+  public getQuestionById(id: QuestionId):Question {
+    const question = this._questions.find(question => question.id.equals(id));
+    if (!question) throw new DomainException(`Question with id ${id.getValue()} not found in this quiz.`);
+    return question;
   }
 
   public toPlainObject() {
@@ -162,24 +124,4 @@ export class Quiz {
       questions: this._questions.map((q) => q.toPlainObject()),
     };
   }
-
-  public getFirstQuestion(): Question {
-    if(this._questions.length === 0){
-        throw new DomainException("Quiz has no questions.");
-    }
-    return this._questions[0];
-  }
-
-  public getQuestionIds(): QuestionId[] {
-    return this._questions.map( question => question.id);
-  }
-
-  public getQuestionById(id: QuestionId):Question {
-    const question: Question = this._questions.find(question => question.id.equals(id))
-    if (!question){
-      throw new DomainException(`Question with id ${id.getValue()} not found in this quiz.`);
-    }
-    return question;
-  }
-
 }

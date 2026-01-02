@@ -1,5 +1,5 @@
 
-import { Module } from "@nestjs/common";
+import { Module, OnApplicationBootstrap } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import * as Joi from 'joi';
@@ -14,6 +14,7 @@ import { StatisticsModule } from "./lib/statistics/infrastructure/NestJS/statist
 import { LoggerModule } from "./lib/shared/aspects/logger/infrastructure/logger.module";
 import { DatabaseModule } from "./lib/shared/infrastructure/database/database.module";
 import { AdminModule } from "./lib/admin/infrastructure/admin.module";
+import { DynamicMongoAdapter } from "./lib/shared/infrastructure/database/dynamic-mongo.adapter";
 
 @Module({
   imports: [
@@ -56,4 +57,15 @@ import { AdminModule } from "./lib/admin/infrastructure/admin.module";
     StatisticsModule,
   ],
 })
-export class AppModule {}
+export class AppModule implements OnApplicationBootstrap {
+  constructor(
+    private readonly mongoAdapter: DynamicMongoAdapter,
+    private readonly configService: ConfigService,
+  ) {}
+
+  async onApplicationBootstrap() {
+    const mongoUrl = this.configService.get<string>('DATABASE_URL_MONGO');
+    await this.mongoAdapter.reconnect('kahoot', mongoUrl);
+    await this.mongoAdapter.reconnect('media', mongoUrl);
+  }
+}

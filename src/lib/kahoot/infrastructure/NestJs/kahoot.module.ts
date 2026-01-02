@@ -1,4 +1,3 @@
-
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { KahootController } from './kahoots.controller';
@@ -15,9 +14,10 @@ import { ILoggerPort } from '../../../shared/aspects/logger/domain/ports/logger.
 import { LoggingUseCaseDecorator } from '../../../shared/aspects/logger/application/decorators/logging.decorator';
 import { ErrorHandlingDecorator } from '../../../shared/aspects/error-handling/application/decorators/error-handling.decorator';
 import { GetAllKahootsUseCase } from '../../application/GetAllKahootsUseCase';
+import { DatabaseModule } from '../../../shared/infrastructure/database/database.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([TypeOrmQuizEntity]), LoggerModule],
+  imports: [TypeOrmModule.forFeature([TypeOrmQuizEntity]), LoggerModule, DatabaseModule],
   controllers: [KahootController],
   providers: [
     {

@@ -18,16 +18,16 @@ import {
 import { DomainException } from '../../shared/exceptions/domain.exception';
 import { IHandler } from 'src/lib/shared/IHandler';
 
-// DTOs para la entrada de datos.
+// DTOs para la entrada de datos, ahora alineados con los DTOs de infraestructura.
 export interface CreateAnswerDto {
-    text: string | null;
+    text: string;
     isCorrect: boolean;
     mediaId: string | null;
 }
 
 export interface CreateQuestion {
     text: string;
-    questionType: 'quiz' | 'true_false';
+    type: 'single' | 'multiple' | 'true_false'; // <--- CORREGIDO
     timeLimit: number;
     points: number;
     mediaId: string | null;
@@ -51,7 +51,6 @@ export class CreateQuizUseCase implements IHandler<CreateQuiz, Result<Quiz>> {
 
   async execute(dto: CreateQuiz): Promise<Result<Quiz>> {
 
-    // 1. Crear Value Objects. DomainExceptions will be thrown on validation failure.
     const authorId = UserId.of(dto.authorId);
     const title = QuizTitle.of(dto.title);
     const description = QuizDescription.of(dto.description);
@@ -61,14 +60,10 @@ export class CreateQuizUseCase implements IHandler<CreateQuiz, Result<Quiz>> {
     const themeId = ThemeId.of(dto.themeId);
     const coverImageId = dto.coverImageId ? MediaIdVO.of(dto.coverImageId) : null;
 
-    // 2. Build Question and Answer entities from DTOs.
     const questions: Question[] = [];
     for (const qDto of dto.questions) {
         const answers: Answer[] = [];
         for (const aDto of qDto.answers) {
-            if (aDto.text && aDto.mediaId) {
-                 throw new DomainException('Answer cannot have both text and mediaId');
-            }
             if (!aDto.text && !aDto.mediaId) {
                 throw new DomainException('Answer must have either text or mediaId');
             }
@@ -89,7 +84,7 @@ export class CreateQuizUseCase implements IHandler<CreateQuiz, Result<Quiz>> {
             QuestionId.generate(),
             QuestionText.of(qDto.text),
             qDto.mediaId ? MediaIdVO.of(qDto.mediaId) : null,
-            QuestionType.fromString(qDto.questionType),
+            QuestionType.fromString(qDto.type), // <--- CORREGIDO
             TimeLimit.of(qDto.timeLimit),
             Points.of(qDto.points),
             answers
@@ -97,7 +92,6 @@ export class CreateQuizUseCase implements IHandler<CreateQuiz, Result<Quiz>> {
         questions.push(question);
     }
 
-    // 3. Create the Aggregate Root (Quiz)
     const quiz = Quiz.create(
         QuizId.generate(),
         authorId,
@@ -111,10 +105,8 @@ export class CreateQuizUseCase implements IHandler<CreateQuiz, Result<Quiz>> {
         questions
     );
 
-    // 4. Persist the aggregate. Infrastructure errors will bubble up to the decorator.
     await this.quizRepository.save(quiz);
 
-    // If no exceptions were thrown, return a success result.
     return Result.ok<Quiz>(quiz);
   }
 }
