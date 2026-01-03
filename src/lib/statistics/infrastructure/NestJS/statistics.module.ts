@@ -15,6 +15,8 @@ import { LoggingUseCaseDecorator } from "src/lib/shared/aspects/logger/applicati
 import { ILoggerPort } from "src/lib/shared/aspects/logger/domain/ports/logger.port";
 import { ErrorHandlingDecoratorWithEither } from "src/lib/shared/aspects/error-handling/application/decorators/error-handling-either";
 import { StatisticsRepositoryBuilder } from "../TypeORM/statisticsBuilder";
+import { DynamicMongoAdapter } from "src/lib/shared/infrastructure/database/dynamic-mongo.adapter";
+import { DatabaseModule } from "src/lib/shared/infrastructure/database/database.module";
 
 @Module({
   imports: [
@@ -23,6 +25,7 @@ import { StatisticsRepositoryBuilder } from "../TypeORM/statisticsBuilder";
       TypeOrmSinglePlayerGameEntity,
     ]),
     LoggerModule,
+    DatabaseModule,
   ],
   controllers: [StatisticsController],
   providers: [
@@ -47,9 +50,10 @@ import { StatisticsRepositoryBuilder } from "../TypeORM/statisticsBuilder";
     {
       provide: "SinglePlayerGameRepository",
       useFactory: (
-        builder: StatisticsRepositoryBuilder
-      ) => builder.buildSinglePlayerGameRepository(),
-      inject: ["StatisticsRepositoryBuilder"],
+        builder: StatisticsRepositoryBuilder,
+        mongoAdapter: DynamicMongoAdapter
+      ) => builder.buildSinglePlayerGameRepository(mongoAdapter),
+      inject: ["StatisticsRepositoryBuilder", DynamicMongoAdapter],
     },
     {
       provide: "GetUserResultsDomainService",

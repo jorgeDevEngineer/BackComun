@@ -3,9 +3,11 @@ import { TypeOrmSinglePlayerGameEntity } from "src/lib/singlePlayerGame/infrastr
 import { DataSource, Repository } from "typeorm";
 import { TypeOrmQuizRepository } from "src/lib/kahoot/infrastructure/TypeOrm/TypeOrmQuizRepository";
 import { TypeOrmPostgresCriteriaApplier } from "./Criteria Appliers/Postgres/TypeOrmPostgresCriteriaApplier";
-import { TypeOrmPostgresSinglePlayerGameRepository } from "./Postgres/Repositories/TypeOrmPostgresSinglePlayerGameRepository";
+import { DynamicSinglePlayerGameRepository } from "./DynamicSinglePlayerGameRepository";
 import { SinglePlayerGameRepository } from "../../domain/port/SinglePlayerRepository";
 import { QuizRepository } from "src/lib/kahoot/domain/port/QuizRepository";
+import { DynamicMongoAdapter } from "src/lib/shared/infrastructure/database/dynamic-mongo.adapter";
+import { MongoCriteriaApplier } from "./Criteria Appliers/Mongo/MongoCriteriaApplier";
 
 type DbType = "postgres" | "mongo";
 
@@ -39,13 +41,16 @@ export class StatisticsRepositoryBuilder {
     throw new Error("Mongo QuizRepository no implementado aún");
   }
 
-  buildSinglePlayerGameRepository(
+  buildSinglePlayerGameRepository( mongoAdapter: DynamicMongoAdapter
   ): SinglePlayerGameRepository {
     if (this.dbType === "postgres") {
       const criteriaApplier = new TypeOrmPostgresCriteriaApplier<TypeOrmSinglePlayerGameEntity>();
-      return new TypeOrmPostgresSinglePlayerGameRepository(
+      const mongoCriteriaApplier = new MongoCriteriaApplier<any>();
+      return new DynamicSinglePlayerGameRepository(
         this.singleGameRepo!,
-        criteriaApplier
+        criteriaApplier,
+        mongoAdapter,
+        mongoCriteriaApplier
       );
     }
     throw new Error("Mongo SinglePlayerGameRepository no implementado aún");
