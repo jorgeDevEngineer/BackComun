@@ -3,14 +3,14 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { TypeOrmUserEntity } from "../TypeOrm/TypeOrmUserEntity";
 import { UserController } from "./user.controller";
 import { TypeOrmUserRepository } from "../TypeOrm/TypeOrmUserRepository";
-import { GetOneUserById } from "../../aplication/GetOneUserById";
-import { GetAllUsers } from "../../aplication/GetAllUsers";
-import { CreateUser } from "../../aplication/CreateUser";
-import { DeleteUser } from "../../aplication/DeleteUser";
-import { EditUser } from "../../aplication/EditUser";
-import { GetOneUserByUserName } from "../../aplication/GetOneUserByUserName";
-import { EnablePremiumMembership } from "../../aplication/EnablePremiumMembership";
-import { EnableFreeMembership } from "../../aplication/EnableFreeMembership";
+import { GetOneUserById } from "../../application/GetOneUserById";
+import { GetAllUsers } from "../../application/GetAllUsers";
+import { CreateUser } from "../../application/CreateUser";
+import { DeleteUser } from "../../application/DeleteUser";
+import { EditUser } from "../../application/EditUser";
+import { GetOneUserByUserName } from "../../application/GetOneUserByUserName";
+import { EnablePremiumMembership } from "../../application/EnablePremiumMembership";
+import { EnableFreeMembership } from "../../application/EnableFreeMembership";
 
 @Module({
   imports: [TypeOrmModule.forFeature([TypeOrmUserEntity])],
