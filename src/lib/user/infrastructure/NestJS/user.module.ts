@@ -3,14 +3,14 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { TypeOrmUserEntity } from "../TypeOrm/TypeOrmUserEntity";
 import { UserController } from "./user.controller";
 import { TypeOrmUserRepository } from "../TypeOrm/TypeOrmUserRepository";
-import { GetOneUserById } from "../../application/Handlers/Querys/GetOneUserById";
-import { GetAllUsers } from "../../application/Handlers/Querys/GetAllUsers";
+import { GetOneUserByIdQueryHandler } from "../../application/Handlers/Querys/GetOneUserByIdQueryHandler";
+import { GetAllUsersQueryHandler } from "../../application/Handlers/Querys/GetAllUsersQueryHandler";
 import { CreateUserCommandHandler } from "../../application/Handlers/Commands/CreateUserCommandHandler";
-import { DeleteUser } from "../../application/Handlers/Commands/DeleteUser";
-import { EditUser } from "../../application/Handlers/Commands/EditUser";
-import { GetOneUserByUserName } from "../../application/Handlers/Querys/GetOneUserByUserName";
-import { EnablePremiumMembership } from "../../application/Handlers/Commands/EnablePremiumMembership";
-import { EnableFreeMembership } from "../../application/Handlers/Commands/EnableFreeMembership";
+import { DeleteUserCommandHandler } from "../../application/Handlers/Commands/DeleteUserCommandHandler";
+import { EditUserCommandHandler } from "../../application/Handlers/Commands/EditUserCommandHandler";
+import { GetOneUserByUserNameQueryHandler } from "../../application/Handlers/Querys/GetOneUserByUserNameQueryHandler";
+import { EnablePremiumMembershipCommandHandler } from "../../application/Handlers/Commands/EnablePremiumMembershipCommandHandler";
+import { EnableFreeMembershipCommandHandler } from "../../application/Handlers/Commands/EnableFreeMembershipCommandHandler";
 
 @Module({
   imports: [TypeOrmModule.forFeature([TypeOrmUserEntity])],
@@ -21,21 +21,21 @@ import { EnableFreeMembership } from "../../application/Handlers/Commands/Enable
       useClass: TypeOrmUserRepository,
     },
     {
-      provide: "GetAllUsers",
+      provide: "GetAllUsersQueryHandler",
       useFactory: (repository: TypeOrmUserRepository) =>
-        new GetAllUsers(repository),
+        new GetAllUsersQueryHandler(repository),
       inject: ["UserRepository"],
     },
     {
-      provide: "GetOneUserById",
+      provide: "GetOneUserByIdQueryHandler",
       useFactory: (repository: TypeOrmUserRepository) =>
-        new GetOneUserById(repository),
+        new GetOneUserByIdQueryHandler(repository),
       inject: ["UserRepository"],
     },
     {
-      provide: "GetOneUserByUserName",
+      provide: "GetOneUserByUserNameQueryHandler",
       useFactory: (repository: TypeOrmUserRepository) =>
-        new GetOneUserByUserName(repository),
+        new GetOneUserByUserNameQueryHandler(repository),
       inject: ["UserRepository"],
     },
     {
@@ -45,27 +45,27 @@ import { EnableFreeMembership } from "../../application/Handlers/Commands/Enable
       inject: ["UserRepository"],
     },
     {
-      provide: "DeleteUser",
+      provide: "DeleteUserCommandHandler",
       useFactory: (repository: TypeOrmUserRepository) =>
-        new DeleteUser(repository),
+        new DeleteUserCommandHandler(repository),
       inject: ["UserRepository"],
     },
     {
-      provide: "EditUser",
+      provide: "EditUserCommandHandler",
       useFactory: (repository: TypeOrmUserRepository) =>
-        new EditUser(repository),
+        new EditUserCommandHandler(repository),
       inject: ["UserRepository"],
     },
     {
-      provide: "EnablePremiumMembership",
+      provide: "EnablePremiumMembershipCommandHandler",
       useFactory: (repository: TypeOrmUserRepository) =>
-        new EnablePremiumMembership(repository),
+        new EnablePremiumMembershipCommandHandler(repository),
       inject: ["UserRepository"],
     },
     {
-      provide: "EnableFreeMembership",
+      provide: "EnableFreeMembershipCommandHandler",
       useFactory: (repository: TypeOrmUserRepository) =>
-        new EnableFreeMembership(repository),
+        new EnableFreeMembershipCommandHandler(repository),
       inject: ["UserRepository"],
     },
   ],
