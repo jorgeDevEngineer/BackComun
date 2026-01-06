@@ -1,4 +1,4 @@
-import { PlayerId, PlayerNickname } from "../valueObjects/multiplayerVOs";
+import { PlayerId, PlayerNickname } from "../valueObjects/playerVOs";
 import { GameScore } from "src/lib/shared/domain/valueObjects";
 
 export class Player {
