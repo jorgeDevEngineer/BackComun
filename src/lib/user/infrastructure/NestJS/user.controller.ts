@@ -14,7 +14,8 @@ import {
 import { GetAllUsers } from "../../application/Handlers/Querys/GetAllUsers";
 import { GetOneUserById } from "../../application/Handlers/Querys/GetOneUserById";
 import { GetOneUserByUserName } from "../../application/Handlers/Querys/GetOneUserByUserName";
-import { CreateUser } from "../../application/Handlers/Commands/CreateUser";
+import { CreateUserCommandHandler } from "../../application/Handlers/Commands/CreateUserCommandHandler";
+import { CreateUser } from "../../application/Parameter Objects/CreateUser";
 import { EditUser } from "../../application/Handlers/Commands/EditUser";
 import { DeleteUser } from "../../application/Handlers/Commands/DeleteUser";
 import { FindByIdParams, FindByUserNameParams } from "./Validations";
@@ -31,7 +32,8 @@ export class UserController {
     @Inject("GetOneUserById") private readonly getOneUserById: GetOneUserById,
     @Inject("GetOneUserByUserName")
     private readonly getOneUserByUserName: GetOneUserByUserName,
-    @Inject("CreateUser") private readonly createUser: CreateUser,
+    @Inject("CreateUserCommandHandler")
+    private readonly createUserCommandHandler: CreateUserCommandHandler,
     @Inject("EditUser") private readonly editUser: EditUser,
     @Inject("DeleteUser") private readonly deleteUser: DeleteUser,
     @Inject("EnablePremiumMembership")
@@ -86,13 +88,14 @@ export class UserController {
   @Post()
   async create(@Body() body: Create) {
     try {
-      return await this.createUser.run(
+      const createUser = new CreateUser(
         body.userName,
         body.email,
         body.hashedPassword,
         body.userType,
         body.avatarUrl
       );
+      return await this.createUserCommandHandler.execute(createUser);
     } catch (error) {
       throw new InternalServerErrorException(
         "Could not create user : " + error.message

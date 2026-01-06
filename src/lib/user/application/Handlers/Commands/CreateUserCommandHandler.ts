@@ -15,49 +15,38 @@ import { Membership } from "../../../domain/entity/Membership.js";
 import { MembershipType } from "../../../domain/valueObject/MembershipType.js";
 import { MembershipDate } from "../../../domain/valueObject/MembershipDate.js";
 import { UserStatus } from "../../../domain/valueObject/UserStatus";
+import { IHandler } from "src/lib/shared/IHandler";
+import { Either } from "src/lib/shared/Type Helpers/Either";
+import { DomainException } from "src/lib/shared/exceptions/DomainException";
+import { CreateUser } from "../../Parameter Objects/CreateUser";
 
-export class CreateUser {
+export class CreateUserCommandHandler implements IHandler<CreateUser, void> {
   constructor(private readonly userRepository: UserRepository) {}
 
-  async run(
-    userName: string,
-    email: string,
-    hashedPassword: string,
-    userType: "student" | "teacher" | "personal",
-    avatarUrl: string,
-    id?: string,
-    name?: string,
-    theme?: string,
-    language?: string,
-    gameStreak?: number,
-    membership?: { type: "free" | "premium"; startedAt: Date; expiresAt: Date },
-    createdAt?: Date,
-    updatedAt?: Date,
-    status?: "Active" | "Blocked"
-  ): Promise<void> {
+  async execute(command: CreateUser): Promise<void> {
     const newUser = new User(
-      new UserName(userName),
-      new UserEmail(email),
-      new UserHashedPassword(hashedPassword),
-      new UserType(userType),
-      new UserAvatarUrl(avatarUrl),
-      id ? new UserId(id) : undefined,
-      name ? new UserPlainName(name) : undefined,
-      theme ? new UserTheme(theme) : undefined,
-      language ? new UserLanguage(language) : undefined,
-      typeof gameStreak === "number"
-        ? new UserGameStreak(gameStreak)
+      new UserName(command.userName),
+      new UserEmail(command.email),
+      new UserHashedPassword(command.hashedPassword),
+      new UserType(command.userType),
+      new UserAvatarUrl(command.avatarUrl),
+      command.id ? new UserId(command.id) : undefined,
+      command.name ? new UserPlainName(command.name) : undefined,
+      command.theme ? new UserTheme(command.theme) : undefined,
+      command.language ? new UserLanguage(command.language) : undefined,
+      typeof command.gameStreak === "number"
+        ? new UserGameStreak(command.gameStreak)
         : undefined,
-      membership
+      command.membership
         ? new Membership(
-            new MembershipType(membership.type),
-            new MembershipDate(membership.startedAt),
-            new MembershipDate(membership.expiresAt)
+            new MembershipType(command.membership.type),
+            new MembershipDate(command.membership.startedAt),
+            new MembershipDate(command.membership.expiresAt)
           )
         : undefined,
-      createdAt ? new UserDate(createdAt) : undefined,
-      updatedAt ? new UserDate(updatedAt) : undefined,
-      status ? new UserStatus(status) : undefined
+      command.createdAt ? new UserDate(command.createdAt) : undefined,
+      command.updatedAt ? new UserDate(command.updatedAt) : undefined,
+      command.status ? new UserStatus(command.status) : undefined
     );
     const userWithSameId = await this.userRepository.getOneById(newUser.id);
     const userWithSameUserName = await this.userRepository.getOneByName(
