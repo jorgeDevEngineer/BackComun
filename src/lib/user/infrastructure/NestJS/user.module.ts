@@ -5,7 +5,7 @@ import { UserController } from "./user.controller";
 import { TypeOrmUserRepository } from "../TypeOrm/TypeOrmUserRepository";
 import { GetOneUserById } from "../../application/Handlers/Querys/GetOneUserById";
 import { GetAllUsers } from "../../application/Handlers/Querys/GetAllUsers";
-import { CreateUser } from "../../application/Handlers/Commands/CreateUser";
+import { CreateUserCommandHandler } from "../../application/Handlers/Commands/CreateUserCommandHandler";
 import { DeleteUser } from "../../application/Handlers/Commands/DeleteUser";
 import { EditUser } from "../../application/Handlers/Commands/EditUser";
 import { GetOneUserByUserName } from "../../application/Handlers/Querys/GetOneUserByUserName";
@@ -39,9 +39,9 @@ import { EnableFreeMembership } from "../../application/Handlers/Commands/Enable
       inject: ["UserRepository"],
     },
     {
-      provide: "CreateUser",
+      provide: "CreateUserCommandHandler",
       useFactory: (repository: TypeOrmUserRepository) =>
-        new CreateUser(repository),
+        new CreateUserCommandHandler(repository),
       inject: ["UserRepository"],
     },
     {
