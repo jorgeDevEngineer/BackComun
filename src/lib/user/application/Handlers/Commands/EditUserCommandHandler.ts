@@ -11,51 +11,43 @@ import { UserPlainName } from "../../../domain/valueObject/UserPlainName";
 import { UserTheme } from "../../../domain/valueObject/UserTheme";
 import { UserLanguage } from "../../../domain/valueObject/UserLanguaje";
 import { UserGameStreak } from "../../../domain/valueObject/UserGameStreak";
-import { UserNotFoundError } from "./../../error/UserNotFoundError";
+import { UserNotFoundError } from "../../error/UserNotFoundError";
 import { UserStatus } from "../../../domain/valueObject/UserStatus";
+import { IHandler } from "src/lib/shared/IHandler";
+import { EditUser } from "../../Parameter Objects/EditUser";
 
-export class EditUser {
+export class EditUserCommandHandler implements IHandler<EditUser, void> {
   constructor(private readonly userRepository: UserRepository) {}
 
-  async run(
-    userName: string,
-    email: string,
-    hashedPassword: string,
-    userType: "student" | "teacher" | "personal",
-    avatarUrl: string,
-    id: string,
-    name: string,
-    theme: string,
-    language: string,
-    gameStreak: number,
-    status: "Active" | "Blocked"
-  ): Promise<void> {
-    const existing = await this.userRepository.getOneById(new UserId(id));
+  async execute(command: EditUser): Promise<void> {
+    const existing = await this.userRepository.getOneById(
+      new UserId(command.id)
+    );
     if (!existing) {
       throw new UserNotFoundError("User not found");
     }
     const userWithSameUserName = await this.userRepository.getOneByName(
-      new UserName(userName)
+      new UserName(command.userName)
     );
-    if (userWithSameUserName && userWithSameUserName.id.value !== id) {
+    if (userWithSameUserName && userWithSameUserName.id.value !== command.id) {
       throw new Error("That name already belongs to another user");
     }
 
     const user = new User(
-      new UserName(userName),
-      new UserEmail(email),
-      new UserHashedPassword(hashedPassword),
-      new UserType(userType),
-      new UserAvatarUrl(avatarUrl),
-      new UserId(id),
-      new UserPlainName(name),
-      new UserTheme(theme),
-      new UserLanguage(language),
-      new UserGameStreak(gameStreak),
+      new UserName(command.userName),
+      new UserEmail(command.email),
+      new UserHashedPassword(command.hashedPassword),
+      new UserType(command.userType),
+      new UserAvatarUrl(command.avatarUrl),
+      new UserId(command.id),
+      new UserPlainName(command.name),
+      new UserTheme(command.theme),
+      new UserLanguage(command.language),
+      new UserGameStreak(command.gameStreak),
       existing.membership,
       existing.createdAt,
       new UserDate(new Date()),
-      new UserStatus(status)
+      new UserStatus(command.status)
     );
     await this.userRepository.edit(user);
   }

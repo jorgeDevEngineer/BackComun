@@ -11,41 +11,55 @@ import {
   Post,
   Put,
 } from "@nestjs/common";
-import { GetAllUsers } from "../../application/Handlers/Querys/GetAllUsers";
-import { GetOneUserById } from "../../application/Handlers/Querys/GetOneUserById";
-import { GetOneUserByUserName } from "../../application/Handlers/Querys/GetOneUserByUserName";
+import { GetAllUsersQueryHandler } from "../../application/Handlers/Querys/GetAllUsersQueryHandler";
+import { GetOneUserByIdQueryHandler } from "../../application/Handlers/Querys/GetOneUserByIdQueryHandler";
+import { GetOneUserByUserNameQueryHandler } from "../../application/Handlers/Querys/GetOneUserByUserNameQueryHandler";
 import { CreateUserCommandHandler } from "../../application/Handlers/Commands/CreateUserCommandHandler";
 import { CreateUser } from "../../application/Parameter Objects/CreateUser";
-import { EditUser } from "../../application/Handlers/Commands/EditUser";
-import { DeleteUser } from "../../application/Handlers/Commands/DeleteUser";
+import { EditUserCommandHandler } from "../../application/Handlers/Commands/EditUserCommandHandler";
+import { DeleteUserCommandHandler } from "../../application/Handlers/Commands/DeleteUserCommandHandler";
 import { FindByIdParams, FindByUserNameParams } from "./Validations";
 import { UserNotFoundError } from "../../application/error/UserNotFoundError";
 import { Create, Edit } from "./Validations";
-import { EnableFreeMembership } from "../../application/Handlers/Commands/EnableFreeMembership";
-import { EnablePremiumMembership } from "../../application/Handlers/Commands/EnablePremiumMembership";
+import { EnableFreeMembershipCommandHandler } from "../../application/Handlers/Commands/EnableFreeMembershipCommandHandler";
+import { EnablePremiumMembershipCommandHandler } from "../../application/Handlers/Commands/EnablePremiumMembershipCommandHandler";
 import { MEMBERSHIP_TYPES } from "../../domain/valueObject/MembershipType";
+import { GetAllUsers } from "../../application/Parameter Objects/GetAllUsers";
+import { GetOneUserById } from "../../application/Parameter Objects/GetOneUserById";
+import { GetOneUserByUserName } from "../../application/Parameter Objects/GetOneUserByUserName";
+import { EditUser } from "../../application/Parameter Objects/EditUser";
+import { DeleteUser } from "../../application/Parameter Objects/DeleteUser";
+import { EnableFreeMembership } from "../../application/Parameter Objects/EnableFreeMembership";
+import { EnablePremiumMembership } from "../../application/Parameter Objects/EnablePremiumMembership";
 
 @Controller("user")
 export class UserController {
   constructor(
-    @Inject("GetAllUsers") private readonly getAllUsers: GetAllUsers,
-    @Inject("GetOneUserById") private readonly getOneUserById: GetOneUserById,
-    @Inject("GetOneUserByUserName")
-    private readonly getOneUserByUserName: GetOneUserByUserName,
+    @Inject("GetAllUsersQueryHandler")
+    private readonly getAllUsers: GetAllUsersQueryHandler,
+    @Inject("GetOneUserByIdQueryHandler")
+    private readonly getOneUserById: GetOneUserByIdQueryHandler,
+    @Inject("GetOneUserByUserNameQueryHandler")
+    private readonly getOneUserByUserName: GetOneUserByUserNameQueryHandler,
     @Inject("CreateUserCommandHandler")
     private readonly createUserCommandHandler: CreateUserCommandHandler,
-    @Inject("EditUser") private readonly editUser: EditUser,
-    @Inject("DeleteUser") private readonly deleteUser: DeleteUser,
-    @Inject("EnablePremiumMembership")
-    private readonly enablePremiumMembership: EnablePremiumMembership,
-    @Inject("EnableFreeMembership")
-    private readonly enableFreeMembership: EnableFreeMembership
+    @Inject("EditUserCommandHandler")
+    private readonly editUser: EditUserCommandHandler,
+    @Inject("DeleteUserCommandHandler")
+    private readonly deleteUser: DeleteUserCommandHandler,
+    @Inject("EnablePremiumMembershipCommandHandler")
+    private readonly enablePremiumMembership: EnablePremiumMembershipCommandHandler,
+    @Inject("EnableFreeMembershipCommandHandler")
+    private readonly enableFreeMembership: EnableFreeMembershipCommandHandler
   ) {}
 
   @Get()
   async getAll() {
     try {
-      return (await this.getAllUsers.run()).map((user) => user.toPlainObject());
+      const query = new GetAllUsers();
+      return (await this.getAllUsers.execute(query)).map((user) =>
+        user.toPlainObject()
+      );
     } catch (error) {
       throw new InternalServerErrorException(
         "Could not fetch users: " + error.message
@@ -56,7 +70,8 @@ export class UserController {
   @Get(":id")
   async getOneById(@Param() params: FindByIdParams) {
     try {
-      return (await this.getOneUserById.run(params.id)).toPlainObject();
+      const query = new GetOneUserById(params.id);
+      return (await this.getOneUserById.execute(query)).toPlainObject();
     } catch (error) {
       if (error instanceof UserNotFoundError) {
         throw new NotFoundException("User not found");
@@ -71,9 +86,8 @@ export class UserController {
   @Get("username/:userName")
   async getOneUserByName(@Param() params: FindByUserNameParams) {
     try {
-      return (
-        await this.getOneUserByUserName.run(params.userName)
-      ).toPlainObject();
+      const query = new GetOneUserByUserName(params.userName);
+      return (await this.getOneUserByUserName.execute(query)).toPlainObject();
     } catch (error) {
       if (error instanceof UserNotFoundError) {
         throw new NotFoundException("User not found");
@@ -106,8 +120,9 @@ export class UserController {
   @Patch(":id")
   async edit(@Param() params: FindByIdParams, @Body() body: Edit) {
     try {
-      const user = await this.getOneUserById.run(params.id);
-      return await this.editUser.run(
+      const query = new GetOneUserById(params.id);
+      const user = await this.getOneUserById.execute(query);
+      const editUserCommand = new EditUser(
         body.userName,
         body.email,
         body.hashedPassword,
@@ -120,6 +135,7 @@ export class UserController {
         body.gameStreak,
         body.status
       );
+      return await this.editUser.execute(editUserCommand);
     } catch (error) {
       if (error instanceof UserNotFoundError) {
         throw new NotFoundException("User not found");
@@ -134,8 +150,10 @@ export class UserController {
   @Delete(":id")
   async delete(@Param() params: FindByIdParams) {
     try {
-      const user = await this.getOneUserById.run(params.id);
-      return await this.deleteUser.run(params.id);
+      const query = new GetOneUserById(params.id);
+      await this.getOneUserById.execute(query);
+      const deleteUserCommand = new DeleteUser(params.id);
+      return await this.deleteUser.execute(deleteUserCommand);
     } catch (error) {
       if (error instanceof UserNotFoundError) {
         throw new NotFoundException("User not found");
@@ -155,7 +173,8 @@ export class UserController {
   @Get(":id/subscription")
   async getSubscriptionStatus(@Param() params: FindByIdParams) {
     try {
-      const user = await this.getOneUserById.run(params.id);
+      const query = new GetOneUserById(params.id);
+      const user = await this.getOneUserById.execute(query);
       return {
         membershipType: user.membership.type.value,
         status: user.membership.isEnabled() ? "enabled" : "disabled",
@@ -171,7 +190,8 @@ export class UserController {
   @Post(":id/subscription")
   async enablePremiumSubscription(@Param() params: FindByIdParams) {
     try {
-      return await this.enablePremiumMembership.run(params.id);
+      const command = new EnablePremiumMembership(params.id);
+      return await this.enablePremiumMembership.execute(command);
     } catch (error) {
       if (error instanceof UserNotFoundError) {
         throw new NotFoundException("User not found");
@@ -186,7 +206,8 @@ export class UserController {
   @Delete(":id/subscription")
   async enableFreeSubscription(@Param() params: FindByIdParams) {
     try {
-      return await this.enableFreeMembership.run(params.id);
+      const command = new EnableFreeMembership(params.id);
+      return await this.enableFreeMembership.execute(command);
     } catch (error) {
       if (error instanceof UserNotFoundError) {
         throw new NotFoundException("User not found");
