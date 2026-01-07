@@ -25,6 +25,10 @@ export class PlayerId {
     public getId(): string {
         return this.playerId;
     }
+
+    public equals(id: PlayerId): boolean {
+        return this.playerId === id.getId();
+    }
 }
 
 /**
