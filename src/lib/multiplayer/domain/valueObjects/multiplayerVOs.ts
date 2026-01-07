@@ -408,37 +408,36 @@ export class MultiplayerQuestionResult {
 
     private constructor(
         private readonly questionId: QuestionId,
-        private readonly answers: Map<PlayerId, MultiplayerAnswer>
+        private readonly answers: Map<string, MultiplayerAnswer>
     ){}
 
     public static create(questionId: QuestionId): MultiplayerQuestionResult {
-        const answers: Map<PlayerId, MultiplayerAnswer> = new Map();
+        const answers: Map<string, MultiplayerAnswer> = new Map();
         return new MultiplayerQuestionResult(questionId, answers);
     }
 
     public addResult(playerAnswer:MultiplayerAnswer): MultiplayerQuestionResult {
 
-        if(this.answers.has(playerAnswer.getPlayerId())){
+        if(this.answers.has(playerAnswer.getPlayerId().getId())){
             throw Error('El jugador ya tiene una respuesta asociada a esta pregunta, no puede añadir otra');
         }
             
-        const updatedAnswers: Map<PlayerId, MultiplayerAnswer> = new Map();
+        const updatedAnswers: Map<string, MultiplayerAnswer> = new Map();
 
         for( const [playerId, playerAnswer] of this.answers ){
             updatedAnswers.set( playerId, playerAnswer );
         }
 
-        updatedAnswers.set(playerAnswer.getPlayerId(), playerAnswer);
+        updatedAnswers.set(playerAnswer.getPlayerId().getId(), playerAnswer);
 
         return new MultiplayerQuestionResult(this.questionId,updatedAnswers);
-
     }
 
     public searchPlayerAnswer(playerId: PlayerId ): MultiplayerAnswer | undefined {
-        if(!this.answers.has(playerId)){
+        if(!this.answers.has(playerId.getId())){
             return undefined;
         }
-        return this.answers.get(playerId)!;
+        return this.answers.get(playerId.getId())!;
     }
 
     public getQuestionId(): QuestionId {
@@ -450,3 +449,11 @@ export class MultiplayerQuestionResult {
     }
 
 }
+
+export enum StateTransitionsTypes {
+    TRANSITION_TO_QUESTION = "transition_to_question",
+    TRANSITION_TO_RESULTS = "transition_to_results",
+    TRANSITION_TO_END = "transition_to_end",
+}
+
+export type StateTransition = { state: StateTransitionsTypes }
