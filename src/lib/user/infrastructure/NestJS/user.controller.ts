@@ -31,6 +31,7 @@ import { EditUser } from "../../application/Parameter Objects/EditUser";
 import { DeleteUser } from "../../application/Parameter Objects/DeleteUser";
 import { EnableFreeMembership } from "../../application/Parameter Objects/EnableFreeMembership";
 import { EnablePremiumMembership } from "../../application/Parameter Objects/EnablePremiumMembership";
+import { Result } from "src/lib/shared/Type Helpers/Result";
 
 @Controller("user")
 export class UserController {
@@ -52,6 +53,13 @@ export class UserController {
     @Inject("EnableFreeMembershipCommandHandler")
     private readonly enableFreeMembership: EnableFreeMembershipCommandHandler
   ) {}
+
+  handleResult<T>(result: Result<T>): T {
+    if (result.isFailure) {
+      throw new InternalServerErrorException(result.error.message);
+    }
+    return result.getValue()!;
+  }
 
   @Get()
   async getAll() {
@@ -109,7 +117,11 @@ export class UserController {
         body.userType,
         body.avatarUrl
       );
-      return await this.createUserCommandHandler.execute(createUser);
+      const result = await this.createUserCommandHandler.execute(createUser);
+      if (result.isFailure) {
+        throw result.error;
+      }
+      return result.getValue();
     } catch (error) {
       throw new InternalServerErrorException(
         "Could not create user : " + error.message
