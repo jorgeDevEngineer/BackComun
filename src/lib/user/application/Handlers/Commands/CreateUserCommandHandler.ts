@@ -19,11 +19,14 @@ import { IHandler } from "src/lib/shared/IHandler";
 import { Either } from "src/lib/shared/Type Helpers/Either";
 import { DomainException } from "src/lib/shared/exceptions/DomainException";
 import { CreateUser } from "../../Parameter Objects/CreateUser";
+import { Result } from "src/lib/shared/Type Helpers/Result";
 
-export class CreateUserCommandHandler implements IHandler<CreateUser, void> {
+export class CreateUserCommandHandler
+  implements IHandler<CreateUser, Result<void>>
+{
   constructor(private readonly userRepository: UserRepository) {}
 
-  async execute(command: CreateUser): Promise<void> {
+  async execute(command: CreateUser): Promise<Result<void>> {
     const newUser = new User(
       new UserName(command.userName),
       new UserEmail(command.email),
@@ -59,5 +62,6 @@ export class CreateUserCommandHandler implements IHandler<CreateUser, void> {
       throw new Error("User with this username already exists");
     }
     await this.userRepository.create(newUser);
+    return Result.ok<void>();
   }
 }
