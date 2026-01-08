@@ -182,4 +182,17 @@ export class Quiz {
     return question;
   }
 
+  public getNextQuestionByIndex(currentIndex: number): Question | null {
+    if (this._questions.length === 0) {
+        return null;
+    }
+    
+    if (currentIndex < 0 || currentIndex >= this._questions.length - 1) {
+        return null;
+    }
+    
+    return this._questions[currentIndex + 1];
 }
+
+}
+
