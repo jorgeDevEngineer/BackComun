@@ -13,11 +13,15 @@ import { FileSystemPinRepository } from "../repositories/FileSystemPinRepository
 import { CryptoGeneratePinService } from "../adapters/CryptoGeneratePin";
 import { TypeOrmQuizEntity } from "src/lib/kahoot/infrastructure/TypeOrm/TypeOrmQuizEntity";
 import { GetPinWithQrTokenQueryHandler } from "../../application/handlers/GetPinWithQrTokenQueryHandler";
+import { TypeOrmUserEntity } from "src/lib/user/infrastructure/TypeOrm/TypeOrmUserEntity";
+import { UserModule } from "src/lib/user/infrastructure/NestJS/user.module";
+import { TypeOrmUserRepository } from "src/lib/user/infrastructure/TypeOrm/TypeOrmUserRepository";
 
 @Module({
     imports: [
-        TypeOrmModule.forFeature([TypeOrmMultiplayerSessionEntity, TypeOrmQuizEntity]), 
+        TypeOrmModule.forFeature([TypeOrmMultiplayerSessionEntity, TypeOrmQuizEntity, TypeOrmUserEntity]), 
         KahootModule,
+        UserModule,
         SinglePlayerGameModule,
     ],
     controllers: [MultiplayerSessionControler],
@@ -40,6 +44,10 @@ import { GetPinWithQrTokenQueryHandler } from "../../application/handlers/GetPin
     {
       provide: 'QuizRepository',
       useClass: TypeOrmQuizRepository,
+    },
+    {
+      provide: 'UserRepository',
+      useClass: TypeOrmUserRepository,
     },
     {
       provide: 'IPinRepository',
