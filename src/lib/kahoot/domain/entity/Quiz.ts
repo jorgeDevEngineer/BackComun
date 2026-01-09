@@ -88,32 +88,14 @@ export class Quiz {
   
   public get id(): QuizId { return this._id; }
   public get authorId(): UserId { return this._authorId; }
-  public get themeId(): ThemeId { return this._themeId; }
   public getQuestions(): Question[] { return this._questions; }
-  public getTotalQuestions(): number { return this._questions.length; }
 
-  public getFirstQuestion(): Question {
-    if(this._questions.length === 0) throw new DomainException("Quiz has no questions.");
-    return this._questions[0];
-  }
-
-  public getQuestionIds(): QuestionId[] {
-    return this._questions.map( question => question.id);
-  }
-
-<<<<<<< HEAD
   public get themeId(): ThemeId {
     return this._themeId;
   }
 
   public getTotalQuestions():number{
     return this._questions.length;
-=======
-  public getQuestionById(id: QuestionId):Question {
-    const question = this._questions.find(question => question.id.equals(id));
-    if (!question) throw new DomainException(`Question with id ${id.getValue()} not found in this quiz.`);
-    return question;
->>>>>>> main
   }
 
   public getTitle(): string{
@@ -121,7 +103,7 @@ export class Quiz {
   }
 
   public getCoverImageId(): string | null {
-    return this._coverImageId ? this._coverImageId.value : null;
+    return this._coverImageId ? this._coverImageId : null;
   }
 
   public toPlainObject() {
@@ -140,7 +122,6 @@ export class Quiz {
       questions: this._questions.map((q) => q.toPlainObject()),
     };
   }
-<<<<<<< HEAD
 
   public getFirstQuestion(): Question {
     if(this._questions.length === 0){
@@ -192,7 +173,5 @@ export class Quiz {
     return this._visibility.value === 'private';
   }
 
-=======
->>>>>>> main
 }
 
