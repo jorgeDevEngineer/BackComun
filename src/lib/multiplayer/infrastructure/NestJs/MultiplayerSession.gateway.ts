@@ -7,7 +7,7 @@ import { Server } from 'socket.io';
 import { SessionRoles } from '../helpers/SessionRoles.enum';
 import { ClientEvents, HostUserEvents, PlayerUserEvents, ServerErrorEvents, ServerEvents } from '../helpers/WebSocketEvents.enum';
 
-//import type { SessionSocket  } from './interfaces/socket-definitions.interface';
+import type { SessionSocket } from '../helpers/SocketInterface';
 
 import { PlayerJoinCommand } from '../../application/parameterObjects/PlayerJoinCommand';
 
