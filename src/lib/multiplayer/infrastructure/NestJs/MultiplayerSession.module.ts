@@ -16,16 +16,25 @@ import { GetPinWithQrTokenQueryHandler } from "../../application/handlers/GetPin
 import { TypeOrmUserEntity } from "src/lib/user/infrastructure/TypeOrm/TypeOrmUserEntity";
 import { UserModule } from "src/lib/user/infrastructure/NestJS/user.module";
 import { TypeOrmUserRepository } from "src/lib/user/infrastructure/TypeOrm/TypeOrmUserRepository";
+import { PlayerJoinCommandHandler } from "../../application/handlers/PlayerJoinCommandHandler";
+import { MultiplayerSessionsGateway } from "./MultiplayerSession.gateway";
+import { MultiplayerSessionsTracingService } from "./MultiplayerSession.tracing.service";
 
 @Module({
-    imports: [
-        TypeOrmModule.forFeature([TypeOrmMultiplayerSessionEntity, TypeOrmQuizEntity, TypeOrmUserEntity]), 
-        KahootModule,
-        UserModule,
-        SinglePlayerGameModule,
-    ],
-    controllers: [MultiplayerSessionControler],
-    providers: [
+  imports: [
+    TypeOrmModule.forFeature([TypeOrmMultiplayerSessionEntity, TypeOrmQuizEntity, TypeOrmUserEntity]), 
+    KahootModule,
+    UserModule,
+    SinglePlayerGameModule,
+  ],
+
+  controllers: [MultiplayerSessionControler],
+
+  providers: [
+    //Gateway
+    MultiplayerSessionsGateway,                     
+    MultiplayerSessionsTracingService,  
+
     //Handlers
     {
       provide: 'CreateSessionCommandHandler',
@@ -35,7 +44,11 @@ import { TypeOrmUserRepository } from "src/lib/user/infrastructure/TypeOrm/TypeO
       provide: 'GetPinWithQrTokenQueryHandler',
       useClass: GetPinWithQrTokenQueryHandler,
     },
-    
+    {
+      provide: 'PlayerJoinCommandHandler',
+      useClass: PlayerJoinCommandHandler,
+    },
+
     // Repositorios
     {
       provide: 'IActiveMultiplayerSessionRepository',
@@ -73,8 +86,8 @@ import { TypeOrmUserRepository } from "src/lib/user/infrastructure/TypeOrm/TypeO
     CryptoUuidGenerator,
     FileSystemPinRepository,
     MultiplayerSessionHistoryTypeOrmRepository,
-    
   ],
+
   exports: [
     'IActiveMultiplayerSessionRepository',
     'IMultiplayerSessionHistoryRepository',
