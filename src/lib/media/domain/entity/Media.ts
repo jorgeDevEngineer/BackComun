@@ -32,7 +32,7 @@ export class Media {
     return new Media({ id, authorId, name, url, category, createdAt });
   }
   
-  public properties(): { [key: string]: any } {
+  public toPlainObject(): { [key: string]: any } {
     return {
         id: this.props.id.getId(),
         authorId: this.props.authorId.getId(),
@@ -41,6 +41,10 @@ export class Media {
         category: this.props.category.getValue(),
         createdAt: this.props.createdAt.getValue()
     };
+  }
+
+  public properties(): { [key: string]: any } {
+    return this.toPlainObject();
   }
 
   public toResponse() {
