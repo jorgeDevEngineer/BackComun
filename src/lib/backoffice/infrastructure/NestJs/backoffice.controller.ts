@@ -38,6 +38,9 @@ export class BackofficeController {
         private readonly deleteUserUseCase: DeleteUserUseCase,
         private readonly sendNotificationUseCase: SendNotificationUseCase,
         private readonly UnblockUserUseCase: UnblockUserUseCase,
+        private readonly giveAdminRoleUseCase: GiveAdminRoleUseCase,
+        private readonly removeAdminRoleUseCase: RemoveAdminRoleUseCase,
+        private readonly getNotificationsUseCase: GetNotificationsUseCase,
     ){}
 
     @Get('users')
@@ -97,6 +100,32 @@ export class BackofficeController {
     ) {
         try {
             const result = await this.deleteUserUseCase.run(userIdHeader, userId);
+            return result;
+        } catch (e) {
+            throw new InternalServerErrorException(e.message);
+        }
+    }
+
+    @Patch('giveAdmin/:userId')
+    async giveAdminRole(
+        @Headers('user') userIdHeader: string,
+        @Param('userId') userId: string,
+    ) {
+        try {
+            const result = await this.giveAdminRoleUseCase.run(userIdHeader, userId);
+            return result;
+        } catch (e) {
+            throw new InternalServerErrorException(e.message);
+        }
+    }
+
+    @Patch('removeAdmin/:userId')
+    async removeAdminRole(
+        @Headers('user') userIdHeader: string,
+        @Param('userId') userId: string,
+    ) {
+        try {
+            const result = await this.removeAdminRoleUseCase.run(userIdHeader, userId);
             return result;
         } catch (e) {
             throw new InternalServerErrorException(e.message);
