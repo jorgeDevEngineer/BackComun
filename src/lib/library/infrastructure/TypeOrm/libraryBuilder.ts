@@ -79,7 +79,9 @@ export class LibraryRepositoryBuilder {
     const mongoCriteriaApplier = new MongoCriteriaApplier<any>();
     return new DynamicUserFavoriteQuizRepository(
       this.userFavRepo!,
-      criteriaApplier
+      criteriaApplier,
+      this.mongoAdapter,
+      mongoCriteriaApplier
     );
   }
 
