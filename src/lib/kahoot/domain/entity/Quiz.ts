@@ -125,7 +125,7 @@ export class Quiz {
 
   public getFirstQuestion(): Question {
     if(this._questions.length === 0){
-        throw new DomainException("Quiz has no questions.");
+      throw new DomainException("Quiz has no questions.");
     }
     return this._questions[0];
   }
