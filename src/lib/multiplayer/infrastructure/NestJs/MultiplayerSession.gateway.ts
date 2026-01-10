@@ -14,15 +14,16 @@ import { COMMON_ERRORS } from '../../application/handlers/Errors/CommonErrors';
 import { PlayerJoinCommandHandler } from '../../application/handlers/PlayerJoinCommandHandler';
 import { SyncStateCommandHandler } from '../../application/handlers/SyncStateCommandHandler';
 import { HostStartGameCommandHandler } from '../../application/handlers/HostStartGameCommandHandler';
+import { PlayerSubmitAnswerCommandHandler } from '../../application/handlers/PlayerSubmitAnswerCommandHandler';
 
 //Dtos
 import { HostLobbyUpdateResponseDto } from '../../application/responseDtos/LobbyStateUpdateResponse.dto';
 import { LobbyStateUpdateResponseDto } from '../../application/responseDtos/LobbyStateUpdateResponse.dto';
 import { QuestionResultsHostResponseDto, QuestionResultsPlayerResponseDto } from '../../application/responseDtos/QuestionResultResponses.dto';
 import { HostEndGameResponseDto, PlayerEndGameResponseDto } from '../../application/responseDtos/GameEndedResponses.dto';
-import { QuestionStartedResponseDto } from '../../application/responseDtos/QuestionStartedResponse.dto';
 import { PlayerLobbyUpdateResponseDto } from '../../application/responseDtos/LobbyStateUpdateResponse.dto';
 import { PlayerJoinDto } from '../requestesDto/PlayerJoin.dto';
+import { PlayerSubmitAnswerDto } from '../requestesDto/PlayerSubmitAnswer.dto';
 
 //Repositorios
 import { IActiveMultiplayerSessionRepository } from '../../domain/repositories/IActiveMultiplayerSessionRepository';
@@ -56,6 +57,9 @@ export class MultiplayerSessionsGateway  implements OnGatewayConnection, OnGatew
 
         @Inject('HostStartGameCommandHandler')
         private readonly hostStartGameHandler: HostStartGameCommandHandler,
+
+        @Inject('PlayerSubmitAnswerCommandHandler')
+        private readonly playerSubmitAnswerHandler: PlayerSubmitAnswerCommandHandler,
 
         private readonly tracingWsService: MultiplayerSessionsTracingService,
     ) {
@@ -562,7 +566,7 @@ export class MultiplayerSessionsGateway  implements OnGatewayConnection, OnGatew
             }
         
             // Enviar error al cliente (podría ser FATAL_ERROR o game_error según API)
-            client.emit(ServerErrorEvents.FATAL_ERROR, { 
+            client.emit(ServerErrorEvents.GAME_ERROR, { 
                 statusCode: 400, 
                 message: errorMessage 
             });
@@ -622,7 +626,90 @@ export class MultiplayerSessionsGateway  implements OnGatewayConnection, OnGatew
                 errorMessage = error.message;
             }
         
-            client.emit(ServerErrorEvents.FATAL_ERROR, { 
+            client.emit(ServerErrorEvents.GAME_ERROR, { 
+                statusCode: 400, 
+                message: errorMessage 
+            });
+        }
+    }
+
+    @SubscribeMessage(PlayerUserEvents.PLAYER_SUBMIT_ANSWER)
+    async handlePlayerSubmitAnswer(client: SessionSocket, payload: PlayerSubmitAnswerDto) {
+        this.logger.debug(`Recibido PLAYER_SUBMIT_ANSWER de ${client.id} para pregunta ${payload.questionId}`);
+
+        try {
+            // 1. Validaciones básicas según API
+            if (!client.rooms.has(client.data.roomPin)) {
+                throw new WsException("FATAL: El cliente no se encuentra conectado a la sala solicitada");
+            }
+            if (client.data.role !== SessionRoles.PLAYER) {
+                throw new WsException("El Host de la partida no puede enviar respuestas");
+            }
+            // 2. Validar payload según API página 9
+            if (!payload.questionId) {
+                throw new WsException("questionId es requerido");
+            }
+
+            if (!payload.answerId || !Array.isArray(payload.answerId) || payload.answerId.length === 0) {
+                throw new WsException("answerId debe ser un arreglo no vacío");
+            }
+
+            if (typeof payload.timeElapsedMs !== 'number' || payload.timeElapsedMs < 0) {
+                throw new WsException("timeElapsedMs debe ser un número positivo");
+            }
+
+            const answerId = Array.isArray(payload.answerId) ? payload.answerId.map(id => {
+                // Si es string numérico, convertirlo a number
+                if (typeof id === 'string' && !isNaN(Number(id))) {
+                    return Number(id);
+                }
+                // Si ya es number, dejarlo igual
+                if (typeof id === 'number') {
+                    return id;
+                }
+                // Si es string no numérico, lanzar error
+                throw new WsException(`answerId contiene valor inválido: ${id}`);
+            }) : [];
+
+            // 3. Ejecutar el comando de envío de respuesta
+            const result = await this.playerSubmitAnswerHandler.execute({
+                questionId: payload.questionId,
+                answerId: answerId,
+                timeElapsedMs: payload.timeElapsedMs,
+                sessionPin: client.data.roomPin,
+                userId: client.data.userId
+            });
+
+            // 4. Enviar confirmación al jugador (solo al emisor según API)
+            client.emit(ServerEvents.PLAYER_ANSWER_CONFIRMATION, { status: 'ANSWER SUCCESFULLY SUBMITTED' });
+
+            this.logger.debug(`Respuesta confirmada para jugador ${client.data.nickname || client.data.userId}`);
+
+            // 5. Notificar al host sobre la actualización de respuestas (solo al host según API)
+            const hostSocketId = this.tracingWsService.getRoomHostSocketId(client.data.roomPin);
+            if (hostSocketId) {
+                const sockets = await this.wss.in(hostSocketId).fetchSockets();
+                if (sockets.length > 0) {
+                    sockets[0].emit(ServerEvents.HOST_ANSWERS_UPDATE, {
+                        numberOfSubmissions: result.numberOfSubmissions
+                    });
+                    this.logger.debug(`Host notificado: ${result.numberOfSubmissions} respuestas recibidas`);
+                }
+            }
+
+        } catch (error) {
+            this.logger.error(`Error en PLAYER_SUBMIT_ANSWER para cliente ${client.id}:`, error);
+        
+            let errorMessage = 'Error al enviar la respuesta';
+        
+            if (error instanceof WsException) {
+                errorMessage = error.message;
+            } else if (error instanceof Error) {
+                errorMessage = error.message;
+            }
+        
+            // Enviar error solo al jugador (game_error según API página 9)
+            client.emit(ServerErrorEvents.GAME_ERROR, { 
                 statusCode: 400, 
                 message: errorMessage 
             });

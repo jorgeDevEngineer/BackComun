@@ -5,13 +5,14 @@ import { PlayerLobbyUpdateResponseDto } from "../../application/responseDtos/Lob
 
 import { HostUserEvents, PlayerUserEvents, ServerErrorEvents, ServerEvents, ClientEvents } from "./WebSocketEvents.enum";
 import { SessionRoles } from "./SessionRoles.enum";
-import { QuestionStartedResponseDto } from "../../application/responseDtos/QuestionStartedResponse.dto";
+import { PlayerSubmitAnswerDto } from "../requestesDto/PlayerSubmitAnswer.dto";
 import { QuestionResultsHostResponseDto } from "../../application/responseDtos/QuestionResultResponses.dto";
 import { QuestionResultsPlayerResponseDto } from "../../application/responseDtos/QuestionResultResponses.dto";
 import { HostEndGameResponseDto } from "../../application/responseDtos/GameEndedResponses.dto";
 import { PlayerEndGameResponseDto } from "../../application/responseDtos/GameEndedResponses.dto";
 import { SessionStateType } from "../../domain/valueObjects/multiplayerVOs";
 import { QuestionWithoutAnswers } from "../../application/responseDtos/types/QuestionWithoutAnswers.interface";
+import { PlayerSubmitAnswerResponseDto } from "../../application/responseDtos/PlayerSubmitAnswerResponse.dto";
 
 export interface ServerToClientEvents { 
    // Eventos exitosos
@@ -25,8 +26,7 @@ export interface ServerToClientEvents {
     timeRemainingMs?: number;
     hasAnswered?: boolean;
   }) => void;
-  //[ServerEvents.HOST_ANSWERS_UPDATE]:(payload: PlayerSubmitAnswerResponse ) => void; 
-
+  [ServerEvents.HOST_ANSWERS_UPDATE]:(payload: PlayerSubmitAnswerResponseDto ) => void; 
   [ServerEvents.PLAYER_ANSWER_CONFIRMATION]:(payload: { status: 'ANSWER SUCCESFULLY SUBMITTED' }) => void; 
   [ServerEvents.HOST_RESULTS]:(payload: QuestionResultsHostResponseDto ) => void;
   [ServerEvents.PLAYER_RESULTS]:(payload: QuestionResultsPlayerResponseDto ) => void;
@@ -40,6 +40,7 @@ export interface ServerToClientEvents {
 
    // Errores
   [ServerErrorEvents.FATAL_ERROR]: (payload: { statusCode: number, message: string }) => void;
+  [ServerErrorEvents.GAME_ERROR]: (payload: { statusCode: number, message: string }) => void;
   [ServerErrorEvents.UNAVAILABLE_SESSION]: (payload: { statusCode: number, message: string }) => void;
   [ServerErrorEvents.SYNC_ERROR]: (payload: { statusCode: number, message: string }) => void;
 
@@ -50,7 +51,7 @@ export interface ClientToServerEvents {
   [ClientEvents.CLIENT_READY]: () => void;
 
   [PlayerUserEvents.PLAYER_JOIN]: (payload: {}) => void;
-  //[PlayerUserEvents.PLAYER_SUBMIT_ANSWER]: (payload: PlayerSubmitAnswerDto ) => void;
+  [PlayerUserEvents.PLAYER_SUBMIT_ANSWER]: (payload: PlayerSubmitAnswerDto ) => void;
 
   [HostUserEvents.HOST_START_GAME]: (payload: {}) => void;
 
