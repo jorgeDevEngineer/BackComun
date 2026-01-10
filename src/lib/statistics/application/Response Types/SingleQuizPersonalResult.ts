@@ -12,7 +12,7 @@ type questionData = {
   timeTakenMs: number;
 };
 
-export type QuizPersonalResult = {
+export type SingleQuizPersonalResult = {
   kahootId: string;
   title: string;
   userId: string;
@@ -74,7 +74,7 @@ function calculateAverageTime(questionResults: questionData[]): number {
 export function toQuizPersonalResult(
   quiz: Quiz,
   game: SinglePlayerGame
-): QuizPersonalResult {
+): SingleQuizPersonalResult {
   const answeredQuestions = game.getQuestionsResults();
   const questionResults: questionData[] = answeredQuestions.map(
     (questionResult, index) => {

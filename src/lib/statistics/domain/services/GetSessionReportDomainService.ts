@@ -1,4 +1,3 @@
-import { IHandler } from "src/lib/shared/IHandler";
 import { MultiplayerSessionHistoryRepository } from "../port/MultiplayerSessionHistoryRepository";
 import { MultiplayerSessionId } from "src/lib/shared/domain/ids";
 import { Either } from "src/lib/shared/Type Helpers/Either";

@@ -1,10 +1,10 @@
 import { IHandler } from "src/lib/shared/IHandler";
-import { GetCompletedQuizSummary } from "../Parameter Objects/GetCompletedQuizSummary";
+import { GetSinglePlayerCompletedQuizSummary } from "../Parameter Objects/GetSinglePlayerCompletedQuizSummary";
 import { GetSingleCompletedQuizSummaryDomainService } from "../../domain/services/GetSingleCompletedQuizSummaryDomainService";
 import {
-  QuizPersonalResult,
+  SingleQuizPersonalResult,
   toQuizPersonalResult,
-} from "../Response Types/QuizPersonalResult";
+} from "../Response Types/SingleQuizPersonalResult";
 import { DomainException } from "src/lib/shared/exceptions/DomainException";
 import { DomainUnexpectedException } from "src/lib/shared/exceptions/DomainUnexpectedException";
 import { Either } from "src/lib/shared/Type Helpers/Either";
@@ -12,8 +12,8 @@ import { Either } from "src/lib/shared/Type Helpers/Either";
 export class GetSingleCompletedQuizSummaryQueryHandler
   implements
     IHandler<
-      GetCompletedQuizSummary,
-      Either<DomainException, QuizPersonalResult>
+      GetSinglePlayerCompletedQuizSummary,
+      Either<DomainException, SingleQuizPersonalResult>
     >
 {
   constructor(
@@ -21,8 +21,8 @@ export class GetSingleCompletedQuizSummaryQueryHandler
   ) {}
 
   async execute(
-    command: GetCompletedQuizSummary
-  ): Promise<Either<DomainException, QuizPersonalResult>> {
+    command: GetSinglePlayerCompletedQuizSummary
+  ): Promise<Either<DomainException, SingleQuizPersonalResult>> {
     const gameId = command.gameId;
 
     try {
