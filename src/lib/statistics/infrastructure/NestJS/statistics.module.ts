@@ -20,6 +20,8 @@ import { DatabaseModule } from "src/lib/shared/infrastructure/database/database.
 import { MultiplayerSessionHistoryRepository } from "../../domain/port/MultiplayerSessionHistoryRepository";
 import { GetSessionReportDomainService } from "../../domain/services/GetSessionReportDomainService";
 import { GetSessionReportQueryHandler } from "../../application/Handlers/GetSessionReportQueryHandler";
+import { GetMultiPlayerCompletedQuizSummaryDomainService } from "../../domain/services/GetMultiPlayerCompletedQuizSummaryDomainService";
+import { GetMultiPlayerCompletedQuizSummaryQueryHandler } from "../../application/Handlers/GetMultiPlayerCompletedQuizSummaryQueryHandler";
 
 @Module({
   imports: [
@@ -166,6 +168,43 @@ import { GetSessionReportQueryHandler } from "../../application/Handlers/GetSess
         );
       },
       inject: ["ILoggerPort", "GetSessionReportDomainService"],
+    },
+    {
+      provide: "GetMultiPlayerCompletedQuizSummaryDomainService",
+      useFactory: (
+        multiPlayerRepo: MultiplayerSessionHistoryRepository,
+        quizRepo: QuizRepository
+      ) =>
+        new GetMultiPlayerCompletedQuizSummaryDomainService(
+          multiPlayerRepo,
+          quizRepo
+        ),
+      inject: ["MultiplayerSessionHistoryRepository", "QuizRepository"],
+    },
+    {
+      provide: "GetMultiPlayerCompletedQuizSummaryQueryHandler",
+      useFactory: (
+        logger: ILoggerPort,
+        dService: GetMultiPlayerCompletedQuizSummaryDomainService
+      ) => {
+        const realHandler = new GetMultiPlayerCompletedQuizSummaryQueryHandler(
+          dService
+        );
+        const withErrorHandling = new ErrorHandlingDecoratorWithEither(
+          realHandler,
+          logger,
+          "GetMultiPlayerCompletedQuizSummaryQueryHandler"
+        );
+        return new LoggingUseCaseDecorator(
+          withErrorHandling,
+          logger,
+          "GetMultiPlayerCompletedQuizSummaryQueryHandler"
+        );
+      },
+      inject: [
+        "ILoggerPort",
+        "GetMultiPlayerCompletedQuizSummaryDomainService",
+      ],
     },
   ],
 })
