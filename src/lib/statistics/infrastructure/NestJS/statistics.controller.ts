@@ -16,14 +16,14 @@ import { QueryWithPaginationResponse } from "../../application/Response Types/Qu
 import { UserIdDTO } from "../DTOs/UserIdDTO";
 import { CompletedQuizQueryParams } from "../DTOs/CompletedQuizQueryParams";
 import { AttemptIdDTO, SessionIdDTO } from "../DTOs/AttemptIdDTO";
-import { GetCompletedQuizSummary } from "../../application/Parameter Objects/GetCompletedQuizSummary";
+import { GetSinglePlayerCompletedQuizSummary } from "../../application/Parameter Objects/GetSinglePlayerCompletedQuizSummary";
 import { UserId } from "src/lib/kahoot/domain/valueObject/Quiz";
 import { UserId as UserIdDomain } from "src/lib/user/domain/valueObject/UserId";
 import {
   MultiplayerSessionId,
   SinglePlayerGameId,
 } from "src/lib/shared/domain/ids";
-import { QuizPersonalResult } from "../../application/Response Types/QuizPersonalResult";
+import { SingleQuizPersonalResult } from "../../application/Response Types/SingleQuizPersonalResult";
 import { GetSessionReport } from "../../application/Parameter Objects/GetSessionReport";
 import { SessionReportResponse } from "../../application/Response Types/SessionReportResponse";
 
@@ -40,8 +40,8 @@ export class StatisticsController {
     >,
     @Inject("GetSingleCompletedQuizSummaryQueryHandler")
     private readonly getCompletedQuizSummary: IHandler<
-      GetCompletedQuizSummary,
-      Either<DomainException, QuizPersonalResult>
+      GetSinglePlayerCompletedQuizSummary,
+      Either<DomainException, SingleQuizPersonalResult>
     >,
     @Inject("GetSessionReportQueryHandler")
     private readonly getGameReport: IHandler<
@@ -67,9 +67,9 @@ export class StatisticsController {
   @Get("/singleplayer/:attemptId")
   async getSinglePlayerAttemptResults(
     @Param("attemptId") attemptId: string
-  ): Promise<QuizPersonalResult> {
+  ): Promise<SingleQuizPersonalResult> {
     const gameId = new AttemptIdDTO(attemptId.trim());
-    const command = new GetCompletedQuizSummary(
+    const command = new GetSinglePlayerCompletedQuizSummary(
       SinglePlayerGameId.of(gameId.attemptId)
     );
     const results = await this.getCompletedQuizSummary.execute(command);

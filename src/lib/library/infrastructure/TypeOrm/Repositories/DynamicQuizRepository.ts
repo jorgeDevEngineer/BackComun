@@ -39,7 +39,7 @@ import { CriteriaApplier } from "src/lib/library/domain/port/CriteriaApplier";
 
 type MongoQuizDoc = {
   _id: ObjectId; // ID nativo de Mongo
-  userId: string; // autor del quiz
+  authorId: string; // autor del quiz
   title: string;
   description: string;
   visibility: string; // "public" | "private" | etc.
@@ -151,7 +151,7 @@ export class DynamicQuizRepository implements QuizRepository {
 
     return Quiz.fromDb(
       QuizId.of(doc._id.toString()), // 🔑 usamos el _id de Mongo como identificador
-      UserId.of(doc.userId),
+      UserId.of(doc.authorId),
       QuizTitle.of(doc.title),
       QuizDescription.of(doc.description),
       Visibility.fromString(doc.visibility),
@@ -187,16 +187,19 @@ export class DynamicQuizRepository implements QuizRepository {
       const db = await this.mongoAdapter.getConnection("kahoot");
       const collection = db.collection<MongoQuizDoc>("quizzes");
 
-      const params: MongoFindParams<any> = {
-        filter: { userId: authorId.value },
+      const params: MongoFindParams<MongoQuizDoc> = {
+        filter: { authorId: authorId.value },
       };
+
       const { filter, options } = this.mongoCriteriaApplier.apply(
         params,
         criteria
       );
 
       const docs = await collection.find(filter, options).toArray();
-      return [docs.map((doc) => this.mapMongoToDomain(doc)), docs.length];
+      const total = await collection.countDocuments(filter);
+
+      return [docs.map((doc) => this.mapMongoToDomain(doc)), total];
     } catch {
       let qb = this.repository.createQueryBuilder("quiz");
       qb.where("quiz.userId = :authorId", { authorId: authorId.value });
