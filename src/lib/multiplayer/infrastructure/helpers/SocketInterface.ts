@@ -15,7 +15,7 @@ export interface ServerToClientEvents {
   //[ServerEvents.QUESTION_STARTED]:(payload: QuestionStartedResponse) => void; 
   //[ServerEvents.HOST_ANSWERS_UPDATE]:(payload: PlayerSubmitAnswerResponse ) => void; 
 
-  //[ServerEvents.PLAYER_ANSWER_CONFIRMATION]:(payload: { status: 'ANSWER SUCCESFULLY SUBMITTED' }) => void; 
+  [ServerEvents.PLAYER_ANSWER_CONFIRMATION]:(payload: { status: 'ANSWER SUCCESFULLY SUBMITTED' }) => void; 
   //[ServerEvents.HOST_RESULTS]:(payload: QuestionResultsHostResponse ) => void;
   //[ServerEvents.PLAYER_RESULTS]:(payload: QuestionResultsPlayerResponse ) => void;
   //[ServerEvents.HOST_GAME_END]:(payload: HostEndGameResponse ) => void; 
