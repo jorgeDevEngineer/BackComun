@@ -5,7 +5,6 @@ import { DomainUnexpectedException } from "src/lib/shared/exceptions/DomainUnexp
 import { GroupBusinessException } from "src/lib/shared/exceptions/GroupGenException";
 import { GroupNotFoundError } from "src/lib/shared/exceptions/GroupNotFoundError";
 
-
 import { GroupRepository } from "../../../domain/port/GroupRepository";
 import { GroupId } from "../../../domain/valueObject/GroupId";
 import { UserId } from "src/lib/user/domain/valueObject/UserId";
@@ -13,9 +12,6 @@ import { InvitationTokenGenerator } from "../../../domain/port/GroupInvitationTo
 
 import { GenerateGroupInvitationCommand } from "../../parameterObjects/GenerateGroupInvitationCommand";
 import { GenerateGroupInvitationResponseDto } from "../../dtos/GroupResponse.dto";
-import e from "express";
-
-
 
 export class GenerateGroupInvitationCommandHandler
   implements
@@ -29,23 +25,24 @@ export class GenerateGroupInvitationCommandHandler
   async execute(
     command: GenerateGroupInvitationCommand,
   ): Promise<Either<DomainException, GenerateGroupInvitationResponseDto>> {
-  try {
+    
     const now = command.now ?? new Date();
     const ttlDays = command.ttlDays ?? 7;
 
     const groupId = GroupId.of(command.groupId);
     const currentUserId = new UserId(command.currentUserId);
+    
 
     const groupOptional = await this.groupRepository.findById(groupId);
     if (!groupOptional.hasValue()) {
       return Either.makeLeft(new GroupNotFoundError(command.groupId));
     }
-
     const group = groupOptional.getValue();
 
     if (group.adminId.value !== currentUserId.value) {
       return Either.makeLeft(new GroupBusinessException("Solo el administrador del grupo puede generar enlaces de invitación"));
     }
+
     try {
       group.generateInvitation(this.tokenGenerator, ttlDays, now);
     } catch (e) {
@@ -53,10 +50,12 @@ export class GenerateGroupInvitationCommandHandler
     }
 
     await this.groupRepository.save(group);
+
     const tokenOptional = group.invitationToken;
     if (!tokenOptional.hasValue()) {
       return Either.makeLeft(new DomainUnexpectedException("Error generating invitation token"));
     }
+
     const Base_URL = "http://QuizGo.app/groups/join/";
     const token = tokenOptional.getValue();
     const fullInvitationLink = `${Base_URL}${token.token}`;
@@ -66,8 +65,5 @@ export class GenerateGroupInvitationCommandHandler
       Link: fullInvitationLink,
       expiresAt: token.expiresAt.toISOString(),
     });
-  } catch (e) { 
-    return Either.makeLeft(new DomainUnexpectedException(e.message));
   }
-}
 }
