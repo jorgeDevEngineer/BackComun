@@ -1,4 +1,4 @@
-import { DeviceToken } from "../valueObject/DeviceToken"; // Lo crearemos luego
+import { DeviceToken } from "../valueObject/DeviceToken";
 import { UserId } from "src/lib/user/domain/valueObject/UserId";
 
 export interface IDeviceRepository {

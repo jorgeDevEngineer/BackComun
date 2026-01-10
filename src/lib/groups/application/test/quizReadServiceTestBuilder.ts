@@ -1,7 +1,7 @@
 import { mock, MockProxy } from 'jest-mock-extended';
 import { Repository } from 'typeorm';
 import { Collection, Db } from 'mongodb';
-import { TypeOrmQuizReadService } from '../../infraestructure/TypeOrm/QuizReadServiceImplementation'; // Tu servicio
+import { TypeOrmQuizReadService } from '../../infraestructure/TypeOrm/QuizReadServiceImplementation'; 
 import { TypeOrmQuizEntity } from '../../../kahoot/infrastructure/TypeOrm/TypeOrmQuizEntity'; 
 import { DynamicMongoAdapter } from 'src/lib/shared/infrastructure/database/dynamic-mongo.adapter';
 import { QuizId } from 'src/lib/kahoot/domain/valueObject/Quiz';

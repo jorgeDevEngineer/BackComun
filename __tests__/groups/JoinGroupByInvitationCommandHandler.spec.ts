@@ -34,7 +34,7 @@ describe('JoinGroupByInvitationCommandHandler', () => {
       .givenInvitationExpired(VALID_TOKEN)
       .whenUserJoins(VALID_TOKEN, USER_ID)
       .then(() => {
-        test.thenShouldFailWith('Invitation token has expired'); // Mensaje exacto de tu handler
+        test.thenShouldFailWith('Invitation token has expired'); 
       });
   });
 });

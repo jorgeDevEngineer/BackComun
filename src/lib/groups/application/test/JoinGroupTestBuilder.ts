@@ -20,7 +20,7 @@ export class JoinGroupTestBuilder {
     this.handler = new JoinGroupByInvitationCommandHandler(this.repositoryMock);
   }
 
-  // --- GIVEN ---
+  // GIVEN
 
   public givenInvitationExists(token: string): this {
     const group = GroupMother.withActiveInvitation(token);
@@ -50,7 +50,7 @@ export class JoinGroupTestBuilder {
     return this;
   }
 
-  // --- WHEN (Acción) ---
+  // WHEN 
 
   public async whenUserJoins(token: string, userId: string): Promise<this> {
     const command = new JoinGroupByInvitationCommand(token, userId);
@@ -58,36 +58,30 @@ export class JoinGroupTestBuilder {
     return this;
   }
 
-  // --- THEN (Verificaciones) ---
+  // THEN 
 
   public thenShouldJoinSuccessfully(): void {
-    // 1. Verificamos que hay resultado
     expect(this.result).toBeDefined();
     
-    // 2. Verificamos que sea RIGHT (Éxito)
     if (this.result!.isLeft()) {
         throw new Error(`Se esperaba éxito, pero falló con: ${this.result!.getLeft().message}`);
     }
     expect(this.result!.isRight()).toBe(true);
     expect(this.result!.getRight().joinedAs).toBe('member');
     
-    // 3. Verificamos que se guardó el grupo actualizado
     expect(this.repositoryMock.save).toHaveBeenCalledTimes(1);
   }
 
   public thenShouldFailWith(errorMessageFragment: string): void {
     expect(this.result).toBeDefined();
     
-    // 1. Verificamos que sea LEFT (Fallo)
     if (this.result!.isRight()) {
         throw new Error("Se esperaba un fallo, pero tuvo éxito");
     }
     expect(this.result!.isLeft()).toBe(true);
     
-    // 2. Verificamos el mensaje de error
     expect(this.result!.getLeft().message).toContain(errorMessageFragment);
     
-    // 3. Si falló, NO debió guardar nada en la BD
     expect(this.repositoryMock.save).not.toHaveBeenCalled();
   }
 }

@@ -42,7 +42,6 @@ import { MultiplayerSessionHistoryRepository } from "../../domain/port/Multiplay
   ],
   controllers: [LibraryController],
   providers: [
-    // Repositorios construidos con sus criteria appliers correspondientes
     {
       provide: "LibraryRepositoryBuilder",
       useFactory: (
