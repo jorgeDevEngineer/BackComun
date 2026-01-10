@@ -1,6 +1,6 @@
 import { UserRepository } from "../../../domain/port/UserRepository.js";
 import { UserId } from "../../../domain/valueObject/UserId.js";
-import { UserNotFoundError } from "../../error/UserNotFoundError.js";
+import { UserNotFoundException } from "../../exceptions/UserNotFoundException.js";
 import { IHandler } from "src/lib/shared/IHandler";
 import { EnableFreeMembership } from "../../Parameter Objects/EnableFreeMembership.js";
 import { Result } from "src/lib/shared/Type Helpers/result";
@@ -11,9 +11,11 @@ export class EnableFreeMembershipCommandHandler
   constructor(private readonly userRepository: UserRepository) {}
 
   async execute(command: EnableFreeMembership): Promise<Result<void>> {
-    const user = await this.userRepository.getOneById(new UserId(command.id));
+    const user = await this.userRepository.getOneById(
+      new UserId(command.targetUserId)
+    );
     if (!user) {
-      return Result.fail(new UserNotFoundError("User not found"));
+      return Result.fail(new UserNotFoundException());
     }
     user.enableFreeMembership();
     await this.userRepository.edit(user);
