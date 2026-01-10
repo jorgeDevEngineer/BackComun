@@ -1,12 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  HttpCode,
-  Inject,
-  Param,
-  Query,
-} from "@nestjs/common";
+import { Body, Controller, Get, Inject, Param, Query } from "@nestjs/common";
 import { Either } from "src/lib/shared/Type Helpers/Either";
 import { DomainException } from "../../../shared/exceptions/DomainException";
 import { IHandler } from "src/lib/shared/IHandler";
@@ -17,6 +9,7 @@ import { UserIdDTO } from "../DTOs/UserIdDTO";
 import { CompletedQuizQueryParams } from "../DTOs/CompletedQuizQueryParams";
 import { AttemptIdDTO, SessionIdDTO } from "../DTOs/AttemptIdDTO";
 import { GetSinglePlayerCompletedQuizSummary } from "../../application/Parameter Objects/GetSinglePlayerCompletedQuizSummary";
+import { GetMultiPlayerCompletedQuizSummary } from "../../application/Parameter Objects/GetMultiPlayerCompletedQuizSummary";
 import { UserId } from "src/lib/kahoot/domain/valueObject/Quiz";
 import { UserId as UserIdDomain } from "src/lib/user/domain/valueObject/UserId";
 import {
@@ -24,6 +17,7 @@ import {
   SinglePlayerGameId,
 } from "src/lib/shared/domain/ids";
 import { SingleQuizPersonalResult } from "../../application/Response Types/SingleQuizPersonalResult";
+import { MultiQuizPersonalResult } from "../../application/Response Types/MultiQuizPersonalResult";
 import { GetSessionReport } from "../../application/Parameter Objects/GetSessionReport";
 import { SessionReportResponse } from "../../application/Response Types/SessionReportResponse";
 
@@ -47,6 +41,11 @@ export class StatisticsController {
     private readonly getGameReport: IHandler<
       GetSessionReport,
       Either<DomainException, SessionReportResponse>
+    >,
+    @Inject("GetMultiPlayerCompletedQuizSummaryQueryHandler")
+    private readonly getMultiPlayerCompletedQuizSummary: IHandler<
+      GetMultiPlayerCompletedQuizSummary,
+      Either<DomainException, MultiQuizPersonalResult>
     >
   ) {}
 
@@ -73,6 +72,24 @@ export class StatisticsController {
       SinglePlayerGameId.of(gameId.attemptId)
     );
     const results = await this.getCompletedQuizSummary.execute(command);
+    if (results.isLeft()) {
+      throw results.getLeft();
+    }
+    return results.getRight();
+  }
+
+  @Get("/multiplayer/:sessionId")
+  async getMultiPlayerAttemptResults(
+    @Param("sessionId") sessionId: string,
+    @Body() userId: UserIdDTO
+  ): Promise<MultiQuizPersonalResult> {
+    const gameId = new SessionIdDTO(sessionId.trim());
+    const command = new GetMultiPlayerCompletedQuizSummary(
+      MultiplayerSessionId.of(gameId.sessionId),
+      UserIdDomain.of(userId.userId)
+    );
+    const results =
+      await this.getMultiPlayerCompletedQuizSummary.execute(command);
     if (results.isLeft()) {
       throw results.getLeft();
     }

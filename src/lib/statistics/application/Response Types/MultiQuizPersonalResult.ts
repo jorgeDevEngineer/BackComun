@@ -3,6 +3,7 @@ import { MultiplayerSession } from "src/lib/multiplayer/domain/aggregates/Multip
 import { MultiplayerAnswer } from "src/lib/multiplayer/domain/valueObjects/multiplayerVOs";
 import { PlayerId } from "src/lib/multiplayer/domain/valueObjects/playerVOs";
 import { Optional } from "../../../shared/Type Helpers/Optional";
+import { UserId } from "src/lib/user/domain/valueObject/UserId";
 
 type questionData = {
   questionIndex: number;
@@ -25,7 +26,14 @@ export type MultiQuizPersonalResult = {
   questionResults: questionData[];
 };
 
-function getAnswerTextOrMedia(questionResults: MultiplayerAnswer, quiz: Quiz) {
+function getAnswerTextOrMedia(
+  questionResults: MultiplayerAnswer,
+  quiz: Quiz
+): Optional<{
+  resultsText: string[];
+  resultsMedia: string[];
+  isText: boolean;
+}> {
   const resultsText: string[] = [];
   const resultsMedia: string[] = [];
   let isText: boolean = false;
@@ -63,4 +71,54 @@ function calculateAverageTime(answers: MultiplayerAnswer[]): number {
     0
   );
   return Math.floor(totalTime / answers.length);
+}
+
+export function toMultiQuizPersonalResult(
+  game: MultiplayerSession,
+  quiz: Quiz,
+  playerId: UserId
+) {
+  const plainQuiz = quiz.toPlainObject();
+  const playerIdObj = PlayerId.of(playerId.value);
+  const playerAnswers = game.getOnePlayerAnswers(playerIdObj);
+  const questionResults: questionData[] = playerAnswers.map((answer, index) => {
+    const question = quiz.getQuestionById(answer.getQuestionId());
+    if (!question) {
+      throw new Error(
+        `Question with ID ${answer.getQuestionId().getValue()} not found in Quiz ${quiz.id.getValue()}`
+      );
+    }
+    const answerContent = getAnswerTextOrMedia(answer, quiz);
+    let answerText: string[] = [];
+    let answerMediaId: string[] = [];
+    if (answerContent.hasValue()) {
+      const dataContent = answerContent.getValue();
+      if (dataContent.isText) {
+        answerText = dataContent.resultsText;
+      } else {
+        answerMediaId = dataContent.resultsMedia;
+      }
+    }
+    return {
+      questionIndex: index + 1,
+      questionText: question.text.value,
+      isCorrect: answer.getIsCorrect(),
+      answerText: answerText,
+      answerMediaId: answerMediaId,
+      timeTakenMs: answer.getTimeElapsed(),
+    };
+  });
+  return {
+    kahootId: plainQuiz.id,
+    title: plainQuiz.title,
+    userId: playerId.value,
+    finalScore: game.getLeaderboardEntryFor(playerIdObj).getScore().getScore(),
+    correctAnswers: questionResults.filter((q) => q.isCorrect).length,
+    totalQuestions: plainQuiz.questions.length,
+    averageTimeMs: calculateAverageTime(playerAnswers),
+    rankingPosition: game
+      .getLeaderboardEntryFor(PlayerId.of(playerId.value))
+      .getRank(),
+    questionResults: questionResults,
+  };
 }
