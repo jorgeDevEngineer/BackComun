@@ -12,9 +12,7 @@ export class MembershipDate {
   }
 
   private isValid(value: Date): boolean {
-    console.log("MembershipDate validation:", value);
     const now = new Date().getDate();
-    console.log("Current date:", now);
     return value.getDate() <= now;
   }
 }
