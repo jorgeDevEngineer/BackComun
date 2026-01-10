@@ -21,6 +21,8 @@ import { MultiplayerSessionsGateway } from "./MultiplayerSession.gateway";
 import { MultiplayerSessionsTracingService } from "./MultiplayerSession.tracing.service";
 import { SyncStateCommandHandler } from "../../application/handlers/SyncStateCommandHandler";
 import { HostStartGameCommandHandler } from "../../application/handlers/HostStartGameCommandHandler";
+import { PlayerSubmitAnswerCommandHandler } from "../../application/handlers/PlayerSubmitAnswerCommandHandler";
+import { MultiplayerEvaluationService } from "../../domain/services/MultiplayerEvaluationService";
 
 @Module({
   imports: [
@@ -58,6 +60,10 @@ import { HostStartGameCommandHandler } from "../../application/handlers/HostStar
       provide: 'HostStartGameCommandHandler',
       useClass: HostStartGameCommandHandler,
     },
+    {
+      provide: 'PlayerSubmitAnswerCommandHandler',
+      useClass: PlayerSubmitAnswerCommandHandler,
+    },
 
     // Repositorios
     {
@@ -89,6 +95,10 @@ import { HostStartGameCommandHandler } from "../../application/handlers/HostStar
     {
       provide: 'UuidGenerator',
       useClass: CryptoUuidGenerator,
+    },
+    {
+      provide: 'MultiplayerEvaluationService',
+      useClass: MultiplayerEvaluationService,
     },
     
     InMemoryActiveSessionRepository,

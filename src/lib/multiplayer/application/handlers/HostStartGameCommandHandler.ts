@@ -19,7 +19,7 @@ export class HostStartGameCommandHandler implements IHandler<HostStartGameComman
         const sessionWrapper = await this.sessionRepository.findByPin( command.sessionPin );
 
         if( !sessionWrapper ){
-            throw new Error('No se encontró la sesión');
+            throw new Error(COMMON_ERRORS.SESSION_NOT_FOUND);
         }
 
 
