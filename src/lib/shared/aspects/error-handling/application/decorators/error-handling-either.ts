@@ -3,9 +3,13 @@ import { DomainUnexpectedException } from "src/lib/shared/exceptions/DomainUnexp
 import { Either } from "src/lib/shared/Type Helpers/Either";
 import { BaseErrorHandlingDecorator } from "./baseErrorHandling.decorator";
 
-export class ErrorHandlingDecoratorWithEither<TParameterObject, TResponse>
-  extends BaseErrorHandlingDecorator<TParameterObject, Either<DomainException, TResponse>> {
-
+export class ErrorHandlingDecoratorWithEither<
+  TParameterObject,
+  TResponse,
+> extends BaseErrorHandlingDecorator<
+  TParameterObject,
+  Either<DomainException, TResponse>
+> {
   protected handleException(
     error: Error,
     command: TParameterObject
