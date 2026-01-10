@@ -13,6 +13,7 @@ import { COMMON_ERRORS } from '../../application/handlers/Errors/CommonErrors';
 //Commands and Handlers
 import { PlayerJoinCommandHandler } from '../../application/handlers/PlayerJoinCommandHandler';
 import { SyncStateCommandHandler } from '../../application/handlers/SyncStateCommandHandler';
+import { HostStartGameCommandHandler } from '../../application/handlers/HostStartGameCommandHandler';
 
 //Dtos
 import { HostLobbyUpdateResponseDto } from '../../application/responseDtos/LobbyStateUpdateResponse.dto';
@@ -52,6 +53,9 @@ export class MultiplayerSessionsGateway  implements OnGatewayConnection, OnGatew
 
         @Inject('SyncStateCommandHandler')
         private readonly syncStateHandler: SyncStateCommandHandler,
+
+        @Inject('HostStartGameCommandHandler')
+        private readonly hostStartGameHandler: HostStartGameCommandHandler,
 
         private readonly tracingWsService: MultiplayerSessionsTracingService,
     ) {
@@ -567,6 +571,61 @@ export class MultiplayerSessionsGateway  implements OnGatewayConnection, OnGatew
         // Éxito: host_lobby_update (solo al host) y player_connected_to_session (solo al cliente)
         // Error: connection_error (solo al emisor)
         // Tu gateway actual usa FATAL_ERROR, que también es válido
+        }
+    }
+
+    @SubscribeMessage(HostUserEvents.HOST_START_GAME)
+    async handleHostStartGame(client: SessionSocket) {
+        this.logger.debug(`Recibido HOST_START_GAME de ${client.id}`);
+
+        try {
+            // 1. Validaciones básicas
+            if (client.data.role !== SessionRoles.HOST) {
+                throw new WsException("El cliente no es Host");
+            }
+
+            if (!client.rooms.has(client.data.roomPin)) {
+                throw new WsException("FATAL: El HOST no se encuentra conectado a la sala solicitada");
+            }
+
+            // 2. Ejecutar el comando de inicio de juego
+            const result = await this.hostStartGameHandler.execute({sessionPin: client.data.roomPin});
+
+            // 3. Verificar la estructura del resultado
+            this.logger.debug(`Resultado de hostStartGameHandler: ${JSON.stringify(result)}`);
+
+            // 4. Construir el payload según lo que devuelve el handler
+            // Si el handler ya devuelve el formato correcto, úsalo directamente
+            const questionStartedPayload = {
+                state: result.data.state,
+                currentSlideData: result.data.currentSlideData
+                // NOTA: timeRemainingMs y hasAnswered son solo para reconexiones
+                // y NO se incluyen cuando el host inicia el juego por primera vez
+            };
+
+            // 5. Emitir QUESTION_STARTED a todos en la sala (broadcast)
+            this.wss.to(client.data.roomPin).emit(
+                ServerEvents.QUESTION_STARTED, 
+                questionStartedPayload
+            );
+
+            this.logger.debug(`Juego iniciado exitosamente en sala ${client.data.roomPin}`);
+
+        } catch (error) {
+            this.logger.error(`Error en HOST_START_GAME para cliente ${client.id}:`, error);
+        
+            let errorMessage = 'Error al iniciar el juego';
+        
+            if (error instanceof WsException) {
+                errorMessage = error.message;
+            } else if (error instanceof Error) {
+                errorMessage = error.message;
+            }
+        
+            client.emit(ServerErrorEvents.FATAL_ERROR, { 
+                statusCode: 400, 
+                message: errorMessage 
+            });
         }
     }
 
