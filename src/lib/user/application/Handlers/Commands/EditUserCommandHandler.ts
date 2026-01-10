@@ -41,6 +41,17 @@ export class EditUserCommandHandler
         new Error("That name already belongs to another user")
       );
     }
+    const userWithSameEmail = await this.userRepository.getOneByEmail(
+      new UserEmail(command.email)
+    );
+    if (
+      userWithSameEmail &&
+      userWithSameEmail.id.value !== command.targetUserId
+    ) {
+      return Result.fail(
+        new Error("That email already belongs to another user")
+      );
+    }
 
     const user = new User(
       new UserName(command.userName),

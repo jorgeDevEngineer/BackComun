@@ -62,6 +62,12 @@ export class CreateUserCommandHandler
     if (userWithSameUserName) {
       throw new Error("User with this username already exists");
     }
+    const userWithSameEmail = await this.userRepository.getOneByEmail(
+      newUser.email
+    );
+    if (userWithSameEmail) {
+      throw new Error("User with this email already exists");
+    }
     await this.userRepository.create(newUser);
     return Result.ok<void>();
   }
