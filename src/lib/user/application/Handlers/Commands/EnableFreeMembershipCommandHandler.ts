@@ -11,7 +11,9 @@ export class EnableFreeMembershipCommandHandler
   constructor(private readonly userRepository: UserRepository) {}
 
   async execute(command: EnableFreeMembership): Promise<Result<void>> {
-    const user = await this.userRepository.getOneById(new UserId(command.targetUserId));
+    const user = await this.userRepository.getOneById(
+      new UserId(command.targetUserId)
+    );
     if (!user) {
       return Result.fail(new UserNotFoundException());
     }

@@ -32,7 +32,10 @@ export class EditUserCommandHandler
     const userWithSameUserName = await this.userRepository.getOneByName(
       new UserName(command.userName)
     );
-    if (userWithSameUserName && userWithSameUserName.id.value !== command.targetUserId) {
+    if (
+      userWithSameUserName &&
+      userWithSameUserName.id.value !== command.targetUserId
+    ) {
       return Result.fail(
         new Error("That name already belongs to another user")
       );

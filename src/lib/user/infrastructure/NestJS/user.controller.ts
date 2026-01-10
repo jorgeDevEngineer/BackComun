@@ -153,7 +153,11 @@ export class UserController {
   }
 
   @Patch("profile/:id")
-  async editProfileById(@Param() params: FindByIdParams, @Body() body: Edit, @Headers("authorization") auth: string) {
+  async editProfileById(
+    @Param() params: FindByIdParams,
+    @Body() body: Edit,
+    @Headers("authorization") auth: string
+  ) {
     const requesterUserId = await this.getCurrentUserId(auth);
     const query = new GetOneUserById(params.id);
     const userResult = await this.getOneUserById.execute(query);
@@ -189,7 +193,10 @@ export class UserController {
   }
 
   @Delete("profile/:id")
-  async deleteProfileById(@Param() params: FindByIdParams, @Headers("authorization") auth: string) {
+  async deleteProfileById(
+    @Param() params: FindByIdParams,
+    @Headers("authorization") auth: string
+  ) {
     const requesterUserId = await this.getCurrentUserId(auth);
     const query = new GetOneUserById(params.id);
     const userResult = await this.getOneUserById.execute(query);
@@ -238,7 +245,10 @@ export class UserController {
   }
 
   @Post("subscription/premium/:id")
-  async enablePremiumSubscriptionPlanById(@Param() params: FindByIdParams, @Headers("authorization") auth: string) {
+  async enablePremiumSubscriptionPlanById(
+    @Param() params: FindByIdParams,
+    @Headers("authorization") auth: string
+  ) {
     const requesterUserId = await this.getCurrentUserId(auth);
     const command = new EnablePremiumMembership(params.id, requesterUserId);
     const result = await this.enablePremiumMembership.execute(command);
@@ -254,7 +264,10 @@ export class UserController {
   }
 
   @Delete("subscription/free/:id")
-  async enableFreeSubscriptionPlanById(@Param() params: FindByIdParams, @Headers("authorization") auth: string) {
+  async enableFreeSubscriptionPlanById(
+    @Param() params: FindByIdParams,
+    @Headers("authorization") auth: string
+  ) {
     const requesterUserId = await this.getCurrentUserId(auth);
     const command = new EnableFreeMembership(params.id, requesterUserId);
     const result = await this.enableFreeMembership.execute(command);

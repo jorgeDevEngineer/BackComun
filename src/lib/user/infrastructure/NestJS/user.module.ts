@@ -135,9 +135,7 @@ import { AuthModule } from "src/lib/auth/infrastructure/NestJs/auth.module";
           logger,
           "DeleteUserCommandHandler"
         );
-        return new AuthorizationDecorator(
-          withLogging
-        );
+        return new AuthorizationDecorator(withLogging);
       },
       inject: [LOGGER_PORT, "UserRepository"],
     },
@@ -155,9 +153,7 @@ import { AuthModule } from "src/lib/auth/infrastructure/NestJs/auth.module";
           logger,
           "EditUserCommandHandler"
         );
-        return new AuthorizationDecorator(
-          withLogging
-        );
+        return new AuthorizationDecorator(withLogging);
       },
       inject: [LOGGER_PORT, "UserRepository"],
     },
@@ -175,9 +171,7 @@ import { AuthModule } from "src/lib/auth/infrastructure/NestJs/auth.module";
           logger,
           "EnablePremiumMembershipCommandHandler"
         );
-        return new AuthorizationDecorator(
-          withLogging
-        );
+        return new AuthorizationDecorator(withLogging);
       },
       inject: [LOGGER_PORT, "UserRepository"],
     },
@@ -195,9 +189,7 @@ import { AuthModule } from "src/lib/auth/infrastructure/NestJs/auth.module";
           logger,
           "EnableFreeMembershipCommandHandler"
         );
-        return new AuthorizationDecorator(
-          withLogging
-        );
+        return new AuthorizationDecorator(withLogging);
       },
       inject: [LOGGER_PORT, "UserRepository"],
     },
