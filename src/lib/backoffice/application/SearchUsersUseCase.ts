@@ -1,5 +1,8 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { UserRepository } from "../domain/port/UserRepository";
+import { UserId } from "../domain/valueObject/UserId";
+import { BadRequestException } from "@nestjs/common";
+import { UnauthorizedException } from "@nestjs/common";
 
 
 export interface SearchParamsDto {
@@ -34,7 +37,14 @@ export class SearchUsersUseCase {
         private readonly userRepository: UserRepository,
     ) {}
 
-    async run(params: SearchParamsDto): Promise<SearchResultDto> {
+    async run(userheader: string, params: SearchParamsDto): Promise<SearchResultDto> {
+        const user = await this.userRepository.getOneById(new UserId(userheader));
+        if (!user) {
+            throw new BadRequestException('User not found');
+        }
+        if (!user.isadmin) {
+            throw new UnauthorizedException('Unauthorized');
+        }
         const result = await this.userRepository.searchUsers(params);
         return result;
     }

@@ -16,6 +16,7 @@ import { DatabaseModule } from "./lib/shared/infrastructure/database/database.mo
 import { AdminModule } from "./lib/admin/infrastructure/admin.module";
 import { MultiplayerSessionModule } from "./lib/multiplayer/infrastructure/NestJs/MultiplayerSession.module";
 import { DynamicMongoAdapter } from "./lib/shared/infrastructure/database/dynamic-mongo.adapter";
+import { AuthModule } from "./lib/auth/infrastructure/NestJs/auth.module";
 
 @Module({
   imports: [
@@ -59,6 +60,7 @@ import { DynamicMongoAdapter } from "./lib/shared/infrastructure/database/dynami
     GroupsModule,
     LibraryModule,
     UserModule,
+    AuthModule,
     SinglePlayerGameModule,
     StatisticsModule,
     BackofficeModule,
@@ -76,5 +78,6 @@ export class AppModule implements OnApplicationBootstrap {
     await this.mongoAdapter.reconnect("kahoot", mongoUrl);
     await this.mongoAdapter.reconnect("media", mongoUrl);
     await this.mongoAdapter.reconnect("user", mongoUrl);
+    await this.mongoAdapter.reconnect("groups", mongoUrl);
   }
 }
