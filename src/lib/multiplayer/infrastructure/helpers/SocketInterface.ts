@@ -5,6 +5,11 @@ import { PlayerLobbyUpdateResponseDto } from "../../application/responseDtos/Lob
 
 import { HostUserEvents, PlayerUserEvents, ServerErrorEvents, ServerEvents, ClientEvents } from "./WebSocketEvents.enum";
 import { SessionRoles } from "./SessionRoles.enum";
+import { QuestionStartedResponseDto } from "../../application/responseDtos/QuestionStartedResponse.dto";
+import { QuestionResultsHostResponseDto } from "../../application/responseDtos/QuestionResultResponses.dto";
+import { QuestionResultsPlayerResponseDto } from "../../application/responseDtos/QuestionResultResponses.dto";
+import { HostEndGameResponseDto } from "../../application/responseDtos/GameEndedResponses.dto";
+import { PlayerEndGameResponseDto } from "../../application/responseDtos/GameEndedResponses.dto";
 
 export interface ServerToClientEvents { 
    // Eventos exitosos
@@ -12,14 +17,14 @@ export interface ServerToClientEvents {
   [ServerEvents.PLAYER_CONNECTED_TO_SERVER]: (payload: { status: 'IN_LOBBY - CONNECTED TO SERVER' }) => void;
   [ServerEvents.HOST_LOBBY_UPDATE]: (payload: HostLobbyUpdateResponseDto) => void;
   [ServerEvents.PLAYER_CONNECTED_TO_SESSION]: (payload: PlayerLobbyUpdateResponseDto ) => void;  
-  //[ServerEvents.QUESTION_STARTED]:(payload: QuestionStartedResponse) => void; 
+  [ServerEvents.QUESTION_STARTED]:(payload: QuestionStartedResponseDto) => void; 
   //[ServerEvents.HOST_ANSWERS_UPDATE]:(payload: PlayerSubmitAnswerResponse ) => void; 
 
   [ServerEvents.PLAYER_ANSWER_CONFIRMATION]:(payload: { status: 'ANSWER SUCCESFULLY SUBMITTED' }) => void; 
-  //[ServerEvents.HOST_RESULTS]:(payload: QuestionResultsHostResponse ) => void;
-  //[ServerEvents.PLAYER_RESULTS]:(payload: QuestionResultsPlayerResponse ) => void;
-  //[ServerEvents.HOST_GAME_END]:(payload: HostEndGameResponse ) => void; 
-  //[ServerEvents.PLAYER_GAME_END]:(payload: PlayerEndGameResponse ) => void;
+  [ServerEvents.HOST_RESULTS]:(payload: QuestionResultsHostResponseDto ) => void;
+  [ServerEvents.PLAYER_RESULTS]:(payload: QuestionResultsPlayerResponseDto ) => void;
+  [ServerEvents.HOST_GAME_END]:(payload: HostEndGameResponseDto ) => void; 
+  [ServerEvents.PLAYER_GAME_END]:(payload: PlayerEndGameResponseDto ) => void;
   [ServerEvents.PLAYER_LEFT_SESSION]:(payload: { userId: string, nickname: string, message: string}) => void; 
   [ServerEvents.HOST_LEFT_SESSION]:(payload: { message: string }) => void; 
   [ServerEvents.HOST_RETURNED_TO_SESSION]:(payload: { message: string }) => void; 
