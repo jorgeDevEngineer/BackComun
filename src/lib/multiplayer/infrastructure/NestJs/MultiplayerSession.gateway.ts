@@ -95,13 +95,13 @@ export class MultiplayerSessionsGateway  implements OnGatewayConnection, OnGatew
                 }
 
                 this.tracingWsService.registerRoom(client); // Registramos La sala en nuestro servicio de Loggeo
-                this.tracingWsService.registerClient(client); // También registrar el host como cliente
+                this.tracingWsService.registerClient(client);
 
             } else if (validRole === SessionRoles.PLAYER) {
 
                 await this.verifyConnectionAvailability(pin as string, jwt as string);
+                this.tracingWsService.registerClient(client);
 
-                this.tracingWsService.registerClient(client); // Registrar jugador (sin nickname aún)
 
             } else {
                 client.disconnect(true); // En caso de no ser ninguno de esos roles, desconectamos inmediatamente
@@ -289,10 +289,6 @@ export class MultiplayerSessionsGateway  implements OnGatewayConnection, OnGatew
             // Procesar la respuesta según el tipo de sincronización
             switch (response.type) {
                 case SyncType.HOST_LOBBY_UPDATE:
-                    // Verificar que no haya otro host conectado
-                    if (this.tracingWsService.roomHasHost(client.data.roomPin)) {
-                        throw new WsException("Ya hay un host conectado a la partida");
-                    }
 
                     // Emitir eventos específicos para host
                     client.emit(ServerEvents.HOST_CONNECTED_SUCCESS, { 
@@ -406,16 +402,6 @@ export class MultiplayerSessionsGateway  implements OnGatewayConnection, OnGatew
                     throw new WsException(`Tipo de sincronización no reconocido: ${response.type}`);
             }
 
-            // Registrar cliente en el servicio de tracing después de sincronización exitosa
-            if (isHost) {
-                this.tracingWsService.registerClient(client);
-            }
-            // Para jugadores, solo registrar si no tiene nickname (nuevo jugador)
-            else if (isPlayer && !client.data.nickname) {
-                this.tracingWsService.registerClient(client);
-            }
-
-            this.logger.debug(`Cliente ${client.id} (${client.data.role}) sincronizado con tipo: ${response.type}`);
 
         } catch (error) {
             this.logger.error(`Error en syncClientState para cliente ${client.id}:`, error);
@@ -448,6 +434,66 @@ export class MultiplayerSessionsGateway  implements OnGatewayConnection, OnGatew
                 });
                 throw new WsException('Error interno del servidor');
             }
+        }
+    }
+
+    //Eventos
+
+    @SubscribeMessage(ClientEvents.CLIENT_READY)
+    async handleClientReady(client: SessionSocket) {
+        this.logger.debug(`Recibido CLIENT_READY de ${client.data.role} (${client.id})`);
+
+        // Limpiamos el timeout porque el cliente ya cumplió y notificó de que está listo para sincronizar
+        const timeout = this.readyTimeouts.get(client.id);
+        if (timeout) {
+            clearTimeout(timeout);
+            this.readyTimeouts.delete(client.id);
+        }
+
+        // Para cuando se reconecte un host que estaba desconectado
+        if (client.data.role === SessionRoles.HOST) {
+            const pendingTimer = this.hostDisconnectionTimers.get(client.data.roomPin);
+            if (pendingTimer) {
+                this.logger.log(`Host reconectado a sala ${client.data.roomPin}. Cancelando cierre de sala.`);
+                clearTimeout(pendingTimer);
+                this.hostDisconnectionTimers.delete(client.data.roomPin);
+            
+                // Notificamos a los jugadores
+                this.wss.to(client.data.roomPin).emit(ServerEvents.HOST_RETURNED_TO_SESSION, { 
+                    message: "El host ha recuperado la conexión con la sesión" 
+                });
+            }
+        }
+
+        try {
+            // Llamamos a la sincronización ahora que el cliente nos confirma que está escuchando
+            await this.syncClientState(client);
+        
+            this.logger.debug(`Cliente ${client.id} sincronizado exitosamente después de CLIENT_READY`);
+        
+        } catch (error) {
+            this.logger.error(`Error en sincronización post-ready para cliente ${client.id}:`, error);
+        
+            let errorMessage = 'Error desconocido en la sincronización';
+        
+            if (error instanceof WsException) {
+                errorMessage = error.message;
+            } else if (error instanceof Error) {
+                errorMessage = error.message;
+            }
+        
+            client.emit(ServerErrorEvents.SYNC_ERROR, { 
+                statusCode: 500, 
+                message: errorMessage 
+            });
+        
+            // Retrasar la desconexión para permitir el envío del evento
+            setTimeout(() => {
+                client.disconnect(true);
+                this.logger.log(`Cliente ${client.id} desconectado después de error en CLIENT_READY`);
+            }, 100);
+        
+            return;
         }
     }
 
