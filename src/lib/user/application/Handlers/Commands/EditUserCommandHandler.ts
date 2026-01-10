@@ -11,7 +11,7 @@ import { UserPlainName } from "../../../domain/valueObject/UserPlainName";
 import { UserTheme } from "../../../domain/valueObject/UserTheme";
 import { UserLanguage } from "../../../domain/valueObject/UserLanguaje";
 import { UserGameStreak } from "../../../domain/valueObject/UserGameStreak";
-import { UserNotFoundError } from "../../error/UserNotFoundError";
+import { UserNotFoundException } from "../../exceptions/UserNotFoundException";
 import { UserStatus } from "../../../domain/valueObject/UserStatus";
 import { IHandler } from "src/lib/shared/IHandler";
 import { EditUser } from "../../Parameter Objects/EditUser";
@@ -24,15 +24,18 @@ export class EditUserCommandHandler
 
   async execute(command: EditUser): Promise<Result<void>> {
     const existing = await this.userRepository.getOneById(
-      new UserId(command.id)
+      new UserId(command.targetUserId)
     );
     if (!existing) {
-      return Result.fail(new UserNotFoundError("User not found"));
+      return Result.fail(new UserNotFoundException());
     }
     const userWithSameUserName = await this.userRepository.getOneByName(
       new UserName(command.userName)
     );
-    if (userWithSameUserName && userWithSameUserName.id.value !== command.id) {
+    if (
+      userWithSameUserName &&
+      userWithSameUserName.id.value !== command.targetUserId
+    ) {
       return Result.fail(
         new Error("That name already belongs to another user")
       );
@@ -44,7 +47,7 @@ export class EditUserCommandHandler
       new UserHashedPassword(command.hashedPassword),
       new UserType(command.userType),
       new UserAvatarUrl(command.avatarUrl),
-      new UserId(command.id),
+      new UserId(command.targetUserId),
       new UserPlainName(command.name),
       new UserTheme(command.theme),
       new UserLanguage(command.language),

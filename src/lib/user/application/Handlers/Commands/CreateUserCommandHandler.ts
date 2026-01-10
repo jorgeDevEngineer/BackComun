@@ -20,6 +20,7 @@ import { Either } from "src/lib/shared/Type Helpers/Either";
 import { DomainException } from "src/lib/shared/exceptions/DomainException";
 import { CreateUser } from "../../Parameter Objects/CreateUser";
 import { Result } from "src/lib/shared/Type Helpers/result";
+import * as bcrypt from "bcrypt";
 
 export class CreateUserCommandHandler
   implements IHandler<CreateUser, Result<void>>
@@ -30,7 +31,7 @@ export class CreateUserCommandHandler
     const newUser = new User(
       new UserName(command.userName),
       new UserEmail(command.email),
-      new UserHashedPassword(command.hashedPassword),
+      new UserHashedPassword(await bcrypt.hash(command.password, 12)),
       new UserType(command.userType),
       new UserAvatarUrl(command.avatarUrl),
       command.id ? new UserId(command.id) : undefined,
@@ -52,12 +53,12 @@ export class CreateUserCommandHandler
       command.status ? new UserStatus(command.status) : undefined
     );
     const userWithSameId = await this.userRepository.getOneById(newUser.id);
-    const userWithSameUserName = await this.userRepository.getOneByName(
-      newUser.userName
-    );
     if (userWithSameId) {
       throw new Error("User with this ID already exists");
     }
+    const userWithSameUserName = await this.userRepository.getOneByName(
+      newUser.userName
+    );
     if (userWithSameUserName) {
       throw new Error("User with this username already exists");
     }
