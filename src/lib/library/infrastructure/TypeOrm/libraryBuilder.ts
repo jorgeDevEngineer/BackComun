@@ -22,6 +22,9 @@ import { TypeOrmPostgresCriteriaApplier } from "./Criteria Appliers/Postgres/Typ
 import { TypeOrmPostgresAdvancedCriteriaApplier } from "./Criteria Appliers/Postgres/TypeOrmPostgresAdvancedCriteriaApplier";
 import { MongoCriteriaApplier } from "./Criteria Appliers/Mongo/MongoCriteriaApplier";
 import { DynamicMongoAdapter } from "../../../shared/infrastructure/database/dynamic-mongo.adapter";
+import { TypeOrmMultiplayerSessionEntity } from "src/lib/multiplayer/infrastructure/repositories/TypeOrm/TypeOrmMultiplayerSessionEntity";
+import { DynamicMultiplayerGameRepository } from "./Repositories/DynamicMultiplayerGameRepository";
+import { MultiplayerSessionHistoryRepository } from "../../domain/port/MultiplayerSessionHistoryRepository";
 
 const entityMap = {
   postgres: {
@@ -29,6 +32,7 @@ const entityMap = {
     User: TypeOrmUserEntity,
     UserFavoriteQuiz: TypeOrmPostgresUserFavoriteQuizEntity,
     SinglePlayerGame: TypeOrmSinglePlayerGameEntity,
+    MultiplayerSession: TypeOrmMultiplayerSessionEntity,
   },
 };
 
@@ -37,6 +41,7 @@ export class LibraryRepositoryBuilder {
   private userRepo?: Repository<TypeOrmUserEntity>;
   private userFavRepo?: Repository<TypeOrmPostgresUserFavoriteQuizEntity>;
   private singleGameRepo?: Repository<TypeOrmSinglePlayerGameEntity>;
+  private sessionRepository?: Repository<TypeOrmMultiplayerSessionEntity>;
 
   constructor(
     private readonly dataSource: DataSource,
@@ -67,6 +72,11 @@ export class LibraryRepositoryBuilder {
       case "SinglePlayerGame":
         this.singleGameRepo = this.dataSource.getRepository(
           entityClass as typeof TypeOrmSinglePlayerGameEntity
+        );
+        break;
+      case "MultiplayerSession":
+        this.sessionRepository = this.dataSource.getRepository(
+          entityClass as typeof TypeOrmMultiplayerSessionEntity
         );
         break;
     }
@@ -103,11 +113,23 @@ export class LibraryRepositoryBuilder {
 
   buildSinglePlayerGameRepository(): SinglePlayerGameRepository {
     const criteriaApplier =
-      new TypeOrmPostgresAdvancedCriteriaApplier<TypeOrmSinglePlayerGameEntity>();
+      new TypeOrmPostgresCriteriaApplier<TypeOrmSinglePlayerGameEntity>();
     const mongoCriteriaApplier = new MongoCriteriaApplier<any>();
     return new DynamicSinglePlayerGameRepository(
       this.singleGameRepo!,
       criteriaApplier,
+      this.mongoAdapter,
+      mongoCriteriaApplier
+    );
+  }
+
+  buildMultiplayerSessionHistoryRepository(): MultiplayerSessionHistoryRepository {
+    const criteriaAplier =
+      new TypeOrmPostgresCriteriaApplier<TypeOrmMultiplayerSessionEntity>();
+    const mongoCriteriaApplier = new MongoCriteriaApplier<any>();
+    return new DynamicMultiplayerGameRepository(
+      this.sessionRepository!,
+      criteriaAplier,
       this.mongoAdapter,
       mongoCriteriaApplier
     );
