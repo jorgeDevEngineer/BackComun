@@ -11,6 +11,7 @@ import { GetNotificationsParamsDto } from "../../application/GetNotificationUseC
 import { GetNotificationsResultDto } from "../../application/GetNotificationUseCase";
 import { UserRepository } from "../../domain/port/UserRepository";
 import { UserId } from "../../domain/valueObject/UserId";
+import { SendNotificationDto } from "../../application/SendNotificationUseCase";
 
 // Interfaz para el documento de MongoDB
 interface MongoNotificationDoc {
@@ -50,7 +51,7 @@ export class TypeOrmNotificationRepository implements NotificationRepository {
     );
   }
 
-  async sendNotification(data: NotificationDto): Promise<Notification> {
+  async sendNotification(data: NotificationDto): Promise<SendNotificationDto> {
     const domainNotification = new Notification(
       data.title,
       data.message,
@@ -68,7 +69,20 @@ export class TypeOrmNotificationRepository implements NotificationRepository {
         createdAt: domainNotification.createdAt,
       });
 
-      return domainNotification;
+      const user = await this.userRepository.getOneById(new UserId(data.userId));
+
+      return {
+        id: domainNotification.id,
+        title: domainNotification.title,
+        message: domainNotification.message,
+        createdAt: domainNotification.createdAt,
+        sender: {
+          ImageUrl: user.avatarUrl.value,
+          id: user.id.value,
+          name: user.name.value,
+          email: user.email.value,
+        },
+      };
     } catch (error) {
       // 2. Si MongoDB falla, usa PostgreSQL como fallback
       console.log('MongoDB connection not available, falling back to PostgreSQL for sendNotification operation.', error);
@@ -82,7 +96,20 @@ export class TypeOrmNotificationRepository implements NotificationRepository {
       });
       await this.pgRepository.save(entity);
 
-      return domainNotification;
+      const user = await this.userRepository.getOneById(new UserId(data.userId));
+
+      return {
+        id: domainNotification.id,
+        title: domainNotification.title,
+        message: domainNotification.message,
+        createdAt: domainNotification.createdAt,
+        sender: {
+          ImageUrl: user.avatarUrl.value,
+          id: user.id.value,
+          name: user.name.value,
+          email: user.email.value,
+        },
+      };
     }
   }
 

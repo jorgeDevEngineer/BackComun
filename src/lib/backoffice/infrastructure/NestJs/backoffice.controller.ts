@@ -138,6 +138,10 @@ export class BackofficeController {
         @Body() body: {
             title: string;
             message: string;
+            filters: {
+                toAdmins: boolean,
+                toRegularUsers: boolean
+            }
         },
     ) {
         try {
@@ -145,6 +149,7 @@ export class BackofficeController {
                 title: body.title,
                 message: body.message,
                 userId: userIdHeader,
+                filters: body.filters,
             });
             return result;
         } catch (e) {

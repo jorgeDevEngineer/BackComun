@@ -5,7 +5,21 @@ export interface NotificationRepository {
         title: string;
         message: string;
         userId: string;
-    }): Promise<Notification>;
+    }): Promise<
+    {
+        id: string;
+        title: string;
+        message: string;
+        createdAt: Date;
+        sender: {
+            ImageUrl: string;
+            id: string;
+            name: string;
+            email: string;
+        }
+    }
+    >;
+
 
     getNotifications(
         params: {

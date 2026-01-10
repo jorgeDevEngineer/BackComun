@@ -13,6 +13,7 @@ import { UnblockUserUseCase } from '../../application/UnblockUserUseCase';
 import { GiveAdminRoleUseCase } from '../../application/GiveAdminUseCase';
 import { RemoveAdminRoleUseCase } from '../../application/RemoveAdminUseCase';
 import { GetNotificationsUseCase } from '../../application/GetNotificationUseCase';
+import { SMTPSendMailService } from '../SMTP/SMTPSendMailService';
 
 @Module({
   imports: [TypeOrmModule.forFeature([TypeOrmUserEntity, TypeOrmNotificationEntity])],
@@ -33,6 +34,10 @@ import { GetNotificationsUseCase } from '../../application/GetNotificationUseCas
     {
       provide: 'NotificationRepository',
       useClass: TypeOrmNotificationRepository,
+    },
+    {
+      provide: 'SendMailService',
+      useClass: SMTPSendMailService,
     }
   ],
   exports: [SearchUsersUseCase, BlockUserUseCase, DeleteUserUseCase, SendNotificationUseCase, UnblockUserUseCase, GiveAdminRoleUseCase, RemoveAdminRoleUseCase, GetNotificationsUseCase],
