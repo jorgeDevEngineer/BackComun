@@ -1,4 +1,4 @@
-import { Module } from "@nestjs/common";
+import { Module, forwardRef } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { TypeOrmSinglePlayerGameEntity } from "../TypeOrm/TypeOrmSinglePlayerGameEntity";
 import { KahootModule } from "src/lib/kahoot/infrastructure/NestJs/kahoot.module";
@@ -12,10 +12,12 @@ import { SubmitGameAnswerCommandHandler } from "../../application/handlers/Submi
 import { GetGameProgressQueryHandler } from "../../application/handlers/GetGameProgressQueryHandler";
 import { GetGameSummaryQueryHandler } from "../../application/handlers/GetGameSummaryQueryHandler";
 import { CryptoUuidGenerator } from "src/lib/shared/infrastructure/adapters/CryptoUuidGenerator";
+import { AuthModule } from "src/lib/auth/infrastructure/NestJs/auth.module";
 
 @Module({
     imports: [
         TypeOrmModule.forFeature([TypeOrmSinglePlayerGameEntity]), 
+        forwardRef(() => AuthModule),
         KahootModule,
     ],
     controllers: [SinglePlayerGameController],

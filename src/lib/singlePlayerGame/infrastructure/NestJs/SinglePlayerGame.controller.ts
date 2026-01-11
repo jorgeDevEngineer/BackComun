@@ -22,6 +22,7 @@ import { StartSinglePlayerGameCommand } from "../../application/parameterObjects
 import { SubmitGameAnswerCommand } from "../../application/parameterObjects/SubmitGameAnswerCommand";
 import { GetGameProgressQuery } from "../../application/parameterObjects/GetGameProgressQuery";
 import { GetGameSummaryQuery } from "../../application/parameterObjects/GetGameSummaryQuery";
+import { ITokenProvider } from "src/lib/auth/application/providers/ITokenProvider";
 
 @Controller('attempts')
 export class SinglePlayerGameController {
@@ -37,34 +38,20 @@ export class SinglePlayerGameController {
         private readonly SubmitGameAnswerHandler: IHandler<SubmitGameAnswerCommand, SubmitGameAnswerResponseDto>,
 
         @Inject('GetGameSummaryQueryHandler')
-        private readonly GetGameSummaryHandler: IHandler<GetGameSummaryQuery, GameSummaryResponseDto> 
-    ) {}
+        private readonly GetGameSummaryHandler: IHandler<GetGameSummaryQuery, GameSummaryResponseDto>,
 
-    //Mientras no esté hecho el modulo de autentición
-    private extractUserIdFromToken(authHeader: string): string {
-        // Implementación simple - en producción usaremos JWT service
-        //if (!authHeader || !authHeader.startsWith('Bearer ')) {
-           // throw new HttpException('Token invalido', HttpStatus.UNAUTHORIZED);
-        //}
-    
-        //const token = authHeader.substring(7);
-        // Aquí iría la lógica para decodificar el JWT y obtener el userId
-        // Por ahora retornamos un mock
-        return authHeader;
-    }
+        @Inject("ITokenProvider") 
+        private readonly tokenProvider: ITokenProvider
+    ) {}
 
     @Post()
     async startGame(
         @Body() body: StartGameRequestDto,
-        @Headers('authorization') authHeader?: string
+        @Headers('authorization') authHeader: string
     ):Promise<StartGameResponseDto>{
 
-        if (!authHeader) {
-            throw new UnauthorizedException('No se encuentra el header de autorización');
-        }
-
         try {
-            const playerId = this.extractUserIdFromToken(authHeader);
+            const playerId = await this.getCurrentUserId(authHeader);
             return await this.StartSinglePlayerGameHandler.execute({
                 kahootId: body.kahootId,
                 playerId
@@ -80,14 +67,12 @@ export class SinglePlayerGameController {
     @Get(':attemptId')
     async getProgress(
         @Param('attemptId') attemptId: string,
-        @Headers('authorization') authHeader?: string
+        @Headers('authorization') authHeader: string
     ): Promise<GameProgressResponseDto> {
 
-        if (!authHeader) {
-            throw new UnauthorizedException('No se encuentra el header de autorización');
-        }
-
         try {
+            //Llamo al getCurrentUserId para validar el token aunque no lo use
+            const userId = await this.getCurrentUserId(authHeader);
             return await this.GetGameProgressHandler.execute({ attemptId });
         } catch (error) {
             if (error.message === `No se encontró la partida de id ${attemptId}`) {
@@ -102,14 +87,12 @@ export class SinglePlayerGameController {
     async submitAnswer(
         @Param('attemptId') attemptId: string,
         @Body() body: SubmitGameAnswerRequestDto,
-        @Headers('authorization') authHeader?: string
+        @Headers('authorization') authHeader: string
     ): Promise<SubmitGameAnswerResponseDto> {
 
-        if (!authHeader) {
-            throw new UnauthorizedException('No se encuentra el header de autorización');
-        }
-
         try {
+            //Llamo al getCurrentUserId para validar el token aunque no lo use
+            const userId = await this.getCurrentUserId(authHeader);
             return await this.SubmitGameAnswerHandler.execute({
                 attemptId,
                 slideId: body.slideId,
@@ -137,12 +120,9 @@ export class SinglePlayerGameController {
         @Headers('authorization') authHeader: string
     ): Promise<GameSummaryResponseDto> {
 
-        if (!authHeader) {
-            throw new UnauthorizedException('No se encuentra el header de autorización');
-        }
-
-
         try {
+            //Llamo al getCurrentUserId para validar el token aunque no lo use
+            const userId = await this.getCurrentUserId(authHeader);
             return await this.GetGameSummaryHandler.execute({ attemptId });
         } catch (error) {
             if (error.message === `No se encontró la partida de id ${attemptId}`) {
@@ -155,5 +135,17 @@ export class SinglePlayerGameController {
         }
 
     }
+
+    private async getCurrentUserId(authHeader: string): Promise<string> {
+        const token = authHeader?.replace(/^Bearer\s+/i, "");
+        if (!token) {
+          throw new Error("Token required");
+        }
+        const payload = await this.tokenProvider.validateToken(token);
+        if (!payload || !payload.sub) {
+          throw new Error("Invalid token");
+        }
+        return payload.sub;
+      }
 
 }
