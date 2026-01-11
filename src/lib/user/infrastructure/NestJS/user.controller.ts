@@ -36,6 +36,7 @@ import { Result } from "src/lib/shared/Type Helpers/result";
 import { User } from "../../domain/aggregate/User";
 import { get } from "http";
 import { ITokenProvider } from "src/lib/auth/application/providers/ITokenProvider";
+import { IAssetUrlResolver } from "src/lib/shared/application/providers/IAssetUrlResolver";
 
 @Controller("user")
 export class UserController {
@@ -56,8 +57,31 @@ export class UserController {
     private readonly enablePremiumMembership: EnablePremiumMembershipCommandHandler,
     @Inject(EnableFreeMembershipCommandHandler)
     private readonly enableFreeMembership: EnableFreeMembershipCommandHandler,
-    @Inject("ITokenProvider") private readonly tokenProvider: ITokenProvider
+    @Inject("ITokenProvider") private readonly tokenProvider: ITokenProvider,
+    @Inject("IAssetUrlResolver")
+    private readonly assetUrlResolver: IAssetUrlResolver
   ) {}
+
+  private mapUserToResponse(user: User) {
+    return {
+      id: user.id.value,
+      email: user.email.value,
+      username: user.userName.value,
+      type: user.userType.value,
+      state: user.status.value,
+      preferences: {
+        theme: user.theme.value,
+      },
+      userProfileDetails: {
+        name: user.name.value,
+        description: user.description.value,
+        avatarAssetUrl: this.assetUrlResolver.resolveAvatarUrl(
+          user.avatarAssetId.value
+        ),
+      },
+      isPremium: user.membership.isPremium(),
+    };
+  }
 
   private async getCurrentUserId(authHeader: string): Promise<string> {
     const token = authHeader?.replace(/^Bearer\s+/i, "");
@@ -98,7 +122,7 @@ export class UserController {
       new GetOneUserByUserName(body.username)
     );
     this.handleResult(createdUser);
-    return { user: createdUser.getValue().toPlainObject() };
+    return { user: this.mapUserToResponse(createdUser.getValue()) };
   }
 
   @Get("profile")
@@ -106,14 +130,14 @@ export class UserController {
     const userId = await this.getCurrentUserId(auth);
     const query = new GetOneUserById(userId);
     const result = await this.getOneUserById.execute(query);
-    return { user: this.handleResult(result).toPlainObject() };
+    return { user: this.mapUserToResponse(this.handleResult(result)) };
   }
 
   @Get("profile/id/:id")
   async getProfileById(@Param() params: FindByIdParams) {
     const query = new GetOneUserById(params.id);
     const result = await this.getOneUserById.execute(query);
-    return { user: this.handleResult(result).toPlainObject() };
+    return { user: this.mapUserToResponse(this.handleResult(result)) };
   }
 
   @Get("profile/username/:userName")
@@ -127,7 +151,11 @@ export class UserController {
   async getAllProfiles() {
     const query = new GetAllUsers();
     const result = await this.getAllUsers.execute(query);
-    return this.handleResult(result).map((user) => user.toPlainObjectResumed());
+    return this.handleResult(result).map((user) => {
+      const mapped = this.mapUserToResponse(user);
+      delete (mapped as any).preferences;
+      return mapped;
+    });
   }
 
   @Patch("profile")
@@ -147,7 +175,7 @@ export class UserController {
       body.confirmNewPassword,
       body.name,
       body.description,
-      body.avatarAssetUrl,
+      body.avatarAssetId,
       body.themePreference,
       user.id.value,
       userId
@@ -155,7 +183,7 @@ export class UserController {
     const editResult = await this.editUser.execute(editUserCommand);
     this.handleResult(editResult);
     const result = await this.getOneUserById.execute(query);
-    return { user: this.handleResult(result).toPlainObject() };
+    return { user: this.mapUserToResponse(this.handleResult(result)) };
   }
 
   @Patch("profile/:id")
@@ -177,7 +205,7 @@ export class UserController {
       body.confirmNewPassword,
       body.name,
       body.description,
-      body.avatarAssetUrl,
+      body.avatarAssetId,
       body.themePreference,
       user.id.value,
       requesterUserId
@@ -185,7 +213,7 @@ export class UserController {
     const editResult = await this.editUser.execute(editUserCommand);
     this.handleResult(editResult);
     const result = await this.getOneUserById.execute(query);
-    return { user: this.handleResult(result).toPlainObject() };
+    return { user: this.mapUserToResponse(this.handleResult(result)) };
   }
 
   @Delete("profile")
@@ -287,21 +315,23 @@ export class UserController {
   async getOneById(@Param() params: FindByIdParams) {
     const query = new GetOneUserById(params.id);
     const result = await this.getOneUserById.execute(query);
-    return this.handleResult(result).toPlainObject();
+    return this.mapUserToResponse(this.handleResult(result));
   }
 
   @Get("username/:userName")
   async getOneUserByName(@Param() params: FindByUserNameParams) {
     const query = new GetOneUserByUserName(params.userName);
     const result = await this.getOneUserByUserName.execute(query);
-    return this.handleResult(result).toPlainObject();
+    return this.mapUserToResponse(this.handleResult(result));
   }
 
   @Get()
   async getAll() {
     const query = new GetAllUsers();
     const result = await this.getAllUsers.execute(query);
-    return this.handleResult(result).map((user) => user.toPlainObject());
+    return this.handleResult(result).map((user) =>
+      this.mapUserToResponse(user)
+    );
   }
 
   @Post()
@@ -336,7 +366,7 @@ export class UserController {
       body.confirmNewPassword,
       body.name,
       body.description,
-      body.avatarAssetUrl,
+      body.avatarAssetId,
       body.themePreference,
       user.id.value
     );

@@ -2,7 +2,7 @@ import { UserName } from "../valueObject/UserName";
 import { UserEmail } from "../valueObject/UserEmail";
 import { UserHashedPassword } from "../valueObject/UserHashedPassword";
 import { UserType } from "../valueObject/UserType";
-import { UserAvatarUrl } from "../valueObject/UserAvatarUrl";
+import { UserAvatarId } from "src/lib/user/domain/valueObject/UserAvatarId";
 import { UserTheme } from "../valueObject/UserTheme";
 import { UserLanguage } from "../valueObject/UserLanguaje";
 import { UserGameStreak } from "../valueObject/UserGameStreak";
@@ -22,7 +22,7 @@ export class User {
   readonly email: UserEmail;
   readonly hashedPassword: UserHashedPassword;
   readonly userType: UserType;
-  readonly avatarUrl: UserAvatarUrl;
+  readonly avatarAssetId: UserAvatarId;
   readonly name: UserPlainName;
   readonly description: UserDescription;
   readonly roles: UserRoles;
@@ -39,7 +39,7 @@ export class User {
     email: UserEmail,
     hashedPassword: UserHashedPassword,
     userType: UserType,
-    avatarUrl: UserAvatarUrl,
+    avatarAssetId: UserAvatarId,
     id?: UserId,
     name?: UserPlainName,
     description?: UserDescription,
@@ -57,7 +57,7 @@ export class User {
     this.email = email;
     this.hashedPassword = hashedPassword;
     this.userType = userType;
-    this.avatarUrl = avatarUrl ? avatarUrl : new UserAvatarUrl("");
+    this.avatarAssetId = avatarAssetId ? avatarAssetId : new UserAvatarId("");
     this.id = id ? id : UserId.generateId();
     this.name = name ? name : new UserPlainName("");
     this.description = description ? description : new UserDescription("");
@@ -87,7 +87,7 @@ export class User {
       userProfileDetails: {
         name: this.name.value,
         description: this.description.value,
-        avatarAssetUrl: this.avatarUrl.value,
+        avatarAssetId: this.avatarAssetId.value,
       },
       isPremium: this.membership.isPremium(),
     };

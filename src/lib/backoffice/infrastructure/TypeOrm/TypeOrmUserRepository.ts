@@ -10,7 +10,7 @@ import { UserId } from "../../domain/valueObject/UserId";
 import { UserEmail } from "../../domain/valueObject/UserEmail";
 import { UserHashedPassword } from "../../domain/valueObject/UserHashedPassword";
 import { UserType } from "../../domain/valueObject/UserType";
-import { UserAvatarUrl } from "../../domain/valueObject/UserAvatarUrl";
+import { UserAvatarId } from "src/lib/backoffice/domain/valueObject/UserAvatarId";
 import { UserPlainName } from "../../domain/valueObject/UserPlainName";
 import { UserTheme } from "../../domain/valueObject/UserTheme";
 import { UserLanguage } from "../../domain/valueObject/UserLanguaje";
@@ -34,7 +34,7 @@ interface MongoUserDoc {
   email: string;
   hashedPassword: string;
   userType: "student" | "teacher" | "personal";
-  avatarUrl: string;
+  avatarAssetId: string;
   name: string;
   theme: string;
   language: string;
@@ -90,7 +90,7 @@ export class TypeOrmUserRepository implements UserRepository {
       new UserEmail(entity.email),
       new UserHashedPassword(entity.hashedPassword),
       new UserType(entity.userType),
-      new UserAvatarUrl(entity.avatarUrl),
+      new UserAvatarId((entity as any).avatarAssetId),
       new UserId(userId),
       new UserPlainName(entity.name),
       new UserTheme(entity.theme),

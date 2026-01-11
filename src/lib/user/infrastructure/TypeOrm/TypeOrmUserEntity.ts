@@ -18,7 +18,7 @@ export class TypeOrmUserEntity {
   userType: "student" | "teacher" | "personal";
 
   @Column()
-  avatarUrl: string;
+  avatarAssetId: string;
 
   @Column()
   name: string;

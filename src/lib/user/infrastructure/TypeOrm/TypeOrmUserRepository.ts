@@ -8,7 +8,7 @@ import { UserId } from "../../domain/valueObject/UserId";
 import { UserEmail } from "../../domain/valueObject/UserEmail";
 import { UserHashedPassword } from "../../domain/valueObject/UserHashedPassword";
 import { UserType } from "../../domain/valueObject/UserType";
-import { UserAvatarUrl } from "../../domain/valueObject/UserAvatarUrl";
+import { UserAvatarId } from "../../domain/valueObject/UserAvatarId";
 import { UserPlainName } from "../../domain/valueObject/UserPlainName";
 import { UserDescription } from "../../domain/valueObject/UserDescription";
 import { UserRoles } from "../../domain/valueObject/UserRoles";
@@ -31,7 +31,7 @@ interface UserMongoDoc {
   email: string;
   hashedPassword: string;
   userType: "student" | "teacher" | "personal";
-  avatarUrl: string;
+  avatarAssetId: string;
   name: string;
   description?: string;
   roles?: ("user" | "admin")[];
@@ -66,7 +66,7 @@ export class TypeOrmUserRepository implements UserRepository {
       new UserEmail(entity.email),
       new UserHashedPassword(entity.hashedPassword),
       new UserType(entity.userType),
-      new UserAvatarUrl(entity.avatarUrl),
+      new UserAvatarId(entity.avatarAssetId),
       new UserId(entity.id),
       new UserPlainName(entity.name),
       new UserDescription(entity.description ?? ""),
@@ -96,7 +96,7 @@ export class TypeOrmUserRepository implements UserRepository {
       new UserEmail(doc.email),
       new UserHashedPassword(doc.hashedPassword),
       new UserType(doc.userType),
-      new UserAvatarUrl(doc.avatarUrl),
+      new UserAvatarId(doc.avatarAssetId),
       new UserId(doc._id),
       new UserPlainName(doc.name),
       new UserDescription(doc.description ?? ""),
@@ -123,7 +123,7 @@ export class TypeOrmUserRepository implements UserRepository {
       email: user.email.value,
       hashedPassword: user.hashedPassword.value,
       userType: user.userType.value,
-      avatarUrl: user.avatarUrl.value,
+      avatarAssetId: user.avatarAssetId.value,
       name: user.name.value,
       description: user.description.value,
       roles: user.roles.value,
@@ -221,7 +221,7 @@ export class TypeOrmUserRepository implements UserRepository {
         email: user.email.value,
         hashedPassword: user.hashedPassword.value,
         userType: user.userType.value,
-        avatarUrl: user.avatarUrl.value,
+        avatarAssetId: user.avatarAssetId.value,
         name: user.name.value,
         description: user.description.value,
         roles: user.roles.value,
@@ -254,7 +254,7 @@ export class TypeOrmUserRepository implements UserRepository {
         email: user.email.value,
         hashedPassword: user.hashedPassword.value,
         userType: user.userType.value,
-        avatarUrl: user.avatarUrl.value,
+        avatarAssetId: user.avatarAssetId.value,
         name: user.name.value,
         description: user.description.value,
         roles: user.roles.value,

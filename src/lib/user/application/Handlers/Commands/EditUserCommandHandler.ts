@@ -6,7 +6,7 @@ import { UserName } from "../../../domain/valueObject/UserName";
 import { UserEmail } from "../../../domain/valueObject/UserEmail";
 import { UserHashedPassword } from "../../../domain/valueObject/UserHashedPassword";
 import { UserType } from "../../../domain/valueObject/UserType";
-import { UserAvatarUrl } from "../../../domain/valueObject/UserAvatarUrl";
+import { UserAvatarId } from "../../../domain/valueObject/UserAvatarId";
 import { UserPlainName } from "../../../domain/valueObject/UserPlainName";
 import { UserDescription } from "../../../domain/valueObject/UserDescription";
 import { UserIsAdmin } from "../../../domain/valueObject/UserIsAdmin";
@@ -84,7 +84,7 @@ export class EditUserCommandHandler
       new UserEmail(command.email),
       newHashedPassword,
       existing.userType,
-      new UserAvatarUrl(command.avatarAssetUrl),
+      new UserAvatarId(command.avatarAssetId),
       new UserId(command.targetUserId),
       new UserPlainName(command.name),
       new UserDescription(command.description ?? existing.description.value),

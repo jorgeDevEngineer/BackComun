@@ -23,6 +23,7 @@ import { In } from "typeorm";
 import { GetOneUserByIdQueryHandler } from "src/lib/user/application/Handlers/Querys/GetOneUserByIdQueryHandler";
 import { GetOneUserById } from "src/lib/user/application/Parameter Objects/GetOneUserById";
 import { ITokenProvider } from "../../application/providers/ITokenProvider";
+import { IAssetUrlResolver } from "src/lib/shared/application/providers/IAssetUrlResolver";
 
 @Controller("auth")
 export class AuthController {
@@ -37,8 +38,29 @@ export class AuthController {
     private readonly getUserByEmailHandler: GetOneUserByEmailQueryHandler,
     @Inject(GetOneUserByIdQueryHandler)
     private readonly getUserByIdHandler: GetOneUserByIdQueryHandler,
-    @Inject("ITokenProvider") private readonly tokenProvider: ITokenProvider
+    @Inject("ITokenProvider") private readonly tokenProvider: ITokenProvider,
+    @Inject("IAssetUrlResolver")
+    private readonly assetUrlResolver: IAssetUrlResolver
   ) {}
+
+  private mapUserToResponse(user: any) {
+    return {
+      id: user.id.value,
+      email: user.email.value,
+      username: user.userName.value,
+      type: user.userType.value,
+      state: user.status.value,
+      preferences: { theme: user.theme.value },
+      userProfileDetails: {
+        name: user.name.value,
+        description: user.description.value,
+        avatarAssetUrl: this.assetUrlResolver.resolveAvatarUrl(
+          user.avatarAssetId.value
+        ),
+      },
+      isPremium: user.membership.isPremium(),
+    };
+  }
 
   @Post("login")
   async login(@Body() body: { email: string; password: string }) {
@@ -51,7 +73,10 @@ export class AuthController {
     const user = await this.getUserByEmailHandler.execute(
       new GetOneUserByEmail(body.email)
     );
-    return { token: result.getValue(), user: user.getValue().toPlainObject() };
+    return {
+      token: result.getValue(),
+      user: this.mapUserToResponse(user.getValue()),
+    };
   }
 
   @Post("logout")
@@ -98,6 +123,6 @@ export class AuthController {
       email: user.email.value,
       roles: user.roles.value,
     });
-    return { token: newToken, user: user.toPlainObject() };
+    return { token: newToken, user: this.mapUserToResponse(user) };
   }
 }
