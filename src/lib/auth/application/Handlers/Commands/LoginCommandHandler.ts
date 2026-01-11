@@ -7,6 +7,7 @@ import { ITokenProvider } from "src/lib/auth/application/providers/ITokenProvide
 import { Get, Inject } from "@nestjs/common";
 import * as bcrypt from "bcrypt";
 import { User } from "src/lib/user/domain/aggregate/User";
+import { DomainException } from "src/lib/shared/exceptions/domain.exception";
 
 export class LoginCommandHandler
   implements IHandler<LoginCommand, Result<string>>
@@ -22,7 +23,7 @@ export class LoginCommandHandler
 
   async execute(command: LoginCommand): Promise<Result<string>> {
     if (!command.password || command.password.trim() === "") {
-      return Result.fail(new Error("Password is required"));
+      return Result.fail(new DomainException("Password is required"));
     }
     const getUserResult = await this.getUserByUserNameHandler.execute(
       new GetOneUserByUserName(command.userName)
