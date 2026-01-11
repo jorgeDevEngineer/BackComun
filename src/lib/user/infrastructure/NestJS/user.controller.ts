@@ -6,6 +6,7 @@ import {
   Inject,
   InternalServerErrorException,
   NotFoundException,
+  BadRequestException,
   Param,
   Patch,
   Post,
@@ -84,6 +85,13 @@ export class UserController {
     return result.getValue()!;
   }
 
+  handleBadRequestResult<T>(result: Result<T>): T {
+    if (result.isFailure) {
+      throw new BadRequestException(result.error.message);
+    }
+    return result.getValue()!;
+  }
+
   private addAvatarUrlToUser(userObj: any) {
     if (!userObj) return userObj;
 
@@ -130,7 +138,7 @@ export class UserController {
       body.name
     );
     const result = await this.createUserCommandHandler.execute(createUser);
-    this.handleResult(result);
+    this.handleBadRequestResult(result);
     const createdUser = await this.getOneUserByUserName.execute(
       new GetOneUserByUserName(body.username)
     );
