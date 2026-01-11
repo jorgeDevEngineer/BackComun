@@ -33,24 +33,10 @@ export class CreateUserCommandHandler
       new UserEmail(command.email),
       new UserHashedPassword(await bcrypt.hash(command.password, 12)),
       new UserType(command.userType),
-      new UserAvatarUrl(command.avatarUrl),
-      command.id ? new UserId(command.id) : undefined,
-      command.name ? new UserPlainName(command.name) : undefined,
-      command.theme ? new UserTheme(command.theme) : undefined,
-      command.language ? new UserLanguage(command.language) : undefined,
-      typeof command.gameStreak === "number"
-        ? new UserGameStreak(command.gameStreak)
-        : undefined,
-      command.membership
-        ? new Membership(
-            new MembershipType(command.membership.type),
-            new MembershipDate(command.membership.startedAt),
-            new MembershipDate(command.membership.expiresAt)
-          )
-        : undefined,
-      command.createdAt ? new UserDate(command.createdAt) : undefined,
-      command.updatedAt ? new UserDate(command.updatedAt) : undefined,
-      command.status ? new UserStatus(command.status) : undefined
+      undefined,
+      undefined,
+      new UserPlainName(command.name),
+      command.description
     );
     const userWithSameId = await this.userRepository.getOneById(newUser.id);
     if (userWithSameId) {

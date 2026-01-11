@@ -20,6 +20,7 @@ export class User {
   readonly userType: UserType;
   readonly avatarUrl: UserAvatarUrl;
   readonly name: UserPlainName;
+  readonly description: string;
   readonly theme: UserTheme; // Default: 'light'
   readonly language: UserLanguage; // Default: 'es'
   readonly gameStreak: UserGameStreak; // Default: 0
@@ -36,6 +37,7 @@ export class User {
     avatarUrl: UserAvatarUrl,
     id?: UserId,
     name?: UserPlainName,
+    description?: string,
     theme?: UserTheme,
     language?: UserLanguage,
     gameStreak?: UserGameStreak,
@@ -49,9 +51,10 @@ export class User {
     this.email = email;
     this.hashedPassword = hashedPassword;
     this.userType = userType;
-    this.avatarUrl = avatarUrl;
+    this.avatarUrl = avatarUrl ? avatarUrl : new UserAvatarUrl("");
     this.id = id ? id : UserId.generateId();
     this.name = name ? name : new UserPlainName("");
+    this.description = description ?? "";
     this.theme = theme ? theme : new UserTheme("light");
     this.language = language ? language : new UserLanguage("es");
     this.gameStreak = gameStreak ? gameStreak : new UserGameStreak(0);
@@ -67,19 +70,24 @@ export class User {
   toPlainObject() {
     return {
       id: this.id.value,
-      userName: this.userName.value,
-      name: this.name.value,
       email: this.email.value,
-      userType: this.userType.value,
-      avatarUrl: this.avatarUrl.value,
-      theme: this.theme.value,
-      language: this.language.value,
+      username: this.userName.value,
+      type: this.userType.value,
+      state: this.status.value,
+      isAdmin: this.isAdmin,
+      preferences: {
+        theme: this.theme.value,
+        language: this.language.value,
+      },
+      userProfileDetails: {
+        name: this.name.value,
+        description: this.description,
+        avatarUrl: this.avatarUrl.value,
+      },
+      isPremium: this.membership.isPremium(),
       gameStreak: this.gameStreak.value,
-      membership: this.membership.toPlainObject(),
       createdAt: this.createdAt.value,
       updatedAt: this.updatedAt.value,
-      status: this.status.value,
-      isAdmin: this.isAdmin,
     };
   }
 
