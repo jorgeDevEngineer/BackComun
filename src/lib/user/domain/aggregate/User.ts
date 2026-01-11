@@ -74,20 +74,15 @@ export class User {
       username: this.userName.value,
       type: this.userType.value,
       state: this.status.value,
-      isAdmin: this.isAdmin,
       preferences: {
         theme: this.theme.value,
-        language: this.language.value,
       },
       userProfileDetails: {
         name: this.name.value,
         description: this.description,
-        avatarUrl: this.avatarUrl.value,
+        avatarAssetUrl: this.avatarUrl.value,
       },
       isPremium: this.membership.isPremium(),
-      gameStreak: this.gameStreak.value,
-      createdAt: this.createdAt.value,
-      updatedAt: this.updatedAt.value,
     };
   }
 
