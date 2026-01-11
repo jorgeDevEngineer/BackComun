@@ -61,6 +61,7 @@ export class EditUserCommandHandler
       new UserAvatarUrl(command.avatarUrl),
       new UserId(command.targetUserId),
       new UserPlainName(command.name),
+      command.description,
       new UserTheme(command.theme),
       new UserLanguage(command.language),
       new UserGameStreak(command.gameStreak),

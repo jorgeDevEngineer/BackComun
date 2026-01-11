@@ -86,14 +86,19 @@ export class UserController {
   @Post("register")
   async register(@Body() body: Create) {
     const createUser = new CreateUser(
-      body.userName,
+      body.username,
       body.email,
       body.password,
-      body.userType,
-      body.avatarUrl
+      body.type,
+      body.name
     );
     const result = await this.createUserCommandHandler.execute(createUser);
-    return this.handleResult(result);
+    this.handleResult(result);
+    const createdUser = await this.getOneUserByUserName.execute(
+      new GetOneUserByUserName(body.username)
+    );
+    this.handleResult(createdUser);
+    return { user: createdUser.getValue().toPlainObject() };
   }
 
   @Get("profile")
@@ -142,6 +147,7 @@ export class UserController {
       body.avatarUrl,
       user.id.value,
       body.name,
+      body.description,
       body.theme,
       body.language,
       body.gameStreak,
@@ -171,6 +177,7 @@ export class UserController {
       body.avatarUrl,
       user.id.value,
       body.name,
+      body.description,
       body.theme,
       body.language,
       body.gameStreak,
@@ -301,11 +308,11 @@ export class UserController {
   async create(@Body() body: Create) {
     try {
       const createUser = new CreateUser(
-        body.userName,
+        body.username,
         body.email,
         body.password,
-        body.userType,
-        body.avatarUrl
+        body.type,
+        body.name
       );
       const result = await this.createUserCommandHandler.execute(createUser);
       return this.handleResult(result);
@@ -329,6 +336,7 @@ export class UserController {
       body.avatarUrl,
       user.id.value,
       body.name,
+      body.description,
       body.theme,
       body.language,
       body.gameStreak,

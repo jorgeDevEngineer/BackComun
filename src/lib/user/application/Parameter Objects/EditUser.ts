@@ -7,6 +7,7 @@ export class EditUser {
     public readonly avatarUrl: string,
     public readonly targetUserId: string,
     public readonly name: string,
+    public readonly description: string,
     public readonly theme: string,
     public readonly language: string,
     public readonly gameStreak: number,

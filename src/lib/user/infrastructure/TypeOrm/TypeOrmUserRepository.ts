@@ -30,6 +30,7 @@ interface UserMongoDoc {
   userType: "student" | "teacher" | "personal";
   avatarUrl: string;
   name: string;
+  description?: string;
   theme: string;
   language: string;
   gameStreak: number;
@@ -64,6 +65,7 @@ export class TypeOrmUserRepository implements UserRepository {
       new UserAvatarUrl(entity.avatarUrl),
       new UserId(entity.id),
       new UserPlainName(entity.name),
+      entity.description,
       new UserTheme(entity.theme),
       new UserLanguage(entity.language),
       new UserGameStreak(entity.gameStreak),
@@ -88,6 +90,7 @@ export class TypeOrmUserRepository implements UserRepository {
       new UserAvatarUrl(doc.avatarUrl),
       new UserId(doc._id),
       new UserPlainName(doc.name),
+      doc.description,
       new UserTheme(doc.theme),
       new UserLanguage(doc.language),
       new UserGameStreak(doc.gameStreak),
@@ -112,6 +115,7 @@ export class TypeOrmUserRepository implements UserRepository {
       userType: user.userType.value,
       avatarUrl: user.avatarUrl.value,
       name: user.name.value,
+      description: user.description,
       theme: user.theme.value,
       language: user.language.value,
       gameStreak: user.gameStreak.value,
@@ -208,6 +212,7 @@ export class TypeOrmUserRepository implements UserRepository {
         userType: user.userType.value,
         avatarUrl: user.avatarUrl.value,
         name: user.name.value,
+        description: user.description,
         theme: user.theme.value,
         language: user.language.value,
         gameStreak: user.gameStreak.value,
@@ -239,6 +244,7 @@ export class TypeOrmUserRepository implements UserRepository {
         userType: user.userType.value,
         avatarUrl: user.avatarUrl.value,
         name: user.name.value,
+        description: user.description,
         theme: user.theme.value,
         language: user.language.value,
         gameStreak: user.gameStreak.value,
