@@ -1,11 +1,11 @@
-import { Repository } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Injectable } from '@nestjs/common';
-import { Collection, Db } from 'mongodb';
-import { User } from '../../domain/entity/User';
-import { UserRepository } from '../../domain/port/UserRepository';
-import { TypeOrmUserEntity } from './TypeOrmUserEntity';
-import { DynamicMongoAdapter } from '../../../shared/infrastructure/database/dynamic-mongo.adapter';
+import { Repository } from "typeorm";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Injectable } from "@nestjs/common";
+import { Collection, Db } from "mongodb";
+import { User } from "../../domain/entity/User";
+import { UserRepository } from "../../domain/port/UserRepository";
+import { TypeOrmUserEntity } from "./TypeOrmUserEntity";
+import { DynamicMongoAdapter } from "../../../shared/infrastructure/database/dynamic-mongo.adapter";
 
 // Interfaz para el documento de MongoDB
 interface MongoUserDoc {
@@ -14,8 +14,8 @@ interface MongoUserDoc {
   userName: string;
   email: string;
   hashedPassword: string;
-  userType: 'student' | 'teacher' | 'personal';
-  avatarUrl: string;
+  userType: "student" | "teacher" | "personal";
+  avatarAssetId: string;
   name: string;
   theme: string;
   language: string;
@@ -29,15 +29,15 @@ export class TypeOrmUserRepository implements UserRepository {
   constructor(
     @InjectRepository(TypeOrmUserEntity)
     private readonly pgRepository: Repository<TypeOrmUserEntity>,
-    private readonly mongoAdapter: DynamicMongoAdapter,
+    private readonly mongoAdapter: DynamicMongoAdapter
   ) {}
 
   /**
    * Obtiene la colección de usuarios de MongoDB para el módulo 'search'
    */
   private async getMongoCollection(): Promise<Collection<MongoUserDoc>> {
-    const db: Db = await this.mongoAdapter.getConnection('search');
-    return db.collection<MongoUserDoc>('users');
+    const db: Db = await this.mongoAdapter.getConnection("search");
+    return db.collection<MongoUserDoc>("users");
   }
 
   private mapToDomain(entity: TypeOrmUserEntity | MongoUserDoc): User {
@@ -50,13 +50,13 @@ export class TypeOrmUserRepository implements UserRepository {
       entity.email,
       entity.hashedPassword,
       entity.userType,
-      entity.avatarUrl,
+      (entity as any).avatarAssetId,
       entity.name,
       entity.theme,
       entity.language,
       entity.gameStreak,
       entity.createdAt,
-      entity.updatedAt,
+      entity.updatedAt
     );
   }
 
@@ -67,19 +67,22 @@ export class TypeOrmUserRepository implements UserRepository {
       // Buscar por 'id' o '_id' según cómo esté almacenado el documento
       const user = await collection.findOne({ $or: [{ id: id }, { _id: id }] });
 
-      if (!user) throw new Error('User not found');
+      if (!user) throw new Error("User not found");
       return user.name;
     } catch (error) {
       // 2. Si MongoDB falla, usa PostgreSQL como fallback
       // Solo hacemos fallback si el error es de conexión, no si el usuario no existe
-      if (error.message === 'User not found') {
+      if (error.message === "User not found") {
         throw error;
       }
 
-      console.log('MongoDB connection not available, falling back to PostgreSQL for getNameById operation.',error);
+      console.log(
+        "MongoDB connection not available, falling back to PostgreSQL for getNameById operation.",
+        error
+      );
       const user = await this.pgRepository.findOne({ where: { id: id } });
 
-      if (!user) throw new Error('User not found');
+      if (!user) throw new Error("User not found");
       return user.name;
     }
   }

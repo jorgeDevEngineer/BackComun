@@ -5,7 +5,6 @@ import { UserName } from "../../../domain/valueObject/UserName";
 import { UserEmail } from "../../../domain/valueObject/UserEmail";
 import { UserHashedPassword } from "../../../domain/valueObject/UserHashedPassword";
 import { UserType } from "../../../domain/valueObject/UserType";
-import { UserAvatarUrl } from "../../../domain/valueObject/UserAvatarUrl";
 import { UserPlainName } from "../../../domain/valueObject/UserPlainName";
 import { UserDescription } from "../../../domain/valueObject/UserDescription";
 import { UserTheme } from "../../../domain/valueObject/UserTheme";

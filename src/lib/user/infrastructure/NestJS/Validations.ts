@@ -43,7 +43,7 @@ export class Edit {
   @IsString()
   description?: string;
   @IsString()
-  avatarAssetUrl: string;
+  avatarAssetId: string;
   @IsString()
   themePreference: string;
 }

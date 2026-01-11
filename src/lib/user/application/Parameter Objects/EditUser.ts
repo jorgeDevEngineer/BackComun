@@ -7,7 +7,7 @@ export class EditUser {
     public readonly confirmNewPassword: string | undefined,
     public readonly name: string,
     public readonly description: string | undefined,
-    public readonly avatarAssetUrl: string,
+    public readonly avatarAssetId: string,
     public readonly themePreference: string,
     public readonly targetUserId: string,
     public readonly requesterUserId?: string
