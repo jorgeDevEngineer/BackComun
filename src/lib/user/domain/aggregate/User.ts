@@ -14,6 +14,7 @@ import { UserRoles } from "../valueObject/UserRoles";
 import { UserIsAdmin } from "../valueObject/UserIsAdmin";
 import { Membership } from "../entity/Membership.js";
 import { UserStatus } from "../valueObject/UserStatus";
+import { de } from "zod/v4/locales";
 
 export class User {
   readonly id: UserId;
@@ -90,6 +91,12 @@ export class User {
       },
       isPremium: this.membership.isPremium(),
     };
+  }
+
+  toPlainObjectResumed() {
+    const result = this.toPlainObject();
+    delete result.preferences;
+    return result;
   }
 
   hasPremiumMembershipEnabled(): boolean {
