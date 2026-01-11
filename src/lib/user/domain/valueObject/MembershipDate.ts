@@ -12,7 +12,7 @@ export class MembershipDate {
   }
 
   private isValid(value: Date): boolean {
-    const now = new Date();
-    return value <= now;
+    const now = new Date().getDate();
+    return value.getDate() <= now;
   }
 }
