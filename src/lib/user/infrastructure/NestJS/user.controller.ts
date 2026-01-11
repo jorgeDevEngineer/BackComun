@@ -7,6 +7,7 @@ import {
   InternalServerErrorException,
   NotFoundException,
   BadRequestException,
+  UnauthorizedException,
   Param,
   Patch,
   Post,
@@ -38,6 +39,7 @@ import { User } from "../../domain/aggregate/User";
 import { get } from "http";
 import { ITokenProvider } from "src/lib/auth/application/providers/ITokenProvider";
 import { IAssetUrlResolver } from "src/lib/shared/application/providers/IAssetUrlResolver";
+import { DomainException } from "src/lib/shared/exceptions/domain.exception";
 
 @Controller("user")
 export class UserController {
@@ -66,11 +68,11 @@ export class UserController {
   private async getCurrentUserId(authHeader: string): Promise<string> {
     const token = authHeader?.replace(/^Bearer\s+/i, "");
     if (!token) {
-      throw new InternalServerErrorException("Token required");
+      throw new UnauthorizedException("Token required");
     }
     const payload = await this.tokenProvider.validateToken(token);
     if (!payload || !payload.id) {
-      throw new InternalServerErrorException("Invalid token");
+      throw new UnauthorizedException("Invalid token");
     }
     return payload.id;
   }
@@ -79,6 +81,9 @@ export class UserController {
     if (result.isFailure) {
       if (result.error instanceof UserNotFoundException) {
         throw new NotFoundException(result.error.message);
+      }
+      if (result.error instanceof DomainException) {
+        throw new BadRequestException(result.error.message);
       }
       throw new InternalServerErrorException(result.error.message);
     }
