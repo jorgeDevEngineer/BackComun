@@ -79,19 +79,6 @@ export class AuthController {
     };
   }
 
-  @Post("logout")
-  async logout(@Headers("authorization") auth: string) {
-    const token = auth?.replace(/^Bearer\s+/i, "");
-    if (!token) {
-      throw new HttpException("Token required", HttpStatus.BAD_REQUEST);
-    }
-    const result = await this.logoutHandler.execute(new LogoutCommand(token));
-    if (result.isFailure) {
-      throw new HttpException(result.error.message, HttpStatus.BAD_REQUEST);
-    }
-    return { message: "Logged out successfully" };
-  }
-
   @Post("check-status")
   async checkStatus(@Headers("authorization") auth: string) {
     const token = auth?.replace(/^Bearer\s+/i, "");
