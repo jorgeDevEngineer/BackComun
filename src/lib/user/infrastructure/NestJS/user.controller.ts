@@ -65,10 +65,10 @@ export class UserController {
       throw new InternalServerErrorException("Token required");
     }
     const payload = await this.tokenProvider.validateToken(token);
-    if (!payload || !payload.sub) {
+    if (!payload || !payload.id) {
       throw new InternalServerErrorException("Invalid token");
     }
-    return payload.sub;
+    return payload.id;
   }
 
   handleResult<T>(result: Result<T>): T {
@@ -106,28 +106,28 @@ export class UserController {
     const userId = await this.getCurrentUserId(auth);
     const query = new GetOneUserById(userId);
     const result = await this.getOneUserById.execute(query);
-    return this.handleResult(result).toPlainObject();
+    return { user: this.handleResult(result).toPlainObject() };
   }
 
   @Get("profile/id/:id")
   async getProfileById(@Param() params: FindByIdParams) {
     const query = new GetOneUserById(params.id);
     const result = await this.getOneUserById.execute(query);
-    return this.handleResult(result).toPlainObject();
+    return { user: this.handleResult(result).toPlainObject() };
   }
 
   @Get("profile/username/:userName")
   async getProfileByUserName(@Param() params: FindByUserNameParams) {
     const query = new GetOneUserByUserName(params.userName);
     const result = await this.getOneUserByUserName.execute(query);
-    return this.handleResult(result).toPlainObject();
+    return { user: this.handleResult(result).toPlainObject() };
   }
 
   @Get()
   async getAllProfiles() {
     const query = new GetAllUsers();
     const result = await this.getAllUsers.execute(query);
-    return this.handleResult(result).map((user) => user.toPlainObject());
+    return this.handleResult(result).map((user) => user.toPlainObjectResumed());
   }
 
   @Patch("profile")
@@ -140,22 +140,22 @@ export class UserController {
     const userResult = await this.getOneUserById.execute(query);
     const user = this.handleResult(userResult);
     const editUserCommand = new EditUser(
-      body.userName,
+      body.username,
       body.email,
-      body.password,
-      body.userType,
-      body.avatarUrl,
-      user.id.value,
+      body.currentPassword,
+      body.newPassword,
+      body.confirmNewPassword,
       body.name,
       body.description,
-      body.theme,
-      body.language,
-      body.gameStreak,
-      body.status,
+      body.avatarAssetUrl,
+      body.themePreference,
+      user.id.value,
       userId
     );
     const editResult = await this.editUser.execute(editUserCommand);
-    return this.handleResult(editResult);
+    this.handleResult(editResult);
+    const result = await this.getOneUserById.execute(query);
+    return { user: this.handleResult(result).toPlainObject() };
   }
 
   @Patch("profile/:id")
@@ -170,22 +170,22 @@ export class UserController {
     const user = this.handleResult(userResult);
 
     const editUserCommand = new EditUser(
-      body.userName,
+      body.username,
       body.email,
-      body.password,
-      body.userType,
-      body.avatarUrl,
-      user.id.value,
+      body.currentPassword,
+      body.newPassword,
+      body.confirmNewPassword,
       body.name,
       body.description,
-      body.theme,
-      body.language,
-      body.gameStreak,
-      body.status,
+      body.avatarAssetUrl,
+      body.themePreference,
+      user.id.value,
       requesterUserId
     );
     const editResult = await this.editUser.execute(editUserCommand);
-    return this.handleResult(editResult);
+    this.handleResult(editResult);
+    const result = await this.getOneUserById.execute(query);
+    return { user: this.handleResult(result).toPlainObject() };
   }
 
   @Delete("profile")
@@ -329,18 +329,16 @@ export class UserController {
     const userResult = await this.getOneUserById.execute(query);
     const user = this.handleResult(userResult);
     const editUserCommand = new EditUser(
-      body.userName,
+      body.username,
       body.email,
-      body.password,
-      body.userType,
-      body.avatarUrl,
-      user.id.value,
+      body.currentPassword,
+      body.newPassword,
+      body.confirmNewPassword,
       body.name,
       body.description,
-      body.theme,
-      body.language,
-      body.gameStreak,
-      body.status
+      body.avatarAssetUrl,
+      body.themePreference,
+      user.id.value
     );
     const editResult = await this.editUser.execute(editUserCommand);
     return this.handleResult(editResult);
