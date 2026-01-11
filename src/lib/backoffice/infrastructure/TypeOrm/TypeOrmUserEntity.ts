@@ -18,7 +18,7 @@ export class TypeOrmUserEntity {
   userType: "student" | "teacher" | "personal";
 
   @Column()
-  avatarUrl: string;
+  avatarAssetId: string;
 
   @Column()
   name: string;
@@ -48,8 +48,8 @@ export class TypeOrmUserEntity {
   membershipExpiresAt: Date;
 
   @Column()
-  status: 'Active' | 'Blocked';
+  status: "Active" | "Blocked";
 
-  @Column()
-  isadmin: boolean;
+  @Column({ name: "isadmin", default: false })
+  isAdmin: boolean;
 }
