@@ -48,6 +48,9 @@ export class TypeOrmUserEntity {
   updatedAt: Date;
 
   @Column({ nullable: true })
+  lastUserNameChangeAt: Date;
+
+  @Column({ nullable: true })
   membershipType: "free" | "premium";
 
   @Column({ nullable: true })

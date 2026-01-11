@@ -15,6 +15,7 @@ import { UserIsAdmin } from "../valueObject/UserIsAdmin";
 import { Membership } from "../entity/Membership.js";
 import { UserStatus } from "../valueObject/UserStatus";
 import { de } from "zod/v4/locales";
+import { DomainException } from "src/lib/shared/exceptions/domain.exception";
 
 export class User {
   readonly id: UserId;
@@ -32,6 +33,7 @@ export class User {
   membership: Membership;
   readonly createdAt: UserDate;
   updatedAt: UserDate;
+  lastUserNameChangeAt?: UserDate;
   status: UserStatus;
   readonly isAdmin: UserIsAdmin;
   constructor(
@@ -49,6 +51,7 @@ export class User {
     membership?: Membership,
     createdAt?: UserDate,
     updatedAt?: UserDate,
+    lastUserNameChangeAt?: UserDate,
     status?: UserStatus,
     isAdmin?: UserIsAdmin,
     roles?: UserRoles
@@ -69,6 +72,9 @@ export class User {
       : Membership.createFreeMembership();
     this.createdAt = createdAt ? createdAt : new UserDate(new Date());
     this.updatedAt = updatedAt ? updatedAt : new UserDate(this.createdAt.value);
+    this.lastUserNameChangeAt = lastUserNameChangeAt
+      ? lastUserNameChangeAt
+      : new UserDate(this.createdAt.value);
     this.status = status ? status : new UserStatus("active");
     this.isAdmin = isAdmin ? isAdmin : new UserIsAdmin(false);
     this.roles = roles ? roles : new UserRoles(["user"]);
@@ -111,5 +117,25 @@ export class User {
   enableFreeMembership(): void {
     this.membership = Membership.createFreeMembership();
     this.updatedAt = new UserDate(new Date());
+  }
+
+  canChangeUserName(newName: UserName, now: Date): boolean {
+    if (newName.value === this.userName.value) return true;
+    const last = this.lastUserNameChangeAt?.value || this.createdAt.value;
+    const oneYearMs = 365 * 24 * 60 * 60 * 1000;
+    return now.getTime() - new Date(last).getTime() >= oneYearMs;
+  }
+
+  ensureCanChangeUserName(newName: UserName, now: Date): void {
+    if (!this.canChangeUserName(newName, now)) {
+      throw new DomainException("Username can only be changed once per year");
+    }
+  }
+
+  deriveLastUserNameChangeAt(newName: UserName, now: Date): UserDate {
+    if (newName.value === this.userName.value) {
+      return this.lastUserNameChangeAt!;
+    }
+    return new UserDate(now);
   }
 }

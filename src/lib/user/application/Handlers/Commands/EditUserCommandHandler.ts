@@ -45,6 +45,15 @@ export class EditUserCommandHandler
         new Error("That name already belongs to another user")
       );
     }
+
+    // Domain invariant: enforce annual username change in the aggregate
+    const now = new Date();
+    const newUserNameVo = new UserName(command.username);
+    try {
+      existing.ensureCanChangeUserName(newUserNameVo, now);
+    } catch (err) {
+      return Result.fail(err as Error);
+    }
     const userWithSameEmail = await this.userRepository.getOneByEmail(
       new UserEmail(command.email)
     );
@@ -100,7 +109,8 @@ export class EditUserCommandHandler
       existing.gameStreak,
       existing.membership,
       existing.createdAt,
-      new UserDate(new Date()),
+      new UserDate(now),
+      existing.deriveLastUserNameChangeAt(newUserNameVo, now),
       existing.status,
       existing.isAdmin,
       existing.roles
