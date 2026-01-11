@@ -10,7 +10,7 @@ export class UserPlainName {
   }
   private isValid(value: string): boolean {
     const minLength = 0;
-    const maxLength = 20;
+    const maxLength = 148;
     return value.length >= minLength && value.length <= maxLength;
   }
 }

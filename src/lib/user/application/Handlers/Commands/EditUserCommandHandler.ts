@@ -19,6 +19,7 @@ import { UserStatus } from "../../../domain/valueObject/UserStatus";
 import { IHandler } from "src/lib/shared/IHandler";
 import { EditUser } from "../../Parameter Objects/EditUser";
 import { Result } from "src/lib/shared/Type Helpers/result";
+import { UserPassword } from "../../../domain/valueObject/UserPassword";
 import * as bcrypt from "bcrypt";
 
 export class EditUserCommandHandler
@@ -74,8 +75,14 @@ export class EditUserCommandHandler
           new Error("New password confirmation does not match")
         );
       }
+      if (command.newPassword.length < 6) {
+        return Result.fail(
+          new Error("New password must be at least 6 characters")
+        );
+      }
+      const password = new UserPassword(command.newPassword);
       newHashedPassword = new UserHashedPassword(
-        await bcrypt.hash(command.newPassword, 12)
+        await bcrypt.hash(password.value, 12)
       );
     }
 

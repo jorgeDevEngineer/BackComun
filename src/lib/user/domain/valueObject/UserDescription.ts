@@ -9,7 +9,7 @@ export class UserDescription {
     this.value = value;
   }
   private isValid(value: string): boolean {
-    const maxLength = 500;
+    const maxLength = 300;
     return typeof value === "string" && value.length <= maxLength;
   }
 }
