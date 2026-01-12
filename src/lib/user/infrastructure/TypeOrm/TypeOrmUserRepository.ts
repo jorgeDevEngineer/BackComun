@@ -8,11 +8,8 @@ import { UserId } from "../../domain/valueObject/UserId";
 import { UserEmail } from "../../domain/valueObject/UserEmail";
 import { UserHashedPassword } from "../../domain/valueObject/UserHashedPassword";
 import { UserType } from "../../domain/valueObject/UserType";
-import { UserAvatarId } from "../../domain/valueObject/UserAvatarId";
+import { UserAvatarUrl } from "../../domain/valueObject/UserAvatarUrl";
 import { UserPlainName } from "../../domain/valueObject/UserPlainName";
-import { UserDescription } from "../../domain/valueObject/UserDescription";
-import { UserRoles } from "../../domain/valueObject/UserRoles";
-import { UserIsAdmin } from "../../domain/valueObject/UserIsAdmin";
 import { UserTheme } from "../../domain/valueObject/UserTheme";
 import { UserLanguage } from "../../domain/valueObject/UserLanguaje";
 import { UserGameStreak } from "../../domain/valueObject/UserGameStreak";
@@ -30,12 +27,10 @@ interface UserMongoDoc {
   userName: string;
   email: string;
   hashedPassword: string;
-  userType: "STUDENT" | "TEACHER";
-  avatarAssetId: string;
+  userType: "student" | "teacher" | "personal";
+  avatarUrl: string;
   name: string;
-  description?: string;
-  roles?: ("user" | "admin")[];
-  theme: "LIGHT" | "DARK";
+  theme: string;
   language: string;
   gameStreak: number;
   createdAt: Date;
@@ -43,8 +38,7 @@ interface UserMongoDoc {
   membershipType?: "free" | "premium";
   membershipStartedAt?: Date;
   membershipExpiresAt?: Date;
-  status: "active" | "blocked";
-  isAdmin?: boolean;
+  status: "Active" | "Blocked";
 }
 
 @Injectable()
@@ -66,10 +60,9 @@ export class TypeOrmUserRepository implements UserRepository {
       new UserEmail(entity.email),
       new UserHashedPassword(entity.hashedPassword),
       new UserType(entity.userType),
-      new UserAvatarId(entity.avatarAssetId),
+      new UserAvatarUrl(entity.avatarUrl),
       new UserId(entity.id),
       new UserPlainName(entity.name),
-      new UserDescription(entity.description ?? ""),
       new UserTheme(entity.theme),
       new UserLanguage(entity.language),
       new UserGameStreak(entity.gameStreak),
@@ -80,13 +73,7 @@ export class TypeOrmUserRepository implements UserRepository {
       ),
       new UserDate(entity.createdAt),
       new UserDate(entity.updatedAt),
-      new UserStatus(entity.status),
-      new UserIsAdmin(entity.isAdmin),
-      new UserRoles(
-        (entity as any).roles && (entity as any).roles.length
-          ? (entity as any).roles
-          : ["user"]
-      )
+      new UserStatus(entity.status)
     );
   }
 
@@ -96,10 +83,9 @@ export class TypeOrmUserRepository implements UserRepository {
       new UserEmail(doc.email),
       new UserHashedPassword(doc.hashedPassword),
       new UserType(doc.userType),
-      new UserAvatarId(doc.avatarAssetId),
+      new UserAvatarUrl(doc.avatarUrl),
       new UserId(doc._id),
       new UserPlainName(doc.name),
-      new UserDescription(doc.description ?? ""),
       new UserTheme(doc.theme),
       new UserLanguage(doc.language),
       new UserGameStreak(doc.gameStreak),
@@ -110,9 +96,7 @@ export class TypeOrmUserRepository implements UserRepository {
       ),
       new UserDate(doc.createdAt),
       new UserDate(doc.updatedAt),
-      new UserStatus(doc.status),
-      new UserIsAdmin(doc.isAdmin || false),
-      new UserRoles(doc.roles && doc.roles.length ? doc.roles : ["user"])
+      new UserStatus(doc.status)
     );
   }
 
@@ -123,17 +107,14 @@ export class TypeOrmUserRepository implements UserRepository {
       email: user.email.value,
       hashedPassword: user.hashedPassword.value,
       userType: user.userType.value,
-      avatarAssetId: user.avatarAssetId.value,
+      avatarUrl: user.avatarUrl.value,
       name: user.name.value,
-      description: user.description.value,
-      roles: user.roles.value,
       theme: user.theme.value,
       language: user.language.value,
       gameStreak: user.gameStreak.value,
       membershipType: user.membership.type.value,
       membershipStartedAt: user.membership.startedAt.value,
       membershipExpiresAt: user.membership.expiresAt.value,
-      isAdmin: user.isAdmin.value,
       createdAt: user.createdAt.value,
       updatedAt: user.updatedAt.value,
       status: user.status.value,
@@ -221,14 +202,11 @@ export class TypeOrmUserRepository implements UserRepository {
         email: user.email.value,
         hashedPassword: user.hashedPassword.value,
         userType: user.userType.value,
-        avatarAssetId: user.avatarAssetId.value,
+        avatarUrl: user.avatarUrl.value,
         name: user.name.value,
-        description: user.description.value,
-        roles: user.roles.value,
         theme: user.theme.value,
         language: user.language.value,
         gameStreak: user.gameStreak.value,
-        isAdmin: user.isAdmin.value,
         membershipType: user.membership.type.value,
         membershipStartedAt: user.membership.startedAt.value,
         membershipExpiresAt: user.membership.expiresAt.value,
@@ -254,14 +232,11 @@ export class TypeOrmUserRepository implements UserRepository {
         email: user.email.value,
         hashedPassword: user.hashedPassword.value,
         userType: user.userType.value,
-        avatarAssetId: user.avatarAssetId.value,
+        avatarUrl: user.avatarUrl.value,
         name: user.name.value,
-        description: user.description.value,
-        roles: user.roles.value,
         theme: user.theme.value,
         language: user.language.value,
         gameStreak: user.gameStreak.value,
-        isAdmin: user.isAdmin.value,
         membershipType: user.membership.type.value,
         membershipStartedAt: user.membership.startedAt.value,
         membershipExpiresAt: user.membership.expiresAt.value,

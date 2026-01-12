@@ -2,7 +2,7 @@ import { UserName } from "../valueObject/UserName";
 import { UserEmail } from "../valueObject/UserEmail";
 import { UserHashedPassword } from "../valueObject/UserHashedPassword";
 import { UserType } from "../valueObject/UserType";
-import { UserAvatarId } from "../valueObject/UserAvatarId";
+import { UserAvatarUrl } from "../valueObject/UserAvatarUrl";
 import { UserTheme } from "../valueObject/UserTheme";
 import { UserLanguage } from "../valueObject/UserLanguaje";
 import { UserGameStreak } from "../valueObject/UserGameStreak";
@@ -17,7 +17,7 @@ export class User {
   readonly email: UserEmail;
   readonly hashedPassword: UserHashedPassword;
   readonly userType: UserType;
-  readonly avatarAssetId: UserAvatarId;
+  readonly avatarUrl: UserAvatarUrl;
   readonly name: UserPlainName;
   readonly theme: UserTheme; // Default: 'light'
   readonly language: UserLanguage; // Default: 'es'
@@ -25,14 +25,14 @@ export class User {
   membership: Membership;
   readonly createdAt: UserDate;
   updatedAt: UserDate;
-  status: string; // Default: 'Active';
-  isAdmin: boolean; // Default: false
+  status: string// Default: 'Active';
+  isadmin: boolean; // Default: false
   constructor(
     userName: UserName,
     email: UserEmail,
     hashedPassword: UserHashedPassword,
     userType: UserType,
-    avatarAssetId: UserAvatarId,
+    avatarUrl: UserAvatarUrl,
     id?: UserId,
     name?: UserPlainName,
     theme?: UserTheme,
@@ -42,13 +42,13 @@ export class User {
     createdAt?: UserDate,
     updatedAt?: UserDate,
     Status?: string,
-    isAdmin?: boolean
+    isadmin?: boolean
   ) {
     this.userName = userName;
     this.email = email;
     this.hashedPassword = hashedPassword;
     this.userType = userType;
-    this.avatarAssetId = avatarAssetId;
+    this.avatarUrl = avatarUrl;
     this.id = id ? id : UserId.generateId();
     this.name = name ? name : new UserPlainName("");
     this.theme = theme ? theme : new UserTheme("light");
@@ -59,8 +59,8 @@ export class User {
       : Membership.createFreeMembership();
     this.createdAt = createdAt ? createdAt : new UserDate(new Date());
     this.updatedAt = updatedAt ? updatedAt : new UserDate(this.createdAt.value);
-    this.status = Status ? Status : "Active";
-    this.isAdmin = isAdmin ? isAdmin : false;
+    this.status = Status ? Status : 'Active';
+    this.isadmin = isadmin ? isadmin : false;
   }
 
   toPlainObject() {
@@ -70,7 +70,7 @@ export class User {
       name: this.name.value,
       email: this.email.value,
       userType: this.userType.value,
-      avatarAssetId: this.avatarAssetId.value,
+      avatarUrl: this.avatarUrl.value,
       theme: this.theme.value,
       language: this.language.value,
       gameStreak: this.gameStreak.value,
@@ -78,7 +78,7 @@ export class User {
       createdAt: this.createdAt.value,
       updatedAt: this.updatedAt.value,
       status: this.status,
-      isAdmin: this.isAdmin,
+      isadmin: this.isadmin,
     };
   }
 
@@ -95,4 +95,5 @@ export class User {
     this.membership = Membership.createFreeMembership();
     this.updatedAt = new UserDate(new Date());
   }
+
 }

@@ -12,7 +12,7 @@ export class UserAvatarUrl {
 
   private isValid(value: string): boolean {
     try {
-      //new URL(value);
+      new URL(value);
       return true;
     } catch {
       return false;

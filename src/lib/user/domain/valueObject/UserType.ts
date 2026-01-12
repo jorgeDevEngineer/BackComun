@@ -1,18 +1,17 @@
 import { DomainException } from "src/lib/shared/exceptions/domain.exception";
 
 export class UserType {
-  readonly value: "STUDENT" | "TEACHER";
+  readonly value: "student" | "teacher" | "personal";
 
-  constructor(value: string) {
-    const normalized = value.toUpperCase();
-    if (!this.isValid(normalized)) {
+  constructor(value: "student" | "teacher" | "personal") {
+    if (!this.isValid(value)) {
       throw new DomainException("Invalid user type");
     }
-    this.value = normalized as "STUDENT" | "TEACHER";
+    this.value = value;
   }
 
-  private isValid(value: string): boolean {
-    const validTypes = ["STUDENT", "TEACHER"];
+  private isValid(value: "student" | "teacher" | "personal"): boolean {
+    const validTypes = ["student", "teacher", "personal"];
     return validTypes.includes(value);
   }
 }

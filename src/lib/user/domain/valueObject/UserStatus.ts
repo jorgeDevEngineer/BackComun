@@ -1,15 +1,14 @@
 import { DomainException } from "src/lib/shared/exceptions/domain.exception";
 
 export class UserStatus {
-  readonly value: "active" | "blocked";
-  constructor(value: string) {
-    const normalized = value.toLowerCase();
-    if (!this.isValid(normalized)) {
+  readonly value: "Active" | "Blocked";
+  constructor(value: "Active" | "Blocked") {
+    if (!this.isValid(value)) {
       throw new DomainException("Invalid user status");
     }
-    this.value = normalized as "active" | "blocked";
+    this.value = value;
   }
-  private isValid(value: string): boolean {
-    return value === "active" || value === "blocked";
+  private isValid(value: "Active" | "Blocked"): boolean {
+    return value === "Active" || value === "Blocked";
   }
 }

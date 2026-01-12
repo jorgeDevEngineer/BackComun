@@ -12,7 +12,6 @@ import { GetNotificationsResultDto } from "../../application/GetNotificationUseC
 import { UserRepository } from "../../domain/port/UserRepository";
 import { UserId } from "../../domain/valueObject/UserId";
 import { SendNotificationDto } from "../../application/SendNotificationUseCase";
-import { IAssetUrlResolver } from "src/lib/shared/application/providers/IAssetUrlResolver";
 
 // Interfaz para el documento de MongoDB
 interface MongoNotificationDoc {
@@ -30,31 +29,26 @@ export class TypeOrmNotificationRepository implements NotificationRepository {
     @InjectRepository(TypeOrmNotificationEntity)
     private readonly pgRepository: Repository<TypeOrmNotificationEntity>,
     private readonly mongoAdapter: DynamicMongoAdapter,
-    @Inject("UserRepository")
+    @Inject('UserRepository')
     private readonly userRepository: UserRepository,
-    @Inject("IAssetUrlResolver")
-    private readonly assetUrlResolver: IAssetUrlResolver
   ) {}
 
   /**
    * Obtiene la colección de notificaciones de MongoDB para el módulo 'backoffice'
    */
-  private async getMongoCollection(): Promise<
-    Collection<MongoNotificationDoc>
-  > {
-    const db: Db = await this.mongoAdapter.getConnection("backoffice");
-    return db.collection<MongoNotificationDoc>("notifications");
+  private async getMongoCollection(): Promise<Collection<MongoNotificationDoc>> {
+    const db: Db = await this.mongoAdapter.getConnection('backoffice');
+    return db.collection<MongoNotificationDoc>('notifications');
   }
 
-  private mapToDomain(
-    entity: TypeOrmNotificationEntity | MongoNotificationDoc
-  ): Notification {
+  private mapToDomain(entity: TypeOrmNotificationEntity | MongoNotificationDoc): Notification {
     const notificationId = entity.id || (entity as MongoNotificationDoc)._id;
-    const createdAt =
-      typeof entity.createdAt === "string"
-        ? new Date(entity.createdAt)
-        : entity.createdAt;
-    return new Notification(entity.title, entity.message, entity.userId);
+    const createdAt = typeof entity.createdAt === 'string' ? new Date(entity.createdAt) : entity.createdAt;
+    return new Notification(
+      entity.title,
+      entity.message,
+      entity.userId,
+    );
   }
 
   async sendNotification(data: NotificationDto): Promise<SendNotificationDto> {
@@ -75,9 +69,7 @@ export class TypeOrmNotificationRepository implements NotificationRepository {
         createdAt: domainNotification.createdAt,
       });
 
-      const user = await this.userRepository.getOneById(
-        new UserId(data.userId)
-      );
+      const user = await this.userRepository.getOneById(new UserId(data.userId));
 
       return {
         id: domainNotification.id,
@@ -85,9 +77,7 @@ export class TypeOrmNotificationRepository implements NotificationRepository {
         message: domainNotification.message,
         createdAt: domainNotification.createdAt,
         sender: {
-          ImageUrl: this.assetUrlResolver.resolveAvatarUrl(
-            user.avatarAssetId.value
-          ),
+          ImageUrl: user.avatarUrl.value,
           id: user.id.value,
           name: user.name.value,
           email: user.email.value,
@@ -95,10 +85,7 @@ export class TypeOrmNotificationRepository implements NotificationRepository {
       };
     } catch (error) {
       // 2. Si MongoDB falla, usa PostgreSQL como fallback
-      console.log(
-        "MongoDB connection not available, falling back to PostgreSQL for sendNotification operation.",
-        error
-      );
+      console.log('MongoDB connection not available, falling back to PostgreSQL for sendNotification operation.', error);
 
       const entity = this.pgRepository.create({
         id: domainNotification.id,
@@ -109,9 +96,7 @@ export class TypeOrmNotificationRepository implements NotificationRepository {
       });
       await this.pgRepository.save(entity);
 
-      const user = await this.userRepository.getOneById(
-        new UserId(data.userId)
-      );
+      const user = await this.userRepository.getOneById(new UserId(data.userId));
 
       return {
         id: domainNotification.id,
@@ -119,9 +104,7 @@ export class TypeOrmNotificationRepository implements NotificationRepository {
         message: domainNotification.message,
         createdAt: domainNotification.createdAt,
         sender: {
-          ImageUrl: this.assetUrlResolver.resolveAvatarUrl(
-            user.avatarAssetId.value
-          ),
+          ImageUrl: user.avatarUrl.value,
           id: user.id.value,
           name: user.name.value,
           email: user.email.value,
@@ -130,9 +113,7 @@ export class TypeOrmNotificationRepository implements NotificationRepository {
     }
   }
 
-  async getNotifications(
-    params: GetNotificationsParamsDto
-  ): Promise<GetNotificationsResultDto> {
+  async getNotifications(params: GetNotificationsParamsDto): Promise<GetNotificationsResultDto> {
     try {
       // 1. Intenta usar MongoDB
       const collection = await this.getMongoCollection();
@@ -148,8 +129,8 @@ export class TypeOrmNotificationRepository implements NotificationRepository {
       const totalCount = await collection.countDocuments(filter);
 
       // Ordenamiento
-      const sortField = params.orderBy || "createdAt";
-      const sortDirection = params.order?.toUpperCase() === "ASC" ? 1 : -1;
+      const sortField = params.orderBy || 'createdAt';
+      const sortDirection = params.order?.toUpperCase() === 'ASC' ? 1 : -1;
       const sort: Record<string, 1 | -1> = { [sortField]: sortDirection };
 
       // Paginación
@@ -165,27 +146,20 @@ export class TypeOrmNotificationRepository implements NotificationRepository {
         .toArray();
 
       const resultData = data.map(async (notification) => {
-        const user = await this.userRepository.getOneById(
-          new UserId(notification.userId)
-        );
+        const user = await this.userRepository.getOneById(new UserId(notification.userId));
         return {
-          id: notification.id || notification._id,
-          title: notification.title,
-          message: notification.message,
-          createdAt:
-            typeof notification.createdAt === "string"
-              ? new Date(notification.createdAt)
-              : notification.createdAt,
-          sender: {
-            ImageUrl: this.assetUrlResolver.resolveAvatarUrl(
-              user.avatarAssetId.value
-            ),
-            id: user.id.value,
-            name: user.name.value,
-            email: user.email.value,
-          },
-        };
-      });
+        id: notification.id || notification._id,
+        title: notification.title,
+        message: notification.message,
+        createdAt: typeof notification.createdAt === 'string' ? new Date(notification.createdAt) : notification.createdAt,
+        sender: {
+          ImageUrl: user.avatarUrl.value,
+          id: user.id.value,
+          name: user.name.value,
+          email: user.email.value,
+        },
+      };
+    });
 
       const totalPages = Math.ceil(totalCount / limit);
 
@@ -200,14 +174,11 @@ export class TypeOrmNotificationRepository implements NotificationRepository {
       };
     } catch (error) {
       // 2. Si MongoDB falla, usa PostgreSQL como fallback
-      console.log(
-        "MongoDB connection not available, falling back to PostgreSQL for searchUsers operation.",
-        error
-      );
+      console.log('MongoDB connection not available, falling back to PostgreSQL for searchUsers operation.', error);
 
-      const qb = this.pgRepository.createQueryBuilder("user");
+      const qb = this.pgRepository.createQueryBuilder('user');
       if (params.userId) {
-        qb.andWhere("user.userId = :userId", { userId: params.userId });
+        qb.andWhere('user.userId = :userId', { userId: params.userId });
       }
       if (params.limit) {
         qb.take(params.limit);
@@ -221,11 +192,10 @@ export class TypeOrmNotificationRepository implements NotificationRepository {
       }
 
       if (params.orderBy) {
-        const orderDirection =
-          params.order?.toUpperCase() === "DESC" ? "DESC" : "ASC";
+        const orderDirection = params.order?.toUpperCase() === 'DESC' ? 'DESC' : 'ASC';
         qb.orderBy(`user.${params.orderBy}`, orderDirection);
       } else {
-        qb.orderBy("user.createdAt", "DESC");
+        qb.orderBy('user.createdAt', 'DESC');
       }
 
       const totalCount = await qb.getCount();
@@ -233,21 +203,14 @@ export class TypeOrmNotificationRepository implements NotificationRepository {
       const data = await qb.getMany();
 
       const resultData = data.map(async (notification) => {
-        const user = await this.userRepository.getOneById(
-          new UserId(notification.userId)
-        );
+        const user = await this.userRepository.getOneById(new UserId(notification.userId));
         return {
           id: notification.id,
           title: notification.title,
           message: notification.message,
-          createdAt:
-            typeof notification.createdAt === "string"
-              ? new Date(notification.createdAt)
-              : notification.createdAt,
+          createdAt: typeof notification.createdAt === 'string' ? new Date(notification.createdAt) : notification.createdAt,
           sender: {
-            ImageUrl: this.assetUrlResolver.resolveAvatarUrl(
-              user.avatarAssetId.value
-            ),
+            ImageUrl: user.avatarUrl.value,
             id: user.id.value,
             name: user.name.value,
             email: user.email.value,

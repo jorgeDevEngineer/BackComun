@@ -36,7 +36,6 @@ import { Result } from "src/lib/shared/Type Helpers/result";
 import { User } from "../../domain/aggregate/User";
 import { get } from "http";
 import { ITokenProvider } from "src/lib/auth/application/providers/ITokenProvider";
-import { IAssetUrlResolver } from "src/lib/shared/application/providers/IAssetUrlResolver";
 
 @Controller("user")
 export class UserController {
@@ -57,9 +56,7 @@ export class UserController {
     private readonly enablePremiumMembership: EnablePremiumMembershipCommandHandler,
     @Inject(EnableFreeMembershipCommandHandler)
     private readonly enableFreeMembership: EnableFreeMembershipCommandHandler,
-    @Inject("ITokenProvider") private readonly tokenProvider: ITokenProvider,
-    @Inject("IAssetUrlResolver")
-    private readonly assetUrlResolver: IAssetUrlResolver
+    @Inject("ITokenProvider") private readonly tokenProvider: ITokenProvider
   ) {}
 
   private async getCurrentUserId(authHeader: string): Promise<string> {
@@ -68,10 +65,10 @@ export class UserController {
       throw new InternalServerErrorException("Token required");
     }
     const payload = await this.tokenProvider.validateToken(token);
-    if (!payload || !payload.id) {
+    if (!payload || !payload.sub) {
       throw new InternalServerErrorException("Invalid token");
     }
-    return payload.id;
+    return payload.sub;
   }
 
   handleResult<T>(result: Result<T>): T {
@@ -89,19 +86,14 @@ export class UserController {
   @Post("register")
   async register(@Body() body: Create) {
     const createUser = new CreateUser(
-      body.username,
+      body.userName,
       body.email,
       body.password,
-      body.type,
-      body.name
+      body.userType,
+      body.avatarUrl
     );
     const result = await this.createUserCommandHandler.execute(createUser);
-    this.handleResult(result);
-    const createdUser = await this.getOneUserByUserName.execute(
-      new GetOneUserByUserName(body.username)
-    );
-    this.handleResult(createdUser);
-    return { user: createdUser.getValue().toPlainObject() };
+    return this.handleResult(result);
   }
 
   @Get("profile")
@@ -109,28 +101,28 @@ export class UserController {
     const userId = await this.getCurrentUserId(auth);
     const query = new GetOneUserById(userId);
     const result = await this.getOneUserById.execute(query);
-    return { user: this.handleResult(result).toPlainObject() };
+    return this.handleResult(result).toPlainObject();
   }
 
   @Get("profile/id/:id")
   async getProfileById(@Param() params: FindByIdParams) {
     const query = new GetOneUserById(params.id);
     const result = await this.getOneUserById.execute(query);
-    return { user: this.handleResult(result).toPlainObjectResumed() };
+    return this.handleResult(result).toPlainObject();
   }
 
   @Get("profile/username/:userName")
   async getProfileByUserName(@Param() params: FindByUserNameParams) {
     const query = new GetOneUserByUserName(params.userName);
     const result = await this.getOneUserByUserName.execute(query);
-    return { user: this.handleResult(result).toPlainObjectResumed() };
+    return this.handleResult(result).toPlainObject();
   }
 
   @Get()
   async getAllProfiles() {
     const query = new GetAllUsers();
     const result = await this.getAllUsers.execute(query);
-    return this.handleResult(result).map((user) => user.toPlainObjectResumed());
+    return this.handleResult(result).map((user) => user.toPlainObject());
   }
 
   @Patch("profile")
@@ -143,22 +135,21 @@ export class UserController {
     const userResult = await this.getOneUserById.execute(query);
     const user = this.handleResult(userResult);
     const editUserCommand = new EditUser(
-      body.username,
+      body.userName,
       body.email,
-      body.currentPassword,
-      body.newPassword,
-      body.confirmNewPassword,
-      body.name,
-      body.description,
-      body.avatarAssetId,
-      body.themePreference,
+      body.password,
+      body.userType,
+      body.avatarUrl,
       user.id.value,
+      body.name,
+      body.theme,
+      body.language,
+      body.gameStreak,
+      body.status,
       userId
     );
     const editResult = await this.editUser.execute(editUserCommand);
-    this.handleResult(editResult);
-    const result = await this.getOneUserById.execute(query);
-    return { user: this.handleResult(result).toPlainObject() };
+    return this.handleResult(editResult);
   }
 
   @Patch("profile/:id")
@@ -173,22 +164,21 @@ export class UserController {
     const user = this.handleResult(userResult);
 
     const editUserCommand = new EditUser(
-      body.username,
+      body.userName,
       body.email,
-      body.currentPassword,
-      body.newPassword,
-      body.confirmNewPassword,
-      body.name,
-      body.description,
-      body.avatarAssetId,
-      body.themePreference,
+      body.password,
+      body.userType,
+      body.avatarUrl,
       user.id.value,
+      body.name,
+      body.theme,
+      body.language,
+      body.gameStreak,
+      body.status,
       requesterUserId
     );
     const editResult = await this.editUser.execute(editUserCommand);
-    this.handleResult(editResult);
-    const result = await this.getOneUserById.execute(query);
-    return { user: this.handleResult(result).toPlainObjectResumed() };
+    return this.handleResult(editResult);
   }
 
   @Delete("profile")
@@ -311,11 +301,11 @@ export class UserController {
   async create(@Body() body: Create) {
     try {
       const createUser = new CreateUser(
-        body.username,
+        body.userName,
         body.email,
         body.password,
-        body.type,
-        body.name
+        body.userType,
+        body.avatarUrl
       );
       const result = await this.createUserCommandHandler.execute(createUser);
       return this.handleResult(result);
@@ -332,16 +322,17 @@ export class UserController {
     const userResult = await this.getOneUserById.execute(query);
     const user = this.handleResult(userResult);
     const editUserCommand = new EditUser(
-      body.username,
+      body.userName,
       body.email,
-      body.currentPassword,
-      body.newPassword,
-      body.confirmNewPassword,
+      body.password,
+      body.userType,
+      body.avatarUrl,
+      user.id.value,
       body.name,
-      body.description,
-      body.avatarAssetId,
-      body.themePreference,
-      user.id.value
+      body.theme,
+      body.language,
+      body.gameStreak,
+      body.status
     );
     const editResult = await this.editUser.execute(editUserCommand);
     return this.handleResult(editResult);

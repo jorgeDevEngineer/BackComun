@@ -1,8 +1,8 @@
 import { IHandler } from "src/lib/shared/IHandler";
 import { Result } from "src/lib/shared/Type Helpers/result";
 import { LoginCommand } from "../../parameterObjects/LoginCommand";
-import { GetOneUserByUserNameQueryHandler } from "src/lib/user/application/Handlers/Querys/GetOneUserByUserNameQueryHandler";
-import { GetOneUserByUserName } from "src/lib/user/application/Parameter Objects/GetOneUserByUserName";
+import { GetOneUserByEmailQueryHandler } from "src/lib/user/application/Handlers/Querys/GetOneUserByEmailQueryHandler";
+import { GetOneUserByEmail } from "src/lib/user/application/Parameter Objects/GetOneUserByEmail";
 import { ITokenProvider } from "src/lib/auth/application/providers/ITokenProvider";
 import { Get, Inject } from "@nestjs/common";
 import * as bcrypt from "bcrypt";
@@ -12,9 +12,9 @@ export class LoginCommandHandler
   implements IHandler<LoginCommand, Result<string>>
 {
   constructor(
-    @Inject(GetOneUserByUserNameQueryHandler)
-    private readonly getUserByUserNameHandler: IHandler<
-      GetOneUserByUserName,
+    @Inject(GetOneUserByEmailQueryHandler)
+    private readonly getUserByEmailHandler: IHandler<
+      GetOneUserByEmail,
       Result<User>
     >,
     @Inject("ITokenProvider") private readonly tokenProvider: ITokenProvider
@@ -24,8 +24,8 @@ export class LoginCommandHandler
     if (!command.password || command.password.trim() === "") {
       return Result.fail(new Error("Password is required"));
     }
-    const getUserResult = await this.getUserByUserNameHandler.execute(
-      new GetOneUserByUserName(command.userName)
+    const getUserResult = await this.getUserByEmailHandler.execute(
+      new GetOneUserByEmail(command.email)
     );
     if (getUserResult.isFailure) {
       return Result.fail(getUserResult.error);
@@ -39,9 +39,8 @@ export class LoginCommandHandler
       return Result.fail(new Error("Invalid credentials"));
     }
     const token = await this.tokenProvider.generateToken({
-      id: user.id.value,
+      sub: user.id.value,
       email: user.email.value,
-      roles: user.roles.value,
     });
     return Result.ok(token);
   }

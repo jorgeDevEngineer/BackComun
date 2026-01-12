@@ -17,13 +17,12 @@ import { LoginCommand } from "../../application/parameterObjects/LoginCommand";
 import { RegisterCommand } from "../../application/parameterObjects/RegisterCommand";
 import { LogoutCommand } from "../../application/parameterObjects/LogoutCommand";
 import { CheckTokenStatusQuery } from "../../application/parameterObjects/CheckTokenStatusQuery";
-import { GetOneUserByUserName } from "src/lib/user/application/Parameter Objects/GetOneUserByUserName";
-import { GetOneUserByUserNameQueryHandler } from "src/lib/user/application/Handlers/Querys/GetOneUserByUserNameQueryHandler";
+import { GetOneUserByEmail } from "src/lib/user/application/Parameter Objects/GetOneUserByEmail";
+import { GetOneUserByEmailQueryHandler } from "src/lib/user/application/Handlers/Querys/GetOneUserByEmailQueryHandler";
 import { In } from "typeorm";
 import { GetOneUserByIdQueryHandler } from "src/lib/user/application/Handlers/Querys/GetOneUserByIdQueryHandler";
 import { GetOneUserById } from "src/lib/user/application/Parameter Objects/GetOneUserById";
 import { ITokenProvider } from "../../application/providers/ITokenProvider";
-import { IAssetUrlResolver } from "src/lib/shared/application/providers/IAssetUrlResolver";
 
 @Controller("auth")
 export class AuthController {
@@ -34,49 +33,38 @@ export class AuthController {
     private readonly logoutHandler: LogoutCommandHandler,
     @Inject(CheckTokenStatusQueryHandler)
     private readonly checkTokenHandler: CheckTokenStatusQueryHandler,
-    @Inject(GetOneUserByUserNameQueryHandler)
-    private readonly getUserByUserNameHandler: GetOneUserByUserNameQueryHandler,
+    @Inject(GetOneUserByEmailQueryHandler)
+    private readonly getUserByEmailHandler: GetOneUserByEmailQueryHandler,
     @Inject(GetOneUserByIdQueryHandler)
     private readonly getUserByIdHandler: GetOneUserByIdQueryHandler,
-    @Inject("ITokenProvider") private readonly tokenProvider: ITokenProvider,
-    @Inject("IAssetUrlResolver")
-    private readonly assetUrlResolver: IAssetUrlResolver
+    @Inject("ITokenProvider") private readonly tokenProvider: ITokenProvider
   ) {}
 
-  private mapUserToResponse(user: any) {
-    return {
-      id: user.id.value,
-      email: user.email.value,
-      username: user.userName.value,
-      type: user.userType.value,
-      state: user.status.value,
-      preferences: { theme: user.theme.value },
-      userProfileDetails: {
-        name: user.name.value,
-        description: user.description.value,
-        avatarAssetUrl: this.assetUrlResolver.resolveAvatarUrl(
-          user.avatarAssetId.value
-        ),
-      },
-      isPremium: user.membership.isPremium(),
-    };
-  }
-
   @Post("login")
-  async login(@Body() body: { username: string; password: string }) {
+  async login(@Body() body: { email: string; password: string }) {
     const result = await this.loginHandler.execute(
-      new LoginCommand(body.username, body.password)
+      new LoginCommand(body.email, body.password)
     );
     if (result.isFailure) {
       throw new HttpException(result.error.message, HttpStatus.UNAUTHORIZED);
     }
-    const user = await this.getUserByUserNameHandler.execute(
-      new GetOneUserByUserName(body.username)
+    const user = await this.getUserByEmailHandler.execute(
+      new GetOneUserByEmail(body.email)
     );
-    return {
-      token: result.getValue(),
-      user: this.mapUserToResponse(user.getValue()),
-    };
+    return { token: result.getValue(), user: user.getValue().toPlainObject() };
+  }
+
+  @Post("logout")
+  async logout(@Headers("authorization") auth: string) {
+    const token = auth?.replace(/^Bearer\s+/i, "");
+    if (!token) {
+      throw new HttpException("Token required", HttpStatus.BAD_REQUEST);
+    }
+    const result = await this.logoutHandler.execute(new LogoutCommand(token));
+    if (result.isFailure) {
+      throw new HttpException(result.error.message, HttpStatus.BAD_REQUEST);
+    }
+    return { message: "Logged out successfully" };
   }
 
   @Post("check-status")
@@ -95,21 +83,19 @@ export class AuthController {
       );
     }
     const decodedToken = await this.tokenProvider.validateToken(token);
-    if (!decodedToken || !decodedToken.id) {
-      throw new HttpException("Invalid token", HttpStatus.UNAUTHORIZED);
+    if (!decodedToken) {
+      return { valid: false, user: null };
+    } else {
+      const user = await this.getUserByIdHandler.execute(
+        new GetOneUserById(decodedToken.sub)
+      );
+      if (user.isFailure) {
+        throw new HttpException("User not found", HttpStatus.NOT_FOUND);
+      }
+      return {
+        valid: result.getValue() === true,
+        user: user.getValue().toPlainObject(),
+      };
     }
-    const userResult = await this.getUserByIdHandler.execute(
-      new GetOneUserById(decodedToken.id)
-    );
-    if (userResult.isFailure) {
-      throw new HttpException("User not found", HttpStatus.NOT_FOUND);
-    }
-    const user = userResult.getValue();
-    const newToken = await this.tokenProvider.generateToken({
-      sub: user.id.value,
-      email: user.email.value,
-      roles: user.roles.value,
-    });
-    return { token: newToken, user: this.mapUserToResponse(user) };
   }
 }
