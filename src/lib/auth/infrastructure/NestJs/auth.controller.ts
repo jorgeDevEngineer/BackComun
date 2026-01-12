@@ -8,6 +8,8 @@ import {
   HttpStatus,
   Inject,
   Get,
+  BadRequestException,
+  UnauthorizedException,
 } from "@nestjs/common";
 import { LoginCommandHandler } from "../../application/Handlers/Commands/LoginCommandHandler";
 import { RegisterCommandHandler } from "../../application/Handlers/Commands/RegisterCommandHandler";
@@ -24,6 +26,7 @@ import { GetOneUserByIdQueryHandler } from "src/lib/user/application/Handlers/Qu
 import { GetOneUserById } from "src/lib/user/application/Parameter Objects/GetOneUserById";
 import { ITokenProvider } from "../../application/providers/ITokenProvider";
 import { IAssetUrlResolver } from "src/lib/shared/application/providers/IAssetUrlResolver";
+import { UserNotFoundException } from "src/lib/user/application/exceptions/UserNotFoundException";
 
 @Controller("auth")
 export class AuthController {
@@ -68,7 +71,15 @@ export class AuthController {
       new LoginCommand(body.username, body.password)
     );
     if (result.isFailure) {
-      throw new HttpException(result.error.message, HttpStatus.UNAUTHORIZED);
+      // Domain validation errors or known application not-found → 400 Bad Request
+      if (
+        (result.error && (result.error as any).name === "DomainException") ||
+        result.error instanceof UserNotFoundException
+      ) {
+        throw new BadRequestException(result.error.message);
+      }
+      // Auth failures → 401 Unauthorized (handled by auth decorator or invalid credentials)
+      throw new UnauthorizedException(result.error.message);
     }
     const user = await this.getUserByUserNameHandler.execute(
       new GetOneUserByUserName(body.username)

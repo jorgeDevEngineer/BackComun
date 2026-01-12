@@ -105,7 +105,7 @@ export class DynamicMultiplayerGameRepository
 
       const params = {
         filter: {
-          sessionState: "COMPLETED",
+          sessionState: "end",
           "players.playerId": playerId.getValue(),
         },
       };
@@ -121,17 +121,25 @@ export class DynamicMultiplayerGameRepository
       return [sessions, total];
     } catch (error) {
       // 🔹 Postgres
-      let qb = this.sessionRepository.createQueryBuilder("multiPlayerSession");
+      let qb = this.sessionRepository.createQueryBuilder("multiplayerSessions");
 
-      qb.andWhere(`multiPlayerSession.sessionState = :status`, {
-        status: "COMPLETED",
+      qb.andWhere(`multiplayerSessions.sessionState = :status`, {
+        status: "end",
       });
 
-      qb.andWhere(`multiPlayerSession.players @> :playerJson`, {
-        playerJson: JSON.stringify([{ playerId: playerId.getValue() }]),
-      });
+      // ✅ Usar JOIN LATERAL para descomponer players
+      qb.andWhere(
+        `
+        EXISTS (
+          SELECT 1
+          FROM jsonb_array_elements("multiplayerSessions"."players"::jsonb) AS elem
+          WHERE elem->>'playerId' = :playerId
+        )
+      `,
+        { playerId: playerId.getValue() }
+      );
 
-      qb = this.pgCriteriaApplier.apply(qb, criteria);
+      qb = this.pgCriteriaApplier.apply(qb, criteria, "multiplayerSessions");
 
       const [entities, total] = await qb.getManyAndCount();
       return [entities.map((entity) => entity.toDomain()), total];

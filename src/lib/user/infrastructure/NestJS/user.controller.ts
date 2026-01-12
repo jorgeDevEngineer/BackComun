@@ -6,6 +6,8 @@ import {
   Inject,
   InternalServerErrorException,
   NotFoundException,
+  BadRequestException,
+  UnauthorizedException,
   Param,
   Patch,
   Post,
@@ -37,6 +39,7 @@ import { User } from "../../domain/aggregate/User";
 import { get } from "http";
 import { ITokenProvider } from "src/lib/auth/application/providers/ITokenProvider";
 import { IAssetUrlResolver } from "src/lib/shared/application/providers/IAssetUrlResolver";
+import { DomainException } from "src/lib/shared/exceptions/domain.exception";
 
 @Controller("user")
 export class UserController {
@@ -65,11 +68,11 @@ export class UserController {
   private async getCurrentUserId(authHeader: string): Promise<string> {
     const token = authHeader?.replace(/^Bearer\s+/i, "");
     if (!token) {
-      throw new InternalServerErrorException("Token required");
+      throw new UnauthorizedException("Token required");
     }
     const payload = await this.tokenProvider.validateToken(token);
     if (!payload || !payload.id) {
-      throw new InternalServerErrorException("Invalid token");
+      throw new UnauthorizedException("Invalid token");
     }
     return payload.id;
   }
@@ -79,9 +82,53 @@ export class UserController {
       if (result.error instanceof UserNotFoundException) {
         throw new NotFoundException(result.error.message);
       }
+      if (result.error instanceof DomainException) {
+        throw new BadRequestException(result.error.message);
+      }
       throw new InternalServerErrorException(result.error.message);
     }
     return result.getValue()!;
+  }
+
+  handleBadRequestResult<T>(result: Result<T>): T {
+    if (result.isFailure) {
+      throw new BadRequestException(result.error.message);
+    }
+    return result.getValue()!;
+  }
+
+  private addAvatarUrlToUser(userObj: any) {
+    if (!userObj) return userObj;
+
+    let updated = { ...userObj };
+
+    // Map top-level avatarAssetId -> avatarAssetUrl
+    if (Object.prototype.hasOwnProperty.call(updated, "avatarAssetId")) {
+      const id = updated.avatarAssetId;
+      const url = this.assetUrlResolver.resolveAvatarUrl(id);
+      const { avatarAssetId, ...rest } = updated;
+      updated = { ...rest, avatarAssetUrl: url };
+    }
+
+    // Map nested userProfileDetails.avatarAssetId -> avatarAssetUrl
+    if (
+      updated.userProfileDetails &&
+      Object.prototype.hasOwnProperty.call(
+        updated.userProfileDetails,
+        "avatarAssetId"
+      )
+    ) {
+      const nestedId = updated.userProfileDetails.avatarAssetId;
+      const nestedUrl = this.assetUrlResolver.resolveAvatarUrl(nestedId);
+      const { avatarAssetId: _drop, ...restProfile } =
+        updated.userProfileDetails;
+      updated.userProfileDetails = {
+        ...restProfile,
+        avatarAssetUrl: nestedUrl,
+      };
+    }
+
+    return updated;
   }
 
   /////////////////////////////////////CURRENT ENDPOINTS//////////////////////////////////////
@@ -96,12 +143,13 @@ export class UserController {
       body.name
     );
     const result = await this.createUserCommandHandler.execute(createUser);
-    this.handleResult(result);
+    this.handleBadRequestResult(result);
     const createdUser = await this.getOneUserByUserName.execute(
       new GetOneUserByUserName(body.username)
     );
     this.handleResult(createdUser);
-    return { user: createdUser.getValue().toPlainObject() };
+    const created = createdUser.getValue().toPlainObject();
+    return { user: this.addAvatarUrlToUser(created) };
   }
 
   @Get("profile")
@@ -109,28 +157,33 @@ export class UserController {
     const userId = await this.getCurrentUserId(auth);
     const query = new GetOneUserById(userId);
     const result = await this.getOneUserById.execute(query);
-    return { user: this.handleResult(result).toPlainObject() };
+    const userObj = this.handleResult(result).toPlainObject();
+    return { user: this.addAvatarUrlToUser(userObj) };
   }
 
   @Get("profile/id/:id")
   async getProfileById(@Param() params: FindByIdParams) {
     const query = new GetOneUserById(params.id);
     const result = await this.getOneUserById.execute(query);
-    return { user: this.handleResult(result).toPlainObjectResumed() };
+    const userObj = this.handleResult(result).toPlainObjectResumed();
+    return { user: this.addAvatarUrlToUser(userObj) };
   }
 
   @Get("profile/username/:userName")
   async getProfileByUserName(@Param() params: FindByUserNameParams) {
     const query = new GetOneUserByUserName(params.userName);
     const result = await this.getOneUserByUserName.execute(query);
-    return { user: this.handleResult(result).toPlainObjectResumed() };
+    const userObj = this.handleResult(result).toPlainObjectResumed();
+    return { user: this.addAvatarUrlToUser(userObj) };
   }
 
   @Get()
   async getAllProfiles() {
     const query = new GetAllUsers();
     const result = await this.getAllUsers.execute(query);
-    return this.handleResult(result).map((user) => user.toPlainObjectResumed());
+    return this.handleResult(result).map((user) =>
+      this.addAvatarUrlToUser(user.toPlainObjectResumed())
+    );
   }
 
   @Patch("profile")
@@ -158,7 +211,8 @@ export class UserController {
     const editResult = await this.editUser.execute(editUserCommand);
     this.handleResult(editResult);
     const result = await this.getOneUserById.execute(query);
-    return { user: this.handleResult(result).toPlainObject() };
+    const userObj = this.handleResult(result).toPlainObject();
+    return { user: this.addAvatarUrlToUser(userObj) };
   }
 
   @Patch("profile/:id")
@@ -188,7 +242,8 @@ export class UserController {
     const editResult = await this.editUser.execute(editUserCommand);
     this.handleResult(editResult);
     const result = await this.getOneUserById.execute(query);
-    return { user: this.handleResult(result).toPlainObjectResumed() };
+    const userObj = this.handleResult(result).toPlainObjectResumed();
+    return { user: this.addAvatarUrlToUser(userObj) };
   }
 
   @Delete("profile")
@@ -290,21 +345,25 @@ export class UserController {
   async getOneById(@Param() params: FindByIdParams) {
     const query = new GetOneUserById(params.id);
     const result = await this.getOneUserById.execute(query);
-    return this.handleResult(result).toPlainObject();
+    const userObj = this.handleResult(result).toPlainObject();
+    return this.addAvatarUrlToUser(userObj);
   }
 
   @Get("username/:userName")
   async getOneUserByName(@Param() params: FindByUserNameParams) {
     const query = new GetOneUserByUserName(params.userName);
     const result = await this.getOneUserByUserName.execute(query);
-    return this.handleResult(result).toPlainObject();
+    const userObj = this.handleResult(result).toPlainObject();
+    return this.addAvatarUrlToUser(userObj);
   }
 
   @Get()
   async getAll() {
     const query = new GetAllUsers();
     const result = await this.getAllUsers.execute(query);
-    return this.handleResult(result).map((user) => user.toPlainObject());
+    return this.handleResult(result).map((user) =>
+      this.addAvatarUrlToUser(user.toPlainObject())
+    );
   }
 
   @Post()
