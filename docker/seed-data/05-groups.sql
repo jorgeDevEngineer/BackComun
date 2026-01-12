@@ -1,3 +1,20 @@
+create table groups
+(
+    id                    uuid                                       not null
+        constraint "PK_659d1483316afb28afd3a90646e"
+            primary key,
+    name                  varchar(80)                                not null,
+    description           varchar(300) default ''::character varying not null,
+    "adminId"             uuid                                       not null,
+    "invitationToken"     varchar(255),
+    "invitationExpiresAt" timestamp with time zone,
+    "createdAt"           timestamp    default now()                 not null,
+    "updatedAt"           timestamp    default now()                 not null
+);
+
+alter table groups
+    owner to postgres;
+
 INSERT INTO public.groups (id, name, description, "adminId", "invitationToken", "invitationExpiresAt", "createdAt", "updatedAt") VALUES ('3c37f98a-b4ff-45e8-9ecf-ab25d27cf654', 'Grupo 1', '', '123e4567-e89b-42d3-a456-426614174000', null, null, '2025-12-04 23:04:38.740000', '2025-12-04 23:04:38.740000');
 INSERT INTO public.groups (id, name, description, "adminId", "invitationToken", "invitationExpiresAt", "createdAt", "updatedAt") VALUES ('34ebe02c-45dd-4523-9528-7f64a7f60309', 'Nuevo nombre', 'Nueva descripción para pruebas', '123e4567-e89b-42d3-a456-426614174123', 'fd791d655ffe9af51f8c89668022d5e9', '2025-12-11 23:07:19.961000 +00:00', '2025-12-03 15:14:35.201000', '2025-12-04 23:47:46.364000');
 INSERT INTO public.groups (id, name, description, "adminId", "invitationToken", "invitationExpiresAt", "createdAt", "updatedAt") VALUES ('e9a26ede-9916-4746-8021-fb5ac1688f54', 'Grupo prueba 2', '', '123e4567-e89b-42d3-a456-426614174000', null, null, '2025-12-05 07:03:06.594000', '2025-12-05 07:03:06.594000');

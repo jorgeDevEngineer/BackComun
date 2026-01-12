@@ -4,8 +4,8 @@ import { BackofficeController } from "./backoffice.controller";
 import { SearchUsersUseCase } from "../../application/SearchUsersUseCase";
 import { TypeOrmUserRepository } from "../TypeOrm/TypeOrmUserRepository";
 import { TypeOrmUserEntity } from "../TypeOrm/TypeOrmUserEntity";
-import { TypeOrmNotificationRepository } from "../TypeOrm/TypeOrmNotificationRepository";
-import { TypeOrmNotificationEntity } from "../TypeOrm/TypeOrmNotificationEntity";
+import { TypeOrmMassiveNotificationRepository } from "../TypeOrm/TypeOrmMassiveNotificationRepository";
+import { TypeOrmMassiveNotificationEntity } from "../TypeOrm/TypeOrmMassiveNotificationEntity";
 import { BlockUserUseCase } from "../../application/BlockUserUseCase";
 import { DeleteUserUseCase } from "../../application/DeleteUserUseCase";
 import { SendNotificationUseCase } from "../../application/SendNotificationUseCase";
@@ -18,7 +18,7 @@ import { AssetUrlResolver } from "src/lib/shared/infrastructure/providers/AssetU
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([TypeOrmUserEntity, TypeOrmNotificationEntity]),
+    TypeOrmModule.forFeature([TypeOrmUserEntity, TypeOrmMassiveNotificationEntity]),
   ],
   controllers: [BackofficeController],
   providers: [
@@ -35,8 +35,8 @@ import { AssetUrlResolver } from "src/lib/shared/infrastructure/providers/AssetU
       useClass: TypeOrmUserRepository,
     },
     {
-      provide: "NotificationRepository",
-      useClass: TypeOrmNotificationRepository,
+      provide: "MassiveNotificationRepository",
+      useClass: TypeOrmMassiveNotificationRepository,
     },
     {
       provide: "IAssetUrlResolver",

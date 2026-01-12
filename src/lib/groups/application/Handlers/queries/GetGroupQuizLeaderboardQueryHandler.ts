@@ -9,6 +9,7 @@ import { GroupNotFoundError } from "../../../../shared/exceptions/GroupNotFoundE
 import { UserNotMemberOfGroupError } from "../../../../shared/exceptions/NotMemberGroupError";
 import { GameProgressStatus } from "src/lib/singlePlayerGame/domain/valueObjects/SinglePlayerGameVOs";
 
+
 export class GetGroupQuizLeaderboardQueryHandler
   implements IHandler<GetGroupQuizLeaderboardQuery, GetGroupQuizLeaderboardResponseDto>
 {

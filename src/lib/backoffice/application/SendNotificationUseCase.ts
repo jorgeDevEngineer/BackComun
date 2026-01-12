@@ -1,6 +1,6 @@
-import { NotificationRepository } from "../domain/port/NotificationRepository";
+import { MassiveNotificationRepository } from "../domain/port/MassiveNotificationRepository";
 import { Inject, Injectable } from "@nestjs/common";
-import { Notification } from "../domain/entity/Notification";
+import { MassiveNotification } from "../domain/entity/MassiveNotification";
 import { UserRepository } from "../domain/port/UserRepository";
 import { UserId } from "../domain/valueObject/UserId";
 import { BadRequestException } from "@nestjs/common";
@@ -31,8 +31,8 @@ export interface SendNotificationDto {
 @Injectable()
 export class SendNotificationUseCase {
   constructor(
-    @Inject("NotificationRepository")
-    private readonly notificationRepository: NotificationRepository,
+    @Inject("MassiveNotificationRepository")
+    private readonly massiveNotificationRepository: MassiveNotificationRepository,
     @Inject("UserRepository")
     private readonly userRepository: UserRepository,
     @Inject("SendMailService")
@@ -50,8 +50,7 @@ export class SendNotificationUseCase {
     if (!user.isAdmin) {
       throw new UnauthorizedException("Unauthorized");
     }
-    const result = await this.notificationRepository.sendNotification(data);
-
+    const result = await this.massiveNotificationRepository.sendMassiveNotification(data);
     if (data.filters.toAdmins) {
       this.userRepository.getEmailAdmin().then((emails) => {
         emails.forEach((email) => {
