@@ -18,12 +18,16 @@ import { GroupQuizAssignmentId } from "../../../domain/valueObject/GroupQuizAssi
 import { QuizId } from "../../../../kahoot/domain/valueObject/Quiz";
 import { UserId } from "../../../../user/domain/valueObject/UserId";
 
+import { EventEmitter2 } from "@nestjs/event-emitter";
+import { QuizAssignedToGroupEvent } from "../../../../shared/domain/Events/QuizAssignedToGroupEvent";
+
 export class AssignQuizToGroupCommandHandler
   implements IHandler<AssignQuizToGroupCommand, Either<DomainException, AssignQuizToGroupResponseDto>>
 {
   constructor(
     private readonly groupRepository: GroupRepository,
     private readonly quizReadService: QuizReadService,
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   async execute(command: AssignQuizToGroupCommand): Promise<Either<DomainException, AssignQuizToGroupResponseDto>> {
@@ -38,6 +42,8 @@ export class AssignQuizToGroupCommandHandler
     const groupId = GroupId.of(command.groupId);
     const quizId = QuizId.of(command.quizId);
     const userId = new UserId(command.currentUserId);
+    const quizTitle = await this.getQuizTitle(quizId);
+    const assignerName = "El administrador"
 
     const groupOptional = await this.groupRepository.findById(groupId);
     if (!groupOptional.hasValue()) {
@@ -71,6 +77,26 @@ export class AssignQuizToGroupCommandHandler
     }
 
     await this.groupRepository.save(group);
+    const memberIdsToNotify = group.members
+        .filter(m => m.userId.value !== userId.value)
+        .map(m => m.userId.value);
+
+    if (memberIdsToNotify.length > 0) {
+        this.eventEmitter.emit(
+            'quiz.assigned',
+            new QuizAssignedToGroupEvent(
+                group.id.value,
+                quizId.value,
+                group.name.value,
+                quizTitle,      
+                assignerName,  
+                memberIdsToNotify,
+                new Date()
+            )
+        );
+    }
+
+    
 
     return Either.makeRight({
       id: assignment.id.value,
@@ -82,5 +108,8 @@ export class AssignQuizToGroupCommandHandler
       availableUntil: availableUntil.toISOString(),
       isActive: assignment.isActive,
     });
+  }
+  private async getQuizTitle(id: QuizId): Promise<string> {
+      return "Quiz de Prueba"; //arreglar esto
   }
 }

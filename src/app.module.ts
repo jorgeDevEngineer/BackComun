@@ -1,6 +1,7 @@
 import { Module, OnApplicationBootstrap } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { ConfigModule, ConfigService } from "@nestjs/config";
+import { EventEmitterModule } from '@nestjs/event-emitter';
 import * as Joi from "joi";
 import { KahootModule } from "./lib/kahoot/infrastructure/NestJs/kahoot.module";
 import { MediaModule } from "./lib/media/infrastructure/NestJs/media.module";
@@ -16,9 +17,11 @@ import { DatabaseModule } from "./lib/shared/infrastructure/database/database.mo
 import { AdminModule } from "./lib/admin/infrastructure/admin.module";
 import { MultiplayerSessionModule } from "./lib/multiplayer/infrastructure/NestJs/MultiplayerSession.module";
 import { DynamicMongoAdapter } from "./lib/shared/infrastructure/database/dynamic-mongo.adapter";
+import { NotificationsModule } from "./lib/notifications/infrastructure/NestJs/Notification.module";
 
 @Module({
   imports: [
+    EventEmitterModule.forRoot(),
     ConfigModule.forRoot({
       isGlobal: true,
       validationSchema: Joi.object({
@@ -63,6 +66,7 @@ import { DynamicMongoAdapter } from "./lib/shared/infrastructure/database/dynami
     StatisticsModule,
     BackofficeModule,
     MultiplayerSessionModule,
+    NotificationsModule
   ],
 })
 export class AppModule implements OnApplicationBootstrap {
@@ -77,5 +81,6 @@ export class AppModule implements OnApplicationBootstrap {
     await this.mongoAdapter.reconnect("media", mongoUrl);
     await this.mongoAdapter.reconnect("user", mongoUrl);
     await this.mongoAdapter.reconnect("groups", mongoUrl);
+    await this.mongoAdapter.reconnect("notifications", mongoUrl);
   }
 }

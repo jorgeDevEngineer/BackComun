@@ -3,24 +3,20 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 
 import { GroupsController } from "./Group.controller";
 
-// 1. Entidades
 import { GroupOrmEntity } from "../TypeOrm/GroupOrmEntity";
 import { GroupMemberOrmEntity } from "../TypeOrm/GroupOrnMember";
 import { GroupQuizAssignmentOrmEntity } from "../TypeOrm/GroupQuizAssigmentOrmEntity";
 import { TypeOrmQuizEntity } from "../../../kahoot/infrastructure/TypeOrm/TypeOrmQuizEntity";
 import { TypeOrmSinglePlayerGameEntity } from "src/lib/singlePlayerGame/infrastructure/TypeOrm/TypeOrmSinglePlayerGameEntity";
 
-// 2. Repositorios y Servicios
 import { TypeOrmGroupRepository } from "../TypeOrm/TypeOrmGroupRepository";
 import { TypeOrmQuizReadService } from "../TypeOrm/QuizReadServiceImplementation";
 import { cryptoInvitationTokenGenerator } from "../Token/InvitationTokenGenerator";
 
-// 3. Puertos
 import { GroupRepository } from "../../domain/port/GroupRepository";
 import { InvitationTokenGenerator } from "../../domain/port/GroupInvitationTokenGenerator";
 import { QuizReadService } from "../../domain/port/QuizReadService";
 
-// 4. Handlers
 import { CreateGroupCommandHandler } from "../../application/Handlers/commands/CreateGroupCommandHandler";
 import { UpdateGroupDetailsCommandHandler } from "../../application/Handlers/commands/UpdateGroupDetailsCommandHandler";
 import { JoinGroupByInvitationCommandHandler } from "../../application/Handlers/commands/JoinGroupByInvitationCommandHandler";
@@ -36,15 +32,14 @@ import { GetGroupQuizzesQueryHandler } from "../../application/Handlers/queries/
 import { GetGroupLeaderboardQueryHandler } from "../../application/Handlers/queries/GetGroupLeaderboardQUeryHandler";
 import { GetGroupQuizLeaderboardQueryHandler } from "../../application/Handlers/queries/GetGroupQuizLeaderboardQueryHandler";
 
-// 5. Shared (Logger y Decorators)
 import { LoggerModule } from "src/lib/shared/aspects/logger/infrastructure/logger.module";
 import { LoggingUseCaseDecorator } from "src/lib/shared/aspects/logger/application/decorators/logging.decorator";
 import { ILoggerPort, LOGGER_PORT } from "src/lib/shared/aspects/logger/domain/ports/logger.port";
 import { ErrorHandlingDecoratorWithEither } from "src/lib/shared/aspects/error-handling/application/decorators/error-handling-either";
-
+import { EventEmitter2 } from "@nestjs/event-emitter";
 @Module({
   imports: [
-    LoggerModule, // Módulo de Logs compartido
+    LoggerModule, 
     TypeOrmModule.forFeature([
       GroupOrmEntity,
       GroupMemberOrmEntity,
@@ -55,7 +50,6 @@ import { ErrorHandlingDecoratorWithEither } from "src/lib/shared/aspects/error-h
   ],
   controllers: [GroupsController],
   providers: [
-    // --- INFRAESTRUCTURA ---
     {
       provide: "GroupRepository",
       useClass: TypeOrmGroupRepository,
@@ -68,10 +62,6 @@ import { ErrorHandlingDecoratorWithEither } from "src/lib/shared/aspects/error-h
       provide: "QuizReadService",
       useClass: TypeOrmQuizReadService,
     },
-
-    // --- HANDLERS CON DECORADORES (FACTORY PATTERN) ---
-
-    // 1. CreateGroupCommandHandler (SOLO LOGGER, SIN ERROR HANDLING)
     {
       provide: CreateGroupCommandHandler,
       useFactory: (logger: ILoggerPort, repo: GroupRepository) => {
@@ -81,7 +71,6 @@ import { ErrorHandlingDecoratorWithEither } from "src/lib/shared/aspects/error-h
       inject: [LOGGER_PORT, "GroupRepository"],
     },
 
-    // 2. GetUserGroupsQueryHandler
     {
       provide: GetUserGroupsQueryHandler,
       useFactory: (logger: ILoggerPort, repo: GroupRepository) => {
@@ -92,7 +81,6 @@ import { ErrorHandlingDecoratorWithEither } from "src/lib/shared/aspects/error-h
       inject: [LOGGER_PORT, "GroupRepository"],
     },
 
-    // 3. GetGroupDetailsQueryHandler
     {
       provide: GetGroupDetailsQueryHandler,
       useFactory: (logger: ILoggerPort, repo: GroupRepository) => {
@@ -103,7 +91,6 @@ import { ErrorHandlingDecoratorWithEither } from "src/lib/shared/aspects/error-h
       inject: [LOGGER_PORT, "GroupRepository"],
     },
 
-    // 4. GetGroupMembersQueryHandler
     {
       provide: GetGroupMembersQueryHandler,
       useFactory: (logger: ILoggerPort, repo: GroupRepository) => {
@@ -114,7 +101,6 @@ import { ErrorHandlingDecoratorWithEither } from "src/lib/shared/aspects/error-h
       inject: [LOGGER_PORT, "GroupRepository"],
     },
 
-    // 5. GenerateGroupInvitationCommandHandler (2 dependencias)
     {
       provide: GenerateGroupInvitationCommandHandler,
       useFactory: (
@@ -129,7 +115,6 @@ import { ErrorHandlingDecoratorWithEither } from "src/lib/shared/aspects/error-h
       inject: [LOGGER_PORT, "GroupRepository", "InvitationTokenGenerator"],
     },
 
-    // 6. JoinGroupByInvitationCommandHandler
     {
       provide: JoinGroupByInvitationCommandHandler,
       useFactory: (logger: ILoggerPort, repo: GroupRepository) => {
@@ -140,7 +125,6 @@ import { ErrorHandlingDecoratorWithEither } from "src/lib/shared/aspects/error-h
       inject: [LOGGER_PORT, "GroupRepository"],
     },
 
-    // 7. LeaveGroupCommandHandler
     {
       provide: LeaveGroupCommandHandler,
       useFactory: (logger: ILoggerPort, repo: GroupRepository) => {
@@ -151,7 +135,6 @@ import { ErrorHandlingDecoratorWithEither } from "src/lib/shared/aspects/error-h
       inject: [LOGGER_PORT, "GroupRepository"],
     },
 
-    // 8. RemoveGroupMemberCommandHandler
     {
       provide: RemoveGroupMemberCommandHandler,
       useFactory: (logger: ILoggerPort, repo: GroupRepository) => {
@@ -162,7 +145,6 @@ import { ErrorHandlingDecoratorWithEither } from "src/lib/shared/aspects/error-h
       inject: [LOGGER_PORT, "GroupRepository"],
     },
 
-    // 9. UpdateGroupDetailsCommandHandler
     {
       provide: UpdateGroupDetailsCommandHandler,
       useFactory: (logger: ILoggerPort, repo: GroupRepository) => {
@@ -173,7 +155,6 @@ import { ErrorHandlingDecoratorWithEither } from "src/lib/shared/aspects/error-h
       inject: [LOGGER_PORT, "GroupRepository"],
     },
 
-    // 10. TransferGroupAdminCommandHandler
     {
       provide: TransferGroupAdminCommandHandler,
       useFactory: (logger: ILoggerPort, repo: GroupRepository) => {
@@ -184,22 +165,21 @@ import { ErrorHandlingDecoratorWithEither } from "src/lib/shared/aspects/error-h
       inject: [LOGGER_PORT, "GroupRepository"],
     },
 
-    // 11. AssignQuizToGroupCommandHandler (2 dependencias)
     {
       provide: AssignQuizToGroupCommandHandler,
       useFactory: (
         logger: ILoggerPort,
         groupRepo: GroupRepository,
-        quizReadService: QuizReadService
+        quizReadService: QuizReadService,
+        eventEmitter: EventEmitter2
       ) => {
-        const useCase = new AssignQuizToGroupCommandHandler(groupRepo, quizReadService);
+        const useCase = new AssignQuizToGroupCommandHandler(groupRepo, quizReadService, eventEmitter);
         const withError = new ErrorHandlingDecoratorWithEither(useCase, logger, "AssignQuizToGroupCommandHandler");
         return new LoggingUseCaseDecorator(withError, logger, "AssignQuizToGroupCommandHandler");
       },
-      inject: [LOGGER_PORT, "GroupRepository", "QuizReadService"],
+      inject: [LOGGER_PORT, "GroupRepository", "QuizReadService",EventEmitter2],
     },
 
-    // 12. GetGroupQuizzesQueryHandler
     {
       provide: GetGroupQuizzesQueryHandler,
       useFactory: (logger: ILoggerPort, repo: GroupRepository) => {
@@ -210,7 +190,6 @@ import { ErrorHandlingDecoratorWithEither } from "src/lib/shared/aspects/error-h
       inject: [LOGGER_PORT, "GroupRepository"],
     },
 
-    // 13. GetGroupLeaderboardQueryHandler
     {
       provide: GetGroupLeaderboardQueryHandler,
       useFactory: (logger: ILoggerPort, repo: GroupRepository) => {
@@ -221,7 +200,6 @@ import { ErrorHandlingDecoratorWithEither } from "src/lib/shared/aspects/error-h
       inject: [LOGGER_PORT, "GroupRepository"],
     },
 
-    // 14. GetGroupQuizLeaderboardQueryHandler
     {
       provide: GetGroupQuizLeaderboardQueryHandler,
       useFactory: (logger: ILoggerPort, repo: GroupRepository) => {

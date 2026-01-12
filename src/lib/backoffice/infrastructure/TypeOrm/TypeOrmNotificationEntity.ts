@@ -1,7 +1,7 @@
 import { Column, Entity, PrimaryColumn } from "typeorm";
 import { Notification } from "../../domain/entity/Notification";
 
-@Entity("notifications")
+@Entity("notificationsBAckofice")
 export class TypeOrmNotificationEntity {
   @PrimaryColumn()
   id: string;
