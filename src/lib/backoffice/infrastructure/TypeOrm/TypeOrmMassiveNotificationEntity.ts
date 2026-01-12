@@ -1,8 +1,8 @@
 import { Column, Entity, PrimaryColumn } from "typeorm";
-import { Notification } from "../../domain/entity/Notification";
+import { MassiveNotification } from "../../domain/entity/MassiveNotification";
 
-@Entity("notifications")
-export class TypeOrmNotificationEntity {
+@Entity("massivenotifications")
+export class TypeOrmMassiveNotificationEntity {
   @PrimaryColumn()
   id: string;
 

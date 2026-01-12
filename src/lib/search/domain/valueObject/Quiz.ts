@@ -97,13 +97,13 @@ export class QuizDescription {
 }
 
 export class QuizStatus {
-    private constructor(public readonly value: 'draft' | 'publish') {}
+    private constructor(public readonly value: 'draft' | 'published') {}
 
     public static fromString(value: string): QuizStatus {
-        if (value !== 'draft' && value !== 'publish') {
+        if (value !== 'draft' && value !== 'published') {
             throw new Error(`Invalid QuizStatus: ${value}`);
         }
-        return new QuizStatus(value as 'draft' | 'publish');
+        return new QuizStatus(value as 'draft' | 'published');
     }
 }
 
