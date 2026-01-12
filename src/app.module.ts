@@ -100,5 +100,11 @@ export class AppModule implements OnApplicationBootstrap {
     } catch (error) {
       logger.error(`Failed to connect groups mongo: ${error.message}`);
     }
+     try {
+      await this.mongoAdapter.reconnect("notifications", mongoUrl);
+    } catch (error) {
+      logger.error(`Failed to connect notifications mongo: ${error.message}`);
+    }
+
   }
 }
