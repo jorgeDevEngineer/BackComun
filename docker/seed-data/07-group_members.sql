@@ -1,3 +1,21 @@
+create table group_members
+(
+    id                 uuid      default uuid_generate_v4() not null
+        constraint "PK_86446139b2c96bfd0f3b8638852"
+            primary key,
+    "userId"           uuid                                 not null,
+    role               varchar(20)                          not null,
+    "joinedAt"         timestamp default now()              not null,
+    "completedQuizzes" integer   default 0                  not null,
+    "groupId"          uuid
+        constraint "FK_1aa8d31831c3126947e7a713c2b"
+            references groups
+            on delete cascade
+);
+
+alter table group_members
+    owner to postgres;
+
 INSERT INTO public.group_members (id, "userId", role, "joinedAt", "completedQuizzes", "groupId") VALUES ('16dd1e49-dfac-4de1-9899-b865500f8a86', '123e4567-e89b-42d3-a456-426614174000', 'admin', '2025-12-04 23:04:38.740000', 0, '3c37f98a-b4ff-45e8-9ecf-ab25d27cf654');
 INSERT INTO public.group_members (id, "userId", role, "joinedAt", "completedQuizzes", "groupId") VALUES ('d5cb6684-4b22-4324-97f9-175854d9acf5', '123e4567-e89b-42d3-a456-426614174000', 'member', '2025-12-03 15:14:35.201000', 0, '34ebe02c-45dd-4523-9528-7f64a7f60309');
 INSERT INTO public.group_members (id, "userId", role, "joinedAt", "completedQuizzes", "groupId") VALUES ('0ea2fffc-1640-402c-b760-6e8cdf355257', '123e4567-e89b-42d3-a456-426614174123', 'admin', '2025-12-04 23:46:17.539000', 0, '34ebe02c-45dd-4523-9528-7f64a7f60309');

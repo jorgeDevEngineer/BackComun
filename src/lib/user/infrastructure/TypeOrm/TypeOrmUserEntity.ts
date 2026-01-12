@@ -15,16 +15,22 @@ export class TypeOrmUserEntity {
   hashedPassword: string;
 
   @Column()
-  userType: "student" | "teacher" | "personal";
+  userType: "STUDENT" | "TEACHER";
 
   @Column()
-  avatarUrl: string;
+  avatarAssetId: string;
 
   @Column()
   name: string;
 
+  @Column({ nullable: true })
+  description: string;
+
+  @Column({ type: "simple-array", default: "user" })
+  roles: string[];
+
   @Column()
-  theme: string;
+  theme: "LIGHT" | "DARK";
 
   @Column()
   language: string;
@@ -32,11 +38,17 @@ export class TypeOrmUserEntity {
   @Column()
   gameStreak: number;
 
+  @Column({ name: "isadmin", default: false })
+  isAdmin: boolean;
+
   @Column()
   createdAt: Date;
 
   @Column()
   updatedAt: Date;
+
+  @Column({ nullable: true })
+  lastUserNameChangeAt: Date;
 
   @Column({ nullable: true })
   membershipType: "free" | "premium";
@@ -48,5 +60,5 @@ export class TypeOrmUserEntity {
   membershipExpiresAt: Date;
 
   @Column()
-  status: "Active" | "Blocked";
+  status: "active" | "blocked";
 }

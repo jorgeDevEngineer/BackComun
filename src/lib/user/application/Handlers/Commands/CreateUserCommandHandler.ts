@@ -5,8 +5,8 @@ import { UserName } from "../../../domain/valueObject/UserName";
 import { UserEmail } from "../../../domain/valueObject/UserEmail";
 import { UserHashedPassword } from "../../../domain/valueObject/UserHashedPassword";
 import { UserType } from "../../../domain/valueObject/UserType";
-import { UserAvatarUrl } from "../../../domain/valueObject/UserAvatarUrl";
 import { UserPlainName } from "../../../domain/valueObject/UserPlainName";
+import { UserDescription } from "../../../domain/valueObject/UserDescription";
 import { UserTheme } from "../../../domain/valueObject/UserTheme";
 import { UserLanguage } from "../../../domain/valueObject/UserLanguaje";
 import { UserGameStreak } from "../../../domain/valueObject/UserGameStreak";
@@ -20,6 +20,8 @@ import { Either } from "src/lib/shared/Type Helpers/Either";
 import { DomainException } from "src/lib/shared/exceptions/DomainException";
 import { CreateUser } from "../../Parameter Objects/CreateUser";
 import { Result } from "src/lib/shared/Type Helpers/result";
+import { UserPassword } from "../../../domain/valueObject/UserPassword";
+import * as bcrypt from "bcrypt";
 
 export class CreateUserCommandHandler
   implements IHandler<CreateUser, Result<void>>
@@ -27,39 +29,32 @@ export class CreateUserCommandHandler
   constructor(private readonly userRepository: UserRepository) {}
 
   async execute(command: CreateUser): Promise<Result<void>> {
+    const password = new UserPassword(command.password);
     const newUser = new User(
       new UserName(command.userName),
       new UserEmail(command.email),
-      new UserHashedPassword(command.hashedPassword),
+      new UserHashedPassword(await bcrypt.hash(password.value, 12)),
       new UserType(command.userType),
-      new UserAvatarUrl(command.avatarUrl),
-      command.id ? new UserId(command.id) : undefined,
-      command.name ? new UserPlainName(command.name) : undefined,
-      command.theme ? new UserTheme(command.theme) : undefined,
-      command.language ? new UserLanguage(command.language) : undefined,
-      typeof command.gameStreak === "number"
-        ? new UserGameStreak(command.gameStreak)
-        : undefined,
-      command.membership
-        ? new Membership(
-            new MembershipType(command.membership.type),
-            new MembershipDate(command.membership.startedAt),
-            new MembershipDate(command.membership.expiresAt)
-          )
-        : undefined,
-      command.createdAt ? new UserDate(command.createdAt) : undefined,
-      command.updatedAt ? new UserDate(command.updatedAt) : undefined,
-      command.status ? new UserStatus(command.status) : undefined
+      undefined,
+      undefined,
+      new UserPlainName(command.name),
+      new UserDescription(command.description ?? "")
     );
     const userWithSameId = await this.userRepository.getOneById(newUser.id);
-    const userWithSameUserName = await this.userRepository.getOneByName(
-      newUser.userName
-    );
     if (userWithSameId) {
       throw new Error("User with this ID already exists");
     }
+    const userWithSameUserName = await this.userRepository.getOneByName(
+      newUser.userName
+    );
     if (userWithSameUserName) {
       throw new Error("User with this username already exists");
+    }
+    const userWithSameEmail = await this.userRepository.getOneByEmail(
+      newUser.email
+    );
+    if (userWithSameEmail) {
+      throw new Error("User with this email already exists");
     }
     await this.userRepository.create(newUser);
     return Result.ok<void>();

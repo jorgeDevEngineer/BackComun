@@ -1,15 +1,18 @@
-export class UserType {
-  readonly value: "student" | "teacher" | "personal";
+import { DomainException } from "src/lib/shared/exceptions/domain.exception";
 
-  constructor(value: "student" | "teacher" | "personal") {
-    if (!this.isValid(value)) {
-      throw new Error("Invalid user type");
+export class UserType {
+  readonly value: "STUDENT" | "TEACHER";
+
+  constructor(value: string) {
+    const normalized = value.toUpperCase();
+    if (!this.isValid(normalized)) {
+      throw new DomainException("Invalid user type");
     }
-    this.value = value;
+    this.value = normalized as "STUDENT" | "TEACHER";
   }
 
-  private isValid(value: "student" | "teacher" | "personal"): boolean {
-    const validTypes = ["student", "teacher", "personal"];
+  private isValid(value: string): boolean {
+    const validTypes = ["STUDENT", "TEACHER"];
     return validTypes.includes(value);
   }
 }

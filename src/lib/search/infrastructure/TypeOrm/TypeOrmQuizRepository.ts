@@ -43,7 +43,7 @@ interface MongoQuizDoc {
   title: string;
   description: string;
   visibility: 'public' | 'private';
-  status: 'draft' | 'publish';
+  status: 'draft' | 'published';
   category: string;
   themeId: string;
   coverImageId?: string;
@@ -296,7 +296,7 @@ export class TypeOrmQuizRepository implements QuizRepository {
       const quizzes = await collection
         .find({
           visibility: 'public',
-          status: 'publish',
+          status: 'published',
         })
         .sort({ playCount: -1 })
         .limit(limit)
@@ -341,7 +341,7 @@ export class TypeOrmQuizRepository implements QuizRepository {
       const quizzes = await this.pgRepository.find({
         where: {
           visibility: 'public',
-          status: 'publish',
+          status: 'published',
         },
         order: {
           playCount: 'DESC',

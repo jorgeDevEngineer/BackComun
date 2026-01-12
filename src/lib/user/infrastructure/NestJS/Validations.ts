@@ -1,4 +1,4 @@
-import { IsString, Length } from "class-validator";
+import { IsOptional, IsString } from "class-validator";
 
 export class FindByIdParams {
   @IsString()
@@ -12,41 +12,38 @@ export class FindByUserNameParams {
 
 export class Create {
   @IsString()
-  @Length(6, 20)
-  id: string;
-  @IsString()
-  userName: string;
-  @IsString()
   email: string;
   @IsString()
-  hashedPassword: string;
+  username: string;
   @IsString()
-  userType: "student" | "teacher" | "personal";
+  password: string;
   @IsString()
-  avatarUrl: string;
+  name: string;
   @IsString()
-  status: "Active" | "Blocked";
+  type: "STUDENT" | "TEACHER";
 }
 
 export class Edit {
   @IsString()
-  userName: string;
+  username: string;
   @IsString()
   email: string;
+  @IsOptional()
   @IsString()
-  hashedPassword: string;
+  currentPassword?: string;
+  @IsOptional()
   @IsString()
-  userType: "student" | "teacher" | "personal";
+  newPassword?: string;
+  @IsOptional()
   @IsString()
-  avatarUrl: string;
+  confirmNewPassword?: string;
   @IsString()
   name: string;
+  @IsOptional()
   @IsString()
-  theme: string;
+  description?: string;
   @IsString()
-  language: string;
+  avatarAssetId: string;
   @IsString()
-  gameStreak: number;
-  @IsString()
-  status: "Active" | "Blocked";
+  themePreference: string;
 }

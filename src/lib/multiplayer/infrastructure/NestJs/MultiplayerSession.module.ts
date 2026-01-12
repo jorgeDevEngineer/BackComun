@@ -1,4 +1,4 @@
-import { Module } from "@nestjs/common";
+import { Module, forwardRef } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { TypeOrmMultiplayerSessionEntity } from "../repositories/TypeOrm/TypeOrmMultiplayerSessionEntity";
 import { KahootModule } from "src/lib/kahoot/infrastructure/NestJs/kahoot.module";
@@ -19,10 +19,19 @@ import { TypeOrmUserRepository } from "src/lib/user/infrastructure/TypeOrm/TypeO
 import { PlayerJoinCommandHandler } from "../../application/handlers/PlayerJoinCommandHandler";
 import { MultiplayerSessionsGateway } from "./MultiplayerSession.gateway";
 import { MultiplayerSessionsTracingService } from "./MultiplayerSession.tracing.service";
+import { SyncStateCommandHandler } from "../../application/handlers/SyncStateCommandHandler";
+import { HostStartGameCommandHandler } from "../../application/handlers/HostStartGameCommandHandler";
+import { PlayerSubmitAnswerCommandHandler } from "../../application/handlers/PlayerSubmitAnswerCommandHandler";
+import { HostNextPhaseCommandHandler } from "../../application/handlers/HostNextPhaseCommandHandler";
+import { MultiplayerEvaluationService } from "../../domain/services/MultiplayerEvaluationService";
+import { UpdateSessionProgressAndLeaderboardService } from "../../domain/services/UpdateSessionProgressAndLeaderboardService";
+import { SessionArchiverService } from "../../domain/services/SessionArchiverService";
+import { AuthModule } from "src/lib/auth/infrastructure/NestJs/auth.module";
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([TypeOrmMultiplayerSessionEntity, TypeOrmQuizEntity, TypeOrmUserEntity]), 
+    TypeOrmModule.forFeature([TypeOrmMultiplayerSessionEntity, TypeOrmQuizEntity, TypeOrmUserEntity]),
+    forwardRef(() => AuthModule), 
     KahootModule,
     UserModule,
     SinglePlayerGameModule,
@@ -47,6 +56,22 @@ import { MultiplayerSessionsTracingService } from "./MultiplayerSession.tracing.
     {
       provide: 'PlayerJoinCommandHandler',
       useClass: PlayerJoinCommandHandler,
+    },
+    {
+      provide: 'SyncStateCommandHandler',
+      useClass: SyncStateCommandHandler,
+    },
+    {
+      provide: 'HostStartGameCommandHandler',
+      useClass: HostStartGameCommandHandler,
+    },
+    {
+      provide: 'PlayerSubmitAnswerCommandHandler',
+      useClass: PlayerSubmitAnswerCommandHandler,
+    },
+    {
+      provide: 'HostNextPhaseCommandHandler',
+      useClass: HostNextPhaseCommandHandler,
     },
 
     // Repositorios
@@ -80,6 +105,19 @@ import { MultiplayerSessionsTracingService } from "./MultiplayerSession.tracing.
       provide: 'UuidGenerator',
       useClass: CryptoUuidGenerator,
     },
+    {
+      provide: 'MultiplayerEvaluationService',
+      useClass: MultiplayerEvaluationService,
+    },
+    {
+      provide: 'UpdateSessionProgressAndLeaderboardService',
+      useClass: UpdateSessionProgressAndLeaderboardService,
+    },
+    {
+      provide: 'SessionArchiverService',
+      useClass: SessionArchiverService,
+    },
+    
     
     InMemoryActiveSessionRepository,
     CryptoGeneratePinService,

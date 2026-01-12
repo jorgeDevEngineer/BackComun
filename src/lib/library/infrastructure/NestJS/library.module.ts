@@ -203,9 +203,23 @@ import { MultiplayerSessionHistoryRepository } from "../../domain/port/Multiplay
     },
     {
       provide: "GetAllUserQuizzesQueryHandler",
-      useFactory: (domainService: GetAllUserQuizzesDomainService) =>
-        new GetAllUserQuizzesQueryHandler(domainService),
-      inject: ["GetAllUserQuizzesDomainService"],
+      useFactory: (
+        logger: ILoggerPort,
+        domainService: GetAllUserQuizzesDomainService
+      ) => {
+        const realHandler = new GetAllUserQuizzesQueryHandler(domainService);
+        const withErrorHandling = new ErrorHandlingDecoratorWithEither(
+          realHandler,
+          logger,
+          "GetAllUserQuizzesQueryHandler"
+        );
+        return new LoggingUseCaseDecorator(
+          withErrorHandling,
+          logger,
+          "GetAllUserQuizzesQueryHandler"
+        );
+      },
+      inject: ["ILoggerPort", "GetAllUserQuizzesDomainService"],
     },
     {
       provide: "GetUserInProgressQuizzesDomainService",

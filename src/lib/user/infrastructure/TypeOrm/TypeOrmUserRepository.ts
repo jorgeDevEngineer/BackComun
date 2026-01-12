@@ -8,8 +8,11 @@ import { UserId } from "../../domain/valueObject/UserId";
 import { UserEmail } from "../../domain/valueObject/UserEmail";
 import { UserHashedPassword } from "../../domain/valueObject/UserHashedPassword";
 import { UserType } from "../../domain/valueObject/UserType";
-import { UserAvatarUrl } from "../../domain/valueObject/UserAvatarUrl";
+import { UserAvatarId } from "../../domain/valueObject/UserAvatarId";
 import { UserPlainName } from "../../domain/valueObject/UserPlainName";
+import { UserDescription } from "../../domain/valueObject/UserDescription";
+import { UserRoles } from "../../domain/valueObject/UserRoles";
+import { UserIsAdmin } from "../../domain/valueObject/UserIsAdmin";
 import { UserTheme } from "../../domain/valueObject/UserTheme";
 import { UserLanguage } from "../../domain/valueObject/UserLanguaje";
 import { UserGameStreak } from "../../domain/valueObject/UserGameStreak";
@@ -27,18 +30,22 @@ interface UserMongoDoc {
   userName: string;
   email: string;
   hashedPassword: string;
-  userType: "student" | "teacher" | "personal";
-  avatarUrl: string;
+  userType: "STUDENT" | "TEACHER";
+  avatarAssetId: string;
   name: string;
-  theme: string;
+  description?: string;
+  roles?: ("user" | "admin")[];
+  theme: "LIGHT" | "DARK";
   language: string;
   gameStreak: number;
   createdAt: Date;
   updatedAt: Date;
+  lastUserNameChangeAt?: Date;
   membershipType?: "free" | "premium";
   membershipStartedAt?: Date;
   membershipExpiresAt?: Date;
-  status: "Active" | "Blocked";
+  status: "active" | "blocked";
+  isAdmin?: boolean;
 }
 
 @Injectable()
@@ -60,9 +67,10 @@ export class TypeOrmUserRepository implements UserRepository {
       new UserEmail(entity.email),
       new UserHashedPassword(entity.hashedPassword),
       new UserType(entity.userType),
-      new UserAvatarUrl(entity.avatarUrl),
+      new UserAvatarId(entity.avatarAssetId),
       new UserId(entity.id),
       new UserPlainName(entity.name),
+      new UserDescription(entity.description ?? ""),
       new UserTheme(entity.theme),
       new UserLanguage(entity.language),
       new UserGameStreak(entity.gameStreak),
@@ -73,7 +81,16 @@ export class TypeOrmUserRepository implements UserRepository {
       ),
       new UserDate(entity.createdAt),
       new UserDate(entity.updatedAt),
-      new UserStatus(entity.status)
+      entity.lastUserNameChangeAt
+        ? new UserDate(entity.lastUserNameChangeAt)
+        : undefined,
+      new UserStatus(entity.status),
+      new UserIsAdmin(entity.isAdmin),
+      new UserRoles(
+        (entity as any).roles && (entity as any).roles.length
+          ? (entity as any).roles
+          : ["user"]
+      )
     );
   }
 
@@ -83,9 +100,10 @@ export class TypeOrmUserRepository implements UserRepository {
       new UserEmail(doc.email),
       new UserHashedPassword(doc.hashedPassword),
       new UserType(doc.userType),
-      new UserAvatarUrl(doc.avatarUrl),
+      new UserAvatarId(doc.avatarAssetId),
       new UserId(doc._id),
       new UserPlainName(doc.name),
+      new UserDescription(doc.description ?? ""),
       new UserTheme(doc.theme),
       new UserLanguage(doc.language),
       new UserGameStreak(doc.gameStreak),
@@ -96,7 +114,12 @@ export class TypeOrmUserRepository implements UserRepository {
       ),
       new UserDate(doc.createdAt),
       new UserDate(doc.updatedAt),
-      new UserStatus(doc.status)
+      doc.lastUserNameChangeAt
+        ? new UserDate(doc.lastUserNameChangeAt)
+        : undefined,
+      new UserStatus(doc.status),
+      new UserIsAdmin(doc.isAdmin || false),
+      new UserRoles(doc.roles && doc.roles.length ? doc.roles : ["user"])
     );
   }
 
@@ -107,16 +130,20 @@ export class TypeOrmUserRepository implements UserRepository {
       email: user.email.value,
       hashedPassword: user.hashedPassword.value,
       userType: user.userType.value,
-      avatarUrl: user.avatarUrl.value,
+      avatarAssetId: user.avatarAssetId.value,
       name: user.name.value,
+      description: user.description.value,
+      roles: user.roles.value,
       theme: user.theme.value,
       language: user.language.value,
       gameStreak: user.gameStreak.value,
       membershipType: user.membership.type.value,
       membershipStartedAt: user.membership.startedAt.value,
       membershipExpiresAt: user.membership.expiresAt.value,
+      isAdmin: user.isAdmin.value,
       createdAt: user.createdAt.value,
       updatedAt: user.updatedAt.value,
+      lastUserNameChangeAt: user.lastUserNameChangeAt?.value,
       status: user.status.value,
     };
   }
@@ -169,6 +196,24 @@ export class TypeOrmUserRepository implements UserRepository {
     }
   }
 
+  async getOneByEmail(email: UserEmail): Promise<User | null> {
+    try {
+      const collection = await this.getMongoCollection();
+      const doc = await collection.findOne({ email: email.value });
+      if (!doc) return null;
+      return this.mapMongoToDomain(doc);
+    } catch (error) {
+      console.log(
+        "MongoDB connection not available, falling back to PostgreSQL for getOneByEmail operation."
+      );
+      const user = await this.pgRepository.findOne({
+        where: { email: email.value },
+      });
+      if (!user) return null;
+      return this.mapToDomain(user);
+    }
+  }
+
   async create(user: User): Promise<void> {
     try {
       const collection = await this.getMongoCollection();
@@ -184,16 +229,20 @@ export class TypeOrmUserRepository implements UserRepository {
         email: user.email.value,
         hashedPassword: user.hashedPassword.value,
         userType: user.userType.value,
-        avatarUrl: user.avatarUrl.value,
+        avatarAssetId: user.avatarAssetId.value,
         name: user.name.value,
+        description: user.description.value,
+        roles: user.roles.value,
         theme: user.theme.value,
         language: user.language.value,
         gameStreak: user.gameStreak.value,
+        isAdmin: user.isAdmin.value,
         membershipType: user.membership.type.value,
         membershipStartedAt: user.membership.startedAt.value,
         membershipExpiresAt: user.membership.expiresAt.value,
         createdAt: user.createdAt.value,
         updatedAt: user.updatedAt.value,
+        lastUserNameChangeAt: user.lastUserNameChangeAt?.value,
         status: user.status.value,
       });
       await this.pgRepository.save(userEntity);
@@ -214,15 +263,19 @@ export class TypeOrmUserRepository implements UserRepository {
         email: user.email.value,
         hashedPassword: user.hashedPassword.value,
         userType: user.userType.value,
-        avatarUrl: user.avatarUrl.value,
+        avatarAssetId: user.avatarAssetId.value,
         name: user.name.value,
+        description: user.description.value,
+        roles: user.roles.value,
         theme: user.theme.value,
         language: user.language.value,
         gameStreak: user.gameStreak.value,
+        isAdmin: user.isAdmin.value,
         membershipType: user.membership.type.value,
         membershipStartedAt: user.membership.startedAt.value,
         membershipExpiresAt: user.membership.expiresAt.value,
         updatedAt: user.updatedAt.value,
+        lastUserNameChangeAt: user.lastUserNameChangeAt?.value,
         status: user.status.value,
       });
     }

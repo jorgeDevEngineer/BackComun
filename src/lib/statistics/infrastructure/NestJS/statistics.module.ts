@@ -8,8 +8,8 @@ import { SinglePlayerGameRepository } from "../../domain/port/SinglePlayerReposi
 import { QuizRepository } from "src/lib/kahoot/domain/port/QuizRepository";
 import { GetUserResultsDomainService } from "../../domain/services/GetUserResultsDomainService";
 import { GetUserResultsQueryHandler } from "../../application/Handlers/GetUserResultsQueryHandler";
-import { GetCompletedQuizSummaryDomainService } from "../../domain/services/GetCompletedQuizSummaryDomainService";
-import { GetCompletedQuizSummaryQueryHandler } from "../../application/Handlers/GetCompletedQuizSummaryQueryHandler";
+import { GetSingleCompletedQuizSummaryDomainService } from "../../domain/services/GetSingleCompletedQuizSummaryDomainService";
+import { GetSingleCompletedQuizSummaryQueryHandler } from "../../application/Handlers/GetSingleCompletedQuizSummaryQueryHandler";
 import { LoggerModule } from "src/lib/shared/aspects/logger/infrastructure/logger.module";
 import { LoggingUseCaseDecorator } from "src/lib/shared/aspects/logger/application/decorators/logging.decorator";
 import { ILoggerPort } from "src/lib/shared/aspects/logger/domain/ports/logger.port";
@@ -17,6 +17,11 @@ import { ErrorHandlingDecoratorWithEither } from "src/lib/shared/aspects/error-h
 import { StatisticsRepositoryBuilder } from "../TypeORM/statisticsBuilder";
 import { DynamicMongoAdapter } from "src/lib/shared/infrastructure/database/dynamic-mongo.adapter";
 import { DatabaseModule } from "src/lib/shared/infrastructure/database/database.module";
+import { MultiplayerSessionHistoryRepository } from "../../domain/port/MultiplayerSessionHistoryRepository";
+import { GetSessionReportDomainService } from "../../domain/services/GetSessionReportDomainService";
+import { GetSessionReportQueryHandler } from "../../application/Handlers/GetSessionReportQueryHandler";
+import { GetMultiPlayerCompletedQuizSummaryDomainService } from "../../domain/services/GetMultiPlayerCompletedQuizSummaryDomainService";
+import { GetMultiPlayerCompletedQuizSummaryQueryHandler } from "../../application/Handlers/GetMultiPlayerCompletedQuizSummaryQueryHandler";
 
 @Module({
   imports: [
@@ -31,15 +36,16 @@ import { DatabaseModule } from "src/lib/shared/infrastructure/database/database.
   providers: [
     {
       provide: "StatisticsRepositoryBuilder",
-      useFactory: (dataSource: DataSource) => {
-        const dbType: "postgres" | "mongo" =
-          (process.env.STATISTICS_DB_TYPE as "postgres" | "mongo") ||
-          "postgres";
-        return new StatisticsRepositoryBuilder(dbType, dataSource)
+      useFactory: (
+        dataSource: DataSource,
+        mongoAdapter: DynamicMongoAdapter
+      ) => {
+        return new StatisticsRepositoryBuilder(mongoAdapter, dataSource)
           .withEntity("Quiz")
-          .withEntity("SinglePlayerGame");
+          .withEntity("SinglePlayerGame")
+          .withEntity("MultiplayerSession");
       },
-      inject: [DataSource],
+      inject: [DataSource, DynamicMongoAdapter],
     },
     {
       provide: "QuizRepository",
@@ -52,16 +58,34 @@ import { DatabaseModule } from "src/lib/shared/infrastructure/database/database.
       useFactory: (
         builder: StatisticsRepositoryBuilder,
         mongoAdapter: DynamicMongoAdapter
-      ) => builder.buildSinglePlayerGameRepository(mongoAdapter),
+      ) => builder.buildSinglePlayerGameRepository(),
       inject: ["StatisticsRepositoryBuilder", DynamicMongoAdapter],
+    },
+    {
+      provide: "MultiplayerSessionHistoryRepository",
+      useFactory: (
+        builder: StatisticsRepositoryBuilder,
+        mongoAdapter: DynamicMongoAdapter
+      ) => builder.buildMultiplayerSessionHistoryRepository(),
+      inject: ["StatisticsRepositoryBuilder"],
     },
     {
       provide: "GetUserResultsDomainService",
       useFactory: (
         singleGameRepo: SinglePlayerGameRepository,
-        quizRepo: QuizRepository
-      ) => new GetUserResultsDomainService(singleGameRepo, quizRepo),
-      inject: ["SinglePlayerGameRepository", "QuizRepository"],
+        quizRepo: QuizRepository,
+        multiSessionRepo: MultiplayerSessionHistoryRepository
+      ) =>
+        new GetUserResultsDomainService(
+          singleGameRepo,
+          multiSessionRepo,
+          quizRepo
+        ),
+      inject: [
+        "SinglePlayerGameRepository",
+        "QuizRepository",
+        "MultiplayerSessionHistoryRepository",
+      ],
     },
     {
       provide: "GetUserResultsQueryHandler",
@@ -84,20 +108,26 @@ import { DatabaseModule } from "src/lib/shared/infrastructure/database/database.
       inject: ["ILoggerPort", "GetUserResultsDomainService"],
     },
     {
-      provide: "GetCompletedQuizSummaryDomainService",
+      provide: "GetSingleCompletedQuizSummaryDomainService",
       useFactory: (
         singleGameRepo: SinglePlayerGameRepository,
         quizRepo: QuizRepository
-      ) => new GetCompletedQuizSummaryDomainService(singleGameRepo, quizRepo),
+      ) =>
+        new GetSingleCompletedQuizSummaryDomainService(
+          singleGameRepo,
+          quizRepo
+        ),
       inject: ["SinglePlayerGameRepository", "QuizRepository"],
     },
     {
-      provide: "GetCompletedQuizSummaryQueryHandler",
+      provide: "GetSingleCompletedQuizSummaryQueryHandler",
       useFactory: (
         logger: ILoggerPort,
-        dService: GetCompletedQuizSummaryDomainService
+        dService: GetSingleCompletedQuizSummaryDomainService
       ) => {
-        const realHandler = new GetCompletedQuizSummaryQueryHandler(dService);
+        const realHandler = new GetSingleCompletedQuizSummaryQueryHandler(
+          dService
+        );
         const withErrorHandling = new ErrorHandlingDecoratorWithEither(
           realHandler,
           logger,
@@ -109,7 +139,72 @@ import { DatabaseModule } from "src/lib/shared/infrastructure/database/database.
           "GetCompletedQuizSummaryQueryHandler"
         );
       },
-      inject: ["ILoggerPort", "GetCompletedQuizSummaryDomainService"],
+      inject: ["ILoggerPort", "GetSingleCompletedQuizSummaryDomainService"],
+    },
+    {
+      provide: "GetSessionReportDomainService",
+      useFactory: (
+        multiSessionRepo: MultiplayerSessionHistoryRepository,
+        quizRepo: QuizRepository
+      ) => new GetSessionReportDomainService(multiSessionRepo, quizRepo),
+      inject: ["MultiplayerSessionHistoryRepository", "QuizRepository"],
+    },
+    {
+      provide: "GetSessionReportQueryHandler",
+      useFactory: (
+        logger: ILoggerPort,
+        dService: GetSessionReportDomainService
+      ) => {
+        const realHandler = new GetSessionReportQueryHandler(dService);
+        const withErrorHandling = new ErrorHandlingDecoratorWithEither(
+          realHandler,
+          logger,
+          "GetSessionReportQueryHandler"
+        );
+        return new LoggingUseCaseDecorator(
+          withErrorHandling,
+          logger,
+          "GetSessionReportQueryHandler"
+        );
+      },
+      inject: ["ILoggerPort", "GetSessionReportDomainService"],
+    },
+    {
+      provide: "GetMultiPlayerCompletedQuizSummaryDomainService",
+      useFactory: (
+        multiPlayerRepo: MultiplayerSessionHistoryRepository,
+        quizRepo: QuizRepository
+      ) =>
+        new GetMultiPlayerCompletedQuizSummaryDomainService(
+          multiPlayerRepo,
+          quizRepo
+        ),
+      inject: ["MultiplayerSessionHistoryRepository", "QuizRepository"],
+    },
+    {
+      provide: "GetMultiPlayerCompletedQuizSummaryQueryHandler",
+      useFactory: (
+        logger: ILoggerPort,
+        dService: GetMultiPlayerCompletedQuizSummaryDomainService
+      ) => {
+        const realHandler = new GetMultiPlayerCompletedQuizSummaryQueryHandler(
+          dService
+        );
+        const withErrorHandling = new ErrorHandlingDecoratorWithEither(
+          realHandler,
+          logger,
+          "GetMultiPlayerCompletedQuizSummaryQueryHandler"
+        );
+        return new LoggingUseCaseDecorator(
+          withErrorHandling,
+          logger,
+          "GetMultiPlayerCompletedQuizSummaryQueryHandler"
+        );
+      },
+      inject: [
+        "ILoggerPort",
+        "GetMultiPlayerCompletedQuizSummaryDomainService",
+      ],
     },
   ],
 })

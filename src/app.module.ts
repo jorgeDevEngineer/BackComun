@@ -1,4 +1,4 @@
-import { Module, OnApplicationBootstrap } from "@nestjs/common";
+import { Module, OnApplicationBootstrap, Logger } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { EventEmitterModule } from '@nestjs/event-emitter';
@@ -17,6 +17,7 @@ import { DatabaseModule } from "./lib/shared/infrastructure/database/database.mo
 import { AdminModule } from "./lib/admin/infrastructure/admin.module";
 import { MultiplayerSessionModule } from "./lib/multiplayer/infrastructure/NestJs/MultiplayerSession.module";
 import { DynamicMongoAdapter } from "./lib/shared/infrastructure/database/dynamic-mongo.adapter";
+import { AuthModule } from "./lib/auth/infrastructure/NestJs/auth.module";
 import { NotificationsModule } from "./lib/notifications/infrastructure/NestJs/Notification.module";
 
 @Module({
@@ -62,6 +63,7 @@ import { NotificationsModule } from "./lib/notifications/infrastructure/NestJs/N
     GroupsModule,
     LibraryModule,
     UserModule,
+    AuthModule,
     SinglePlayerGameModule,
     StatisticsModule,
     BackofficeModule,
@@ -76,11 +78,27 @@ export class AppModule implements OnApplicationBootstrap {
   ) {}
 
   async onApplicationBootstrap() {
+    const logger = new Logger(AppModule.name);
     const mongoUrl = this.configService.get<string>("DATABASE_URL_MONGO");
-    await this.mongoAdapter.reconnect("kahoot", mongoUrl);
-    await this.mongoAdapter.reconnect("media", mongoUrl);
-    await this.mongoAdapter.reconnect("user", mongoUrl);
-    await this.mongoAdapter.reconnect("groups", mongoUrl);
-    await this.mongoAdapter.reconnect("notifications", mongoUrl);
+    try {
+      await this.mongoAdapter.reconnect("kahoot", mongoUrl);
+    } catch (error) {
+      logger.error(`Failed to connect kahoot mongo: ${error.message}`);
+    }
+    try {
+      await this.mongoAdapter.reconnect("media", mongoUrl);
+    } catch (error) {
+      logger.error(`Failed to connect media mongo: ${error.message}`);
+    }
+    try {
+      await this.mongoAdapter.reconnect("user", mongoUrl);
+    } catch (error) {
+      logger.error(`Failed to connect user mongo: ${error.message}`);
+    }
+    try {
+      await this.mongoAdapter.reconnect("groups", mongoUrl);
+    } catch (error) {
+      logger.error(`Failed to connect groups mongo: ${error.message}`);
+    }
   }
 }
