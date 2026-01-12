@@ -806,13 +806,43 @@ export class MultiplayerSessionsGateway  implements OnGatewayConnection, OnGatew
                 throw new WsException("FATAL: El HOST no se encuentra conectado a la sala solicitada");
             }
 
-            // 2. Validar autorización del host
-            await this.verifyHostAuthorization(client.data.roomPin, client.data.userId);
+            const roomPin = client.data.roomPin;
+            const userId = client.data.userId;
 
-            // 3. Cerrar sesión según API página 11
-            await this.closeSessionByHost(client.data.roomPin);
+            // 2. Verificar si la sesión existe en el repositorio activo
+            let sessionContext;
+            try {
+                sessionContext = await this.sessionRepository.findByPin(roomPin);
+            } catch (error) {
+                this.logger.warn(`No se encontró sesión activa con PIN: ${roomPin}, puede que ya haya terminado`);
+                // Continuamos de todos modos para cerrar la conexión WebSocket
+            }
 
-            this.logger.debug(`Host cerró sesión exitosamente: ${client.data.roomPin}`);
+            // 3. Si existe la sesión, validar autorización del host
+            if (sessionContext) {
+                const session = sessionContext.session;
+                const hostId = session.getHostId().getValue();
+            
+                if (userId !== hostId) {
+                    throw new WsException('No eres el host autorizado de esta sesión');
+                }
+            } else {
+                // Si no existe en repositorio activo, verificar si es el host registrado en tracing
+                try {
+                    const hostSocketId = this.tracingWsService.getRoomHostSocketId(roomPin);
+                    if (hostSocketId !== client.id) {
+                        throw new WsException('No eres el host autorizado de esta sesión');
+                    }
+                } catch (error) {
+                    this.logger.warn(`No se pudo verificar host en tracing service: ${error.message}`);
+                    // Continuamos de todos modos para cerrar la conexión
+                }
+            }
+
+            // 4. Cerrar sesión según API página 11
+            await this.closeSessionByHost(roomPin);
+
+            this.logger.debug(`Host cerró sesión exitosamente: ${roomPin}`);
 
         } catch (error) {
             this.logger.error(`Error en HOST_END_SESSION para cliente ${client.id}:`, error);
@@ -836,72 +866,46 @@ export class MultiplayerSessionsGateway  implements OnGatewayConnection, OnGatew
     //Metodos de apoyo
 
     private async closeSession(roomPin: string): Promise<void> {
-        this.logger.log(`Cerrando sesión ${roomPin}`);
+        this.logger.log(`Cerrando sesión ${roomPin} por timeout de host`);
 
         try {
-            // 1. Notificar a todos los clientes PRIMERO
+            // 1. Obtener todos los sockets ANTES de limpiar
+            const sockets = await this.wss.in(roomPin).fetchSockets();
+        
+            if (sockets.length === 0) {
+                this.logger.warn(`Sala ${roomPin} ya está vacía. Limpiando rastros.`);
+                this.cleanupSessionResources(roomPin);
+                return;
+            }
+        
+            // 2. Notificar SESSION_CLOSED
             this.wss.to(roomPin).emit(ServerEvents.SESSION_CLOSED, {
                 reason: 'HOST_DISCONNECTED',
                 message: 'El host no se reconectó a tiempo. La sesión ha sido cerrada.'
             });
 
-            // 2. Obtener todos los sockets ANTES de limpiar
-            const sockets = await this.wss.in(roomPin).fetchSockets();
-        
-            // 3. Limpiar timers y timeouts ANTES de desconectar
-            const hostTimer = this.hostDisconnectionTimers.get(roomPin);
-            if (hostTimer) {
-                clearTimeout(hostTimer);
-                this.hostDisconnectionTimers.delete(roomPin);
-            }
+            // 3. Dar tiempo para recibir SESSION_CLOSED
+            await new Promise(resolve => setTimeout(resolve, 1000));
 
-            // Limpiar readyTimeouts para todos los sockets en esta sala
-            sockets.forEach(socket => {
-                const timeout = this.readyTimeouts.get(socket.id);
-                if (timeout) {
-                    clearTimeout(timeout);
-                    this.readyTimeouts.delete(socket.id);
-                }
-            });
+            // 4. Limpiar recursos
+            this.cleanupSessionResources(roomPin);
 
-            // 4. Opcional: Guardar hostSocketId ANTES de limpiar tracing service
-            let hostSocketId = null;
-            try {
-                hostSocketId = this.tracingWsService.getRoomHostSocketId(roomPin);
-            } catch (error) {
-                this.logger.debug(`No se pudo obtener hostSocketId para ${roomPin}, puede que ya haya sido limpiado`);
-            }
-
-            // 5. Limpiar tracing service DESPUÉS de obtener la info necesaria
-            this.tracingWsService.removeRoom(roomPin);
-
-            // 6. Desconectar a todos los sockets de manera controlada
-            // Primero desconectar jugadores (si es necesario notificarlos individualmente)
+            // 5. Desconectar a todos los sockets
             for (const socket of sockets) {
                 try {
-                    if (socket.data.role === SessionRoles.PLAYER) {
-                        // Opcional: enviar evento individual de desconexión
-                        socket.emit(ServerEvents.SESSION_CLOSED, {
-                            reason: 'SESSION_CLOSED_BY_SYSTEM',
-                            message: 'La sesión ha finalizado'
-                        });
-                    }
-                
-                    // Pequeño delay entre desconexiones para evitar saturación
-                    await new Promise(resolve => setTimeout(resolve, 10));
                     socket.disconnect(true);
-                
+                    this.logger.debug(`Socket ${socket.id} desconectado por timeout de host`);
                 } catch (socketError) {
                     this.logger.warn(`Error al desconectar socket ${socket.id}: ${socketError.message}`);
                 }
             }
 
-            this.logger.log(`Sesión ${roomPin} cerrada exitosamente`);
+            this.logger.log(`Sesión ${roomPin} cerrada por timeout exitosamente`);
 
         } catch (error) {
             this.logger.error(`Error al cerrar sesión ${roomPin}: ${error.message}`);
-            // Asegurar limpieza incluso en caso de error
-            this.tracingWsService.removeRoom(roomPin);
+            // Asegurar limpieza
+            this.cleanupSessionResources(roomPin);
         }
     }
 
@@ -912,38 +916,38 @@ export class MultiplayerSessionsGateway  implements OnGatewayConnection, OnGatew
             // 1. Obtener todos los sockets ANTES de cualquier cambio
             const sockets = await this.wss.in(roomPin).fetchSockets();
         
+            if (sockets.length === 0) {
+                this.logger.warn(`Sala ${roomPin} ya está vacía. Limpiando rastros.`);
+                this.cleanupSessionResources(roomPin);
+                return;
+            }
+        
             // 2. Notificar SESSION_CLOSED según API página 17
             this.wss.to(roomPin).emit(ServerEvents.SESSION_CLOSED, {
                 reason: 'HOST_CLOSED_SESSION',
                 message: 'El anfitrión ha finalizado la sesión.'
             });
+        
+            this.logger.debug(`SESSION_CLOSED emitido a sala ${roomPin}`);
 
-            // 3. Limpiar timers
-            const hostTimer = this.hostDisconnectionTimers.get(roomPin);
-            if (hostTimer) {
-                clearTimeout(hostTimer);
-                this.hostDisconnectionTimers.delete(roomPin);
-            }
-
-            // 4. Limpiar readyTimeouts
-            sockets.forEach(socket => {
-                const timeout = this.readyTimeouts.get(socket.id);
-                if (timeout) {
-                    clearTimeout(timeout);
-                    this.readyTimeouts.delete(socket.id);
-                }
-            });
-
-            // 5. Dar tiempo para recibir SESSION_CLOSED (mejor UX)
+            // 3. Dar tiempo para recibir SESSION_CLOSED (mejor UX)
             await new Promise(resolve => setTimeout(resolve, 1000));
 
-            // 6. Limpiar tracing service ANTES de desconectar
-            this.tracingWsService.removeRoom(roomPin);
+            // 4. Limpiar timers y timeouts
+            this.cleanupSessionTimers(roomPin);
 
-            // 7. Desconectar a todos los sockets
+            // 5. Limpiar tracing service ANTES de desconectar
+            try {
+                this.tracingWsService.removeRoom(roomPin);
+            } catch (error) {
+                this.logger.warn(`Error limpiando tracing service para ${roomPin}: ${error.message}`);
+            }
+
+            // 6. Desconectar a todos los sockets
             for (const socket of sockets) {
                 try {
                     socket.disconnect(true);
+                    this.logger.debug(`Socket ${socket.id} desconectado por host_end_session`);
                 } catch (socketError) {
                     this.logger.warn(`Error al desconectar socket ${socket.id}: ${socketError.message}`);
                 }
@@ -954,7 +958,7 @@ export class MultiplayerSessionsGateway  implements OnGatewayConnection, OnGatew
         } catch (error) {
             this.logger.error(`Error al cerrar sesión ${roomPin}: ${error.message}`);
             // Asegurar limpieza
-            this.tracingWsService.removeRoom(roomPin);
+            this.cleanupSessionResources(roomPin);
         }
     }
 
@@ -1039,30 +1043,8 @@ export class MultiplayerSessionsGateway  implements OnGatewayConnection, OnGatew
                 }
             }
         }
-
-        // 4. NO usar setTimeout para SESSION_CLOSED - coordinar mejor
-        // En su lugar, esperar un momento y luego cerrar
-        setTimeout(async () => {
-            try {
-                // Verificar que la sala aún exista
-                const currentSockets = await this.wss.in(roomPin).fetchSockets();
-                if (currentSockets.length > 0) {
-                    this.wss.to(roomPin).emit(ServerEvents.SESSION_CLOSED, {
-                        reason: "GAME_COMPLETED",
-                        message: "El juego ha finalizado"
-                    });
-                    this.logger.debug(`SESSION_CLOSED emitido a sala ${roomPin}`);
-                
-                    // Pequeño delay antes de desconectar
-                    await new Promise(resolve => setTimeout(resolve, 500));
-                
-                    // Llamar a closeSession con control de errores
-                    await this.closeSession(roomPin);
-                }
-            } catch (error) {
-                this.logger.error(`Error en finalización de juego ${roomPin}: ${error.message}`);
-            }
-        }, 1500); // Dar más tiempo para recibir los resultados
+    
+        this.logger.log(`Juego finalizado en sala ${roomPin}. Sesión sigue activa para host_end_session.`); 
     }
 
     private async verifyPin(pin: string): Promise<void> {
@@ -1100,17 +1082,27 @@ export class MultiplayerSessionsGateway  implements OnGatewayConnection, OnGatew
     }
 
     private async verifyHostAuthorization(pin: string, userId: string): Promise<void> {
-        const sessionContext = await this.sessionRepository.findByPin(pin);
-    
-        if (!sessionContext) {
-            throw new WsException(`No se encontró sesión con PIN: ${pin}`);
-        }
-    
-        const session = sessionContext.session;
-        const hostId = session.getHostId().getValue();
-    
-        if (userId !== hostId) {
-            throw new WsException('No eres el host autorizado de esta sesión');
+        try {
+            const sessionContext = await this.sessionRepository.findByPin(pin);
+        
+            if (!sessionContext) {
+                this.logger.warn(`Sesión ${pin} no encontrada en repositorio activo, puede que ya haya terminado`);
+                // No lanzar excepción, permitir que el flujo continúe
+                return;
+            }
+        
+            const session = sessionContext.session;
+            const hostId = session.getHostId().getValue();
+        
+            if (userId !== hostId) {
+                throw new WsException('No eres el host autorizado de esta sesión');
+            }
+        } catch (error) {
+            if (error instanceof WsException) {
+                throw error;
+            }
+            // Otros errores no impiden la operación
+            this.logger.warn(`Error verificando autorización de host: ${error.message}`);
         }
     }
 
@@ -1136,6 +1128,35 @@ export class MultiplayerSessionsGateway  implements OnGatewayConnection, OnGatew
         // Esto no es un error, solo log
             this.logger.debug(`Usuario ${userId} ya está en la sesión ${pin}, permitiendo reconexión`);
 
+        }
+    }
+
+    private cleanupSessionTimers(roomPin: string): void {
+        // Limpiar hostDisconnectionTimers
+        const hostTimer = this.hostDisconnectionTimers.get(roomPin);
+        if (hostTimer) {
+            clearTimeout(hostTimer);
+            this.hostDisconnectionTimers.delete(roomPin);
+        }
+    
+        // Limpiar readyTimeouts para todos los sockets en esta sala
+        for (const [socketId, timeout] of this.readyTimeouts.entries()) {
+            clearTimeout(timeout);
+            this.readyTimeouts.delete(socketId);
+        }
+    }
+
+    private cleanupSessionResources(roomPin: string): void {
+        try {
+            // 1. Limpiar timers
+            this.cleanupSessionTimers(roomPin);
+        
+            // 2. Limpiar tracing service
+            this.tracingWsService.removeRoom(roomPin);
+        
+            this.logger.debug(`Recursos de sesión ${roomPin} limpiados`);
+        } catch (error) {
+            this.logger.warn(`Error limpiando recursos de sesión ${roomPin}: ${error.message}`);
         }
     }
 
