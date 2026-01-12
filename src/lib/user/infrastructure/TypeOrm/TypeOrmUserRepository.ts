@@ -40,6 +40,7 @@ interface UserMongoDoc {
   gameStreak: number;
   createdAt: Date;
   updatedAt: Date;
+  lastUserNameChangeAt?: Date;
   membershipType?: "free" | "premium";
   membershipStartedAt?: Date;
   membershipExpiresAt?: Date;
@@ -80,6 +81,9 @@ export class TypeOrmUserRepository implements UserRepository {
       ),
       new UserDate(entity.createdAt),
       new UserDate(entity.updatedAt),
+      entity.lastUserNameChangeAt
+        ? new UserDate(entity.lastUserNameChangeAt)
+        : undefined,
       new UserStatus(entity.status),
       new UserIsAdmin(entity.isAdmin),
       new UserRoles(
@@ -110,6 +114,9 @@ export class TypeOrmUserRepository implements UserRepository {
       ),
       new UserDate(doc.createdAt),
       new UserDate(doc.updatedAt),
+      doc.lastUserNameChangeAt
+        ? new UserDate(doc.lastUserNameChangeAt)
+        : undefined,
       new UserStatus(doc.status),
       new UserIsAdmin(doc.isAdmin || false),
       new UserRoles(doc.roles && doc.roles.length ? doc.roles : ["user"])
@@ -136,6 +143,7 @@ export class TypeOrmUserRepository implements UserRepository {
       isAdmin: user.isAdmin.value,
       createdAt: user.createdAt.value,
       updatedAt: user.updatedAt.value,
+      lastUserNameChangeAt: user.lastUserNameChangeAt?.value,
       status: user.status.value,
     };
   }
@@ -234,6 +242,7 @@ export class TypeOrmUserRepository implements UserRepository {
         membershipExpiresAt: user.membership.expiresAt.value,
         createdAt: user.createdAt.value,
         updatedAt: user.updatedAt.value,
+        lastUserNameChangeAt: user.lastUserNameChangeAt?.value,
         status: user.status.value,
       });
       await this.pgRepository.save(userEntity);
@@ -266,6 +275,7 @@ export class TypeOrmUserRepository implements UserRepository {
         membershipStartedAt: user.membership.startedAt.value,
         membershipExpiresAt: user.membership.expiresAt.value,
         updatedAt: user.updatedAt.value,
+        lastUserNameChangeAt: user.lastUserNameChangeAt?.value,
         status: user.status.value,
       });
     }

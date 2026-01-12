@@ -20,6 +20,7 @@ import { Either } from "src/lib/shared/Type Helpers/Either";
 import { DomainException } from "src/lib/shared/exceptions/DomainException";
 import { CreateUser } from "../../Parameter Objects/CreateUser";
 import { Result } from "src/lib/shared/Type Helpers/result";
+import { UserPassword } from "../../../domain/valueObject/UserPassword";
 import * as bcrypt from "bcrypt";
 
 export class CreateUserCommandHandler
@@ -28,10 +29,11 @@ export class CreateUserCommandHandler
   constructor(private readonly userRepository: UserRepository) {}
 
   async execute(command: CreateUser): Promise<Result<void>> {
+    const password = new UserPassword(command.password);
     const newUser = new User(
       new UserName(command.userName),
       new UserEmail(command.email),
-      new UserHashedPassword(await bcrypt.hash(command.password, 12)),
+      new UserHashedPassword(await bcrypt.hash(password.value, 12)),
       new UserType(command.userType),
       undefined,
       undefined,
