@@ -1,5 +1,29 @@
+create table groups
+(
+    id                    uuid                                       not null
+        constraint "PK_659d1483316afb28afd3a90646e"
+            primary key,
+    name                  varchar(80)                                not null,
+    description           varchar(300) default ''::character varying not null,
+    "adminId"             uuid                                       not null,
+    "invitationToken"     varchar(255),
+    "invitationExpiresAt" timestamp with time zone,
+    "createdAt"           timestamp    default now()                 not null,
+    "updatedAt"           timestamp    default now()                 not null
+);
+
+alter table groups
+    owner to postgres;
+
 INSERT INTO public.groups (id, name, description, "adminId", "invitationToken", "invitationExpiresAt", "createdAt", "updatedAt") VALUES ('3c37f98a-b4ff-45e8-9ecf-ab25d27cf654', 'Grupo 1', '', '123e4567-e89b-42d3-a456-426614174000', null, null, '2025-12-04 23:04:38.740000', '2025-12-04 23:04:38.740000');
 INSERT INTO public.groups (id, name, description, "adminId", "invitationToken", "invitationExpiresAt", "createdAt", "updatedAt") VALUES ('34ebe02c-45dd-4523-9528-7f64a7f60309', 'Nuevo nombre', 'Nueva descripción para pruebas', '123e4567-e89b-42d3-a456-426614174123', 'fd791d655ffe9af51f8c89668022d5e9', '2025-12-11 23:07:19.961000 +00:00', '2025-12-03 15:14:35.201000', '2025-12-04 23:47:46.364000');
 INSERT INTO public.groups (id, name, description, "adminId", "invitationToken", "invitationExpiresAt", "createdAt", "updatedAt") VALUES ('e9a26ede-9916-4746-8021-fb5ac1688f54', 'Grupo prueba 2', '', '123e4567-e89b-42d3-a456-426614174000', null, null, '2025-12-05 07:03:06.594000', '2025-12-05 07:03:06.594000');
 INSERT INTO public.groups (id, name, description, "adminId", "invitationToken", "invitationExpiresAt", "createdAt", "updatedAt") VALUES ('a994e744-2750-492c-b005-51e689cc3eb2', 'grupo update', 'Nueva descripción para pruebas', '123e4567-e89b-42d3-a456-426614174123', '43cf7d6d3e05261bb646d422e62228aa', '2025-12-12 20:09:32.845000 +00:00', '2025-12-05 20:08:37.401000', '2025-12-05 20:16:17.272000');
 INSERT INTO public.groups (id, name, description, "adminId", "invitationToken", "invitationExpiresAt", "createdAt", "updatedAt") VALUES ('d7bc052d-4d14-4c93-b42a-4cacd9608227', 'Grupo defensa', '', '123e4567-e89b-42d3-a456-426614174000', '054b2d3af8c9c98f6ee79a90829efcda', '2025-12-12 21:09:11.724000 +00:00', '2025-12-05 21:08:37.949000', '2025-12-05 21:12:54.027000');
+INSERT INTO public.groups (id, name, description, "adminId", "invitationToken", "invitationExpiresAt", "createdAt", "updatedAt") VALUES ('31efbfa2-b53f-4db8-a2e5-42d40e9c3aa3', 'Grupo 1', '', '123e4567-e89b-42d3-a456-426614174000', null, null, '2026-01-02 01:18:14.288000', '2026-01-02 01:18:14.288000');
+INSERT INTO public.groups (id, name, description, "adminId", "invitationToken", "invitationExpiresAt", "createdAt", "updatedAt") VALUES ('7a077211-6840-4575-8bcb-697933439f7d', 'Grupo 1', '', '123e4567-e89b-42d3-a456-426614174000', null, null, '2026-01-06 17:38:30.285000', '2026-01-06 17:38:30.285000');
+INSERT INTO public.groups (id, name, description, "adminId", "invitationToken", "invitationExpiresAt", "createdAt", "updatedAt") VALUES ('ff7836bb-3a57-4f4a-b06f-9ec97834bea3', 'prueba cqs 255', 'Nueva descripción para pruebas 23', '123e4567-e89b-42d3-a456-426614174000', 'c58d1435b98d0a069aa78020b844b740', '2026-01-13 19:13:45.181000 +00:00', '2026-01-06 19:12:17.510000', '2026-01-06 19:17:07.488000');
+INSERT INTO public.groups (id, name, description, "adminId", "invitationToken", "invitationExpiresAt", "createdAt", "updatedAt") VALUES ('7c031861-2095-48d9-a301-a5199d8959be', 'Grupo prueba CQS', '', '123e4567-e89b-42d3-a456-426614174000', null, null, '2026-01-08 17:58:11.165000', '2026-01-08 17:58:11.165000');
+INSERT INTO public.groups (id, name, description, "adminId", "invitationToken", "invitationExpiresAt", "createdAt", "updatedAt") VALUES ('275844fa-f3ed-418a-99f4-38466c4692f7', 'Grupo', '', '123e4567-e89b-42d3-a456-426614174000', null, null, '2026-01-08 18:02:24.485000', '2026-01-08 18:02:24.485000');
+INSERT INTO public.groups (id, name, description, "adminId", "invitationToken", "invitationExpiresAt", "createdAt", "updatedAt") VALUES ('e92b2b38-0a37-4279-a1c8-09fcc304fdff', 'Grupo 1', '', '123e4567-e89b-42d3-a456-426614174000', null, null, '2026-01-08 18:04:16.499000', '2026-01-08 18:04:16.499000');
+INSERT INTO public.groups (id, name, description, "adminId", "invitationToken", "invitationExpiresAt", "createdAt", "updatedAt") VALUES ('b0469574-b4af-47b9-b77e-ec9f14137b69', 'prueba 2', 'Nueva descripción para pruebas 23', '123e4567-e89b-42d3-a456-426614174123', 'cb72816593853feb707d447efb78dcff', '2026-01-15 22:13:39.949000 +00:00', '2026-01-08 18:13:31.790000', '2026-01-08 18:17:32.036000');

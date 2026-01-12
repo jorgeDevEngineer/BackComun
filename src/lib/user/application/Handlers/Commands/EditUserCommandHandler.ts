@@ -6,8 +6,11 @@ import { UserName } from "../../../domain/valueObject/UserName";
 import { UserEmail } from "../../../domain/valueObject/UserEmail";
 import { UserHashedPassword } from "../../../domain/valueObject/UserHashedPassword";
 import { UserType } from "../../../domain/valueObject/UserType";
-import { UserAvatarUrl } from "../../../domain/valueObject/UserAvatarUrl";
+import { UserAvatarId } from "../../../domain/valueObject/UserAvatarId";
 import { UserPlainName } from "../../../domain/valueObject/UserPlainName";
+import { UserDescription } from "../../../domain/valueObject/UserDescription";
+import { UserIsAdmin } from "../../../domain/valueObject/UserIsAdmin";
+import { UserRoles } from "../../../domain/valueObject/UserRoles";
 import { UserTheme } from "../../../domain/valueObject/UserTheme";
 import { UserLanguage } from "../../../domain/valueObject/UserLanguaje";
 import { UserGameStreak } from "../../../domain/valueObject/UserGameStreak";
@@ -16,6 +19,7 @@ import { UserStatus } from "../../../domain/valueObject/UserStatus";
 import { IHandler } from "src/lib/shared/IHandler";
 import { EditUser } from "../../Parameter Objects/EditUser";
 import { Result } from "src/lib/shared/Type Helpers/result";
+import { UserPassword } from "../../../domain/valueObject/UserPassword";
 import * as bcrypt from "bcrypt";
 
 export class EditUserCommandHandler
@@ -31,7 +35,7 @@ export class EditUserCommandHandler
       return Result.fail(new UserNotFoundException());
     }
     const userWithSameUserName = await this.userRepository.getOneByName(
-      new UserName(command.userName)
+      new UserName(command.username)
     );
     if (
       userWithSameUserName &&
@@ -40,6 +44,15 @@ export class EditUserCommandHandler
       return Result.fail(
         new Error("That name already belongs to another user")
       );
+    }
+
+    // Domain invariant: enforce annual username change in the aggregate
+    const now = new Date();
+    const newUserNameVo = new UserName(command.username);
+    try {
+      existing.ensureCanChangeUserName(newUserNameVo, now);
+    } catch (err) {
+      return Result.fail(err as Error);
     }
     const userWithSameEmail = await this.userRepository.getOneByEmail(
       new UserEmail(command.email)
@@ -53,21 +66,54 @@ export class EditUserCommandHandler
       );
     }
 
+    // Determine new password or keep existing
+    let newHashedPassword: UserHashedPassword = existing.hashedPassword;
+    if (command.newPassword && command.newPassword.trim().length > 0) {
+      if (!command.currentPassword) {
+        return Result.fail(new Error("Current password is required"));
+      }
+      const matches = await bcrypt.compare(
+        command.currentPassword,
+        existing.hashedPassword.value
+      );
+      if (!matches) {
+        return Result.fail(new Error("Current password is incorrect"));
+      }
+      if (command.newPassword !== command.confirmNewPassword) {
+        return Result.fail(
+          new Error("New password confirmation does not match")
+        );
+      }
+      if (command.newPassword.length < 6) {
+        return Result.fail(
+          new Error("New password must be at least 6 characters")
+        );
+      }
+      const password = new UserPassword(command.newPassword);
+      newHashedPassword = new UserHashedPassword(
+        await bcrypt.hash(password.value, 12)
+      );
+    }
+
     const user = new User(
-      new UserName(command.userName),
+      new UserName(command.username),
       new UserEmail(command.email),
-      new UserHashedPassword(await bcrypt.hash(command.password, 12)),
-      new UserType(command.userType),
-      new UserAvatarUrl(command.avatarUrl),
+      newHashedPassword,
+      existing.userType,
+      new UserAvatarId(command.avatarAssetId),
       new UserId(command.targetUserId),
       new UserPlainName(command.name),
-      new UserTheme(command.theme),
-      new UserLanguage(command.language),
-      new UserGameStreak(command.gameStreak),
+      new UserDescription(command.description ?? existing.description.value),
+      new UserTheme(command.themePreference),
+      existing.language,
+      existing.gameStreak,
       existing.membership,
       existing.createdAt,
-      new UserDate(new Date()),
-      new UserStatus(command.status)
+      new UserDate(now),
+      existing.deriveLastUserNameChangeAt(newUserNameVo, now),
+      existing.status,
+      existing.isAdmin,
+      existing.roles
     );
     await this.userRepository.edit(user);
     return Result.ok(undefined);

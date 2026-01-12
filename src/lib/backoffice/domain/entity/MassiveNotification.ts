@@ -1,4 +1,4 @@
-export class Notification {
+export class MassiveNotification {
   readonly id: string;
   readonly title: string;
   readonly message: string;
@@ -10,7 +10,7 @@ export class Notification {
     message: string,
     userId: string,
   ) {
-    this.id = Notification.generateId();
+    this.id = MassiveNotification.generateId();
     this.title = title;
     this.message = message;
     this.createdAt = new Date();

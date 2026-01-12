@@ -2,15 +2,20 @@ import { UserName } from "../valueObject/UserName";
 import { UserEmail } from "../valueObject/UserEmail";
 import { UserHashedPassword } from "../valueObject/UserHashedPassword";
 import { UserType } from "../valueObject/UserType";
-import { UserAvatarUrl } from "../valueObject/UserAvatarUrl";
+import { UserAvatarId } from "src/lib/user/domain/valueObject/UserAvatarId";
 import { UserTheme } from "../valueObject/UserTheme";
 import { UserLanguage } from "../valueObject/UserLanguaje";
 import { UserGameStreak } from "../valueObject/UserGameStreak";
 import { UserDate } from "../valueObject/UserDate";
 import { UserId } from "../valueObject/UserId";
 import { UserPlainName } from "../valueObject/UserPlainName";
+import { UserDescription } from "../valueObject/UserDescription";
+import { UserRoles } from "../valueObject/UserRoles";
+import { UserIsAdmin } from "../valueObject/UserIsAdmin";
 import { Membership } from "../entity/Membership.js";
 import { UserStatus } from "../valueObject/UserStatus";
+import { de } from "zod/v4/locales";
+import { DomainException } from "src/lib/shared/exceptions/domain.exception";
 
 export class User {
   readonly id: UserId;
@@ -18,39 +23,48 @@ export class User {
   readonly email: UserEmail;
   readonly hashedPassword: UserHashedPassword;
   readonly userType: UserType;
-  readonly avatarUrl: UserAvatarUrl;
+  readonly avatarAssetId: UserAvatarId;
   readonly name: UserPlainName;
+  readonly description: UserDescription;
+  readonly roles: UserRoles;
   readonly theme: UserTheme; // Default: 'light'
   readonly language: UserLanguage; // Default: 'es'
   readonly gameStreak: UserGameStreak; // Default: 0
   membership: Membership;
   readonly createdAt: UserDate;
   updatedAt: UserDate;
+  lastUserNameChangeAt?: UserDate;
   status: UserStatus;
+  readonly isAdmin: UserIsAdmin;
   constructor(
     userName: UserName,
     email: UserEmail,
     hashedPassword: UserHashedPassword,
     userType: UserType,
-    avatarUrl: UserAvatarUrl,
+    avatarAssetId: UserAvatarId,
     id?: UserId,
     name?: UserPlainName,
+    description?: UserDescription,
     theme?: UserTheme,
     language?: UserLanguage,
     gameStreak?: UserGameStreak,
     membership?: Membership,
     createdAt?: UserDate,
     updatedAt?: UserDate,
-    status?: UserStatus
+    lastUserNameChangeAt?: UserDate,
+    status?: UserStatus,
+    isAdmin?: UserIsAdmin,
+    roles?: UserRoles
   ) {
     this.userName = userName;
     this.email = email;
     this.hashedPassword = hashedPassword;
     this.userType = userType;
-    this.avatarUrl = avatarUrl;
+    this.avatarAssetId = avatarAssetId ? avatarAssetId : new UserAvatarId("");
     this.id = id ? id : UserId.generateId();
     this.name = name ? name : new UserPlainName("");
-    this.theme = theme ? theme : new UserTheme("light");
+    this.description = description ? description : new UserDescription("");
+    this.theme = theme ? theme : new UserTheme("LIGHT");
     this.language = language ? language : new UserLanguage("es");
     this.gameStreak = gameStreak ? gameStreak : new UserGameStreak(0);
     this.membership = membership
@@ -58,25 +72,37 @@ export class User {
       : Membership.createFreeMembership();
     this.createdAt = createdAt ? createdAt : new UserDate(new Date());
     this.updatedAt = updatedAt ? updatedAt : new UserDate(this.createdAt.value);
-    this.status = status ? status : new UserStatus("Active");
+    this.lastUserNameChangeAt = lastUserNameChangeAt
+      ? lastUserNameChangeAt
+      : new UserDate(this.createdAt.value);
+    this.status = status ? status : new UserStatus("active");
+    this.isAdmin = isAdmin ? isAdmin : new UserIsAdmin(false);
+    this.roles = roles ? roles : new UserRoles(["user"]);
   }
 
   toPlainObject() {
     return {
       id: this.id.value,
-      userName: this.userName.value,
-      name: this.name.value,
       email: this.email.value,
-      userType: this.userType.value,
-      avatarUrl: this.avatarUrl.value,
-      theme: this.theme.value,
-      language: this.language.value,
-      gameStreak: this.gameStreak.value,
-      membership: this.membership.toPlainObject(),
-      createdAt: this.createdAt.value,
-      updatedAt: this.updatedAt.value,
-      status: this.status.value,
+      username: this.userName.value,
+      type: this.userType.value,
+      state: this.status.value,
+      preferences: {
+        theme: this.theme.value,
+      },
+      userProfileDetails: {
+        name: this.name.value,
+        description: this.description.value,
+        avatarAssetId: this.avatarAssetId.value,
+      },
+      isPremium: this.membership.isPremium(),
     };
+  }
+
+  toPlainObjectResumed() {
+    const result = this.toPlainObject();
+    delete result.preferences;
+    return result;
   }
 
   hasPremiumMembershipEnabled(): boolean {
@@ -91,5 +117,25 @@ export class User {
   enableFreeMembership(): void {
     this.membership = Membership.createFreeMembership();
     this.updatedAt = new UserDate(new Date());
+  }
+
+  canChangeUserName(newName: UserName, now: Date): boolean {
+    if (newName.value === this.userName.value) return true;
+    const last = this.lastUserNameChangeAt?.value || this.createdAt.value;
+    const oneYearMs = 365 * 24 * 60 * 60 * 1000;
+    return now.getTime() - new Date(last).getTime() >= oneYearMs;
+  }
+
+  ensureCanChangeUserName(newName: UserName, now: Date): void {
+    if (!this.canChangeUserName(newName, now)) {
+      throw new DomainException("Username can only be changed once per year");
+    }
+  }
+
+  deriveLastUserNameChangeAt(newName: UserName, now: Date): UserDate {
+    if (newName.value === this.userName.value) {
+      return this.lastUserNameChangeAt!;
+    }
+    return new UserDate(now);
   }
 }

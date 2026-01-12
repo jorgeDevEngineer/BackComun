@@ -1,7 +1,7 @@
-import { Notification } from "../entity/Notification";
+import { MassiveNotification } from "../entity/MassiveNotification";
 
-export interface NotificationRepository {
-    sendNotification(data:{
+export interface MassiveNotificationRepository {
+    sendMassiveNotification(data:{
         title: string;
         message: string;
         userId: string;
@@ -21,7 +21,7 @@ export interface NotificationRepository {
     >;
 
 
-    getNotifications(
+    getMassiveNotifications(
         params: {
             userId?: string;
             limit?: number;

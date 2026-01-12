@@ -1,13 +1,16 @@
 import { QuizQueryParamsDTO } from "../../../infrastructure/DTOs/QuizQueryParamsDTO";
-import { QuizResponse, toQuizResponse } from "../../Response Types/QuizResponse";
-import { UserId as UserIdVO} from "src/lib/kahoot/domain/valueObject/Quiz";
+import {
+  QuizResponse,
+  toQuizResponse,
+} from "../../Response Types/QuizResponse";
+import { UserId as UserIdVO } from "src/lib/kahoot/domain/valueObject/Quiz";
 import { QueryWithPaginationResponse } from "../../Response Types/QueryWithPaginationResponse";
 import { Either } from "src/lib/shared/Type Helpers/Either";
 import { DomainUnexpectedException } from "../../../../shared/exceptions/DomainUnexpectedException";
 import { DomainException } from "../../../../shared/exceptions/DomainException";
 import { GetUserFavoriteQuizzesDomainService } from "../../../domain/services/Queries/GetUserFavoriteQuizzesDomainService";
 import { IHandler } from "src/lib/shared/IHandler";
-import { GetUserQuizzes as GetUserFavoriteQuizzes} from '../../Parameter Objects/GetUserQuizzes';
+import { GetUserQuizzes as GetUserFavoriteQuizzes } from "../../Parameter Objects/GetUserQuizzes";
 import { Injectable } from "@nestjs/common";
 
 /**
@@ -15,13 +18,22 @@ import { Injectable } from "@nestjs/common";
  */
 
 @Injectable()
-export class GetUserFavoriteQuizzesQueryHandler implements IHandler<GetUserFavoriteQuizzes, Either<DomainException, QueryWithPaginationResponse<QuizResponse>>> {
+export class GetUserFavoriteQuizzesQueryHandler
+  implements
+    IHandler<
+      GetUserFavoriteQuizzes,
+      Either<DomainException, QueryWithPaginationResponse<QuizResponse>>
+    >
+{
   constructor(
     private readonly domainService: GetUserFavoriteQuizzesDomainService
   ) {}
 
-  async execute(command: GetUserFavoriteQuizzes)
-    : Promise<Either<DomainException, QueryWithPaginationResponse<QuizResponse>>> {
+  async execute(
+    command: GetUserFavoriteQuizzes
+  ): Promise<
+    Either<DomainException, QueryWithPaginationResponse<QuizResponse>>
+  > {
     try {
       const params = new QuizQueryParamsDTO(command.queryInput);
       const criteria = params.toCriteria();
@@ -34,8 +46,8 @@ export class GetUserFavoriteQuizzesQueryHandler implements IHandler<GetUserFavor
 
       const { quizzes, authors } = result.getRight();
 
-      const data: QuizResponse[] = quizzes.map(quiz => {
-        const author = authors.find(u => u.id.value === quiz.authorId.value)!;
+      const data: QuizResponse[] = quizzes.map((quiz) => {
+        const author = authors.find((u) => u.id.value === quiz.authorId.value)!;
         return toQuizResponse(quiz, author);
       });
 
@@ -53,7 +65,6 @@ export class GetUserFavoriteQuizzesQueryHandler implements IHandler<GetUserFavor
 
       return Either.makeRight(answer);
     } catch (err) {
-      console.error(err);
       return Either.makeLeft(new DomainUnexpectedException(err.message));
     }
   }
