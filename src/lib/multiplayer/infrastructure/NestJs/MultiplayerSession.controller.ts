@@ -72,6 +72,6 @@ export class MultiplayerSessionControler {
           throw new Error("Invalid token");
         }
         return payload.sub;
-      }
+    }
     
 }

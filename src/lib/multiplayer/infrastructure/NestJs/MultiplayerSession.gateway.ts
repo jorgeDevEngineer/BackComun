@@ -10,6 +10,7 @@ import { SyncType } from '../../application/responseDtos/enums/SyncType.enum';
 import { LobbydditionalData, QuestionAdditionalData } from '../../application/responseDtos/SyncStateResponse.dto';
 import { COMMON_ERRORS } from '../../application/handlers/Errors/CommonErrors';
 import { HostNextPhaseType } from '../../application/responseDtos/enums/HostNextPhaseType.enum';
+import { ITokenProvider } from "src/lib/auth/application/providers/ITokenProvider";
 
 //Commands and Handlers
 import { PlayerJoinCommandHandler } from '../../application/handlers/PlayerJoinCommandHandler';
@@ -69,6 +70,9 @@ export class MultiplayerSessionsGateway  implements OnGatewayConnection, OnGatew
         @Inject('HostNextPhaseCommandHandler')
         private readonly hostNextPhaseHandler: HostNextPhaseCommandHandler,
 
+        @Inject("ITokenProvider") 
+        private readonly tokenProvider: ITokenProvider,
+
         private readonly tracingWsService: MultiplayerSessionsTracingService,
     ) {
       this.logger.log(`WebSocket Gateway inicializado en namespace /multiplayer-sessions`);
@@ -95,7 +99,7 @@ export class MultiplayerSessionsGateway  implements OnGatewayConnection, OnGatew
 
             client.data.role = role as SessionRoles;
 
-            client.data.userId = jwt as string; 
+            client.data.userId = await this.getCurrentUserId(jwt as string); 
 
             // 3) Validaciones de Dominio (Asíncronas)
             // Equivalente a: await this.commandBus.execute(new VerifyPinCommand(pin as string));
@@ -103,7 +107,7 @@ export class MultiplayerSessionsGateway  implements OnGatewayConnection, OnGatew
 
             if (validRole === SessionRoles.HOST) {
 
-                await this.verifyHost(pin as string, jwt as string);
+                await this.verifyHost(pin as string, client.data.userId as string);
 
                 // Verificar que no haya ya un host conectado
                 if (this.tracingWsService.roomHasHost(pin as string)) {
@@ -1071,6 +1075,18 @@ export class MultiplayerSessionsGateway  implements OnGatewayConnection, OnGatew
             this.logger.debug(`Usuario ${userId} ya está en la sesión ${pin}, permitiendo reconexión`);
 
         }
+    }
+
+    private async getCurrentUserId(authHeader: string): Promise<string> {
+        const token = authHeader?.replace(/^Bearer\s+/i, "");
+        if (!token) {
+          throw new Error("Token required");
+        }
+        const payload = await this.tokenProvider.validateToken(token);
+        if (!payload || !payload.sub) {
+          throw new Error("Invalid token");
+        }
+        return payload.sub;
     }
 
 }
