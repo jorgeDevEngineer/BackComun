@@ -2,9 +2,9 @@ import { Inject, Injectable } from "@nestjs/common";
 import { Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Collection, Db } from "mongodb";
-import { NotificationRepository } from "../../domain/port/NotificationRepository";
-import { TypeOrmNotificationEntity } from "./TypeOrmNotificationEntity";
-import { Notification } from "../../domain/entity/Notification";
+import { MassiveNotificationRepository } from "../../domain/port/MassiveNotificationRepository";
+import { TypeOrmMassiveNotificationEntity } from "./TypeOrmMassiveNotificationEntity";
+import { MassiveNotification } from "../../domain/entity/MassiveNotification";
 import { NotificationDto } from "../../application/SendNotificationUseCase";
 import { DynamicMongoAdapter } from "../../../shared/infrastructure/database/dynamic-mongo.adapter";
 import { GetNotificationsParamsDto } from "../../application/GetNotificationUseCase";
@@ -15,7 +15,7 @@ import { SendNotificationDto } from "../../application/SendNotificationUseCase";
 import { IAssetUrlResolver } from "src/lib/shared/application/providers/IAssetUrlResolver";
 
 // Interfaz para el documento de MongoDB
-interface MongoNotificationDoc {
+interface MongoMassiveNotificationDoc {
   _id?: string;
   id?: string;
   title: string;
@@ -25,10 +25,10 @@ interface MongoNotificationDoc {
 }
 
 @Injectable()
-export class TypeOrmNotificationRepository implements NotificationRepository {
+export class TypeOrmMassiveNotificationRepository implements MassiveNotificationRepository {
   constructor(
-    @InjectRepository(TypeOrmNotificationEntity)
-    private readonly pgRepository: Repository<TypeOrmNotificationEntity>,
+    @InjectRepository(TypeOrmMassiveNotificationEntity)
+    private readonly pgRepository: Repository<TypeOrmMassiveNotificationEntity>,
     private readonly mongoAdapter: DynamicMongoAdapter,
     @Inject("UserRepository")
     private readonly userRepository: UserRepository,
@@ -40,25 +40,25 @@ export class TypeOrmNotificationRepository implements NotificationRepository {
    * Obtiene la colección de notificaciones de MongoDB para el módulo 'backoffice'
    */
   private async getMongoCollection(): Promise<
-    Collection<MongoNotificationDoc>
+    Collection<MongoMassiveNotificationDoc>
   > {
     const db: Db = await this.mongoAdapter.getConnection("backoffice");
-    return db.collection<MongoNotificationDoc>("notifications");
+    return db.collection<MongoMassiveNotificationDoc>("massivenotifications");
   }
 
   private mapToDomain(
-    entity: TypeOrmNotificationEntity | MongoNotificationDoc
-  ): Notification {
-    const notificationId = entity.id || (entity as MongoNotificationDoc)._id;
+    entity: TypeOrmMassiveNotificationEntity | MongoMassiveNotificationDoc
+  ): MassiveNotification {
+    const massiveNotificationId = entity.id || (entity as MongoMassiveNotificationDoc)._id;
     const createdAt =
       typeof entity.createdAt === "string"
         ? new Date(entity.createdAt)
         : entity.createdAt;
-    return new Notification(entity.title, entity.message, entity.userId);
+    return new MassiveNotification(entity.title, entity.message, entity.userId);
   }
 
-  async sendNotification(data: NotificationDto): Promise<SendNotificationDto> {
-    const domainNotification = new Notification(
+  async sendMassiveNotification(data: NotificationDto): Promise<SendNotificationDto> {
+    const domainNotification = new MassiveNotification(
       data.title,
       data.message,
       data.userId
@@ -130,7 +130,7 @@ export class TypeOrmNotificationRepository implements NotificationRepository {
     }
   }
 
-  async getNotifications(
+  async getMassiveNotifications(
     params: GetNotificationsParamsDto
   ): Promise<GetNotificationsResultDto> {
     try {
