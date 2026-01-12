@@ -142,10 +142,10 @@ export class SinglePlayerGameController {
           throw new Error("Token required");
         }
         const payload = await this.tokenProvider.validateToken(token);
-        if (!payload || !payload.sub) {
+        if (!payload || !payload.id) {
           throw new Error("Invalid token");
         }
-        return payload.sub;
+        return payload.id;
       }
 
 }
