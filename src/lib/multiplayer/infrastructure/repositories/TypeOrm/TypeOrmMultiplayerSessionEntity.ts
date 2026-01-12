@@ -49,7 +49,7 @@ interface MultiplayerQuestionResultJSON {
     answers: MultiplayerAnswerJSON[];
 }
 
-@Entity('multiplayerSessions')
+@Entity('multiplayersessions')
 export class TypeOrmMultiplayerSessionEntity {
 
     @PrimaryColumn()
