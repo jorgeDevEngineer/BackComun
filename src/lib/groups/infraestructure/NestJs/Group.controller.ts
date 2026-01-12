@@ -9,15 +9,19 @@ import {
   Patch,
   Post,
   Req,
-  UseGuards
+  UseGuards,
+  NotFoundException,
+  BadRequestException,
+  ForbiddenException,
+  InternalServerErrorException,
 } from "@nestjs/common";
-import { query, Request } from "express";
+import { Request } from "express";
 
 import { FakeCurrentUserGuard } from "./FakeCurrentUser.guard";
 
 import { CreateGroupCommand } from "../../application/parameterObjects/CreateGroupCommand";
 import { CreateGroupCommandHandler } from "../../application/Handlers/commands/CreateGroupCommandHandler";
-import { UpdateGroupDetailsCommandHandler} from "../../application/Handlers/commands/UpdateGroupDetailsCommandHandler";
+import { UpdateGroupDetailsCommandHandler } from "../../application/Handlers/commands/UpdateGroupDetailsCommandHandler";
 import { UpdateGroupDetailsCommand } from "../../application/parameterObjects/UpdateGroupDetailsCommand";
 import { JoinGroupByInvitationCommand } from "../../application/parameterObjects/JoinGroupByInvitationCommand";
 import { JoinGroupByInvitationCommandHandler } from "../../application/Handlers/commands/JoinGroupByInvitationCommandHandler";
@@ -30,7 +34,7 @@ import { RemoveGroupMemberCommandHandler } from "../../application/Handlers/comm
 import { TransferGroupAdminCommand } from "../../application/parameterObjects/TransferGroupAdminCommand";
 import { TransferGroupAdminCommandHandler } from "../../application/Handlers/commands/TransferGroupAdminCommandHandler";
 import { AssignQuizToGroupCommand } from "../../application/parameterObjects/AssignQuizToGroupCommand";
-import { AssignQuizToGroupCommandHandler } from "../../application/Handlers/commands/AssignQuizToGroupCommandHandler"; 
+import { AssignQuizToGroupCommandHandler } from "../../application/Handlers/commands/AssignQuizToGroupCommandHandler";
 import { GetUserGroupsQuery } from "../../application/parameterObjects/GetUserGroupsQuery";
 import { GetUserGroupsQueryHandler } from "../../application/Handlers/queries/GetUserGroupsQueryHandler";
 import { GetGroupMembersQuery } from "../../application/parameterObjects/GetGroupMembersQuery";
@@ -44,14 +48,14 @@ import { GetGroupLeaderboardQueryHandler } from "../../application/Handlers/quer
 import { GetGroupQuizLeaderboardQuery } from "../../application/parameterObjects/GetGroupQuizLeaderboarQuery";
 import { GetGroupQuizLeaderboardQueryHandler } from "../../application/Handlers/queries/GetGroupQuizLeaderboardQueryHandler";
 
-import { CreateGroupRequestDto } from "../../application/dtos/GroupRequest.dto";
-import { CreateGroupResponseDto } from "../../application/dtos/GroupResponse.dto";
+import { CreateGroupRequestDto, AssignQuizToGroupRequestDto } from "../../application/dtos/GroupRequest.dto";
+import { CreateGroupResponseDto, AssignQuizToGroupResponseDto } from "../../application/dtos/GroupResponse.dto";
 
-import { AssignQuizToGroupRequestDto } from "../../application/dtos/GroupRequest.dto";
-import { AssignQuizToGroupResponseDto } from "../../application/dtos/GroupResponse.dto";
-
-
-
+import { Either } from "src/lib/shared/Type Helpers/Either";
+import { DomainException } from "src/lib/shared/exceptions/DomainException";
+import { GroupNotFoundError } from "src/lib/shared/exceptions/GroupNotFoundError";
+import { UserNotMemberOfGroupError } from "../../../shared/exceptions/NotMemberGroupError";
+import { GroupBusinessException } from "src/lib/shared/exceptions/GroupGenException";
 
 @Controller("groups")
 @UseGuards(FakeCurrentUserGuard)
@@ -81,18 +85,39 @@ export class GroupsController {
     return user.id;
   }
 
+  // --- MÉTODO HELPER PARA DESEMPAQUETAR EITHER ---
+  private handleResult<T>(result: Either<DomainException, T>): T {
+    if (result.isLeft()) {
+      const error = result.getLeft();
+      
+      if (error instanceof GroupNotFoundError) {
+        throw new NotFoundException(error.message);
+      }
+      if (error instanceof UserNotMemberOfGroupError) {
+        throw new ForbiddenException(error.message);
+      }
+      if (error instanceof GroupBusinessException) {
+        throw new BadRequestException(error.message);
+      }      
+      throw new InternalServerErrorException(error.message);
+    }    
+    return result.getRight();
+  }
+
+  // --------------------------------------------------------
+  // ENDPOINTS
+  // --------------------------------------------------------
+
   @Post()
   @HttpCode(HttpStatus.CREATED)
   async createGroup(
     @Body() body: CreateGroupRequestDto,
     @Req() req: Request,
-  ): Promise<CreateGroupResponseDto> {  
+  ): Promise<CreateGroupResponseDto> {
     const currentUserId = this.getCurrentUserId(req);
     const command = new CreateGroupCommand(body.name, currentUserId);
-
-    return this.createGroupHandler.execute(command);
-}
-
+        return this.createGroupHandler.execute(command);
+  }
 
   @Post(":groupId/quizzes")
   @HttpCode(HttpStatus.CREATED)
@@ -104,69 +129,54 @@ export class GroupsController {
     const currentUserId = this.getCurrentUserId(req);
 
     if (!body.availableUntil) {
-      throw new Error("es necesario proporcionar availableUntil");
+      throw new BadRequestException("es necesario proporcionar availableUntil");
     }
     const availableUntil = new Date(body.availableUntil);
+    
     const command = new AssignQuizToGroupCommand(
       groupId,
       body.quizId,
       currentUserId,
       availableUntil,
     );
+    
     const result = await this.assignQuizToGroupCommandHandler.execute(command);
-    if (result.isLeft()) {
-      throw result.getLeft();
-    }
-    return result.getRight();
-}
-
-@Get(':groupId/quizzes')
-async getAssignedQuizzes(
-  @Param('groupId') groupId: string,
-  @Req() req: any,
-) {
-  const currentUserId = this.getCurrentUserId(req);
-  const query = new GetGroupQuizzesQuery(groupId, currentUserId);
-  const result = await this.getGroupAssignedQuizzesQueryHandler.execute(query);
-  if (result.isLeft()) {
-    throw result.getLeft();
+    return this.handleResult(result);
   }
-  return result.getRight();
-}
+
+  @Get(':groupId/quizzes')
+  async getAssignedQuizzes(
+    @Param('groupId') groupId: string,
+    @Req() req: any,
+  ) {
+    const currentUserId = this.getCurrentUserId(req);
+    const query = new GetGroupQuizzesQuery(groupId, currentUserId);
+    const result = await this.getGroupAssignedQuizzesQueryHandler.execute(query);
+    return this.handleResult(result);
+  }
 
   @Get()
   async getMyGroups(@Req() req: Request) {
     const currentUserId = this.getCurrentUserId(req);
     const query = new GetUserGroupsQuery(currentUserId);
     const result = await this.getUserGroupsQueryHandler.execute(query);
-    if (result.isLeft()) {
-      throw result.getLeft();
-    }
-    return result.getRight();
+    return this.handleResult(result);
   }
 
   @Get(":id")
   async getGroupDetail(@Param("id") id: string, @Req() req: Request) {
     const currentUserId = this.getCurrentUserId(req);
     const query = new GetGroupDetailsQuery(id, currentUserId);
-
     const result = await this.getGroupDetailsQueryHandler.execute(query);
-    if (result.isLeft()) {
-      throw result.getLeft();
-    }
-    return result.getRight();
+    return this.handleResult(result);
   }
-
 
   @Get(":id/members")
   async getGroupmembers(@Param("id") id: string, @Req() req: Request) {
     const currentUserId = this.getCurrentUserId(req);
     const query = new GetGroupMembersQuery(id, currentUserId);
     const result = await this.getGroupMembersQueryHandler.execute(query);
-    if (result.isLeft()) {
-      throw result.getLeft();
-    }
-    return result.getRight();
+    return this.handleResult(result);
   }
 
   @Post(":id/invitation")
@@ -177,10 +187,7 @@ async getAssignedQuizzes(
       currentUserId,
     );
     const result = await this.generateGroupInvitationHandler.execute(command);
-    if (result.isLeft()) {
-      throw result.getLeft();
-    }
-    return result.getRight();
+    return this.handleResult(result);
   }
 
   @Post("join")
@@ -194,12 +201,8 @@ async getAssignedQuizzes(
       currentUserId,
     );
     const result = await this.joinGroupByInvitationHandler.execute(command);
-    if (result.isLeft()) {
-      throw result.getLeft();
-    }
-    return result.getRight();
+    return this.handleResult(result);
   }
-
 
   @Post(":id/leave")
   async leaveGroup(@Param("id") id: string, @Req() req: Request) {
@@ -209,12 +212,8 @@ async getAssignedQuizzes(
       currentUserId,
     );
     const result = await this.leaveGroupCommandHandler.execute(command);
-    if (result.isLeft()) {
-      throw result.getLeft();
-    }
-    return result.getRight();
+    return this.handleResult(result);
   }
-
 
   @Delete(":id/members/:memberId")
   async removeMember(
@@ -229,12 +228,8 @@ async getAssignedQuizzes(
       currentUserId,
     );
     const result = await this.removeGroupMemberCommandHandler.execute(command);
-    if (result.isLeft()) {
-      throw result.getLeft();
-    }
-    return result.getRight();
+    return this.handleResult(result);
   }
-
 
   @Patch(":id")
   async updateGroupInfo(
@@ -250,12 +245,8 @@ async getAssignedQuizzes(
       body.description,
     );
     const result = await this.updateGroupDetailsHandler.execute(command);
-    if (result.isLeft()) {
-      throw result.getLeft();
-    }
-    return result.getRight();
+    return this.handleResult(result);
   }
-
 
   @Post(":id/transfer-admin")
   async transferAdmin(
@@ -270,41 +261,35 @@ async getAssignedQuizzes(
       body.newAdminUserId,
     );
     const result = await this.transferGroupAdminCommandHandler.execute(command);
-    if (result.isLeft()) {
-      throw result.getLeft();
-    }
-    return result.getRight();
+    return this.handleResult(result);
   }
 
   @Get(':groupId/leaderboard')
-async getGroupLeaderboard(
-  @Param('groupId') groupId: string,
-  @Req() req: Request,
-) {
-  const userId = this.getCurrentUserId(req);
-  const query = new GetGroupLeaderboardQuery(groupId, userId);
-  const result = await this.getGroupLeaderboardQueryHandler.execute(query);
-  if (result.isLeft()) {
-    throw result.getLeft();
+  async getGroupLeaderboard(
+    @Param('groupId') groupId: string,
+    @Req() req: Request,
+  ) {
+    const userId = this.getCurrentUserId(req);
+    const query = new GetGroupLeaderboardQuery(groupId, userId);
+    const result = await this.getGroupLeaderboardQueryHandler.execute(query);
+    return this.handleResult(result);
   }
-  return result.getRight();
+
+  @Get(":groupId/quizzes/:quizId/leaderboard")
+  async getGroupQuizLeaderboard(
+    @Param("groupId") groupId: string,
+    @Param("quizId") quizId: string,
+    @Req() req: Request,
+  ) {
+    const userId = this.getCurrentUserId(req);
+    const query = new GetGroupQuizLeaderboardQuery(
+      groupId,
+      quizId,
+      userId,
+    );
+    return await this.getGroupQuizLeaderboardQueryHandler.execute(query);
+  }
 }
 
-@Get(":groupId/quizzes/:quizId/leaderboard")
-async getGroupQuizLeaderboard(
-  @Param("groupId") groupId: string,
-  @Param("quizId") quizId: string,
-  @Req() req: Request,
-) {
-  const userId = this.getCurrentUserId(req);
-  const query = new GetGroupQuizLeaderboardQuery(
-    groupId,
-    quizId,
-    userId,
-  );
-  return await this.getGroupQuizLeaderboardQueryHandler.execute(query
-  );
-}
 
-}
 

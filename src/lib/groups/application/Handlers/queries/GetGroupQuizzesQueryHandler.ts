@@ -1,17 +1,16 @@
 import { IHandler } from "src/lib/shared/IHandler";
 import { Either } from "src/lib/shared/Type Helpers/Either";
 import { DomainException } from "src/lib/shared/exceptions/DomainException";
-import { DomainUnexpectedException } from "src/lib/shared/exceptions/DomainUnexpectedException";
 import { GroupNotFoundError } from "src/lib/shared/exceptions/GroupNotFoundError";
+import { UserNotMemberOfGroupError } from "../../../../shared/exceptions/NotMemberGroupError";
 
 import { GetGroupQuizzesQuery } from "../../parameterObjects/GetGroupQuizzesQuery";
 import { GetGroupAssignedQuizzesResponseDto } from "../../dtos/GroupResponse.dto";
 
-import { UserNotMemberOfGroupError } from "../../../../shared/exceptions/NotMemberGroupError";
-
 import { GroupRepository } from "../../../domain/port/GroupRepository";
 import { GroupId } from "../../../domain/valueObject/GroupId";
 import { UserId } from "src/lib/user/domain/valueObject/UserId";
+import { GameProgressStatus } from "src/lib/singlePlayerGame/domain/valueObjects/SinglePlayerGameVOs";
 
 export class GetGroupQuizzesQueryHandler
   implements IHandler<GetGroupQuizzesQuery, Either<DomainException, GetGroupAssignedQuizzesResponseDto>>
@@ -19,31 +18,47 @@ export class GetGroupQuizzesQueryHandler
   constructor(private readonly groupRepository: GroupRepository) {}
 
   async execute(query: GetGroupQuizzesQuery): Promise<Either<DomainException, GetGroupAssignedQuizzesResponseDto>> {
-    try {
+    
     const groupId = GroupId.of(query.groupId);
     const currentUserId = new UserId(query.currentUserId);
 
     const groupOptional = await this.groupRepository.findById(groupId);
-    if (!groupOptional.hasValue()) return Either.makeLeft(new GroupNotFoundError(query.groupId));
-
+    if (!groupOptional.hasValue()) {
+      return Either.makeLeft(new GroupNotFoundError(query.groupId));
+    }
     const group = groupOptional.getValue();
-    const plain = group.toPlainObject();
-    const isMember = plain.members.some(m => m.userId === currentUserId.value);
-    if (!isMember) return Either.makeLeft(new UserNotMemberOfGroupError(currentUserId.value, groupId.value));
+
+    const isMember = group.members.some(m => m.userId.value === currentUserId.value);
+    if (!isMember) {
+      return Either.makeLeft(new UserNotMemberOfGroupError(currentUserId.value, groupId.value));
+    }
 
     const assignments = await this.groupRepository.findAssignmentsByGroupId(groupId);
     const quizIds = [...new Set(assignments.map(a => a.quizId))];
 
-    const quizzes = await this.groupRepository.findQuizzesBasicByIds(quizIds);
-    const quizTitleMap = new Map(quizzes.map(q => [q.id, q.title]));
+    // Se usa 'as any' porque GroupRepository no debería exponer esto en su interfaz
+    let quizzes: any[] = [];
+    if (quizIds.length > 0) {
+      quizzes = await (this.groupRepository as any).quizRepo.find({
+        where: { id: quizIds }, 
+        select: { id: true, title: true }
+      });
+    }
+    const quizTitleMap = new Map(quizzes.map((q: any) => [q.id, q.title]));
 
-    const completedAttempts = await this.groupRepository.findCompletedAttemptsByUserAndQuizIds(
-      currentUserId.value,
-      quizIds,
-    );
+    let completedAttempts: any[] = [];
+    if (quizIds.length > 0) {
+      completedAttempts = await (this.groupRepository as any).gameRepo.find({
+        where: {
+          playerId: currentUserId.value,
+          quizId: quizIds,
+          status: GameProgressStatus.COMPLETED,
+        },
+        order: { startedAt: "DESC" },
+      });
+    }
 
-    // Agrupar attempts por quizId 
-    const attemptsByQuiz = new Map<string, typeof completedAttempts>();
+    const attemptsByQuiz = new Map<string, any[]>();
     for (const at of completedAttempts) {
       const arr = attemptsByQuiz.get(at.quizId) ?? [];
       arr.push(at);
@@ -53,12 +68,12 @@ export class GetGroupQuizzesQueryHandler
     const data = assignments.map(a => {
       const effectiveAssignedAt = a.availableFrom ?? a.createdAt;
 
+      // Filtramos intentos hechos DESPUÉS de la asignación
       const candidates = (attemptsByQuiz.get(a.quizId) ?? [])
-        .filter(at => at.startedAt >= effectiveAssignedAt)
-        .sort((x, y) => x.startedAt.getTime() - y.startedAt.getTime());
+        .filter((at: any) => at.startedAt >= effectiveAssignedAt)
+        .sort((x: any, y: any) => x.startedAt.getTime() - y.startedAt.getTime());
 
       const firstCompletedAfterAssign = candidates[0];
-
       const status: "PENDING" | "COMPLETED" = firstCompletedAfterAssign ? "COMPLETED" : "PENDING";
 
       return {
@@ -74,13 +89,10 @@ export class GetGroupQuizzesQueryHandler
               completedAt: firstCompletedAfterAssign.completedAt,
             }
           : null,
-        leaderboard: [], // Por implementar
+        leaderboard: [], // TODO: Por implementar
       };
     });
 
     return Either.makeRight({ data });
-    } catch (e) { 
-      return Either.makeLeft(new DomainUnexpectedException(e.message));
-    }
   }
 }
