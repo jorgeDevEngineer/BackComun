@@ -6,6 +6,7 @@ import { UserId } from "../domain/valueObject/UserId";
 import { BadRequestException } from "@nestjs/common";
 import { UnauthorizedException } from "@nestjs/common";
 import { SendMailService } from "../domain/port/SendMailService";
+import { ITokenProvider } from "src/lib/auth/application/providers/ITokenProvider";
 export interface NotificationDto {
   title: string;
   message: string;
@@ -36,20 +37,37 @@ export class SendNotificationUseCase {
     @Inject("UserRepository")
     private readonly userRepository: UserRepository,
     @Inject("SendMailService")
-    private readonly sendMailService: SendMailService
+    private readonly sendMailService: SendMailService,
+    @Inject("ITokenProvider")
+    private readonly tokenProvider: ITokenProvider,
   ) {}
 
   async run(
-    userheader: string,
-    data: NotificationDto
-  ): Promise<SendNotificationDto> {
-    const user = await this.userRepository.getOneById(new UserId(userheader));
-    if (!user) {
-      throw new BadRequestException("User not found");
+    auth: string,
+    body: {
+      title: string;
+      message: string;
+      filters: {
+        toAdmins: boolean;
+        toRegularUsers: boolean;
+      }
     }
+  ): Promise<SendNotificationDto> {
+    const token = await this.tokenProvider.validateToken(auth);
+    if (!token) {
+      throw new BadRequestException("Invalid token");
+    }
+    const user = await this.userRepository.getOneById(new UserId(token.id));
     if (!user.isAdmin) {
       throw new UnauthorizedException("Unauthorized");
     }
+    const data: NotificationDto = {
+      title: body.title,
+      message: body.message,
+      userId: user.id.value,
+      filters: body.filters,
+    };
+
     const result = await this.massiveNotificationRepository.sendMassiveNotification(data);
     if (data.filters.toAdmins) {
       this.userRepository.getEmailAdmin().then((emails) => {
