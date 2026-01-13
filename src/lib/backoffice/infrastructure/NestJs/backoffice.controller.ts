@@ -13,7 +13,6 @@ import {
     Body,
     BadRequestException,
   } from '@nestjs/common';
-  import { IsString, Length } from 'class-validator';
   import { SearchUsersUseCase } from '../../application/SearchUsersUseCase';
   import { BlockUserUseCase } from '../../application/BlockUserUseCase';
   import { UnblockUserUseCase } from '../../application/UnblockUserUseCase';
@@ -24,11 +23,7 @@ import {
   import { GetNotificationsUseCase } from '../../application/GetNotificationUseCase';
   
 
-export class FindOneParams {
-    @IsString()
-    @Length(5, 255)
-    id: string;
- }
+
 
 @Controller('backoffice')
 export class BackofficeController {
@@ -45,7 +40,7 @@ export class BackofficeController {
 
     @Get('users')
     async searchUser(
-        @Headers('userId') userId: string,
+        @Headers('authorization') auth: string,
         @Query('q') q?: string,
         @Query('limit', new DefaultValuePipe(10)) limit?: number,
         @Query('page', new DefaultValuePipe(1)) page?: number,
@@ -53,7 +48,7 @@ export class BackofficeController {
         @Query('order', new DefaultValuePipe('desc')) order: 'asc' | 'desc' = 'desc'
     ) {
         try {
-            const result = await this.searchUsersUseCase.run(userId, { 
+            const result = await this.searchUsersUseCase.run(auth, { 
                 q, 
                 limit, 
                 page, 
@@ -69,11 +64,11 @@ export class BackofficeController {
 
     @Patch('blockUser/:userId')
     async blockUser(
-        @Headers('user') userIdHeader: string,
+        @Headers('authorization') auth: string,
         @Param('userId') userId: string,
     ) {
         try {
-            const result = await this.blockUserUseCase.run(userIdHeader, userId);
+            const result = await this.blockUserUseCase.run(auth, userId);
             return result;
         } catch (e) {
             throw new InternalServerErrorException(e.message);
@@ -82,11 +77,11 @@ export class BackofficeController {
 
     @Patch('unblockUser/:userId')
     async unblockUser(
-        @Headers('user') userIdHeader: string,
+        @Headers('authorization') auth: string,
         @Param('userId') userId: string,
     ) {
         try {
-            const result = await this.UnblockUserUseCase.run(userIdHeader, userId);
+            const result = await this.UnblockUserUseCase.run(auth, userId);
             return result;
         } catch (e) {
             throw new InternalServerErrorException(e.message);
@@ -95,11 +90,11 @@ export class BackofficeController {
 
     @Delete('user/:userId')
     async deleteUser(
-        @Headers('user') userIdHeader: string,
+        @Headers('authorization') auth: string,
         @Param('userId') userId: string,
     ) {
         try {
-            const result = await this.deleteUserUseCase.run(userIdHeader, userId);
+            const result = await this.deleteUserUseCase.run(auth, userId);
             return result;
         } catch (e) {
             throw new InternalServerErrorException(e.message);
@@ -108,11 +103,11 @@ export class BackofficeController {
 
     @Patch('giveAdmin/:userId')
     async giveAdminRole(
-        @Headers('user') userIdHeader: string,
+        @Headers('authorization') auth: string,
         @Param('userId') userId: string,
     ) {
         try {
-            const result = await this.giveAdminRoleUseCase.run(userIdHeader, userId);
+            const result = await this.giveAdminRoleUseCase.run(auth, userId);
             return result;
         } catch (e) {
             throw new InternalServerErrorException(e.message);
@@ -121,11 +116,11 @@ export class BackofficeController {
 
     @Patch('removeAdmin/:userId')
     async removeAdminRole(
-        @Headers('user') userIdHeader: string,
+        @Headers('authorization') auth: string,
         @Param('userId') userId: string,
     ) {
         try {
-            const result = await this.removeAdminRoleUseCase.run(userIdHeader, userId);
+            const result = await this.removeAdminRoleUseCase.run(auth, userId);
             return result;
         } catch (e) {
             throw new InternalServerErrorException(e.message);
@@ -134,7 +129,7 @@ export class BackofficeController {
 
     @Post('massNotifications')
     async sendNotification(
-        @Headers('user') userIdHeader: string,
+        @Headers('authorization') auth: string,
         @Body() body: {
             title: string;
             message: string;
@@ -145,10 +140,9 @@ export class BackofficeController {
         },
     ) {
         try {
-            const result = await this.sendNotificationUseCase.run(userIdHeader, {
+            const result = await this.sendNotificationUseCase.run(auth, {
                 title: body.title,
                 message: body.message,
-                userId: userIdHeader,
                 filters: body.filters,
             });
             return result;
@@ -159,7 +153,7 @@ export class BackofficeController {
 
     @Get('massNotifications')
     async getNotifications(
-        @Headers('user') userIdHeader: string,
+        @Headers('authorization') auth: string,
         @Query('userId') userId?: string,
         @Query('limit', new DefaultValuePipe(10)) limit?: number,
         @Query('page', new DefaultValuePipe(1)) page?: number,
@@ -167,7 +161,7 @@ export class BackofficeController {
         @Query('order', new DefaultValuePipe('desc')) order: 'asc' | 'desc' = 'desc'
     ) {
         try {
-            const result = await this.getNotificationsUseCase.run(userIdHeader, {
+            const result = await this.getNotificationsUseCase.run(auth, {
                 userId,
                 limit,
                 page,
