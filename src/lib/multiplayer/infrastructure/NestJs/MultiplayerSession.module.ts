@@ -133,6 +133,7 @@ import { AuthModule } from "src/lib/auth/infrastructure/NestJs/auth.module";
     'UuidGenerator',
     'QuizRepository',
     'IPinRepository',
+    TypeOrmModule,
   ],
 })
 export class MultiplayerSessionModule {}
