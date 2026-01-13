@@ -27,6 +27,8 @@ import { GetNotificationsQueryHandler } from '../../application/Handlers/queries
 import { Either } from 'src/lib/shared/Type Helpers/Either';
 import { DomainException } from 'src/lib/shared/exceptions/DomainException';
 import { NotificationBusinessException } from '../../../shared/exceptions/NotificationBussinesException';
+import { MarkNotificationAsReadHandler } from '../../application/Handlers/command/MarkNotificationAsReadCommandHandler';
+import { MarkNotificationAsReadCommand } from '../../application/parameterObjects/MarkNotificationAsReadCommand';
 
 @Controller('notifications')
 @UseGuards(FakeCurrentUserGuard)
@@ -35,6 +37,7 @@ export class NotificationsController {
     private readonly registerDeviceHandler: RegisterDeviceCommandHandler,
     private readonly unregisterDeviceHandler: UnregisterDeviceCommandHandler,
     private readonly getNotificationsHandler: GetNotificationsQueryHandler,
+    private readonly markNotificationAsReadHandler: MarkNotificationAsReadHandler
   ) {}
 
   //Helpers
@@ -102,6 +105,13 @@ export class NotificationsController {
     @Body() body: UpdateNotificationDto,
     @Req() req: Request,
   ) {
-    // TODO: Implementar MarkAsReadHandler
+    const userId = this.getCurrentUserId(req);
+    const command = new MarkNotificationAsReadCommand(
+      id, 
+      userId, 
+      body.isRead
+    );
+    const result = await this.markNotificationAsReadHandler.execute(command);    
+    return this.handleResult(result);
   }
 }
