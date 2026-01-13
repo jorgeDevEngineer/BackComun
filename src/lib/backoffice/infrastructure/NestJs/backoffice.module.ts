@@ -1,4 +1,4 @@
-import { Module } from "@nestjs/common";
+import { forwardRef, Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { BackofficeController } from "./backoffice.controller";
 import { SearchUsersUseCase } from "../../application/SearchUsersUseCase";
@@ -15,10 +15,12 @@ import { RemoveAdminRoleUseCase } from "../../application/RemoveAdminUseCase";
 import { GetNotificationsUseCase } from "../../application/GetNotificationUseCase";
 import { SMTPSendMailService } from "../SMTP/SMTPSendMailService";
 import { AssetUrlResolver } from "src/lib/shared/infrastructure/providers/AssetUrlResolver";
+import { AuthModule } from "src/lib/auth/infrastructure/NestJs/auth.module";
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([TypeOrmUserEntity, TypeOrmMassiveNotificationEntity]),
+    forwardRef(() => AuthModule),
   ],
   controllers: [BackofficeController],
   providers: [
