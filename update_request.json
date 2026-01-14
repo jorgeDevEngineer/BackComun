@@ -1,0 +1,104 @@
+{
+    "title": "Certificación en Arquitectura de Software Moderna",
+    "description": "Examen avanzado sobre GoF, Hexagonal, DDD y principios SOLID.",
+    "coverImageId": "f410f1f5-7c7f-4db3-a71f-58a584f7802a",
+    "visibility": "Private",
+    "status": "draft",
+    "category": "Computer Science",
+    "themeId": "5f0e8c89-f434-4dff-baaf-83a4aa4feb26",
+    "questions": [
+        {
+            "text": "¿Qué asegura que un Agregado en DDD sea consistente?",
+            "mediaId": "5f0e8c89-f434-4dff-baaf-83a4aa4feb26",
+            "type": "single",
+            "timeLimit": 60,
+            "points": 1000,
+            "answers": [
+              { "text": "Las modificaciones se realizan vía su Aggregate Root.", "isCorrect": true },
+              { "text": "El uso de transacciones distribuidas globales.", "isCorrect": false },
+              { "mediaId": "81f1dbb5-2f1d-40d7-b021-8f4cc948a432", "isCorrect": false }
+            ]
+          },
+          {
+            "text": "El patrón GoF 'Chain of Responsibility' es un patrón de Comportamiento.",
+            "mediaId": "516da741-0643-497e-a9ca-6ef952f0e574",
+            "type": "true_false",
+            "timeLimit": 20,
+            "points": 1000,
+            "answers": [
+              { "text": "Verdadero", "isCorrect": true },
+              { "text": "Falso", "isCorrect": false }
+            ]
+          },
+          {
+            "text": "¿Cuál es el objetivo del patrón GoF 'Flyweight'?",
+            "mediaId": "81f1dbb5-2f1d-40d7-b021-8f4cc948a432",
+            "type": "single",
+            "timeLimit": 60,
+            "points": 1000,
+            "answers": [
+              { "text": "Compartir estados comunes para reducir uso de memoria.", "isCorrect": true },
+              { "text": "Controlar el acceso a un objeto mediante un sustituto.", "isCorrect": false },
+              { "mediaId": "f410f1f5-7c7f-4db3-a71f-58a584f7802a", "isCorrect": false }
+            ]
+          },
+          {
+            "text": "En Clean Architecture, los Use Cases residen en la capa de Aplicación.",
+            "mediaId": "f410f1f5-7c7f-4db3-a71f-58a584f7802a",
+            "type": "true_false",
+            "timeLimit": 30,
+            "points": 1000,
+            "answers": [
+              { "text": "Verdadero", "isCorrect": true },
+              { "text": "Falso", "isCorrect": false }
+            ]
+          },
+          {
+            "text": "¿Qué patrón GoF permite notificar cambios de estado sin acoplamiento?",
+            "mediaId": "5f0e8c89-f434-4dff-baaf-83a4aa4feb26",
+            "type": "single",
+            "timeLimit": 30,
+            "points": 1000,
+            "answers": [
+              { "text": "Observer", "isCorrect": true },
+              { "text": "Mediator", "isCorrect": false },
+              { "mediaId": "516da741-0643-497e-a9ca-6ef952f0e574", "isCorrect": false }
+            ]
+          },
+          {
+            "text": "El principio ISP dicta que no se debe obligar a depender de métodos no usados.",
+            "mediaId": "516da741-0643-497e-a9ca-6ef952f0e574",
+            "type": "true_false",
+            "timeLimit": 20,
+            "points": 1000,
+            "answers": [
+              { "text": "Verdadero", "isCorrect": true },
+              { "text": "Falso", "isCorrect": false }
+            ]
+          },
+          {
+            "text": "Patrones CREACIONALES de GoF:",
+            "mediaId": "f410f1f5-7c7f-4db3-a71f-58a584f7802a",
+            "type": "multiple",
+            "timeLimit": 60,
+            "points": 1000,
+            "answers": [
+              { "text": "Abstract Factory", "isCorrect": true },
+              { "text": "Singleton", "isCorrect": true },
+              { "text": "Prototype", "isCorrect": true },
+              { "mediaId": "5f0e8c89-f434-4dff-baaf-83a4aa4feb26", "isCorrect": false }
+            ]
+          },
+          {
+            "text": "En DDD, una Entidad se define exclusivamente por sus atributos.",
+            "mediaId": "81f1dbb5-2f1d-40d7-b021-8f4cc948a432",
+            "type": "true_false",
+            "timeLimit": 20,
+            "points": 1000,
+            "answers": [
+              { "text": "Falso", "isCorrect": true },
+              { "text": "Verdadero", "isCorrect": false }
+            ]
+          }
+    ]
+  }
