@@ -19,6 +19,26 @@ import { PlayerId, PlayerNickname } from "src/lib/multiplayer/domain/valueObject
 import { GameScore } from "src/lib/shared/domain/valueObjects";
 import { QuestionId } from "src/lib/kahoot/domain/valueObject/Question";
 
+export interface MongoMultiplayerSessionDocument {
+    _id: string;
+    hostId: string;
+    quizId: string;
+    sessionPin: string;
+    startedAt: Date;
+    completedAt: Date;
+    currentQuestionStartTime: Date;
+    sessionState: SessionStateType;
+    leaderboard: LeaderboardEntryJSON[];
+    progress: {
+        currentQuestion: string;
+        previousQuestion: string | null;
+        totalQuestions: number;
+        questionsAnswered: number;
+    };
+    players: PlayerJSON[];
+    playersAnswers: MultiplayerQuestionResultJSON[];
+}
+
 interface LeaderboardEntryJSON {
     playerId: string;
     nickname: string;

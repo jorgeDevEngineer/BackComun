@@ -72,6 +72,7 @@ import { AuthModule } from "src/lib/auth/infrastructure/NestJs/auth.module";
     exports: [
         'SinglePlayerGameRepository',
         SinglePlayerEvaluationService,
+        TypeOrmModule,
     ],
 })
 export class SinglePlayerGameModule {}

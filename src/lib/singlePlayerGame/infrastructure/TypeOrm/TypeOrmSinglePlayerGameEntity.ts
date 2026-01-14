@@ -14,6 +14,19 @@ import { QuestionId } from 'src/lib/kahoot/domain/valueObject/Question';
 import { QuizId, UserId } from 'src/lib/kahoot/domain/valueObject/Quiz';
 import { Optional } from "src/lib/shared/Type Helpers/Optional";
 
+export interface MongoSinglePlayerGameDocument {
+    _id: string;
+    quizId: string;
+    totalQuestions: number;
+    playerId: string;
+    status: GameProgressStatus;
+    progress: number;
+    score: number;
+    startedAt: Date;
+    completedAt: Date | null;
+    questionResults: QuestionResultJSON[];
+}
+
 @Entity('asyncgame')
 export class TypeOrmSinglePlayerGameEntity {
 

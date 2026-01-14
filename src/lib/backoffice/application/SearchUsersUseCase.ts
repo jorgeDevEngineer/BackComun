@@ -3,6 +3,7 @@ import { UserRepository } from "../domain/port/UserRepository";
 import { UserId } from "../domain/valueObject/UserId";
 import { BadRequestException } from "@nestjs/common";
 import { UnauthorizedException } from "@nestjs/common";
+import { ITokenProvider } from "src/lib/auth/application/providers/ITokenProvider";
 
 export interface SearchParamsDto {
   q?: string;
@@ -33,17 +34,21 @@ export interface SearchResultDto {
 export class SearchUsersUseCase {
   constructor(
     @Inject("UserRepository")
-    private readonly userRepository: UserRepository
+    private readonly userRepository: UserRepository,
+    @Inject("ITokenProvider")
+    private readonly tokenProvider: ITokenProvider,
   ) {}
 
   async run(
-    userheader: string,
+    auth: string,
     params: SearchParamsDto
   ): Promise<SearchResultDto> {
-    const user = await this.userRepository.getOneById(new UserId(userheader));
-    if (!user) {
-      throw new BadRequestException("User not found");
+
+    const token = await this.tokenProvider.validateToken(auth);
+    if (!token) {
+      throw new BadRequestException("Invalid token");
     }
+    const user = await this.userRepository.getOneById(new UserId(token.id));
     if (!user.isAdmin) {
       throw new UnauthorizedException("Unauthorized");
     }
