@@ -1,7 +1,7 @@
 import { Module, OnApplicationBootstrap, Logger } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { ConfigModule, ConfigService } from "@nestjs/config";
-import { EventEmitterModule } from '@nestjs/event-emitter';
+import { EventEmitterModule } from "@nestjs/event-emitter";
 import * as Joi from "joi";
 import { KahootModule } from "./lib/kahoot/infrastructure/NestJs/kahoot.module";
 import { MediaModule } from "./lib/media/infrastructure/NestJs/media.module";
@@ -18,6 +18,7 @@ import { AdminModule } from "./lib/admin/infrastructure/admin.module";
 import { MultiplayerSessionModule } from "./lib/multiplayer/infrastructure/NestJs/MultiplayerSession.module";
 import { DynamicMongoAdapter } from "./lib/shared/infrastructure/database/dynamic-mongo.adapter";
 import { AuthModule } from "./lib/auth/infrastructure/NestJs/auth.module";
+import { UserSubscriptionModule } from "./lib/user/infrastructure/NestJS/subscription.module";
 import { NotificationsModule } from "./lib/notifications/infrastructure/NestJs/Notification.module";
 
 @Module({
@@ -63,12 +64,13 @@ import { NotificationsModule } from "./lib/notifications/infrastructure/NestJs/N
     GroupsModule,
     LibraryModule,
     UserModule,
+    UserSubscriptionModule,
     AuthModule,
     SinglePlayerGameModule,
     StatisticsModule,
     BackofficeModule,
     MultiplayerSessionModule,
-    NotificationsModule
+    NotificationsModule,
   ],
 })
 export class AppModule implements OnApplicationBootstrap {
@@ -115,6 +117,5 @@ export class AppModule implements OnApplicationBootstrap {
     } catch (error) {
       logger.error(`Failed to connect notifications mongo: ${error.message}`);
     }
-
   }
 }
