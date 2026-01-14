@@ -96,9 +96,9 @@ export class DynamicSinglePlayerGameRepository
     criteria: CompletedQuizQueryCriteria
   ): Promise<{ games: SinglePlayerGame[]; totalGames: number } | null> {
     try {
-      const db = this.mongoAdapter.getConnection("singlePlayerGame");
+      const db = this.mongoAdapter.getConnection("asyncgame");
       const collection = (await db).collection<MongoSinglePlayerGameDoc>(
-        "singlePlayerGame"
+        "asyncgame"
       );
 
       // Filtro Base
@@ -140,9 +140,9 @@ export class DynamicSinglePlayerGameRepository
 
   async findById(gameId: SinglePlayerGameId): Promise<SinglePlayerGame | null> {
     try {
-      const db = this.mongoAdapter.getConnection("singlePlayerGame");
+      const db = this.mongoAdapter.getConnection("asyncgame");
       const collection = (await db).collection<MongoSinglePlayerGameDoc>(
-        "singlePlayerGame"
+        "asyncgame"
       );
 
       const id = gameId.getId();

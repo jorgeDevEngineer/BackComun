@@ -63,9 +63,8 @@ export class DynamicSinglePlayerGameRepository
   ): Promise<[SinglePlayerGame[], number]> {
     try {
       // 🔑 Intentar Mongo primero
-      const db = await this.mongoAdapter.getConnection("singlePlayerGame");
-      const collection =
-        db.collection<MongoSinglePlayerGameDoc>("singlePlayerGame");
+      const db = await this.mongoAdapter.getConnection("asyncgame");
+      const collection = db.collection<MongoSinglePlayerGameDoc>("asyncgame");
 
       const params: MongoFindParams<any> = {
         filter: {
@@ -106,9 +105,8 @@ export class DynamicSinglePlayerGameRepository
   ): Promise<[SinglePlayerGame[], number]> {
     try {
       // 🔑 Intentar Mongo primero
-      const db = await this.mongoAdapter.getConnection("singlePlayerGame");
-      const collection =
-        db.collection<MongoSinglePlayerGameDoc>("singlePlayerGame");
+      const db = await this.mongoAdapter.getConnection("asyncgame");
+      const collection = db.collection<MongoSinglePlayerGameDoc>("asyncgame");
 
       const params: MongoFindParams<any> = {
         filter: {
