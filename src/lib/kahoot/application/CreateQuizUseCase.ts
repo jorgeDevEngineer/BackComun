@@ -17,9 +17,13 @@ import {
 import { DomainException } from '../../shared/exceptions/domain.exception';
 import { IHandler } from 'src/lib/shared/IHandler';
 import { CreateQuestionDto } from '../infrastructure/NestJs/DTOs/create-question.dto';
+import { ITokenProvider } from '../../auth/application/providers/ITokenProvider';
+import { UserRepository } from '../../user/domain/port/UserRepository';
+import { UnauthorizedException } from '@nestjs/common';
+import { UserId as UserDomainId } from '../../user/domain/valueObject/UserId';
 
 export interface CreateQuiz {
-    authorId: string;
+    auth: string;
     title: string;
     description: string;
     visibility: 'public' | 'private';
@@ -31,18 +35,36 @@ export interface CreateQuiz {
 }
 
 export class CreateQuizUseCase implements IHandler<CreateQuiz, Result<Quiz>> {
-  constructor(private readonly quizRepository: QuizRepository) {}
+  constructor(
+    private readonly quizRepository: QuizRepository,
+    private readonly tokenProvider: ITokenProvider,
+    private readonly userRepository: UserRepository,
+    ) {}
 
   async execute(dto: CreateQuiz): Promise<Result<Quiz>> {
 
-    const authorId = UserId.of(dto.authorId);
+    if (!dto.auth || !dto.auth.startsWith('Bearer ')) {
+        throw new UnauthorizedException('Missing or malformed token');
+    }
+    const token = dto.auth.split(' ')[1];
+    const decodedToken = await this.tokenProvider.validateToken(token);
+    if (!decodedToken) {
+        throw new UnauthorizedException('Invalid token');
+    }
+
+    const user = await this.userRepository.getOneById(UserDomainId.of(decodedToken.id));
+    if (!user) {
+        throw new UnauthorizedException('User not found');
+    }
+
+    const authorId = UserId.of(user.id.value);
     const title = QuizTitle.of(dto.title);
     const description = QuizDescription.of(dto.description);
     const visibility = Visibility.fromString(dto.visibility);
     const status = QuizStatus.fromString(dto.status);
     const category = QuizCategory.of(dto.category);
     const themeId = ThemeId.of(dto.themeId);
-    const coverImageId = dto.coverImageId; // ANTES: MediaIdVO.of(dto.coverImageId)
+    const coverImageId = dto.coverImageId;
 
     const questions: Question[] = [];
     for (const qDto of dto.questions) {
@@ -59,7 +81,7 @@ export class CreateQuizUseCase implements IHandler<CreateQuiz, Result<Quiz>> {
             if (aDto.text) {
                 answer = Answer.createTextAnswer(answerId, AnswerText.of(aDto.text), isCorrect);
             } else {
-                answer = Answer.createMediaAnswer(answerId, aDto.mediaId!, isCorrect); // ANTES: MediaIdVO.of(aDto.mediaId!)
+                answer = Answer.createMediaAnswer(answerId, aDto.mediaId!, isCorrect);
             }
             answers.push(answer);
         }
@@ -67,7 +89,7 @@ export class CreateQuizUseCase implements IHandler<CreateQuiz, Result<Quiz>> {
         const question = Question.create(
             QuestionId.generate(),
             QuestionText.of(qDto.text),
-            qDto.mediaId, // ANTES: qDto.mediaId ? MediaIdVO.of(qDto.mediaId) : null
+            qDto.mediaId, 
             QuestionType.fromString(qDto.type),
             TimeLimit.of(qDto.timeLimit),
             Points.of(qDto.points),
