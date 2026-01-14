@@ -18,6 +18,7 @@ import { AdminModule } from "./lib/admin/infrastructure/admin.module";
 import { MultiplayerSessionModule } from "./lib/multiplayer/infrastructure/NestJs/MultiplayerSession.module";
 import { DynamicMongoAdapter } from "./lib/shared/infrastructure/database/dynamic-mongo.adapter";
 import { AuthModule } from "./lib/auth/infrastructure/NestJs/auth.module";
+import { UserSubscriptionModule } from "./lib/user/infrastructure/NestJS/subscription.module";
 import { NotificationsModule } from "./lib/notifications/infrastructure/NestJs/Notification.module";
 
 @Module({
@@ -63,6 +64,7 @@ import { NotificationsModule } from "./lib/notifications/infrastructure/NestJs/N
     GroupsModule,
     LibraryModule,
     UserModule,
+    UserSubscriptionModule,
     AuthModule,
     SinglePlayerGameModule,
     StatisticsModule,
