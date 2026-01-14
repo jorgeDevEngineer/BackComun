@@ -1,9 +1,9 @@
 
-import { IsBoolean, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsOptional, IsString } from 'class-validator';
 
 export class CreateAnswerDto {
     @IsString()
-    @IsNotEmpty()
+    @IsOptional()
     public readonly text: string;
 
     @IsBoolean()

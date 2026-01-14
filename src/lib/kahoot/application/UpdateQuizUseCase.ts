@@ -1,3 +1,4 @@
+
 import { QuizRepository } from "../domain/port/QuizRepository";
 import { Quiz } from "../domain/entity/Quiz";
 import { Question } from "../domain/entity/Question";
@@ -22,23 +23,53 @@ import {
 import { AnswerId, IsCorrect, AnswerText } from "../domain/valueObject/Answer";
 import { Result } from "../../shared/Type Helpers/result";
 import { IHandler } from "src/lib/shared/IHandler";
+import { ITokenProvider } from "src/lib/auth/application/providers/ITokenProvider";
+import { UserRepository } from "src/lib/user/domain/port/UserRepository";
+import { Inject, UnauthorizedException } from "@nestjs/common";
+import { UserId as UserDomainId } from '../../user/domain/valueObject/UserId';
 
 // Interfaces para el DTO de actualización...
 
 export class UpdateQuizUseCase implements IHandler<UpdateQuiz, Result<Quiz>> {
-  constructor(private readonly quizRepository: QuizRepository) {}
+  constructor(
+    private readonly quizRepository: QuizRepository,
+    @Inject("ITokenProvider")
+    private readonly tokenProvider: ITokenProvider,
+    @Inject("UserRepository")
+    private readonly userRepository: UserRepository
+  ) {}
 
   async execute(request: UpdateQuiz): Promise<Result<Quiz>> {
     try {
-      const quizId = QuizId.of(request.quizId);
-      const authorId = UserId.of(request.authorId);
+      if (!request.auth || !request.auth.startsWith('Bearer ')) {
+        throw new UnauthorizedException('Missing or malformed token');
+      }
+      const token = request.auth.split(' ')[1];
+      const decodedToken = await this.tokenProvider.validateToken(token);
+      if (!decodedToken) {
+        throw new UnauthorizedException("Invalid token");
+      }
 
+      const user = await this.userRepository.getOneById(UserDomainId.of(decodedToken.id));
+      if (!user) {
+        throw new UnauthorizedException("User not found");
+      }
+
+      const quizId = QuizId.of(request.quizId);
       const quiz = await this.quizRepository.find(quizId);
+
       if (!quiz) {
         return Result.fail<Quiz>(new Error("Quiz not found"));
       }
 
-      // ... (resto del mapeo)
+      if (quiz.toPlainObject().authorId !== user.id.value) {
+        throw new UnauthorizedException(
+          "User is not the author of this quiz"
+        );
+      }
+
+      const authorId = UserId.of(user.id.value);
+
       const title = QuizTitle.of(request.title || quiz.toPlainObject().title);
       const description = QuizDescription.of(
         request.description || quiz.toPlainObject().description
@@ -55,7 +86,7 @@ export class UpdateQuizUseCase implements IHandler<UpdateQuiz, Result<Quiz>> {
       const themeId = ThemeId.of(
         request.themeId || quiz.toPlainObject().themeId
       );
-      const coverImageId = request.coverImageId; // ANTES: MediaIdVO.of(request.coverImageId)
+      const coverImageId = request.coverImageId;
 
       const newQuestions = request.questions.map((qData) => {
         const questionId = qData.id
@@ -65,7 +96,6 @@ export class UpdateQuizUseCase implements IHandler<UpdateQuiz, Result<Quiz>> {
           const answerId = aData.id
             ? AnswerId.of(aData.id)
             : AnswerId.generate();
-          // Asumiendo que las respuestas actualizadas también pueden ser de texto o media
           if (aData.text) {
             return Answer.createTextAnswer(
               answerId,
@@ -79,14 +109,13 @@ export class UpdateQuizUseCase implements IHandler<UpdateQuiz, Result<Quiz>> {
               IsCorrect.fromBoolean(aData.isCorrect)
             );
           }
-          // Necesitas manejar el caso de que no haya ni texto ni mediaId si es posible
           throw new Error("Answer must have either text or mediaId");
         });
 
         return Question.create(
           questionId,
           QuestionText.of(qData.text),
-          qData.mediaId, // ANTES: qData.mediaId ? MediaIdVO.of(qData.mediaId) : null
+          qData.mediaId,
           QuestionType.fromString(qData.type),
           TimeLimit.of(qData.timeLimit),
           Points.of(qData.points),
@@ -133,8 +162,8 @@ interface UpdateQuestion {
 }
 
 export interface UpdateQuiz {
+  auth: string;
   quizId: string;
-  authorId: string;
   title?: string;
   description?: string | null;
   visibility?: "public" | "private";
