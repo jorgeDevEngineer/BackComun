@@ -1,3 +1,4 @@
+
 import {
   Controller,
   Post,
@@ -44,8 +45,8 @@ export class MediaController {
       );
     }
 
-    const authorId = authHeader?.split(" ")?.[1];
-    if (!authorId) {
+    const token = authHeader?.split(" ")?.[1];
+    if (!token) {
       throw new HttpException(
         "Missing or invalid Authorization header. Expected: Bearer <JWT>",
         HttpStatus.UNAUTHORIZED
@@ -57,7 +58,7 @@ export class MediaController {
       fileName: file.originalname,
       mimeType: file.mimetype,
       category: body.category,
-      authorId: authorId,
+      token: token,
     };
 
     const result = await this.uploadMedia.execute(dto);

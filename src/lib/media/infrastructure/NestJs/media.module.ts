@@ -1,5 +1,5 @@
 
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { MediaController } from './media.controller';
 import { TypeOrmMediaEntity } from '../TypeOrm/TypeOrmMediaEntity';
@@ -14,9 +14,17 @@ import { SupabaseStorageService } from '../Supabase/SupabaseStorageService';
 import { IStorageService, STORAGE_SERVICE } from '../../domain/port/IStorageService';
 import { IMediaRepository, MEDIA_REPOSITORY } from '../../domain/port/IMediaRepository';
 import { DatabaseModule } from '../../../shared/infrastructure/database/database.module';
+import { AuthModule } from '../../../auth/infrastructure/NestJs/auth.module';
+import { ITokenProvider } from '../../../auth/application/providers/ITokenProvider';
+
 
 @Module({
-    imports: [TypeOrmModule.forFeature([TypeOrmMediaEntity]), LoggerModule, DatabaseModule],
+    imports: [
+        TypeOrmModule.forFeature([TypeOrmMediaEntity]),
+        LoggerModule,
+        DatabaseModule,
+        forwardRef(() => AuthModule),
+    ],
     controllers: [MediaController],
     providers: [
         // 1. Storage Service
@@ -36,12 +44,13 @@ import { DatabaseModule } from '../../../shared/infrastructure/database/database
                 logger: ILoggerPort,
                 storageService: IStorageService,
                 repository: IMediaRepository,
+                tokenProvider: ITokenProvider,
             ) => {
-                const useCase = new UploadMedia(storageService, repository);
+                const useCase = new UploadMedia(storageService, repository, tokenProvider);
                 const withErrorHandling = new ErrorHandlingDecorator(useCase, logger, 'UploadMedia');
                 return new LoggingUseCaseDecorator(withErrorHandling, logger, 'UploadMedia');
             },
-            inject: [LOGGER_PORT, STORAGE_SERVICE, MEDIA_REPOSITORY],
+            inject: [LOGGER_PORT, STORAGE_SERVICE, MEDIA_REPOSITORY, 'ITokenProvider'],
         },
         // 4. ListThemesUseCase
         {
