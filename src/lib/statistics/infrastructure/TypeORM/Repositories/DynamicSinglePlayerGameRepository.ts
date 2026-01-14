@@ -96,9 +96,9 @@ export class DynamicSinglePlayerGameRepository
     criteria: CompletedQuizQueryCriteria
   ): Promise<{ games: SinglePlayerGame[]; totalGames: number } | null> {
     try {
-      const db = this.mongoAdapter.getConnection("singlePlayerGame");
+      const db = this.mongoAdapter.getConnection("asyncgame");
       const collection = (await db).collection<MongoSinglePlayerGameDoc>(
-        "singlePlayerGame"
+        "asyncgame"
       );
 
       // Filtro Base
@@ -108,6 +108,8 @@ export class DynamicSinglePlayerGameRepository
           status: GameProgressStatus.COMPLETED,
         },
       };
+
+      console.log("MongoDB llega");
 
       // Aplicar Criterios
       const { filter, options } = this.mongoCriteriaApplier.apply(
@@ -122,6 +124,7 @@ export class DynamicSinglePlayerGameRepository
 
       return { games: domainData, totalGames: results.length };
     } catch (error) {
+      console.log("MongoDB query failed, falling back to Postgres:", error);
       let qb = this.gameRepo.createQueryBuilder("game");
       qb.where("game.playerId = :playerId", {
         playerId: playerId.getValue(),
@@ -140,9 +143,9 @@ export class DynamicSinglePlayerGameRepository
 
   async findById(gameId: SinglePlayerGameId): Promise<SinglePlayerGame | null> {
     try {
-      const db = this.mongoAdapter.getConnection("singlePlayerGame");
+      const db = this.mongoAdapter.getConnection("asyncgame");
       const collection = (await db).collection<MongoSinglePlayerGameDoc>(
-        "singlePlayerGame"
+        "asyncgame"
       );
 
       const id = gameId.getId();

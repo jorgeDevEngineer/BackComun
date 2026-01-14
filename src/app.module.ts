@@ -1,7 +1,7 @@
 import { Module, OnApplicationBootstrap, Logger } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { ConfigModule, ConfigService } from "@nestjs/config";
-import { EventEmitterModule } from '@nestjs/event-emitter';
+import { EventEmitterModule } from "@nestjs/event-emitter";
 import * as Joi from "joi";
 import { KahootModule } from "./lib/kahoot/infrastructure/NestJs/kahoot.module";
 import { MediaModule } from "./lib/media/infrastructure/NestJs/media.module";
@@ -68,7 +68,7 @@ import { NotificationsModule } from "./lib/notifications/infrastructure/NestJs/N
     StatisticsModule,
     BackofficeModule,
     MultiplayerSessionModule,
-    NotificationsModule
+    NotificationsModule,
   ],
 })
 export class AppModule implements OnApplicationBootstrap {
@@ -103,18 +103,19 @@ export class AppModule implements OnApplicationBootstrap {
     try {
       await this.mongoAdapter.reconnect("asyncgame", mongoUrl);
     } catch (error) {
-      logger.error(`Failed to connect kahoot mongo: ${error.message}`);
+      logger.error(`Failed to connect asyncgame mongo: ${error.message}`);
     }
     try {
       await this.mongoAdapter.reconnect("multiplayersessions", mongoUrl);
     } catch (error) {
-      logger.error(`Failed to connect kahoot mongo: ${error.message}`);
+      logger.error(
+        `Failed to connect multiplayersessions mongo: ${error.message}`
+      );
     }
     try {
       await this.mongoAdapter.reconnect("notifications", mongoUrl);
     } catch (error) {
       logger.error(`Failed to connect notifications mongo: ${error.message}`);
     }
-
   }
 }
