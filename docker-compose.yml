@@ -56,6 +56,9 @@ services:
       SMTP_USER: ${SMTP_USER}
       SMTP_PASSWORD: ${SMTP_PASSWORD}
       SMTP_FROM: ${SMTP_FROM}
+      FIREBASE_PROJECT_ID: ${FIREBASE_PROJECT_ID}
+      FIREBASE_CLIENT_EMAIL: ${FIREBASE_CLIENT_EMAIL}
+      FIREBASE_PRIVATE_KEY: ${FIREBASE_PRIVATE_KEY}
     ports:
       - "${PORT:-3000}:3000"
     volumes:
@@ -104,7 +107,7 @@ services:
       PGPASSWORD: ${POSTGRES_PASSWORD:-password123}
       PGDATABASE: ${POSTGRES_DB:-postgres}
       # URL de la app para verificar que está lista (dentro de Docker, usar nombre del servicio)
-      APP_URL: http://app:3000
+      APP_URL: http://app:${PORT:-3000}
     volumes:
       - ./docker/seed-data:/seed-data
       - ./docker/run-seeds.sh:/run-seeds.sh:ro

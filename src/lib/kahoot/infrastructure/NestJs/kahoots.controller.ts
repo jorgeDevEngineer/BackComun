@@ -1,3 +1,4 @@
+
 import {
   Body,
   Controller,
@@ -11,24 +12,22 @@ import {
   BadRequestException,
   UsePipes,
   ValidationPipe,
-  Req,
-  UseGuards,
+  Headers,
 } from "@nestjs/common";
-import { FakeCurrentUserGuard } from "../../../groups/infraestructure/NestJs/FakeCurrentUser.guard";
 import {
   CreateQuizUseCase,
   CreateQuiz,
 } from "../../application/CreateQuizUseCase";
-import { GetQuizUseCase } from "../../application/GetQuizUseCase";
-import { ListUserQuizzesUseCase } from "../../application/ListUserQuizzesUseCase";
+import { GetQuiz, GetQuizUseCase } from "../../application/GetQuizUseCase";
+import { ListUserQuizzes, ListUserQuizzesUseCase } from "../../application/ListUserQuizzesUseCase";
 import {
   UpdateQuizUseCase,
   UpdateQuiz,
 } from "../../application/UpdateQuizUseCase";
-import { DeleteQuizUseCase } from "../../application/DeleteQuizUseCase";
+import { DeleteQuizUseCase, DeleteQuiz } from "../../application/DeleteQuizUseCase";
 import { IsString, Length } from "class-validator";
 import { Result } from "../../../shared/Type Helpers/result";
-import { GetAllKahootsUseCase } from "../../application/GetAllKahootsUseCase";
+import { GetAllKahoots, GetAllKahootsUseCase } from "../../application/GetAllKahootsUseCase";
 import { CreateQuizDto } from "./DTOs/create-quiz.dto";
 import { UpdateQuizDto } from "./DTOs/update-quiz.dto";
 
@@ -39,7 +38,6 @@ export class FindOneParams {
 }
 
 @Controller("kahoots")
-@UseGuards(FakeCurrentUserGuard)
 export class KahootController {
   constructor(
     @Inject(CreateQuizUseCase)
@@ -67,27 +65,32 @@ export class KahootController {
   }
 
   @Get("all")
-  async getAllKahoots() {
-    const result = await this.getAllKahootsUseCase.execute();
+  async getAllKahoots(@Headers('Authorization') auth: string) {
+    const getAllKahootsData: GetAllKahoots = {
+        auth: auth,
+    };
+    const result = await this.getAllKahootsUseCase.execute(getAllKahootsData);
     const quizzes = this.handleResult(result);
     return quizzes.map((q) => q.toPlainObject());
   }
 
-  @Get("user/:userId")
-  async listUserQuizzes(@Param("userId") userId: string) {
-    const result = await this.listUserQuizzesUseCase.execute(userId);
+  @Get("user")
+  async listUserQuizzes(@Headers('Authorization') auth: string) {
+    const listUserQuizzesData: ListUserQuizzes = {
+        auth: auth,
+    };
+    const result = await this.listUserQuizzesUseCase.execute(listUserQuizzesData);
     const quizzes = this.handleResult(result);
     return quizzes.map((q) => q.toPlainObject());
   }
 
   @Post()
   @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
-  async create(@Body() createQuizDto: CreateQuizDto, @Req() req: any) {
-    const authorId = req.user.id;
+  async create(@Body() createQuizDto: CreateQuizDto, @Headers('Authorization') auth: string) {
 
     const createQuizData: CreateQuiz = {
       ...createQuizDto,
-      authorId: authorId,
+      auth: auth,
       questions: createQuizDto.questions,
     };
 
@@ -101,13 +104,11 @@ export class KahootController {
   async edit(
     @Param() params: FindOneParams,
     @Body() updateQuizDto: UpdateQuizDto,
-    @Req() req: any
+    @Headers('Authorization') auth: string
   ) {
-    const authorId = req.user.id;
-
     const updateQuizData: UpdateQuiz = {
       quizId: params.id,
-      authorId: authorId,
+      auth: auth,
       ...updateQuizDto,
     };
     const result = await this.updateQuizUseCase.execute(updateQuizData);
@@ -116,14 +117,23 @@ export class KahootController {
   }
 
   @Delete(":id")
-  async delete(@Param() params: FindOneParams) {
-    const result = await this.deleteQuizUseCase.execute(params.id);
+  async delete(@Param() params: FindOneParams, @Headers('Authorization') auth: string) {
+    const deleteQuizData: DeleteQuiz = {
+        quizId: params.id,
+        auth: auth,
+    };
+    const result = await this.deleteQuizUseCase.execute(deleteQuizData);
+
     return this.handleResult(result);
   }
 
   @Get(":id")
-  async getOneById(@Param() params: FindOneParams) {
-    const result = await this.getQuizUseCase.execute(params.id);
+  async getOneById(@Param() params: FindOneParams, @Headers('Authorization') auth: string) {
+    const getQuizData: GetQuiz = {
+      quizId: params.id,
+      auth: auth
+    }
+    const result = await this.getQuizUseCase.execute(getQuizData);
     const quiz = this.handleResult(result);
     return quiz.toPlainObject();
   }
