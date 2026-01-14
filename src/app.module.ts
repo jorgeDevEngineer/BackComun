@@ -28,6 +28,8 @@ import { UserSubscriptionModule } from "./lib/user/infrastructure/NestJS/subscri
         DATABASE_URL_MONGO: Joi.string().required(),
         DATABASE_SSL: Joi.boolean().default(false),
         DATABASE_SYNCHRONIZE: Joi.boolean().default(false), // Por defecto false para seguridad
+        JWT_SECRET: Joi.string().required(),
+        JWT_EXPIRES_IN: Joi.string().default("1h"),
       }),
     }),
 
