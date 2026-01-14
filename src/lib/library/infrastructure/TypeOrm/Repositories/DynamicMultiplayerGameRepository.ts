@@ -98,6 +98,9 @@ export class DynamicMultiplayerGameRepository
   ): Promise<[MultiplayerSession[], number]> {
     try {
       // 🔹 Mongo
+      console.log(
+        "Trying to fetch completed multiplayer sessions from MongoDB..."
+      );
       const db = await this.mongoAdapter.getConnection("multiplayersessions");
       const collection = db.collection<MongoMultiplayerSessionDoc>(
         "multiplayersessions"
@@ -122,6 +125,10 @@ export class DynamicMultiplayerGameRepository
     } catch (error) {
       // 🔹 Postgres
       let qb = this.sessionRepository.createQueryBuilder("multiplayerSessions");
+
+      console.log(
+        "Falling back to Postgres for completed multiplayer sessions"
+      );
 
       qb.andWhere(`multiplayerSessions.sessionState = :status`, {
         status: "end",

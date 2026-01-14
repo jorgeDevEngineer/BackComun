@@ -109,6 +109,8 @@ export class DynamicSinglePlayerGameRepository
         },
       };
 
+      console.log("MongoDB llega");
+
       // Aplicar Criterios
       const { filter, options } = this.mongoCriteriaApplier.apply(
         baseFilter,
@@ -122,6 +124,7 @@ export class DynamicSinglePlayerGameRepository
 
       return { games: domainData, totalGames: results.length };
     } catch (error) {
+      console.log("MongoDB query failed, falling back to Postgres:", error);
       let qb = this.gameRepo.createQueryBuilder("game");
       qb.where("game.playerId = :playerId", {
         playerId: playerId.getValue(),

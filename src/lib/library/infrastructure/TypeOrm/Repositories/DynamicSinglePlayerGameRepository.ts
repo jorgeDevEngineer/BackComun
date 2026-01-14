@@ -77,6 +77,9 @@ export class DynamicSinglePlayerGameRepository
         params,
         criteria
       );
+
+      console.log("Mongo filter:", filter);
+
       const docs = await collection
         .find(filter, options)
         .sort({ startedAt: -1 })
@@ -85,6 +88,7 @@ export class DynamicSinglePlayerGameRepository
       return [docs.map((doc) => this.mapMongoToDomain(doc)), docs.length];
     } catch {
       // 🔑 Fallback a Postgres
+      console.log("Falling back to Postgres for in-progress games");
       let qb = this.gameRepo.createQueryBuilder("game");
       qb.where("game.playerId = :playerId", {
         playerId: playerId.getValue(),
@@ -108,6 +112,8 @@ export class DynamicSinglePlayerGameRepository
       const db = await this.mongoAdapter.getConnection("asyncgame");
       const collection = db.collection<MongoSinglePlayerGameDoc>("asyncgame");
 
+      console.log("MongoDB llega");
+
       const params: MongoFindParams<any> = {
         filter: {
           playerId: playerId.getValue(),
@@ -127,6 +133,7 @@ export class DynamicSinglePlayerGameRepository
       return [docs.map((doc) => this.mapMongoToDomain(doc)), docs.length];
     } catch {
       // 🔑 Fallback a Postgres
+      console.log("Falling back to Postgres for completed games");
       let qb = this.gameRepo.createQueryBuilder("game");
       qb.where("game.playerId = :playerId", {
         playerId: playerId.getValue(),
