@@ -1,4 +1,4 @@
-import { Module } from "@nestjs/common";
+import { forwardRef, Module } from "@nestjs/common";
 import { LibraryController } from "./library.controller";
 import { AddUserFavoriteQuizCommandHanlder } from "../../application/Handlers/Commands/AddUserFavoriteQuizCommandHandler";
 import { DeleteUserFavoriteQuizCommandHandler } from "../../application/Handlers/Commands/DeleteUserFavoriteQuizCommandHandler";
@@ -29,6 +29,7 @@ import { ErrorHandlingDecoratorWithEither } from "src/lib/shared/aspects/error-h
 import { LoggerModule } from "src/lib/shared/aspects/logger/infrastructure/logger.module";
 import { LibraryRepositoryBuilder } from "../TypeOrm/libraryBuilder";
 import { MultiplayerSessionHistoryRepository } from "../../domain/port/MultiplayerSessionHistoryRepository";
+import { AuthModule } from "src/lib/auth/infrastructure/NestJs/auth.module";
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { MultiplayerSessionHistoryRepository } from "../../domain/port/Multiplay
       TypeOrmUserEntity,
       TypeOrmSinglePlayerGameEntity,
     ]),
+    forwardRef(() => AuthModule),
     LoggerModule,
   ],
   controllers: [LibraryController],

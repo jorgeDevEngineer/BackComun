@@ -24,25 +24,7 @@ import { ObjectId } from "mongodb";
 import { GameScore } from "src/lib/shared/domain/valueObjects";
 import { QuestionId } from "src/lib/kahoot/domain/valueObject/Question";
 import { Optional } from "src/lib/shared/Type Helpers/Optional";
-
-type MongoSinglePlayerGameDoc = {
-  _id: ObjectId; // ID nativo de Mongo
-  gameId: string; // si lo guardas explícito además del _id
-  quizId: string;
-  playerId: string;
-  totalQuestions: number;
-  progress: number;
-  score: number;
-  startedAt: Date;
-  completedAt?: Date;
-  questionResults: {
-    questionId: string;
-    answerIndex: number[];
-    timeUsedMs: number;
-    wasCorrect: boolean;
-    pointsEarned: number;
-  }[];
-};
+import { MongoSinglePlayerGameDocument } from "../../../../singlePlayerGame/infrastructure/TypeOrm/TypeOrmSinglePlayerGameEntity";
 
 @Injectable()
 export class DynamicSinglePlayerGameRepository
@@ -53,10 +35,12 @@ export class DynamicSinglePlayerGameRepository
     private readonly gameRepo: Repository<TypeOrmSinglePlayerGameEntity>,
     private readonly pgCriteriaApplier: TypeOrmPostgresCriteriaApplier<TypeOrmSinglePlayerGameEntity>,
     private readonly mongoAdapter: DynamicMongoAdapter,
-    private readonly mongoCriteriaApplier: MongoCriteriaApplier<MongoSinglePlayerGameDoc>
+    private readonly mongoCriteriaApplier: MongoCriteriaApplier<MongoSinglePlayerGameDocument>
   ) {}
 
-  private mapMongoToDomain(doc: MongoSinglePlayerGameDoc): SinglePlayerGame {
+  private mapMongoToDomain(
+    doc: MongoSinglePlayerGameDocument
+  ): SinglePlayerGame {
     const questionResults = doc.questionResults.map((qr) => {
       const playerAnswer = PlayerAnswer.create(
         QuestionId.of(qr.questionId),
@@ -97,8 +81,8 @@ export class DynamicSinglePlayerGameRepository
   ): Promise<{ games: SinglePlayerGame[]; totalGames: number } | null> {
     try {
       const db = this.mongoAdapter.getConnection("asyncgame");
-      const collection = (await db).collection<MongoSinglePlayerGameDoc>(
-        "asyncgame"
+      const collection = (await db).collection<MongoSinglePlayerGameDocument>(
+        "attempts"
       );
 
       // Filtro Base
@@ -109,7 +93,7 @@ export class DynamicSinglePlayerGameRepository
         },
       };
 
-      console.log("MongoDB llega");
+      console.log("MongoDB llega a singlePlayer");
 
       // Aplicar Criterios
       const { filter, options } = this.mongoCriteriaApplier.apply(
@@ -124,15 +108,16 @@ export class DynamicSinglePlayerGameRepository
 
       return { games: domainData, totalGames: results.length };
     } catch (error) {
-      console.log("MongoDB query failed, falling back to Postgres:", error);
-      let qb = this.gameRepo.createQueryBuilder("game");
-      qb.where("game.playerId = :playerId", {
+      console.log("MongoDB query failed, falling back to Postgres:");
+      console.log(playerId.value);
+      let qb = this.gameRepo.createQueryBuilder("asyncgame");
+      qb.where("asyncgame.playerId = :playerId", {
         playerId: playerId.getValue(),
-      }).andWhere("game.status = :status", {
+      }).andWhere("asyncgame.status = :status", {
         status: GameProgressStatus.COMPLETED,
       });
 
-      qb = this.pgCriteriaApplier.apply(qb, criteria, "game");
+      qb = this.pgCriteriaApplier.apply(qb, criteria, "asyncgame");
 
       const entities = await qb.getMany();
       const totalCount = await this.gameRepo.count();
@@ -144,14 +129,15 @@ export class DynamicSinglePlayerGameRepository
   async findById(gameId: SinglePlayerGameId): Promise<SinglePlayerGame | null> {
     try {
       const db = this.mongoAdapter.getConnection("asyncgame");
-      const collection = (await db).collection<MongoSinglePlayerGameDoc>(
-        "asyncgame"
+      const collection = (await db).collection<MongoSinglePlayerGameDocument>(
+        "attempts"
       );
 
       const id = gameId.getId();
       const doc = await collection.findOne({ id: id });
       return doc ? this.mapMongoToDomain(doc) : null;
     } catch (error) {
+      console.log("MongoDB Failed, fallbak to postgres");
       const entity = await this.gameRepo.findOne({
         where: { gameId: gameId.getId() },
       });

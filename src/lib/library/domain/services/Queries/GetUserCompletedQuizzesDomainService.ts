@@ -44,8 +44,6 @@ export class GetUserCompletedQuizzesDomainService {
     const [completedGames, totalCount] =
       await this.singlePlayerRepo.findCompletedGames(userId, criteria);
 
-    console.log("Completed single player games:", completedGames);
-
     const [completeMultiGames, totalMultiCount] =
       await this.multiPlayerRepo.findCompletedSessions(
         UserId.of(userId.value),

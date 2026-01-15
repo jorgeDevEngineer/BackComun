@@ -4,6 +4,7 @@ import {
   CompletedQuizResponse,
   toSingleCompletedQuizResponse,
   toMultiPlayerCompletedQuizResponse,
+  toMultiHostCompletedQuizResponse,
 } from "../Response Types/CompletedQuizResponse";
 import { QueryWithPaginationResponse } from "../../application/Response Types/QueryWithPaginationResponse";
 import { DomainException } from "src/lib/shared/exceptions/DomainException";
@@ -47,7 +48,8 @@ export class GetUserResultsQueryHandler
         return Either.makeLeft(data.getLeft());
       }
 
-      const { games, multiPlayerGames, quizzes, totalGames } = data.getRight();
+      const { games, multiPlayerGames, ownedGames, quizzes, totalGames } =
+        data.getRight();
       const gameData: CompletedQuizResponse[] = games.flatMap((game) => {
         const quiz = quizzes.find((q) => q.id.value === game.getQuizId().value);
         if (!quiz) return [];
@@ -65,6 +67,16 @@ export class GetUserResultsQueryHandler
       });
 
       gameData.push(...multiGameData);
+
+      const ownedGameData = ownedGames.flatMap((session) => {
+        const quiz = quizzes.find(
+          (q) => q.id.value === session.getQuizId().value
+        );
+        if (!quiz) return [];
+        return [toMultiHostCompletedQuizResponse(session, quiz)];
+      });
+
+      gameData.push(...ownedGameData);
 
       const answer: QueryWithPaginationResponse<CompletedQuizResponse> = {
         results: gameData,
