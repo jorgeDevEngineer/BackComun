@@ -66,10 +66,13 @@ function getAnswerTextOrMedia(
 
 function calculateAverageTime(answers: MultiplayerAnswer[]): number {
   if (answers.length === 0) return 0;
-  const totalTime = answers.reduce(
-    (sum, answer) => sum + answer.getTimeElapsed(),
-    0
-  );
+  const totalTime = answers.reduce((sum, answer) => {
+    if (answer !== undefined) {
+      return sum + answer.getTimeElapsed();
+    } else {
+      return 0;
+    }
+  }, 0);
   return Math.floor(totalTime / answers.length);
 }
 
@@ -82,6 +85,21 @@ export function toMultiQuizPersonalResult(
   const playerIdObj = PlayerId.of(playerId.value);
   const playerAnswers = game.getOnePlayerAnswers(playerIdObj);
   const questionResults: questionData[] = playerAnswers.map((answer, index) => {
+    if (answer === undefined) {
+      const finalQuestionIndex = game.getCurrentQuestionIndex() - 1;
+      const indexDiference = finalQuestionIndex - index;
+      const realIndexInQuiz = finalQuestionIndex - indexDiference;
+      const question = quiz.getQuestions()[realIndexInQuiz];
+      const plainQuestion = question.toPlainObject();
+      return {
+        questionIndex: index + 1,
+        questionText: plainQuestion.text,
+        isCorrect: false,
+        answerText: [],
+        answerMediaId: [],
+        timeTakenMs: 0,
+      };
+    }
     const question = quiz.getQuestionById(answer.getQuestionId());
     if (!question) {
       throw new Error(
