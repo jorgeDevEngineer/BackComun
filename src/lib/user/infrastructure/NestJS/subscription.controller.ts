@@ -21,7 +21,7 @@ import { Result } from "src/lib/shared/Type Helpers/result";
 import { UserNotFoundException } from "../../application/exceptions/UserNotFoundException";
 import { DomainException } from "src/lib/shared/exceptions/domain.exception";
 import { ITokenProvider } from "src/lib/auth/application/providers/ITokenProvider";
-import { FindByIdParams } from "./Validations";
+import { FindByIdParams } from "../DTOs/FindByIdParams";
 import { User } from "../../domain/aggregate/User";
 
 @Controller("subscription")
