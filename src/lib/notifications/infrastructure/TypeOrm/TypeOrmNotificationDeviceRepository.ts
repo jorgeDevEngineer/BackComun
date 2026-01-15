@@ -93,7 +93,7 @@ export class TypeOrmDeviceRepository implements IDeviceRepository {
     
     try {
       const collection = await this.getMongoCollection();
-      const docs = await collection.find({ userId: memberId.value }).toArray(); // Ojo: memberId.value si en mongo guardas string
+      const docs = await collection.find({ userId: memberId.value }).toArray(); 
 
       if (docs.length > 0) {
         return docs.map((d) => DeviceToken.create(d._id));

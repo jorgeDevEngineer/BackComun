@@ -3,8 +3,7 @@ import { IsNotEmpty, IsString, MinLength, IsIn, IsBoolean } from 'class-validato
 export class NotificationDto {
   id: string;
   type: string;
-  title: string;
-  body: string;
+  message: string;
   isRead: boolean;
   createdAt: string;
   resourceId?: string;
@@ -32,7 +31,9 @@ export class UnregisterDeviceResponseDto{
   message: string;
 }
 
+
 export class UpdateNotificationDto {
-  @IsBoolean()
-  isRead: boolean;
+    @IsBoolean({ message: 'isRead debe ser un booleano.' })
+    @IsNotEmpty({ message: 'isRead es obligatorio.' })
+    public readonly isRead: boolean;
 }
