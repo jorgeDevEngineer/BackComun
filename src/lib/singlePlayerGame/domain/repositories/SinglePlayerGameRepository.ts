@@ -1,6 +1,6 @@
 import { SinglePlayerGame } from "../aggregates/SinglePlayerGame";
 import { SinglePlayerGameId } from "src/lib/shared/domain/ids";
-import { QuizId, UserId } from "src/lib/kahoot/domain/valueObject/Quiz";
+import { QuizId, UserId} from "src/lib/kahoot/domain/valueObject/Quiz";
 
 export interface SinglePlayerGameRepository {
 

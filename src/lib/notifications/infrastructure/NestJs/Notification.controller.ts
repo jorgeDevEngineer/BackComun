@@ -13,6 +13,8 @@ import {
   Query,
   Param,
   Patch,
+  Inject,
+  Headers,
 } from '@nestjs/common';
 import { Request } from 'express';
 import { FakeCurrentUserGuard } from '../../../groups/infraestructure/NestJs/FakeCurrentUser.guard';
@@ -29,6 +31,8 @@ import { DomainException } from 'src/lib/shared/exceptions/DomainException';
 import { NotificationBusinessException } from '../../../shared/exceptions/NotificationBussinesException';
 import { MarkNotificationAsReadHandler } from '../../application/Handlers/command/MarkNotificationAsReadCommandHandler';
 import { MarkNotificationAsReadCommand } from '../../application/parameterObjects/MarkNotificationAsReadCommand';
+import { ITokenProvider } from "src/lib/auth/application/providers/ITokenProvider";
+
 
 @Controller('notifications')
 @UseGuards(FakeCurrentUserGuard)
@@ -37,17 +41,23 @@ export class NotificationsController {
     private readonly registerDeviceHandler: RegisterDeviceCommandHandler,
     private readonly unregisterDeviceHandler: UnregisterDeviceCommandHandler,
     private readonly getNotificationsHandler: GetNotificationsQueryHandler,
-    private readonly markNotificationAsReadHandler: MarkNotificationAsReadHandler
+    private readonly markNotificationAsReadHandler: MarkNotificationAsReadHandler,
+    @Inject("ITokenProvider") 
+    private readonly tokenProvider: ITokenProvider ,
   ) {}
 
   //Helpers
 
-  private getCurrentUserId(req: Request): string {
-    const user = (req as any).user;
-    if (!user?.id) {
-      throw new InternalServerErrorException('User ID missing in request context');
+  private async getCurrentUserId(authHeader: string): Promise<string> {
+    const token = authHeader?.replace(/^Bearer\s+/i, "");
+    if (!token) {
+      throw new Error("Token required");
     }
-    return user.id;
+    const payload = await this.tokenProvider.validateToken(token);
+    if (!payload || !payload.id) {
+      throw new Error("Invalid token");
+    }
+    return payload.id;
   }
 
   private handleResult<T>(result: Either<DomainException, T>): T {
@@ -66,9 +76,9 @@ export class NotificationsController {
   @HttpCode(HttpStatus.CREATED)
   async registerDevice(
     @Body() body: RegisterDeviceResponseDto,
-    @Req() req: Request,
+    @Headers('authorization') authHeader: string 
   ) {
-    const userId = this.getCurrentUserId(req);
+    const userId = await this.getCurrentUserId(authHeader);
     const command = new RegisterDeviceCommand(userId, body.token, body.deviceType);
     const result = await this.registerDeviceHandler.execute(command);
     return this.handleResult(result);
@@ -79,9 +89,9 @@ export class NotificationsController {
   @HttpCode(HttpStatus.NO_CONTENT) 
   async unregisterDevice(
     @Body() body: UnregisterDeviceDto,
-    @Req() req: Request,
+    @Headers('authorization') authHeader: string 
   ) {
-    const userId = this.getCurrentUserId(req);
+    const userId = await this.getCurrentUserId(authHeader);
     const command = new UnregisterDeviceCommand(userId, body.token);
     const result = await this.unregisterDeviceHandler.execute(command);
     this.handleResult(result);
@@ -91,9 +101,9 @@ export class NotificationsController {
   async getNotifications(
     @Query('limit') limit: number = 20,
     @Query('page') page: number = 1,
-    @Req() req: Request,
+    @Headers('authorization') authHeader: string 
   ) {
-    const userId = this.getCurrentUserId(req);
+    const userId = await this.getCurrentUserId(authHeader);
     const query = new GetNotificationsQuery(userId, Number(limit), Number(page));
     const result = await this.getNotificationsHandler.execute(query);
     return this.handleResult(result);
@@ -103,9 +113,9 @@ export class NotificationsController {
   async markAsRead(
     @Param('id') id: string,
     @Body() body: UpdateNotificationDto,
-    @Req() req: Request,
+    @Headers('authorization') authHeader: string 
   ) {
-    const userId = this.getCurrentUserId(req);
+    const userId = await this.getCurrentUserId(authHeader);
     const command = new MarkNotificationAsReadCommand(
       id, 
       userId, 

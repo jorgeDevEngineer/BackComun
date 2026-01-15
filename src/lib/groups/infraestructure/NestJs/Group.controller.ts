@@ -14,10 +14,10 @@ import {
   BadRequestException,
   ForbiddenException,
   InternalServerErrorException,
+  Inject,
+  Headers,
 } from "@nestjs/common";
 import { Request } from "express";
-
-import { FakeCurrentUserGuard } from "./FakeCurrentUser.guard";
 
 import { CreateGroupCommand } from "../../application/parameterObjects/CreateGroupCommand";
 import { CreateGroupCommandHandler } from "../../application/Handlers/commands/CreateGroupCommandHandler";
@@ -56,9 +56,9 @@ import { DomainException } from "src/lib/shared/exceptions/DomainException";
 import { GroupNotFoundError } from "src/lib/shared/exceptions/GroupNotFoundError";
 import { UserNotMemberOfGroupError } from "../../../shared/exceptions/NotMemberGroupError";
 import { GroupBusinessException } from "src/lib/shared/exceptions/GroupGenException";
+import { ITokenProvider } from "src/lib/auth/application/providers/ITokenProvider";
 
 @Controller("groups")
-@UseGuards(FakeCurrentUserGuard)
 export class GroupsController {
   constructor(
     private readonly createGroupHandler: CreateGroupCommandHandler,
@@ -75,14 +75,21 @@ export class GroupsController {
     private readonly getGroupAssignedQuizzesQueryHandler: GetGroupQuizzesQueryHandler,
     private readonly getGroupLeaderboardQueryHandler: GetGroupLeaderboardQueryHandler,
     private readonly getGroupQuizLeaderboardQueryHandler: GetGroupQuizLeaderboardQueryHandler,
+
+    @Inject("ITokenProvider") 
+    private readonly tokenProvider: ITokenProvider 
   ) {}
 
-  private getCurrentUserId(req: Request): string {
-    const user = (req as any).user;
-    if (!user?.id) {
-      throw new Error("Missing current user id in request.user");
+  private async getCurrentUserId(authHeader: string): Promise<string> {
+    const token = authHeader?.replace(/^Bearer\s+/i, "");
+    if (!token) {
+      throw new Error("Token required");
     }
-    return user.id;
+    const payload = await this.tokenProvider.validateToken(token);
+    if (!payload || !payload.id) {
+      throw new Error("Invalid token");
+    }
+    return payload.id;
   }
 
   // --- MÉTODO HELPER PARA DESEMPAQUETAR EITHER ---
@@ -112,9 +119,9 @@ export class GroupsController {
   @HttpCode(HttpStatus.CREATED)
   async createGroup(
     @Body() body: CreateGroupRequestDto,
-    @Req() req: Request,
+    @Headers('authorization') authHeader: string 
   ): Promise<CreateGroupResponseDto> {
-    const currentUserId = this.getCurrentUserId(req);
+    const currentUserId = await this.getCurrentUserId(authHeader);
     const command = new CreateGroupCommand(body.name, currentUserId);
         return this.createGroupHandler.execute(command);
   }
@@ -124,9 +131,9 @@ export class GroupsController {
   async assignQuizToGroup(
     @Param("groupId") groupId: string,
     @Body() body: AssignQuizToGroupRequestDto,
-    @Req() req: Request,
+    @Headers('authorization') authHeader: string 
   ): Promise<AssignQuizToGroupResponseDto> {
-    const currentUserId = this.getCurrentUserId(req);
+    const currentUserId = await this.getCurrentUserId(authHeader);
 
     if (!body.availableUntil) {
       throw new BadRequestException("es necesario proporcionar availableUntil");
@@ -147,41 +154,50 @@ export class GroupsController {
   @Get(':groupId/quizzes')
   async getAssignedQuizzes(
     @Param('groupId') groupId: string,
-    @Req() req: any,
+    @Headers('authorization') authHeader: string 
   ) {
-    const currentUserId = this.getCurrentUserId(req);
+    const currentUserId = await this.getCurrentUserId(authHeader);
     const query = new GetGroupQuizzesQuery(groupId, currentUserId);
     const result = await this.getGroupAssignedQuizzesQueryHandler.execute(query);
     return this.handleResult(result);
   }
 
   @Get()
-  async getMyGroups(@Req() req: Request) {
-    const currentUserId = this.getCurrentUserId(req);
+  async getMyGroups(
+    @Headers('authorization') authHeader: string 
+  ) {
+    const currentUserId = await this.getCurrentUserId(authHeader);
     const query = new GetUserGroupsQuery(currentUserId);
     const result = await this.getUserGroupsQueryHandler.execute(query);
     return this.handleResult(result);
   }
 
   @Get(":id")
-  async getGroupDetail(@Param("id") id: string, @Req() req: Request) {
-    const currentUserId = this.getCurrentUserId(req);
+  async getGroupDetail(
+    @Param("id") id: string, 
+    @Headers('authorization') authHeader: string 
+  ) {
+    const currentUserId = await this.getCurrentUserId(authHeader);
     const query = new GetGroupDetailsQuery(id, currentUserId);
     const result = await this.getGroupDetailsQueryHandler.execute(query);
     return this.handleResult(result);
   }
 
   @Get(":id/members")
-  async getGroupmembers(@Param("id") id: string, @Req() req: Request) {
-    const currentUserId = this.getCurrentUserId(req);
+  async getGroupmembers(
+    @Param("id") id: string, 
+    @Headers('authorization') authHeader: string 
+  ) {
+    const currentUserId = await this.getCurrentUserId(authHeader);
     const query = new GetGroupMembersQuery(id, currentUserId);
     const result = await this.getGroupMembersQueryHandler.execute(query);
     return this.handleResult(result);
   }
 
   @Post(":id/invitation")
-  async generateInvitation(@Param("id") id: string, @Req() req: Request) {
-    const currentUserId = this.getCurrentUserId(req);
+  async generateInvitation(@Param("id") id: string,@Headers('authorization') authHeader: string 
+) {
+    const currentUserId = await this.getCurrentUserId(authHeader);
     const command = new GenerateGroupInvitationCommand(
       id,
       currentUserId,
@@ -193,9 +209,9 @@ export class GroupsController {
   @Post("join")
   async joinByInvitation(
     @Body() body: { token: string },
-    @Req() req: Request,
+    @Headers('authorization') authHeader: string 
   ) {
-    const currentUserId = this.getCurrentUserId(req);
+    const currentUserId = await this.getCurrentUserId(authHeader);
     const command = new JoinGroupByInvitationCommand(
       body.token,
       currentUserId,
@@ -205,8 +221,11 @@ export class GroupsController {
   }
 
   @Post(":id/leave")
-  async leaveGroup(@Param("id") id: string, @Req() req: Request) {
-    const currentUserId = this.getCurrentUserId(req);
+  async leaveGroup(
+    @Param("id") id: string, 
+    @Headers('authorization') authHeader: string 
+  ) {
+    const currentUserId = await this.getCurrentUserId(authHeader);
     const command = new LeaveGroupCommand(
       id,
       currentUserId,
@@ -219,9 +238,9 @@ export class GroupsController {
   async removeMember(
     @Param("id") id: string,
     @Param("memberId") memberId: string,
-    @Req() req: Request,
+    @Headers('authorization') authHeader: string 
   ) {
-    const currentUserId = this.getCurrentUserId(req);
+    const currentUserId = await this.getCurrentUserId(authHeader);
     const command = new RemoveGroupMemberCommand(
       id,
       memberId,
@@ -235,9 +254,9 @@ export class GroupsController {
   async updateGroupInfo(
     @Param("id") id: string,
     @Body() body: { name?: string; description?: string },
-    @Req() req: Request,
+    @Headers('authorization') authHeader: string 
   ) {
-    const currentUserId = this.getCurrentUserId(req);
+    const currentUserId = await this.getCurrentUserId(authHeader);
     const command = new UpdateGroupDetailsCommand(
       id,
       currentUserId,
@@ -252,9 +271,9 @@ export class GroupsController {
   async transferAdmin(
     @Param("id") id: string,
     @Body() body: { newAdminUserId: string },
-    @Req() req: Request,
+    @Headers('authorization') authHeader: string 
   ) {
-    const currentUserId = this.getCurrentUserId(req);
+    const currentUserId = await this.getCurrentUserId(authHeader);
     const command = new TransferGroupAdminCommand(
       id,
       currentUserId,
@@ -267,9 +286,9 @@ export class GroupsController {
   @Get(':groupId/leaderboard')
   async getGroupLeaderboard(
     @Param('groupId') groupId: string,
-    @Req() req: Request,
+    @Headers('authorization') authHeader: string 
   ) {
-    const userId = this.getCurrentUserId(req);
+    const userId = await this.getCurrentUserId(authHeader);
     const query = new GetGroupLeaderboardQuery(groupId, userId);
     const result = await this.getGroupLeaderboardQueryHandler.execute(query);
     return this.handleResult(result);
@@ -279,9 +298,9 @@ export class GroupsController {
   async getGroupQuizLeaderboard(
     @Param("groupId") groupId: string,
     @Param("quizId") quizId: string,
-    @Req() req: Request,
+    @Headers('authorization') authHeader: string 
   ) {
-    const userId = this.getCurrentUserId(req);
+    const userId = await this.getCurrentUserId(authHeader);
     const query = new GetGroupQuizLeaderboardQuery(
       groupId,
       quizId,
