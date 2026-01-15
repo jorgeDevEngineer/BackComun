@@ -67,18 +67,6 @@ export class UserController {
     private readonly assetUrlResolver: IAssetUrlResolver
   ) {}
 
-  private async getCurrentUserId(authHeader: string): Promise<string> {
-    const token = authHeader?.replace(/^Bearer\s+/i, "");
-    if (!token) {
-      throw new UnauthorizedException("Token required");
-    }
-    const payload = await this.tokenProvider.validateToken(token);
-    if (!payload || !payload.id) {
-      throw new UnauthorizedException("Invalid token");
-    }
-    return payload.id;
-  }
-
   handleResult<T>(result: Result<T>): T {
     if (result.isFailure) {
       if (result.error instanceof UserNotFoundException) {
@@ -156,7 +144,7 @@ export class UserController {
 
   @Get("profile")
   async getProfile(@Headers("authorization") auth: string) {
-    const userId = await this.getCurrentUserId(auth);
+    const userId = await this.tokenProvider.getUserIdFromAuthHeader(auth);
     const query = new GetOneUserById(userId);
     const result = await this.getOneUserById.execute(query);
     const userObj = this.handleResult(result).toPlainObject();
@@ -193,7 +181,7 @@ export class UserController {
     @Headers("authorization") auth: string,
     @Body() body: Edit
   ) {
-    const userId = await this.getCurrentUserId(auth);
+    const userId = await this.tokenProvider.getUserIdFromAuthHeader(auth);
     const query = new GetOneUserById(userId);
     const userResult = await this.getOneUserById.execute(query);
     const user = this.handleResult(userResult);
@@ -223,7 +211,7 @@ export class UserController {
     @Body() body: Edit,
     @Headers("authorization") auth: string
   ) {
-    const requesterUserId = await this.getCurrentUserId(auth);
+    const requesterUserId = await this.tokenProvider.getUserIdFromAuthHeader(auth);
     const query = new GetOneUserById(params.id);
     const userResult = await this.getOneUserById.execute(query);
     const user = this.handleResult(userResult);
@@ -249,7 +237,7 @@ export class UserController {
 
   @Delete("profile")
   async deleteProfile(@Headers("authorization") auth: string) {
-    const userId = await this.getCurrentUserId(auth);
+    const userId = await this.tokenProvider.getUserIdFromAuthHeader(auth);
     const query = new GetOneUserById(userId);
     const userResult = await this.getOneUserById.execute(query);
     this.handleResult(userResult);
@@ -263,7 +251,7 @@ export class UserController {
     @Param() params: FindByIdParams,
     @Headers("authorization") auth: string
   ) {
-    const requesterUserId = await this.getCurrentUserId(auth);
+    const requesterUserId = await this.tokenProvider.getUserIdFromAuthHeader(auth);
     const query = new GetOneUserById(params.id);
     const userResult = await this.getOneUserById.execute(query);
     this.handleResult(userResult);
