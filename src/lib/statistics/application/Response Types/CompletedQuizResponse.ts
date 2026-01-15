@@ -7,11 +7,11 @@ import { PlayerId } from "src/lib/multiplayer/domain/valueObjects/playerVOs";
 export type CompletedQuizResponse = {
   kahootId: string;
   gameId: string;
-  gameType: "Singleplayer" | "Multiplayer";
+  gameType: "Singleplayer" | "Multiplayer_player" | "Multiplayer_host";
   title: string;
   completionDate: Date;
-  finalScore: number;
-  rankingPosition: number | null;
+  finalScore?: number;
+  rankingPosition?: number;
 };
 
 export function toSingleCompletedQuizResponse(
@@ -27,7 +27,6 @@ export function toSingleCompletedQuizResponse(
     title: plainQuiz.title,
     completionDate: singleGame.getCompletedAt().getValue(),
     finalScore: singleGame.getScore().getScore(),
-    rankingPosition: null,
   };
 }
 
@@ -44,12 +43,27 @@ export function toMultiPlayerCompletedQuizResponse(
   return {
     kahootId: plainQuiz.id,
     gameId: multiGame.getId().getId(),
-    gameType: "Multiplayer",
+    gameType: "Multiplayer_player",
     title: plainQuiz.title,
     completionDate: multiGame.getCompletionDate(),
     finalScore: score[1],
     rankingPosition: multiGame
       .getLeaderboardEntryFor(PlayerId.of(playerId.value))
       .getRank(),
+  };
+}
+
+export function toMultiHostCompletedQuizResponse(
+  multiGame: MultiplayerSession,
+  completedQuiz: Quiz
+): CompletedQuizResponse {
+  const plainQuiz = completedQuiz.toPlainObject();
+
+  return {
+    kahootId: plainQuiz.id,
+    gameId: multiGame.getId().getId(),
+    gameType: "Multiplayer_host",
+    title: plainQuiz.title,
+    completionDate: multiGame.getCompletionDate(),
   };
 }

@@ -7,13 +7,14 @@ import { IHandler } from '../../shared/IHandler';
 import { Injectable } from '@nestjs/common';
 import { AuthorId, MediaCategory, MediaName, MediaUrl, MediaMimeType, MediaSize, MediaFormat } from '../domain/value-object/MediaId';
 import * as path from 'path';
+import { ITokenProvider } from '../../auth/application/providers/ITokenProvider';
 
 export interface UploadMediaDTO {
     file: Buffer;
     fileName: string;
     mimeType: string;
     category?: string;
-    authorId: string;
+    token: string;
 }
 
 @Injectable()
@@ -21,42 +22,43 @@ export class UploadMedia implements IHandler<UploadMediaDTO, Result<Media>> {
     constructor(
         private readonly storageService: IStorageService,
         private readonly mediaRepository: IMediaRepository,
+        private readonly tokenProvider: ITokenProvider,
     ) {}
 
     async execute(request: UploadMediaDTO): Promise<Result<Media>> {
-        const { file, fileName, mimeType, category, authorId } = request;
+        const { file, fileName, mimeType, category, token } = request;
 
-        try {
-            // 1. Upload the file to the storage service
-            const uploadResult = await this.storageService.upload(
-                file,
-                fileName,
-                mimeType,
-            );
+        // 1. Validate the token and get the user id. This will throw if the token is invalid.
+        const tokenPayload = await this.tokenProvider.validateToken(token);
+        const authorId = tokenPayload.id;
 
-            if (uploadResult.isFailure) {
-                return Result.fail(uploadResult.error);
-            }
+        // 2. Upload the file to the storage service
+        const uploadResult = await this.storageService.upload(
+            file,
+            fileName,
+            mimeType,
+        );
 
-            const { url } = uploadResult.getValue();
-
-            // 2. Create the Media entity
-            const media = Media.create(
-                AuthorId.of(authorId),
-                MediaName.of(fileName),
-                MediaUrl.of(url),
-                MediaMimeType.of(mimeType),
-                MediaSize.of(file.length),
-                MediaFormat.of(path.extname(fileName)),
-                MediaCategory.of(category ?? 'generic'),
-            );
-
-            // 3. Save the media entity to the repository
-            await this.mediaRepository.save(media);
-
-            return Result.ok(media);
-        } catch (error) {
-            return Result.fail(error);
+        if (uploadResult.isFailure) {
+            return Result.fail(uploadResult.error);
         }
+
+        const { url } = uploadResult.getValue();
+
+        // 3. Create the Media entity
+        const media = Media.create(
+            AuthorId.of(authorId),
+            MediaName.of(fileName),
+            MediaUrl.of(url),
+            MediaMimeType.of(mimeType),
+            MediaSize.of(file.length),
+            MediaFormat.of(path.extname(fileName)),
+            MediaCategory.of(category ?? 'generic'),
+        );
+
+        // 4. Save the media entity to the repository
+        await this.mediaRepository.save(media);
+
+        return Result.ok(media);
     }
 }

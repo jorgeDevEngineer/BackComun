@@ -1,7 +1,7 @@
 import { Module, OnApplicationBootstrap, Logger } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { ConfigModule, ConfigService } from "@nestjs/config";
-import { EventEmitterModule } from '@nestjs/event-emitter';
+import { EventEmitterModule } from "@nestjs/event-emitter";
 import * as Joi from "joi";
 import { KahootModule } from "./lib/kahoot/infrastructure/NestJs/kahoot.module";
 import { MediaModule } from "./lib/media/infrastructure/NestJs/media.module";
@@ -18,6 +18,7 @@ import { AdminModule } from "./lib/admin/infrastructure/admin.module";
 import { MultiplayerSessionModule } from "./lib/multiplayer/infrastructure/NestJs/MultiplayerSession.module";
 import { DynamicMongoAdapter } from "./lib/shared/infrastructure/database/dynamic-mongo.adapter";
 import { AuthModule } from "./lib/auth/infrastructure/NestJs/auth.module";
+import { UserSubscriptionModule } from "./lib/user/infrastructure/NestJS/subscription.module";
 import { NotificationsModule } from "./lib/notifications/infrastructure/NestJs/Notification.module";
 
 @Module({
@@ -30,6 +31,8 @@ import { NotificationsModule } from "./lib/notifications/infrastructure/NestJs/N
         DATABASE_URL_MONGO: Joi.string().required(),
         DATABASE_SSL: Joi.boolean().default(false),
         DATABASE_SYNCHRONIZE: Joi.boolean().default(false), // Por defecto false para seguridad
+        JWT_SECRET: Joi.string().required(),
+        JWT_EXPIRES_IN: Joi.string().default("24h"),
       }),
     }),
 
@@ -63,12 +66,13 @@ import { NotificationsModule } from "./lib/notifications/infrastructure/NestJs/N
     GroupsModule,
     LibraryModule,
     UserModule,
+    UserSubscriptionModule,
     AuthModule,
     SinglePlayerGameModule,
     StatisticsModule,
     BackofficeModule,
     MultiplayerSessionModule,
-    NotificationsModule
+    NotificationsModule,
   ],
 })
 export class AppModule implements OnApplicationBootstrap {
@@ -103,18 +107,19 @@ export class AppModule implements OnApplicationBootstrap {
     try {
       await this.mongoAdapter.reconnect("asyncgame", mongoUrl);
     } catch (error) {
-      logger.error(`Failed to connect kahoot mongo: ${error.message}`);
+      logger.error(`Failed to connect asyncgame mongo: ${error.message}`);
     }
     try {
       await this.mongoAdapter.reconnect("multiplayersessions", mongoUrl);
     } catch (error) {
-      logger.error(`Failed to connect kahoot mongo: ${error.message}`);
+      logger.error(
+        `Failed to connect multiplayersessions mongo: ${error.message}`
+      );
     }
     try {
       await this.mongoAdapter.reconnect("notifications", mongoUrl);
     } catch (error) {
       logger.error(`Failed to connect notifications mongo: ${error.message}`);
     }
-
   }
 }

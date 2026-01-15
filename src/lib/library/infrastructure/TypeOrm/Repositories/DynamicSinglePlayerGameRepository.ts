@@ -1,6 +1,9 @@
 import { InjectRepository } from "@nestjs/typeorm";
 import { SinglePlayerGameRepository } from "../../../domain/port/SinglePlayerRepository";
-import { TypeOrmSinglePlayerGameEntity } from "src/lib/singlePlayerGame/infrastructure/TypeOrm/TypeOrmSinglePlayerGameEntity";
+import {
+  MongoSinglePlayerGameDocument,
+  TypeOrmSinglePlayerGameEntity,
+} from "src/lib/singlePlayerGame/infrastructure/TypeOrm/TypeOrmSinglePlayerGameEntity";
 import { Injectable } from "@nestjs/common";
 import { SinglePlayerGame } from "src/lib/singlePlayerGame/domain/aggregates/SinglePlayerGame";
 import {
@@ -17,30 +20,11 @@ import { CriteriaApplier } from "src/lib/library/domain/port/CriteriaApplier";
 import { QuizQueryCriteria } from "src/lib/library/application/Response Types/QuizQueryCriteria";
 import { MongoFindParams } from "../Criteria Appliers/Mongo/MongoAdvancedCriteriaApplier";
 import { DynamicMongoAdapter } from "src/lib/shared/infrastructure/database/dynamic-mongo.adapter";
-import { ObjectId } from "mongodb";
+import { ObjectId, Collection, Db } from "mongodb";
 import { Optional } from "src/lib/shared/Type Helpers/Optional";
 import { QuestionId } from "src/lib/kahoot/domain/valueObject/Question";
 import { SinglePlayerGameId } from "src/lib/shared/domain/ids";
 import { MongoCriteriaApplier } from "../Criteria Appliers/Mongo/MongoCriteriaApplier";
-
-type MongoSinglePlayerGameDoc = {
-  _id: ObjectId; // ID nativo de Mongo
-  gameId: string; // si lo guardas explícito además del _id
-  quizId: string;
-  playerId: string;
-  totalQuestions: number;
-  progress: number;
-  score: number;
-  startedAt: Date;
-  completedAt?: Date;
-  questionResults: {
-    questionId: string;
-    answerIndex: number[];
-    timeUsedMs: number;
-    wasCorrect: boolean;
-    pointsEarned: number;
-  }[];
-};
 
 @Injectable()
 export class DynamicSinglePlayerGameRepository
@@ -54,8 +38,15 @@ export class DynamicSinglePlayerGameRepository
       QuizQueryCriteria
     >,
     private readonly mongoAdapter: DynamicMongoAdapter,
-    private readonly mongoCriteriaApplier: MongoCriteriaApplier<MongoSinglePlayerGameDoc>
+    private readonly mongoCriteriaApplier: MongoCriteriaApplier<MongoSinglePlayerGameDocument>
   ) {}
+
+  private async getMongoCollection(): Promise<
+    Collection<MongoSinglePlayerGameDocument>
+  > {
+    const db: Db = await this.mongoAdapter.getConnection("asyncgame");
+    return db.collection<MongoSinglePlayerGameDocument>("attempts");
+  }
 
   async findInProgressGames(
     playerId: UserId,
@@ -63,9 +54,7 @@ export class DynamicSinglePlayerGameRepository
   ): Promise<[SinglePlayerGame[], number]> {
     try {
       // 🔑 Intentar Mongo primero
-      const db = await this.mongoAdapter.getConnection("singlePlayerGame");
-      const collection =
-        db.collection<MongoSinglePlayerGameDoc>("singlePlayerGame");
+      const collection = await this.getMongoCollection();
 
       const params: MongoFindParams<any> = {
         filter: {
@@ -78,6 +67,9 @@ export class DynamicSinglePlayerGameRepository
         params,
         criteria
       );
+
+      console.log("Mongo filter:", filter);
+
       const docs = await collection
         .find(filter, options)
         .sort({ startedAt: -1 })
@@ -86,6 +78,7 @@ export class DynamicSinglePlayerGameRepository
       return [docs.map((doc) => this.mapMongoToDomain(doc)), docs.length];
     } catch {
       // 🔑 Fallback a Postgres
+      console.log("Falling back to Postgres for in-progress games");
       let qb = this.gameRepo.createQueryBuilder("game");
       qb.where("game.playerId = :playerId", {
         playerId: playerId.getValue(),
@@ -106,9 +99,9 @@ export class DynamicSinglePlayerGameRepository
   ): Promise<[SinglePlayerGame[], number]> {
     try {
       // 🔑 Intentar Mongo primero
-      const db = await this.mongoAdapter.getConnection("singlePlayerGame");
-      const collection =
-        db.collection<MongoSinglePlayerGameDoc>("singlePlayerGame");
+      const collection = await this.getMongoCollection();
+
+      console.log("MongoDB llega");
 
       const params: MongoFindParams<any> = {
         filter: {
@@ -129,6 +122,7 @@ export class DynamicSinglePlayerGameRepository
       return [docs.map((doc) => this.mapMongoToDomain(doc)), docs.length];
     } catch {
       // 🔑 Fallback a Postgres
+      console.log("Falling back to Postgres for completed games");
       let qb = this.gameRepo.createQueryBuilder("game");
       qb.where("game.playerId = :playerId", {
         playerId: playerId.getValue(),
@@ -144,37 +138,41 @@ export class DynamicSinglePlayerGameRepository
     }
   }
 
-  private mapMongoToDomain(doc: MongoSinglePlayerGameDoc): SinglePlayerGame {
-    const questionResults = doc.questionResults.map((qr) => {
-      const playerAnswer = PlayerAnswer.create(
-        QuestionId.of(qr.questionId),
-        qr.answerIndex,
-        qr.timeUsedMs
-      );
+  private mapMongoToDomain(
+    mongoDoc: MongoSinglePlayerGameDocument
+  ): SinglePlayerGame {
+    const questionResults: QuestionResult[] = mongoDoc.questionResults.map(
+      (questionResultJson) => {
+        const playerAnswer = PlayerAnswer.create(
+          QuestionId.of(questionResultJson.questionId),
+          questionResultJson.answerIndex,
+          questionResultJson.timeUsedMs
+        );
 
-      const evaluatedAnswer = EvaluatedAnswer.create(
-        qr.wasCorrect,
-        qr.pointsEarned
-      );
+        const evaluatedAnswer = EvaluatedAnswer.create(
+          questionResultJson.wasCorrect,
+          questionResultJson.pointsEarned
+        );
 
-      return QuestionResult.create(
-        QuestionId.of(qr.questionId),
-        playerAnswer,
-        evaluatedAnswer
-      );
-    });
+        return QuestionResult.create(
+          QuestionId.of(questionResultJson.questionId),
+          playerAnswer,
+          evaluatedAnswer
+        );
+      }
+    );
 
     return SinglePlayerGame.fromDb(
-      SinglePlayerGameId.of(doc._id.toString()),
-      QuizId.of(doc.quizId),
-      doc.totalQuestions,
-      UserId.of(doc.playerId),
-      GameProgress.create(doc.progress),
-      GameScore.create(doc.score),
-      new Date(doc.startedAt),
-      doc.completedAt
-        ? new Optional<Date>(new Date(doc.completedAt))
-        : new Optional(),
+      SinglePlayerGameId.of(mongoDoc._id),
+      QuizId.of(mongoDoc.quizId),
+      mongoDoc.totalQuestions,
+      UserId.of(mongoDoc.playerId),
+      GameProgress.create(mongoDoc.progress),
+      GameScore.create(mongoDoc.score),
+      new Date(mongoDoc.startedAt),
+      new Optional<Date>(
+        mongoDoc.completedAt ? new Date(mongoDoc.completedAt) : undefined
+      ),
       questionResults
     );
   }

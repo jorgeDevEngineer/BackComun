@@ -1,5 +1,5 @@
 
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { KahootController } from './kahoots.controller';
 import { CreateQuizUseCase } from '../../application/CreateQuizUseCase';
@@ -16,74 +16,84 @@ import { ErrorHandlingDecorator } from '../../../shared/aspects/error-handling/a
 import { GetAllKahootsUseCase } from '../../application/GetAllKahootsUseCase';
 import { DatabaseModule } from '../../../shared/infrastructure/database/database.module';
 import { TypeOrmQuizEntity } from '../TypeOrm/TypeOrmQuizEntity';
+import { AuthModule } from '../../../auth/infrastructure/NestJs/auth.module';
+import { ITokenProvider } from '../../../auth/application/providers/ITokenProvider';
+import { UserRepository } from '../../../user/domain/port/UserRepository';
+import { TypeOrmUserEntity } from '../../../user/infrastructure/TypeOrm/TypeOrmUserEntity';
+import { TypeOrmUserRepository } from '../../../user/infrastructure/TypeOrm/TypeOrmUserRepository';
 
 @Module({
   imports: [
     LoggerModule, 
     DatabaseModule,
-    TypeOrmModule.forFeature([TypeOrmQuizEntity]),
+    TypeOrmModule.forFeature([TypeOrmQuizEntity, TypeOrmUserEntity]),
+    forwardRef(() => AuthModule),
   ],
   controllers: [KahootController],
   providers: [
+    {
+        provide: 'UserRepository',
+        useClass: TypeOrmUserRepository,
+    },
     {
       provide: 'QuizRepository',
       useClass: TypeOrmQuizRepository,
     },
     {
       provide: CreateQuizUseCase,
-      useFactory: (logger: ILoggerPort, repo: QuizRepository) => {
-        const realUseCase = new CreateQuizUseCase(repo);
+      useFactory: (logger: ILoggerPort, repo: QuizRepository, tokenProvider: ITokenProvider, userRepo: UserRepository) => {
+        const realUseCase = new CreateQuizUseCase(repo, tokenProvider, userRepo);
         const withErrorHandling = new ErrorHandlingDecorator(realUseCase, logger, 'CreateQuizUseCase');
         return new LoggingUseCaseDecorator(withErrorHandling, logger, 'CreateQuizUseCase');
       },
-      inject: ['ILoggerPort', 'QuizRepository'],
+      inject: ['ILoggerPort', 'QuizRepository', 'ITokenProvider', 'UserRepository'],
     },
     {
-      provide: GetQuizUseCase,
-      useFactory: (logger: ILoggerPort, repo: QuizRepository) => {
-        const realUseCase = new GetQuizUseCase(repo);
-        const withErrorHandling = new ErrorHandlingDecorator(realUseCase, logger, 'GetQuizUseCase');
-        return new LoggingUseCaseDecorator(withErrorHandling, logger, 'GetQuizUseCase');
+        provide: GetQuizUseCase,
+        useFactory: (logger: ILoggerPort, repo: QuizRepository, tokenProvider: ITokenProvider, userRepo: UserRepository) => {
+          const realUseCase = new GetQuizUseCase(repo, tokenProvider, userRepo);
+          const withErrorHandling = new ErrorHandlingDecorator(realUseCase, logger, 'GetQuizUseCase');
+          return new LoggingUseCaseDecorator(withErrorHandling, logger, 'GetQuizUseCase');
+        },
+        inject: ['ILoggerPort', 'QuizRepository', 'ITokenProvider', 'UserRepository'],
       },
-      inject: ['ILoggerPort', 'QuizRepository'],
-    },
     {
       provide: ListUserQuizzesUseCase,
-      useFactory: (logger: ILoggerPort, repo: QuizRepository) => {
-        const realUseCase = new ListUserQuizzesUseCase(repo);
+      useFactory: (logger: ILoggerPort, repo: QuizRepository, tokenProvider: ITokenProvider, userRepo: UserRepository) => {
+        const realUseCase = new ListUserQuizzesUseCase(repo, tokenProvider, userRepo);
         const withErrorHandling = new ErrorHandlingDecorator(realUseCase, logger, 'ListUserQuizzesUseCase');
         return new LoggingUseCaseDecorator(withErrorHandling, logger, 'ListUserQuizzesUseCase');
       },
-      inject: ['ILoggerPort', 'QuizRepository'],
+      inject: ['ILoggerPort', 'QuizRepository', 'ITokenProvider', 'UserRepository'],
     },
     {
       provide: UpdateQuizUseCase,
-      useFactory: (logger: ILoggerPort, repo: QuizRepository) => {
-        const realUseCase = new UpdateQuizUseCase(repo);
+      useFactory: (logger: ILoggerPort, repo: QuizRepository, tokenProvider: ITokenProvider, userRepo: UserRepository) => {
+        const realUseCase = new UpdateQuizUseCase(repo, tokenProvider, userRepo);
         const withErrorHandling = new ErrorHandlingDecorator(realUseCase, logger, 'UpdateQuizUseCase');
         return new LoggingUseCaseDecorator(withErrorHandling, logger, 'UpdateQuizUseCase');
       },
-      inject: ['ILoggerPort', 'QuizRepository'],
+      inject: ['ILoggerPort', 'QuizRepository', 'ITokenProvider', 'UserRepository'],
     },
     {
       provide: DeleteQuizUseCase,
-      useFactory: (logger: ILoggerPort, repo: QuizRepository) => {
-        const realUseCase = new DeleteQuizUseCase(repo);
+      useFactory: (logger: ILoggerPort, repo: QuizRepository, tokenProvider: ITokenProvider, userRepo: UserRepository) => {
+        const realUseCase = new DeleteQuizUseCase(repo, tokenProvider, userRepo);
         const withErrorHandling = new ErrorHandlingDecorator(realUseCase, logger, 'DeleteQuizUseCase');
         return new LoggingUseCaseDecorator(withErrorHandling, logger, 'DeleteQuizUseCase');
       },
-      inject: ['ILoggerPort', 'QuizRepository'],
+      inject: ['ILoggerPort', 'QuizRepository', 'ITokenProvider', 'UserRepository'],
     },
     {
       provide: GetAllKahootsUseCase,
-      useFactory: (logger: ILoggerPort, repo: QuizRepository) => {
-        const realUseCase = new GetAllKahootsUseCase(repo);
+      useFactory: (logger: ILoggerPort, repo: QuizRepository, tokenProvider: ITokenProvider, userRepo: UserRepository) => {
+        const realUseCase = new GetAllKahootsUseCase(repo, tokenProvider, userRepo);
         const withErrorHandling = new ErrorHandlingDecorator(realUseCase, logger, 'GetAllKahootsUseCase');
         return new LoggingUseCaseDecorator(withErrorHandling, logger, 'GetAllKahootsUseCase');
       },
-      inject: ['ILoggerPort', 'QuizRepository'],
+      inject: ['ILoggerPort', 'QuizRepository', 'ITokenProvider', 'UserRepository'],
     },
   ],
-  exports: ['QuizRepository', TypeOrmModule],
+  exports: ['QuizRepository', TypeOrmModule, 'UserRepository'],
 })
 export class KahootModule {}

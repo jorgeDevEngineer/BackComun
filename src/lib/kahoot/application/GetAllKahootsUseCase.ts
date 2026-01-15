@@ -1,26 +1,45 @@
-import { Inject, Injectable } from "@nestjs/common";
-import { QuizRepository } from "../domain/port/QuizRepository";
-import { Quiz } from "../domain/entity/Quiz";
-import { Result } from "../../shared/Type Helpers/result";
-import { IHandler } from "src/lib/shared/IHandler";
 
-@Injectable()
-export class GetAllKahootsUseCase implements IHandler<void, Result<Quiz[]>> {
+import { QuizRepository } from '../domain/port/QuizRepository';
+import { Quiz } from '../domain/entity/Quiz';
+import { Result } from '../../shared/Type Helpers/result';
+import { IHandler } from 'src/lib/shared/IHandler';
+import { ITokenProvider } from 'src/lib/auth/application/providers/ITokenProvider';
+import { UserRepository } from 'src/lib/user/domain/port/UserRepository';
+import { UnauthorizedException } from '@nestjs/common';
+import { UserId as UserDomainId } from '../../user/domain/valueObject/UserId';
+
+export interface GetAllKahoots {
+    auth: string;
+}
+
+export class GetAllKahootsUseCase implements IHandler<GetAllKahoots, Result<Quiz[]>> {
   constructor(
-    @Inject("QuizRepository")
-    private readonly quizRepository: QuizRepository
-  ) {}
+    private readonly quizRepository: QuizRepository,
+    private readonly tokenProvider: ITokenProvider,
+    private readonly userRepository: UserRepository,
+    ) {}
 
-  async execute(): Promise<Result<Quiz[]>> {
-    try {
-      const quizzes = await this.quizRepository.searchByAuthor();
-      return Result.ok<Quiz[]>(quizzes);
-    } catch (error) {
-      // Si ocurre cualquier error inesperado, lo capturamos y devolvemos un fallo
-      console.error("Error inesperado en GetAllKahootsUseCase:", error);
-      return Result.fail<Quiz[]>(
-        new Error("Ocurrió un error inesperado al obtener los quizzes.")
-      );
+  async execute(request: GetAllKahoots): Promise<Result<Quiz[]>> {
+    if (!request.auth || !request.auth.startsWith('Bearer ')) {
+        throw new UnauthorizedException('Missing or malformed token');
     }
+    const token = request.auth.split(' ')[1];
+    const decodedToken = await this.tokenProvider.validateToken(token);
+    if (!decodedToken) {
+        throw new UnauthorizedException('Invalid token');
+    }
+
+    const user = await this.userRepository.getOneById(UserDomainId.of(decodedToken.id));
+    if (!user) {
+        throw new UnauthorizedException('User not found');
+    }
+
+    if (!user.isAdmin) {
+        throw new UnauthorizedException('User is not an admin');
+    }
+
+    const quizzes = await this.quizRepository.searchByAuthor();
+    
+    return Result.ok<Quiz[]>(quizzes);
   }
 }

@@ -41,6 +41,7 @@ export class LoginCommandHandler
     }
     const token = await this.tokenProvider.generateToken({
       id: user.id.value,
+      username: user.userName.value,
       email: user.email.value,
       roles: user.roles.value,
     });
