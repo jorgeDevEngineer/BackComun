@@ -1,10 +1,12 @@
 import { IsOptional, IsString } from "class-validator";
 
 export class Edit {
+  @IsOptional()
   @IsString()
-  username: string;
+  username?: string;
+  @IsOptional()
   @IsString()
-  email: string;
+  email?: string;
   @IsOptional()
   @IsString()
   currentPassword?: string;
@@ -14,13 +16,16 @@ export class Edit {
   @IsOptional()
   @IsString()
   confirmNewPassword?: string;
+  @IsOptional()
   @IsString()
-  name: string;
+  name?: string;
   @IsOptional()
   @IsString()
   description?: string;
+  @IsOptional()
   @IsString()
-  avatarAssetId: string;
+  avatarAssetId?: string;
+  @IsOptional()
   @IsString()
-  themePreference: string;
+  themePreference?: string;
 }

@@ -227,7 +227,6 @@ export class UserController {
     const query = new GetOneUserById(params.id);
     const userResult = await this.getOneUserById.execute(query);
     const user = this.handleResult(userResult);
-
     const editUserCommand = new EditUser(
       body.username,
       body.email,
