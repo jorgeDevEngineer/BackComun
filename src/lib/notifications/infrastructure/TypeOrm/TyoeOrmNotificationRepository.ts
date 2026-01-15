@@ -5,13 +5,16 @@ import { Collection, Db } from 'mongodb';
 import { NotificationEntity } from './NotificationEntity';
 import { DynamicMongoAdapter } from 'src/lib/shared/infrastructure/database/dynamic-mongo.adapter'; 
 import { INotificationRepository } from '../../domain/port/INotificationRepository';
+import { notificationId } from '../../domain/valueObject/NotificationId'; 
+import { Optional } from 'src/lib/shared/Type Helpers/Optional'; 
+import { Notification } from '../../domain/Notification';
+import { UserId } from 'src/lib/user/domain/valueObject/UserId';
 
 interface MongoNotificationDocument {
   _id: string; 
   userId: string;
   type: string;
-  title: string;
-  body: string;
+  message: string;
   isRead: boolean;
   resourceId?: string;
   createdAt: Date;
@@ -31,67 +34,99 @@ export class TypeOrmNotificationRepository implements INotificationRepository {
     const db: Db = await this.mongoAdapter.getConnection('notifications');
     return db.collection<MongoNotificationDocument>('history');
   }
+  async findById(id: notificationId): Promise<Optional<Notification>> {
+    const orm = await this.pgRepo.findOne({ where: { id: id.value } });
 
+    if (!orm) {
+      return new Optional<Notification>(null);
+    }
+    const domainNotification = Notification.createFromPersistence(
+        notificationId.of(orm.id),
+        new UserId(orm.userId),
+        orm.type,
+        orm.message,
+        orm.isRead,
+        orm.createdAt,
+        orm.resourceId
+    );
 
-  async save(notification: NotificationEntity): Promise<void> {
-    
-        try {
-            const collection = await this.getMongoCollection();
-            const mongoDoc: MongoNotificationDocument = {
-                _id: notification.id,
-                userId: notification.userId,
-                type: notification.type,
-                title: notification.title,
-                body: notification.body,
-                isRead: notification.isRead,
-                resourceId: notification.resourceId,
-                createdAt: notification.createdAt || new Date(),
-            };
+    return new Optional(domainNotification);
+  }
 
-            await collection.replaceOne({ _id: mongoDoc._id }, mongoDoc, { upsert: true });
-            return; 
+  async save(notification: Notification): Promise<void> {
+    const rawId = typeof notification.id === 'object' ? (notification.id as any).value : notification.id;
+    const rawUserId = typeof notification.userId === 'object' ? (notification.userId as any).value : notification.userId;
 
-        } catch (error) {
-            this.logger.warn(`MongoDB save history failed: ${error.message}`);
-        }
-    
-      try {
-      await this.pgRepo.save(notification);
-      this.logger.debug(`Notificación guardada (PG): ${notification.title}`);
-    } catch (error) {
-      this.logger.error(`Postgres save history failed: ${error.message}`);
+  let rawResourceId: string | null = null;
+  if (notification.resourceId) {
+    if (typeof notification.resourceId.getValue === 'function') {
+      rawResourceId = notification.resourceId.hasValue() ? notification.resourceId.getValue() : null;
+    } else if ((notification.resourceId as any).value) {
+      rawResourceId = (notification.resourceId as any).value;
+    } else if (typeof notification.resourceId === 'string') {
+      rawResourceId = notification.resourceId;
     }
   }
 
-  async findByUserId(userId: string): Promise<NotificationEntity[]> {
-    
-        try {
-            const collection = await this.getMongoCollection();
-            const docs = await collection
-                .find({ userId })
-                .sort({ createdAt: -1 })
-                .limit(20)
-                .toArray();
+  try {
+    const collection = await this.getMongoCollection();
+    const mongoDoc = {
+      _id: rawId,
+      userId: rawUserId,
+      type: notification.type,
+      message: notification.message,
+      isRead: notification.isRead,
+      resourceId: rawResourceId,
+      createdAt: notification.createdAt || new Date(),
+    };
+    await collection.replaceOne({ _id: rawId }, mongoDoc, { upsert: true });
+  } catch (error) {
+    this.logger.warn(`MongoDB save history failed: ${error.message}`);
+  }
+  try {
+    const entityToSave = {
+      id: rawId,          
+      userId: rawUserId,  
+      type: notification.type,
+      message: notification.message,
+      isRead: notification.isRead,
+      resourceId: rawResourceId,
+      createdAt: notification.createdAt
+    };
 
-            if (docs.length > 0) {
-                return docs.map(doc => {
-                    const entity = new NotificationEntity();
-                    entity.id = doc._id;
-                    entity.userId = doc.userId;
-                    entity.type = doc.type;
-                    entity.title = doc.title;
-                    entity.body = doc.body;
-                    entity.isRead = doc.isRead;
-                    entity.resourceId = doc.resourceId;
-                    entity.createdAt = doc.createdAt;
-                    return entity;
-                });
-            }
-            return []; 
-        } catch (error) {
-            this.logger.error(`MongoDB find history failed: ${error.message}`);
-        }
-    
+    await this.pgRepo.save(entityToSave);
+    this.logger.debug(`Notificación guardada (PG): ${notification.message}`);
+  } catch (error) {
+    this.logger.error(`Postgres save history failed: ${error.message}`);
+  }
+}
+
+  async findByUserId(userId: string): Promise<NotificationEntity[]> {
+    try {
+      const collection = await this.getMongoCollection();
+      const docs = await collection
+        .find({ userId })
+        .sort({ createdAt: -1 })
+        .limit(20)
+        .toArray();
+
+      if (docs.length > 0) {
+        return docs.map(doc => {
+          const entity = new NotificationEntity();
+          entity.id = doc._id;
+          entity.userId = doc.userId;
+          entity.type = doc.type;
+          entity.message = doc.message;
+          entity.isRead = doc.isRead;
+          entity.resourceId = doc.resourceId;
+          entity.createdAt = doc.createdAt;
+          return entity;
+        });
+      }
+      return []; 
+    } catch (error) {
+      this.logger.warn(`MongoDB find history failed: ${error.message}`);
+    }
 
     return this.pgRepo.find({
       where: { userId },

@@ -9,14 +9,11 @@ export class NotificationEntity {
   @Column()
   userId: string;
 
-  @Column()
+  @Column({name:"type"})
   type: string; 
 
-  @Column()
-  title: string;
-
   @Column("text")
-  body: string;
+  message: string;
 
   @Column({ default: false })
   isRead: boolean;

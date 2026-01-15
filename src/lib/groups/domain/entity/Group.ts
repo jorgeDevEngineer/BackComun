@@ -18,9 +18,8 @@ export class Group {
   private _members: GroupMember[];
   private _quizAssignments: GroupQuizAssignment[];
   private _completions: GroupQuizCompletion[];
-private _invitationToken: Optional<GroupInvitationToken>;
+  private _invitationToken: Optional<GroupInvitationToken>;
   private _description: Optional<GroupDescription>;
-
   private constructor(
     private readonly _id: GroupId,
     private _name: GroupName,
@@ -353,9 +352,7 @@ removeQuizAssignment(
       member.incrementCompletedQuizzes();
     }
   }
-
-
-
+  
 // Invitaciones al grupo
 setInvitation(invitation: GroupInvitationToken, now: Date = new Date()): void {
   this._invitationToken = new Optional(invitation);
@@ -397,9 +394,6 @@ generateInvitation(
     this._updatedAt = now;
   }
 
-
-
-  
   toPlainObject() {
     return {
       id: this._id.value,
@@ -416,17 +410,6 @@ generateInvitation(
   }
 }
 
-export type GroupQuizAssignmentPlain = {
-  id: string;
-  groupId: string;
-  quizId: string;
-  assignedBy: string;
-  createdAt: Date;
-  availableFrom: Date | null;
-  availableUntil: Date | null;
-  isActive: boolean;
-};
-
 export type GroupQuizAssignmentPrimitive = {
   id: string;
   quizId: string;
@@ -437,21 +420,4 @@ export type GroupQuizAssignmentPrimitive = {
   isActive: boolean;
 };
 
-export type QuizBasicPrimitive = {
-  id: string;
-  title: string;
-};
 
-export type CompletedAttemptPrimitive = {
-  gameId: string;
-  quizId: string;
-  score: number;
-  startedAt: Date;
-  completedAt: Date;
-};
-
-export type GroupMemberScoreStat = {
-  userId: string;
-  completedQuizzes: number;
-  totalPoints: number;
-};
