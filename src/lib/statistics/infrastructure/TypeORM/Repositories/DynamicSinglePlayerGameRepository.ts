@@ -136,7 +136,7 @@ export class DynamicSinglePlayerGameRepository
     try {
       const collection = await this.getMongoCollection();
       const id = gameId.getId();
-      const doc = await collection.findOne({ id: id });
+      const doc = await collection.findOne({ _id: id });
       return doc ? this.mapMongoToDomain(doc) : null;
     } catch (error) {
       console.log("MongoDB Failed, fallbak to postgres");

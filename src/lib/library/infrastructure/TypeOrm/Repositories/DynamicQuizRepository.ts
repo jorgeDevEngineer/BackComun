@@ -38,31 +38,18 @@ import {
 import { CriteriaApplier } from "src/lib/library/domain/port/CriteriaApplier";
 
 type MongoQuizDoc = {
-  _id: ObjectId; // ID nativo de Mongo
-  authorId: string; // autor del quiz
+  _id: string;
+  authorId: string;
   title: string;
   description: string;
-  visibility: string; // "public" | "private" | etc.
-  status: string; // "COMPLETED" | "IN_PROGRESS" | etc.
+  visibility: string;
+  status: string;
   category: string;
   themeId: string;
-  coverImageId?: string;
+  coverImageId: string | null;
   createdAt: Date;
   playCount: number;
-  questions: {
-    id: string;
-    text: string;
-    type: string;
-    mediaId?: string;
-    timeLimit: number;
-    points: number;
-    answers: {
-      id: string;
-      text?: string;
-      mediaId?: string;
-      isCorrect: boolean;
-    }[];
-  }[];
+  questions: any[];
 };
 
 @Injectable()
@@ -121,8 +108,8 @@ export class DynamicQuizRepository implements QuizRepository {
     );
   }
 
-  private mapMongoToDomain(doc: MongoQuizDoc): Quiz {
-    const questions = doc.questions.map((qData) => {
+  private mapMongoToDomain(mongoDoc: MongoQuizDoc): Quiz {
+    const questions = mongoDoc.questions.map((qData) => {
       const answers = qData.answers.map((aData) => {
         if (aData.text) {
           return Answer.createTextAnswer(
@@ -130,14 +117,14 @@ export class DynamicQuizRepository implements QuizRepository {
             AnswerText.of(aData.text),
             IsCorrect.fromBoolean(aData.isCorrect)
           );
+        } else {
+          return Answer.createMediaAnswer(
+            AnswerId.of(aData.id),
+            aData.mediaId,
+            IsCorrect.fromBoolean(aData.isCorrect)
+          );
         }
-        return Answer.createMediaAnswer(
-          AnswerId.of(aData.id),
-          aData.mediaId!,
-          IsCorrect.fromBoolean(aData.isCorrect)
-        );
       });
-
       return Question.create(
         QuestionId.of(qData.id),
         QuestionText.of(qData.text),
@@ -148,28 +135,32 @@ export class DynamicQuizRepository implements QuizRepository {
         answers
       );
     });
-
     return Quiz.fromDb(
-      QuizId.of(doc._id.toString()), // 🔑 usamos el _id de Mongo como identificador
-      UserId.of(doc.authorId),
-      QuizTitle.of(doc.title),
-      QuizDescription.of(doc.description),
-      Visibility.fromString(doc.visibility),
-      QuizStatus.fromString(doc.status),
-      QuizCategory.of(doc.category),
-      ThemeId.of(doc.themeId),
-      doc.coverImageId,
-      doc.createdAt,
-      doc.playCount,
+      QuizId.of(mongoDoc._id),
+      UserId.of(mongoDoc.authorId),
+      QuizTitle.of(mongoDoc.title),
+      QuizDescription.of(mongoDoc.description),
+      Visibility.fromString(mongoDoc.visibility),
+      QuizStatus.fromString(mongoDoc.status),
+      QuizCategory.of(mongoDoc.category),
+      ThemeId.of(mongoDoc.themeId),
+      mongoDoc.coverImageId,
+      new Date(mongoDoc.createdAt),
+      mongoDoc.playCount,
       questions
     );
   }
 
+  private async getMongoCollection() {
+    const db = await this.mongoAdapter.getConnection("kahoot");
+    const collection = db.collection<MongoQuizDoc>("quizzes");
+    return collection;
+  }
+
   async find(id: QuizId): Promise<Quiz | null> {
     try {
-      const db = await this.mongoAdapter.getConnection("kahoot");
-      const collection = db.collection<MongoQuizDoc>("quizzes");
-      const doc = await collection.findOne({ _id: new ObjectId(id.value) });
+      const collection = await this.getMongoCollection();
+      const doc = await collection.findOne({ _id: id.value });
       return doc ? this.mapMongoToDomain(doc) : null;
     } catch {
       const quizEntity = await this.repository.findOne({
@@ -184,8 +175,7 @@ export class DynamicQuizRepository implements QuizRepository {
     criteria: QuizQueryCriteria
   ): Promise<[Quiz[], number]> {
     try {
-      const db = await this.mongoAdapter.getConnection("kahoot");
-      const collection = db.collection<MongoQuizDoc>("quizzes");
+      const collection = await this.getMongoCollection();
 
       const params: MongoFindParams<MongoQuizDoc> = {
         filter: { authorId: authorId.value },
@@ -211,10 +201,9 @@ export class DynamicQuizRepository implements QuizRepository {
 
   async quizExists(quizId: QuizId): Promise<boolean> {
     try {
-      const db = await this.mongoAdapter.getConnection("kahoot");
-      const collection = db.collection("quizzes");
+      const collection = await this.getMongoCollection();
       const count = await collection.countDocuments({
-        _id: new ObjectId(quizId.value),
+        _id: quizId.value,
       });
       return count > 0;
     } catch {
@@ -225,8 +214,7 @@ export class DynamicQuizRepository implements QuizRepository {
   async findByIds(ids: QuizId[], criteria: QuizQueryCriteria): Promise<Quiz[]> {
     if (ids.length === 0) return [];
     try {
-      const db = await this.mongoAdapter.getConnection("kahoot");
-      const collection = db.collection<MongoQuizDoc>("quizzes");
+      const collection = await this.getMongoCollection();
 
       const params: MongoFindParams<any> = {
         filter: { _id: { $in: ids.map((id) => id.value) } },
