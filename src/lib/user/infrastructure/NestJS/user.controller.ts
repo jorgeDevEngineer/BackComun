@@ -271,73 +271,7 @@ export class UserController {
     return this.handleResult(deleteResult);
   }
 
-  @Get("subscription/plans")
-  async getSubscriptionPlans() {
-    return [...Object.values(MEMBERSHIP_TYPES)];
-  }
-
-  @Get("subscription/status")
-  async getProfileSubscriptionStatus(@Headers("authorization") auth: string) {
-    const userId = await this.getCurrentUserId(auth);
-    const query = new GetOneUserById(userId);
-    const userResult = await this.getOneUserById.execute(query);
-    const user = this.handleResult(userResult);
-    return {
-      membershipType: user.membership.type.value,
-      status: user.membership.isEnabled() ? "enabled" : "disabled",
-      expiresAt: user.membership.expiresAt.value,
-    };
-  }
-
-  @Get("subscription/status/:id")
-  async getSubscriptionStatusById(@Param() params: FindByIdParams) {
-    const query = new GetOneUserById(params.id);
-    const userResult = await this.getOneUserById.execute(query);
-    const user = this.handleResult(userResult);
-    return {
-      membershipType: user.membership.type.value,
-      status: user.membership.isEnabled() ? "enabled" : "disabled",
-      expiresAt: user.membership.expiresAt.value,
-    };
-  }
-
-  @Post("subscription/premium")
-  async enablePremiumSubscriptionPlan(@Headers("authorization") auth: string) {
-    const userId = await this.getCurrentUserId(auth);
-    const command = new EnablePremiumMembership(userId, userId);
-    const result = await this.enablePremiumMembership.execute(command);
-    return this.handleResult(result);
-  }
-
-  @Post("subscription/premium/:id")
-  async enablePremiumSubscriptionPlanById(
-    @Param() params: FindByIdParams,
-    @Headers("authorization") auth: string
-  ) {
-    const requesterUserId = await this.getCurrentUserId(auth);
-    const command = new EnablePremiumMembership(params.id, requesterUserId);
-    const result = await this.enablePremiumMembership.execute(command);
-    return this.handleResult(result);
-  }
-
-  @Delete("subscription/free")
-  async enableFreeSubscriptionPlan(@Headers("authorization") auth: string) {
-    const userId = await this.getCurrentUserId(auth);
-    const command = new EnableFreeMembership(userId, userId);
-    const result = await this.enableFreeMembership.execute(command);
-    return this.handleResult(result);
-  }
-
-  @Delete("subscription/free/:id")
-  async enableFreeSubscriptionPlanById(
-    @Param() params: FindByIdParams,
-    @Headers("authorization") auth: string
-  ) {
-    const requesterUserId = await this.getCurrentUserId(auth);
-    const command = new EnableFreeMembership(params.id, requesterUserId);
-    const result = await this.enableFreeMembership.execute(command);
-    return this.handleResult(result);
-  }
+  // Subscription endpoints moved to UserSubscriptionModule
 
   /////////////////////////////////////LEGACY ENDPOINTS//////////////////////////////////////
 
