@@ -27,6 +27,7 @@ import { GetOneUserById } from "src/lib/user/application/Parameter Objects/GetOn
 import { ITokenProvider } from "../../application/providers/ITokenProvider";
 import { IAssetUrlResolver } from "src/lib/shared/application/providers/IAssetUrlResolver";
 import { UserNotFoundException } from "src/lib/user/application/exceptions/UserNotFoundException";
+import { TokenPayload } from "src/lib/auth/application/Parameter Objects/TokenPayload";
 
 @Controller("auth")
 export class AuthController {
@@ -116,12 +117,9 @@ export class AuthController {
       throw new HttpException("User not found", HttpStatus.NOT_FOUND);
     }
     const user = userResult.getValue();
-    const newToken = await this.tokenProvider.generateToken({
-      id: user.id.value,
-      username: user.userName.value,
-      email: user.email.value,
-      roles: user.roles.value,
-    });
+    const newToken = await this.tokenProvider.generateToken(
+      TokenPayload.fromUser(user)
+    );
     return { token: newToken, user: this.mapUserToResponse(user) };
   }
 }
