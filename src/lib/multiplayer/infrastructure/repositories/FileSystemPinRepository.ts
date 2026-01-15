@@ -10,19 +10,20 @@ export class FileSystemPinRepository implements IPinRepository, OnModuleInit {
     private readonly PIN_FILE_PATH: string;
     
     constructor() {
-        const fileName = process.env.PIN_STORAGE_PATH || 'active_pins.txt';
-    
-        if (path.isAbsolute(fileName)) {
-            this.PIN_FILE_PATH = fileName;
-        } else if (process.env.RENDER) {
-            // Verificar si tenemos sistema de archivos persistente
-            this.PIN_FILE_PATH = process.env.RENDER_PERSISTENT_FS === 'true'
-                ? `/persistent/${fileName}`  // ✅ Persistente
-                : `/tmp/${fileName}`;        // ⚠️ Temporal
+         // EN RENDER: siempre usar /tmp
+        // LOCAL: usar archivo local
+        if (process.env.RENDER) {
+            this.PIN_FILE_PATH = '/tmp/active_pins.txt';
+            console.log('⚡ RENDER: Usando /tmp/ (datos temporales)');
         } else {
-            this.PIN_FILE_PATH = path.join(process.cwd(), fileName);
+            // Desarrollo local - puedes personalizar con variable de entorno
+            const fileName = process.env.PIN_STORAGE_PATH || 'active_pins.txt';
+            this.PIN_FILE_PATH = path.isAbsolute(fileName) 
+                ? fileName 
+                : path.join(process.cwd(), fileName);
+            console.log('💻 LOCAL: Usando archivo local');
         }
-        console.log(`🔧 Ruta configurada: ${this.PIN_FILE_PATH}`);
+        console.log(`📁 Archivo configurado en: ${this.PIN_FILE_PATH}`);
     }
 
     async onModuleInit() {
