@@ -11,9 +11,18 @@ export class FileSystemPinRepository implements IPinRepository, OnModuleInit {
     
     constructor() {
         const fileName = process.env.PIN_STORAGE_PATH || 'active_pins.txt';
-        this.PIN_FILE_PATH = path.isAbsolute(fileName) 
-            ? fileName 
-            : path.join(process.cwd(), fileName);
+    
+        if (path.isAbsolute(fileName)) {
+            this.PIN_FILE_PATH = fileName;
+        } else if (process.env.RENDER) {
+            // Verificar si tenemos sistema de archivos persistente
+            this.PIN_FILE_PATH = process.env.RENDER_PERSISTENT_FS === 'true'
+                ? `/persistent/${fileName}`  // ✅ Persistente
+                : `/tmp/${fileName}`;        // ⚠️ Temporal
+        } else {
+            this.PIN_FILE_PATH = path.join(process.cwd(), fileName);
+        }
+        console.log(`🔧 Ruta configurada: ${this.PIN_FILE_PATH}`);
     }
 
     async onModuleInit() {
