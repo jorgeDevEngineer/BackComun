@@ -50,14 +50,6 @@ export class GetUserCompletedQuizzesDomainService {
         criteria
       );
 
-    if (completedGames.length === 0 && completeMultiGames.length === 0) {
-      return Either.makeLeft(
-        new NotInProgressQuizzesException(
-          "No hay quizzes completados para este usuario"
-        )
-      );
-    }
-
     const multiGameQuizIds = completeMultiGames.map((game) =>
       QuizId.of(game.getQuizId().value)
     );
@@ -71,9 +63,6 @@ export class GetUserCompletedQuizzesDomainService {
       QuizId.of(game.getQuizId().value)
     );
     const quizzes = await this.quizRepository.findByIds(quizzIds, criteria);
-    if (quizzes.length === 0) {
-      return Either.makeLeft(new QuizzesNotFoundException());
-    }
 
     if (multiQuizzes.length > 0) {
       quizzes.push(...multiQuizzes);

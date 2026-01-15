@@ -59,25 +59,13 @@ export class LibraryController {
     >
   ) {}
 
-  private async getCurrentUserId(authHeader: string): Promise<string> {
-    const token = authHeader?.replace(/^Bearer\s+/i, "");
-    if (!token) {
-      throw new UnauthorizedException("Token required");
-    }
-    const payload = await this.tokenProvider.validateToken(token);
-    if (!payload || !payload.id) {
-      throw new UnauthorizedException("Invalid token");
-    }
-    return payload.id;
-  }
-
   @Post("favorites/:quizId")
   @HttpCode(201)
   async addFavorite(
     @Param("quizId") quizId: string,
     @Headers("authorization") auth: string
   ): Promise<void> {
-    const userId = await this.getCurrentUserId(auth);
+    const userId = await this.tokenProvider.getUserIdFromAuthHeader(auth);
     const command = new AddUserFavoriteQuiz(userId, quizId);
     const result = await this.addUserFavoriteQuizHandler.execute(command);
     if (result.isLeft()) {
@@ -92,7 +80,7 @@ export class LibraryController {
     @Param("quizId") quizId: string,
     @Headers("authorization") auth: string
   ): Promise<void> {
-    const userId = await this.getCurrentUserId(auth);
+    const userId = await this.tokenProvider.getUserIdFromAuthHeader(auth);
     const command = new DeleteUserFavoriteQuiz(userId, quizId);
     const result = await this.deleteUserFavoriteQuizHandler.execute(command);
     if (result.isLeft()) {
@@ -107,7 +95,7 @@ export class LibraryController {
     @Headers("authorization") auth: string,
     @Query() queryParams: QuizQueryParamsInput
   ): Promise<QueryWithPaginationResponse<QuizResponse>> {
-    const userId = await this.getCurrentUserId(auth);
+    const userId = await this.tokenProvider.getUserIdFromAuthHeader(auth);
     const command = new GetUserQuizzes(userId, queryParams);
     const result = await this.getUserFavoriteQuizzesHandler.execute(command);
     if (result.isLeft()) {
@@ -122,7 +110,7 @@ export class LibraryController {
     @Headers("authorization") auth: string,
     @Query() queryParams: QuizQueryParamsInput
   ): Promise<QueryWithPaginationResponse<QuizResponse>> {
-    const userId = await this.getCurrentUserId(auth);
+    const userId = await this.tokenProvider.getUserIdFromAuthHeader(auth);
     const command = new GetUserQuizzes(userId, queryParams);
     const result = await this.getAllUserQuizzesHandler.execute(command);
     if (result.isLeft()) {
@@ -137,7 +125,7 @@ export class LibraryController {
     @Headers("authorization") auth: string,
     @Query() queryParams: QuizQueryParamsInput
   ): Promise<QueryWithPaginationResponse<PlayingQuizResponse>> {
-    const userId = await this.getCurrentUserId(auth);
+    const userId = await this.tokenProvider.getUserIdFromAuthHeader(auth);
     const command = new GetUserQuizzes(userId, queryParams);
     const result = await this.getInProgressQuizzesHandler.execute(command);
     if (result.isLeft()) {
@@ -152,7 +140,7 @@ export class LibraryController {
     @Headers("authorization") auth: string,
     @Query() queryParams: QuizQueryParamsInput
   ): Promise<QueryWithPaginationResponse<PlayingQuizResponse>> {
-    const userId = await this.getCurrentUserId(auth);
+    const userId = await this.tokenProvider.getUserIdFromAuthHeader(auth);
     console.log(userId);
     const command = new GetUserQuizzes(userId, queryParams);
     const result = await this.getCompletedQuizzesHandler.execute(command);
