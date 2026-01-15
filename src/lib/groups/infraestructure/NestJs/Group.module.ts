@@ -1,5 +1,5 @@
 
-import { Module } from "@nestjs/common";
+import { Module, forwardRef } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 
 import { GroupsController } from "./Group.controller";
@@ -38,6 +38,14 @@ import { LoggingUseCaseDecorator } from "src/lib/shared/aspects/logger/applicati
 import { ILoggerPort, LOGGER_PORT } from "src/lib/shared/aspects/logger/domain/ports/logger.port";
 import { ErrorHandlingDecoratorWithEither } from "src/lib/shared/aspects/error-handling/application/decorators/error-handling-either";
 import { EventEmitter2, EventEmitterModule } from "@nestjs/event-emitter";
+import { AuthModule } from "src/lib/auth/infrastructure/NestJs/auth.module";
+import { QuizRepository } from "src/lib/kahoot/domain/port/QuizRepository";
+import { SinglePlayerGameRepository } from "src/lib/singlePlayerGame/domain/repositories/SinglePlayerGameRepository";
+import { SinglePlayerGameModule } from "src/lib/singlePlayerGame/infrastructure/NestJs/SinglePlayerGame.module";
+import { KahootModule } from "src/lib/kahoot/infrastructure/NestJs/kahoot.module";
+import { UserModule } from "src/lib/user/infrastructure/NestJS/user.module";
+import { UserRepository } from "src/lib/user/domain/port/UserRepository";
+
 @Module({
   imports: [
     LoggerModule, 
@@ -48,7 +56,12 @@ import { EventEmitter2, EventEmitterModule } from "@nestjs/event-emitter";
       GroupQuizAssignmentOrmEntity,
       TypeOrmQuizEntity,
       TypeOrmSinglePlayerGameEntity,
+      
     ]),
+    forwardRef(() => AuthModule),
+    SinglePlayerGameModule,
+    KahootModule,
+    UserModule
   ],
   controllers: [GroupsController],
   providers: [
@@ -184,31 +197,33 @@ import { EventEmitter2, EventEmitterModule } from "@nestjs/event-emitter";
 
     {
       provide: GetGroupQuizzesQueryHandler,
-      useFactory: (logger: ILoggerPort, repo: GroupRepository) => {
-        const useCase = new GetGroupQuizzesQueryHandler(repo);
+      useFactory: (logger: ILoggerPort, repo: GroupRepository,
+      quizRepo: QuizRepository, gameRepo: SinglePlayerGameRepository,
+  ) => {
+        const useCase = new GetGroupQuizzesQueryHandler(repo, quizRepo, gameRepo);
         const withError = new ErrorHandlingDecoratorWithEither(useCase, logger, "GetGroupQuizzesQueryHandler");
         return new LoggingUseCaseDecorator(withError, logger, "GetGroupQuizzesQueryHandler");
       },
-      inject: [LOGGER_PORT, "GroupRepository"],
+      inject: [LOGGER_PORT, "GroupRepository", "QuizRepository", "SinglePlayerGameRepository"],
     },
 
     {
       provide: GetGroupLeaderboardQueryHandler,
-      useFactory: (logger: ILoggerPort, repo: GroupRepository) => {
-        const useCase = new GetGroupLeaderboardQueryHandler(repo);
+      useFactory: (logger: ILoggerPort, repo: GroupRepository, gameRepo: SinglePlayerGameRepository, UserRepo: UserRepository) => {
+        const useCase = new GetGroupLeaderboardQueryHandler(repo, gameRepo, UserRepo);
         const withError = new ErrorHandlingDecoratorWithEither(useCase, logger, "GetGroupLeaderboardQueryHandler");
         return new LoggingUseCaseDecorator(withError, logger, "GetGroupLeaderboardQueryHandler");
       },
-      inject: [LOGGER_PORT, "GroupRepository"],
+      inject: [LOGGER_PORT, "GroupRepository", "SinglePlayerGameRepository", "UserRepository"],
     },
 
     {
       provide: GetGroupQuizLeaderboardQueryHandler,
-      useFactory: (logger: ILoggerPort, repo: GroupRepository) => {
-        const useCase = new GetGroupQuizLeaderboardQueryHandler(repo);
+      useFactory: (logger: ILoggerPort, repo: GroupRepository, gameRepo: SinglePlayerGameRepository, UserRepo: UserRepository,) => {
+        const useCase = new GetGroupQuizLeaderboardQueryHandler(repo, gameRepo, UserRepo);
         return new LoggingUseCaseDecorator(useCase, logger, "GetGroupQuizLeaderboardQueryHandler");
       },
-      inject: [LOGGER_PORT, "GroupRepository"],
+      inject: [LOGGER_PORT, "GroupRepository", "SinglePlayerGameRepository", "UserRepository"],
     },
   ],
   exports: ["GroupRepository", TypeOrmModule],

@@ -4,7 +4,7 @@ import { Repository, In } from "typeorm";
 import { Collection, Db } from "mongodb";
 
 import { GroupRepository } from "../../domain/port/GroupRepository";
-import { CompletedAttemptPrimitive, Group, GroupQuizAssignmentPrimitive, QuizBasicPrimitive } from "../../domain/entity/Group";
+import { Group, GroupQuizAssignmentPrimitive } from "../../domain/entity/Group";
 import { GroupId } from "../../domain/valueObject/GroupId";
 import { GroupName } from "../../domain/valueObject/GroupName";
 import { GroupDescription } from "../../domain/valueObject/GroupDescription";
@@ -19,9 +19,6 @@ import { GroupInvitationToken } from "../../domain/valueObject/GroupInvitationTo
 import { UserId } from "src/lib/user/domain/valueObject/UserId";
 import { GroupOrmEntity } from "./GroupOrmEntity";
 import { GroupMemberOrmEntity } from "./GroupOrnMember";
-import { TypeOrmSinglePlayerGameEntity } from "src/lib/singlePlayerGame/infrastructure/TypeOrm/TypeOrmSinglePlayerGameEntity";
-import { TypeOrmQuizEntity } from "src/lib/search/infrastructure/TypeOrm/TypeOrmQuizEntity";
-import { GameProgressStatus } from "src/lib/singlePlayerGame/domain/valueObjects/SinglePlayerGameVOs";
 import { Optional } from "src/lib/shared/Type Helpers/Optional";
 import { DynamicMongoAdapter } from "src/lib/shared/infrastructure/database/dynamic-mongo.adapter";
 
@@ -49,13 +46,8 @@ export class TypeOrmGroupRepository implements GroupRepository {
     private readonly mongoAdapter: DynamicMongoAdapter,
     @InjectRepository(GroupMemberOrmEntity)
     private readonly memberRepo: Repository<GroupMemberOrmEntity>,
-
     @InjectRepository(GroupQuizAssignmentOrmEntity)
     private readonly groupQuizAssignmentRepo: Repository<GroupQuizAssignmentOrmEntity>,
-
-    @InjectRepository(TypeOrmQuizEntity) private readonly quizRepo: Repository<TypeOrmQuizEntity>,
-
-    @InjectRepository(TypeOrmSinglePlayerGameEntity) private readonly gameRepo: Repository<TypeOrmSinglePlayerGameEntity>,
 
   ) {}
 
@@ -242,67 +234,6 @@ export class TypeOrmGroupRepository implements GroupRepository {
     }));
   }
 
-  async findQuizzesBasicByIds(quizIds: string[]): Promise<QuizBasicPrimitive[]> {
-    if (quizIds.length === 0) return [];
-    const quizzes = await this.quizRepo.find({
-      where: { id: In(quizIds) },
-      select: { id: true, title: true },
-    });
-    return quizzes.map(q => ({ id: q.id, title: q.title }));
-  }
-
-  async findCompletedAttemptsByUserAndQuizIds(userId: string, quizIds: string[]): Promise<CompletedAttemptPrimitive[]> {
-    if (quizIds.length === 0) return [];
-    const games = await this.gameRepo.find({
-      where: {
-        playerId: userId,
-        quizId: In(quizIds),
-        status: GameProgressStatus.COMPLETED,
-      },
-      order: { startedAt: "DESC" },
-    });
-
-    return games
-      .filter(g => !!g.completedAt)
-      .map(g => ({
-        gameId: g.gameId,
-        quizId: g.quizId,
-        score: g.score,
-        startedAt: g.startedAt,
-        completedAt: g.completedAt!,
-      }));
-  }
-
-  async getGroupLeaderboardByGroupId(
-    groupId: GroupId,
-    memberUserIds: string[],
-  ): Promise<{ userId: string; completedQuizzes: number; totalPoints: number }[]> {
-    const assignments = await this.findAssignmentsByGroupId(groupId);
-    const quizIds = assignments
-      .filter(a => a.isActive)
-      .map(a => a.quizId);
-
-    if (quizIds.length === 0 || memberUserIds.length === 0) return [];
-
-    const raw = await this.gameRepo
-      .createQueryBuilder("g")
-      .select("g.playerId", "userId")
-      .addSelect("COUNT(DISTINCT g.quizId)", "completedQuizzes")
-      .addSelect("COALESCE(SUM(g.score), 0)", "totalPoints")
-      .where("g.status = :status", { status: GameProgressStatus.COMPLETED })
-      .andWhere("g.quizId IN (:...quizIds)", { quizIds })
-      .andWhere("g.playerId IN (:...userIds)", { userIds: memberUserIds })
-      .groupBy("g.playerId")
-      .orderBy("COALESCE(SUM(g.score), 0)", "DESC")
-      .addOrderBy("COUNT(DISTINCT g.quizId)", "DESC")
-      .getRawMany<{ userId: string; completedQuizzes: string; totalPoints: string }>();
-
-    return raw.map(r => ({
-      userId: r.userId,
-      completedQuizzes: Number(r.completedQuizzes ?? 0),
-      totalPoints: Number(r.totalPoints ?? 0),
-    }));
-  }
 
   // --- MAPPERS PARA MONGO ---
 
