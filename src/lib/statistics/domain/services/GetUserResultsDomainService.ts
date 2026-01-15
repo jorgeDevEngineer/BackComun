@@ -29,6 +29,7 @@ export class GetUserResultsDomainService {
       {
         games: SinglePlayerGame[];
         multiPlayerGames: MultiplayerSession[];
+        ownedGames: MultiplayerSession[];
         quizzes: Quiz[];
         totalGames: number;
       }
@@ -46,10 +47,20 @@ export class GetUserResultsDomainService {
         criteria
       );
 
-    if (completedQuizzes.length === 0 && completeMultiGames.length === 0) {
+    const [ownedGames, totalOwnedCount] =
+      await this.multiPlayerRepo.findOwnedSessionsById(
+        UserIdFromUser.of(userId.getValue()),
+        criteria
+      );
+
+    if (
+      completedQuizzes.length === 0 &&
+      completeMultiGames.length === 0 &&
+      ownedGames.length === 0
+    ) {
       return Either.makeLeft(
         new QuizzesNotFoundException(
-          "El usuario no ha completado nigun kahoot."
+          "El usuario no ha completado nigun kahoot ni ha sido el host de una partida multijugador."
         )
       );
     }
@@ -78,11 +89,23 @@ export class GetUserResultsDomainService {
       quizzes.push(quizData);
     }
 
-    let realCount = totalGames + totalMultiCount;
+    for (const game of ownedGames) {
+      const quizId = QuizId.of(game.getQuizId().getValue());
+      const quizData = await this.quizRepository.find(quizId);
+
+      if (!quizData) {
+        return Either.makeLeft(new QuizNotFoundException());
+      }
+
+      quizzes.push(quizData);
+    }
+
+    let realCount = totalGames + totalMultiCount + totalOwnedCount;
 
     return Either.makeRight({
       games: completedQuizzes,
       multiPlayerGames: completeMultiGames,
+      ownedGames: ownedGames,
       quizzes,
       totalGames: realCount,
     });
