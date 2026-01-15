@@ -117,7 +117,8 @@ export class AuthController {
     }
     const user = userResult.getValue();
     const newToken = await this.tokenProvider.generateToken({
-      sub: user.id.value,
+      id: user.id.value,
+      username: user.userName.value,
       email: user.email.value,
       roles: user.roles.value,
     });

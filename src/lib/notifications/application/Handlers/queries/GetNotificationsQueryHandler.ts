@@ -21,8 +21,7 @@ export class GetNotificationsQueryHandler implements IHandler<GetNotificationsQu
       const dtos: NotificationDto[] = entities.map((e) => ({
         id: e.id,
         type: e.type,
-        title: e.title,
-        body: e.body,
+        message: e.message,
         isRead: e.isRead,
         createdAt: e.createdAt.toISOString(),
         resourceId: e.resourceId

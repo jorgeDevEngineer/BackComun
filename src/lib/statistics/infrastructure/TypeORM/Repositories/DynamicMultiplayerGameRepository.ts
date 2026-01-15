@@ -10,7 +10,7 @@ import { CompletedQuizQueryCriteria } from "src/lib/statistics/application/Respo
 import { CriteriaApplier } from "src/lib/library/domain/port/CriteriaApplier";
 import { QuizId } from "src/lib/kahoot/domain/valueObject/Quiz";
 import { UserId } from "src/lib/user/domain/valueObject/UserId";
-import { ObjectId } from "mongodb";
+import { Collection, Db, ObjectId } from "mongodb";
 import { QuestionId } from "src/lib/kahoot/domain/valueObject/Question";
 import { Player } from "src/lib/multiplayer/domain/entities/Player";
 import {
@@ -30,52 +30,7 @@ import {
 import { MultiplayerSessionId } from "src/lib/shared/domain/ids";
 import { GameScore } from "src/lib/shared/domain/valueObjects";
 import { MongoCriteriaApplier } from "../Criteria Appliers/Mongo/MongoCriteriaApplier";
-
-type MongoMultiplayerSessionDoc = {
-  _id: ObjectId; // identificador nativo de Mongo
-  hostId: string;
-  quizId: string;
-  sessionPin: string;
-  startedAt: Date;
-  completedAt?: Date;
-  currentQuestionStartTime: Date;
-  sessionState: string; // SessionStateType como string
-
-  leaderboard: {
-    playerId: string;
-    nickname: string;
-    score: number;
-    rank: number;
-    previousRank: number;
-  }[];
-
-  progress: {
-    currentQuestion: string;
-    previousQuestion: string | null;
-    totalQuestions: number;
-    questionsAnswered: number;
-  };
-
-  players: {
-    playerId: string;
-    nickname: string;
-    score: number;
-    streak: number;
-    isGuest: boolean;
-  }[];
-
-  playersAnswers: {
-    questionId: string;
-    answers: {
-      playerId: string;
-      questionId: string;
-      answerIndex: number[];
-      isCorrect: boolean;
-      earnedScore: number;
-      timeElapsed: number;
-    }[];
-  }[];
-};
+import { MongoMultiplayerSessionDocument } from "../../../../multiplayer/infrastructure/repositories/TypeOrm/TypeOrmMultiplayerSessionEntity";
 
 @Injectable()
 export class DynamicMultiplayerGameRepository
@@ -89,8 +44,15 @@ export class DynamicMultiplayerGameRepository
       CompletedQuizQueryCriteria
     >,
     private readonly mongoAdapter: DynamicMongoAdapter,
-    private readonly mongoCriteriaApplier: MongoCriteriaApplier<MongoMultiplayerSessionDoc>
+    private readonly mongoCriteriaApplier: MongoCriteriaApplier<MongoMultiplayerSessionDocument>
   ) {}
+
+  private async getMongoCollection(): Promise<
+    Collection<MongoMultiplayerSessionDocument>
+  > {
+    const db: Db = await this.mongoAdapter.getConnection("multiplayersessions");
+    return db.collection<MongoMultiplayerSessionDocument>("sessions");
+  }
 
   async findCompletedSessions(
     playerId: UserId,
@@ -98,14 +60,11 @@ export class DynamicMultiplayerGameRepository
   ): Promise<[MultiplayerSession[], number]> {
     try {
       // 🔹 Mongo
-      const db = await this.mongoAdapter.getConnection("multiplayersessions");
-      const collection = db.collection<MongoMultiplayerSessionDoc>(
-        "multiplayersessions"
-      );
+      const collection = await this.getMongoCollection();
 
       const params = {
         filter: {
-          sessionState: "end",
+          sessionState: { $eq: "end" as SessionStateType },
           "players.playerId": playerId.getValue(),
         },
       };
@@ -124,9 +83,9 @@ export class DynamicMultiplayerGameRepository
       console.log(
         "MongoDB connection not avaliable for multiplayersession falling back to postgres"
       );
-      let qb = this.sessionRepository.createQueryBuilder("multiplayerSessions");
+      let qb = this.sessionRepository.createQueryBuilder("multiplayersessions");
 
-      qb.andWhere(`multiplayerSessions.sessionState = :status`, {
+      qb.andWhere(`multiplayersessions.sessionState = :status`, {
         status: "end",
       });
 
@@ -142,7 +101,7 @@ export class DynamicMultiplayerGameRepository
         { playerId: playerId.getValue() }
       );
 
-      qb = this.pgCriteriaApplier.apply(qb, criteria, "multiplayerSessions");
+      qb = this.pgCriteriaApplier.apply(qb, criteria, "multiplayersessions");
 
       const [entities, total] = await qb.getManyAndCount();
       return [entities.map((entity) => entity.toDomain()), total];
@@ -153,12 +112,9 @@ export class DynamicMultiplayerGameRepository
     sessionId: MultiplayerSessionId
   ): Promise<MultiplayerSession | null> {
     try {
-      const db = await this.mongoAdapter.getConnection("multiplayersessions");
-      const collection = db.collection<MongoMultiplayerSessionDoc>(
-        "multiplayersessions"
-      );
+      const collection = await this.getMongoCollection();
       const id = sessionId.getId();
-      const doc = await collection.findOne({ id: id });
+      const doc = await collection.findOne({ _id: id });
       return doc ? this.mapMongoToDomain(doc) : null;
     } catch (error) {
       const entity = await this.sessionRepository.findOne({
@@ -174,14 +130,11 @@ export class DynamicMultiplayerGameRepository
   ): Promise<[MultiplayerSession[], number]> {
     try {
       // 🔹 Mongo
-      const db = await this.mongoAdapter.getConnection("multiplayersessions");
-      const collection = db.collection<MongoMultiplayerSessionDoc>(
-        "multiplayersessions"
-      );
+      const collection = await this.getMongoCollection();
 
       const params = {
         filter: {
-          sessionState: "end", // mismo valor que usas en Postgres
+          sessionState: { $eq: "end" as SessionStateType }, // mismo valor que usas en Postgres
           hostId: ownerId.getValue(),
         },
       };
@@ -203,28 +156,28 @@ export class DynamicMultiplayerGameRepository
       console.log(
         "MongoDB connection not avaliable for multiplayersession falling back to postgres"
       );
-      let qb = this.sessionRepository.createQueryBuilder("multiplayerSessions");
+      let qb = this.sessionRepository.createQueryBuilder("multiplayersessions");
 
-      qb.andWhere(`multiplayerSessions.sessionState = :status`, {
+      qb.andWhere(`multiplayersessions.sessionState = :status`, {
         status: "end",
       });
 
-      qb.andWhere(`multiplayerSessions.hostId = :ownerId`, {
+      qb.andWhere(`multiplayersessions.hostId = :ownerId`, {
         ownerId: ownerId.getValue(),
       });
 
-      qb = this.pgCriteriaApplier.apply(qb, criteria, "multiplayerSessions");
+      qb = this.pgCriteriaApplier.apply(qb, criteria, "multiplayersessions");
       const [entities, total] = await qb.getManyAndCount();
       return [entities.map((entity) => entity.toDomain()), total];
     }
   }
 
   private mapMongoToDomain(
-    doc: MongoMultiplayerSessionDoc
+    mongoDoc: MongoMultiplayerSessionDocument
   ): MultiplayerSession {
-    // 🔹 Convertir players JSON a Map<PlayerId, Player>
+    // Convertir players JSON a Map<PlayerId, Player>
     const playersMap = new Map<string, Player>();
-    doc.players.forEach((playerJson) => {
+    mongoDoc.players.forEach((playerJson) => {
       const player = Player.create(
         PlayerId.of(playerJson.playerId),
         PlayerNickname.create(playerJson.nickname),
@@ -235,11 +188,12 @@ export class DynamicMultiplayerGameRepository
       playersMap.set(playerJson.playerId, player);
     });
 
-    // 🔹 Convertir playersAnswers JSON a Map<QuestionId, MultiplayerQuestionResult>
+    // Convertir playersAnswers JSON a Map<QuestionId, MultiplayerQuestionResult>
     const answersMap = new Map<string, MultiplayerQuestionResult>();
-    doc.playersAnswers.forEach((resultJson) => {
+    mongoDoc.playersAnswers.forEach((resultJson) => {
       const questionId = QuestionId.of(resultJson.questionId);
 
+      // Convertir answers JSON a Map<PlayerId, MultiplayerAnswer>
       const answersMapForQuestion = new Map<string, MultiplayerAnswer>();
       resultJson.answers.forEach((answerJson) => {
         const answer = MultiplayerAnswer.create(
@@ -253,6 +207,7 @@ export class DynamicMultiplayerGameRepository
         answersMapForQuestion.set(answerJson.playerId, answer);
       });
 
+      // Crear MultiplayerQuestionResult
       const questionResult = MultiplayerQuestionResult.fromMap(
         questionId,
         answersMapForQuestion
@@ -260,8 +215,8 @@ export class DynamicMultiplayerGameRepository
       answersMap.set(resultJson.questionId, questionResult);
     });
 
-    // 🔹 Convertir leaderboard JSON a Leaderboard
-    const leaderboardEntries: LeaderboardEntry[] = doc.leaderboard.map(
+    // Convertir leaderboard JSON a Leaderboard
+    const leaderboardEntries: LeaderboardEntry[] = mongoDoc.leaderboard.map(
       (entryJson) =>
         LeaderboardEntry.create(
           PlayerId.of(entryJson.playerId),
@@ -273,28 +228,27 @@ export class DynamicMultiplayerGameRepository
     );
     const leaderboard = Leaderboard.fromMap(leaderboardEntries);
 
-    // 🔹 Convertir progress JSON a SessionProgress
+    // Convertir progress JSON a SessionProgress
     const progress = SessionProgress.create(
-      QuestionId.of(doc.progress.currentQuestion),
-      doc.progress.previousQuestion
-        ? new Optional<QuestionId>(QuestionId.of(doc.progress.previousQuestion))
+      QuestionId.of(mongoDoc.progress.currentQuestion),
+      mongoDoc.progress.previousQuestion
+        ? new Optional<QuestionId>(
+            QuestionId.of(mongoDoc.progress.previousQuestion)
+          )
         : new Optional<QuestionId>(undefined),
-      doc.progress.totalQuestions,
-      doc.progress.questionsAnswered
+      mongoDoc.progress.totalQuestions,
+      mongoDoc.progress.questionsAnswered
     );
 
-    // 🔹 Crear el agregado MultiplayerSession
     return MultiplayerSession.fromDb(
-      MultiplayerSessionId.of(doc._id.toString()),
-      UserId.of(doc.hostId),
-      QuizId.of(doc.quizId),
-      SessionPin.create(doc.sessionPin),
-      new Date(doc.startedAt),
-      new Optional<Date>(
-        doc.completedAt ? new Date(doc.completedAt) : undefined
-      ),
-      new Date(doc.currentQuestionStartTime),
-      SessionState.createAsAny(doc.sessionState as SessionStateType),
+      MultiplayerSessionId.of(mongoDoc._id),
+      UserId.of(mongoDoc.hostId),
+      QuizId.of(mongoDoc.quizId),
+      SessionPin.create(mongoDoc.sessionPin),
+      new Date(mongoDoc.startedAt),
+      new Optional<Date>(new Date(mongoDoc.completedAt)),
+      new Date(mongoDoc.currentQuestionStartTime),
+      SessionState.createAsAny(mongoDoc.sessionState),
       leaderboard,
       progress,
       playersMap,

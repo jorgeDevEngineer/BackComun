@@ -31,10 +31,9 @@ export class QuizAssignedListener {
       notification.id = randomUUID();
       notification.userId = userId;
       notification.type = 'quiz_assigned'; 
-      notification.title = title;
-      notification.body = body;
+      notification.message = body;
       notification.isRead = false;
-      notification.resourceId = event.quizId; // ID para que al tocar, vaya al quiz
+      notification.resourceId = event.quizId; 
       notification.createdAt = new Date();
 
       await this.notificationRepo.save(notification);

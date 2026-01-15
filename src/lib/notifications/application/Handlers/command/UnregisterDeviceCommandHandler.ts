@@ -1,5 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { IHandler } from "src/lib/shared/IHandler"; // Tu interfaz genérica
+import { IHandler } from "src/lib/shared/IHandler"; 
 import { Either } from "src/lib/shared/Type Helpers/Either";
 import { DomainException } from "src/lib/shared/exceptions/DomainException";
 import { NotificationBusinessException } from "../../../../shared/exceptions/NotificationBussinesException";

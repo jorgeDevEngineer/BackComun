@@ -21,9 +21,11 @@ import { CreateUserCommandHandler } from "../../application/Handlers/Commands/Cr
 import { CreateUser } from "../../application/Parameter Objects/CreateUser";
 import { EditUserCommandHandler } from "../../application/Handlers/Commands/EditUserCommandHandler";
 import { DeleteUserCommandHandler } from "../../application/Handlers/Commands/DeleteUserCommandHandler";
-import { FindByIdParams, FindByUserNameParams } from "./Validations";
+import { FindByIdParams } from "../DTOs/FindByIdParams";
+import { FindByUserNameParams } from "../DTOs/FindByUserNameParams";
 import { UserNotFoundException } from "../../application/exceptions/UserNotFoundException";
-import { Create, Edit } from "./Validations";
+import { Create } from "../DTOs/Create";
+import { Edit } from "../DTOs/Edit";
 import { EnableFreeMembershipCommandHandler } from "../../application/Handlers/Commands/EnableFreeMembershipCommandHandler";
 import { EnablePremiumMembershipCommandHandler } from "../../application/Handlers/Commands/EnablePremiumMembershipCommandHandler";
 import { MEMBERSHIP_TYPES } from "../../domain/valueObject/MembershipType";
@@ -225,7 +227,6 @@ export class UserController {
     const query = new GetOneUserById(params.id);
     const userResult = await this.getOneUserById.execute(query);
     const user = this.handleResult(userResult);
-
     const editUserCommand = new EditUser(
       body.username,
       body.email,
@@ -271,73 +272,7 @@ export class UserController {
     return this.handleResult(deleteResult);
   }
 
-  @Get("subscription/plans")
-  async getSubscriptionPlans() {
-    return [...Object.values(MEMBERSHIP_TYPES)];
-  }
-
-  @Get("subscription/status")
-  async getProfileSubscriptionStatus(@Headers("authorization") auth: string) {
-    const userId = await this.getCurrentUserId(auth);
-    const query = new GetOneUserById(userId);
-    const userResult = await this.getOneUserById.execute(query);
-    const user = this.handleResult(userResult);
-    return {
-      membershipType: user.membership.type.value,
-      status: user.membership.isEnabled() ? "enabled" : "disabled",
-      expiresAt: user.membership.expiresAt.value,
-    };
-  }
-
-  @Get("subscription/status/:id")
-  async getSubscriptionStatusById(@Param() params: FindByIdParams) {
-    const query = new GetOneUserById(params.id);
-    const userResult = await this.getOneUserById.execute(query);
-    const user = this.handleResult(userResult);
-    return {
-      membershipType: user.membership.type.value,
-      status: user.membership.isEnabled() ? "enabled" : "disabled",
-      expiresAt: user.membership.expiresAt.value,
-    };
-  }
-
-  @Post("subscription/premium")
-  async enablePremiumSubscriptionPlan(@Headers("authorization") auth: string) {
-    const userId = await this.getCurrentUserId(auth);
-    const command = new EnablePremiumMembership(userId, userId);
-    const result = await this.enablePremiumMembership.execute(command);
-    return this.handleResult(result);
-  }
-
-  @Post("subscription/premium/:id")
-  async enablePremiumSubscriptionPlanById(
-    @Param() params: FindByIdParams,
-    @Headers("authorization") auth: string
-  ) {
-    const requesterUserId = await this.getCurrentUserId(auth);
-    const command = new EnablePremiumMembership(params.id, requesterUserId);
-    const result = await this.enablePremiumMembership.execute(command);
-    return this.handleResult(result);
-  }
-
-  @Delete("subscription/free")
-  async enableFreeSubscriptionPlan(@Headers("authorization") auth: string) {
-    const userId = await this.getCurrentUserId(auth);
-    const command = new EnableFreeMembership(userId, userId);
-    const result = await this.enableFreeMembership.execute(command);
-    return this.handleResult(result);
-  }
-
-  @Delete("subscription/free/:id")
-  async enableFreeSubscriptionPlanById(
-    @Param() params: FindByIdParams,
-    @Headers("authorization") auth: string
-  ) {
-    const requesterUserId = await this.getCurrentUserId(auth);
-    const command = new EnableFreeMembership(params.id, requesterUserId);
-    const result = await this.enableFreeMembership.execute(command);
-    return this.handleResult(result);
-  }
+  // Subscription endpoints moved to UserSubscriptionModule
 
   /////////////////////////////////////LEGACY ENDPOINTS//////////////////////////////////////
 

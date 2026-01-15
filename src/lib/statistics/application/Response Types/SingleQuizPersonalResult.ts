@@ -64,10 +64,13 @@ function getAnswerTextOrMedia(
 }
 
 function calculateAverageTime(questionResults: questionData[]): number {
-  const totalTime = questionResults.reduce(
-    (acc, curr) => acc + curr.timeTakenMs,
-    0
-  );
+  const totalTime = questionResults.reduce((acc, curr) => {
+    if (curr !== undefined) {
+      return acc + curr.timeTakenMs;
+    } else {
+      return 0;
+    }
+  }, 0);
   return Math.round(totalTime / questionResults.length);
 }
 
@@ -78,6 +81,17 @@ export function toQuizPersonalResult(
   const answeredQuestions = game.getQuestionsResults();
   const questionResults: questionData[] = answeredQuestions.map(
     (questionResult, index) => {
+      const plainQuestion = quiz.getQuestions()[index].toPlainObject();
+      if (questionResult === undefined) {
+        return {
+          questionIndex: index + 1,
+          questionText: plainQuestion.text,
+          isCorrect: false,
+          answerText: [],
+          answerMediaId: [],
+          timeTakenMs: 0,
+        };
+      }
       const answerDataOpt = getAnswerTextOrMedia(questionResult, quiz);
       let answerText: string[] = [];
       let answerMediaId: string[] = [];
