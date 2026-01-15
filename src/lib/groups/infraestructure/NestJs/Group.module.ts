@@ -1,5 +1,5 @@
 
-import { Module } from "@nestjs/common";
+import { Module, forwardRef } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 
 import { GroupsController } from "./Group.controller";
@@ -38,6 +38,14 @@ import { LoggingUseCaseDecorator } from "src/lib/shared/aspects/logger/applicati
 import { ILoggerPort, LOGGER_PORT } from "src/lib/shared/aspects/logger/domain/ports/logger.port";
 import { ErrorHandlingDecoratorWithEither } from "src/lib/shared/aspects/error-handling/application/decorators/error-handling-either";
 import { EventEmitter2, EventEmitterModule } from "@nestjs/event-emitter";
+import { AuthModule } from "src/lib/auth/infrastructure/NestJs/auth.module";
+import { QuizRepository } from "src/lib/kahoot/domain/port/QuizRepository";
+import { SinglePlayerGameRepository } from "src/lib/singlePlayerGame/domain/repositories/SinglePlayerGameRepository";
+import { SinglePlayerGameModule } from "src/lib/singlePlayerGame/infrastructure/NestJs/SinglePlayerGame.module";
+import { KahootModule } from "src/lib/kahoot/infrastructure/NestJs/kahoot.module";
+import { UserModule } from "src/lib/user/infrastructure/NestJS/user.module";
+import { UserRepository } from "src/lib/user/domain/port/UserRepository";
+
 @Module({
   imports: [
     LoggerModule, 

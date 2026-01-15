@@ -8,8 +8,6 @@ import {
   Param,
   Patch,
   Post,
-  Req,
-  UseGuards,
   NotFoundException,
   BadRequestException,
   ForbiddenException,
@@ -17,8 +15,6 @@ import {
   Inject,
   Headers,
 } from "@nestjs/common";
-import { Request } from "express";
-
 import { CreateGroupCommand } from "../../application/parameterObjects/CreateGroupCommand";
 import { CreateGroupCommandHandler } from "../../application/Handlers/commands/CreateGroupCommandHandler";
 import { UpdateGroupDetailsCommandHandler } from "../../application/Handlers/commands/UpdateGroupDetailsCommandHandler";
