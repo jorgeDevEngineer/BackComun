@@ -80,7 +80,7 @@ export class GetUserResultsQueryHandler
 
       const answer: QueryWithPaginationResponse<CompletedQuizResponse> = {
         results: gameData,
-        pagination: {
+        meta: {
           totalItems: totalGames,
           currentPage: criteria.page,
           totalPages: Math.ceil(totalGames / criteria.limit),
