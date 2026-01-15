@@ -50,17 +50,16 @@ export class AssignQuizToGroupResponseDto {
   isActive!: boolean;
 }
 
-export class GetUserGroupitem {
+export class GetUserGroupsResponseDto {
   id: string;
   name: string;
   adminId: string;
+  description:string;
+  role:string;
   memberCount: number;
   createdAt: string;
 }
 
-export class GetUserGroupsResponseDto {
-  groups!: GetUserGroupitem[];
-}
 
 export class GetGroupMembersItem {
   userId: string;
