@@ -36,18 +36,6 @@ export class UserSubscriptionController {
     @Inject("ITokenProvider") private readonly tokenProvider: ITokenProvider
   ) {}
 
-  private async getCurrentUserId(authHeader: string): Promise<string> {
-    const token = authHeader?.replace(/^Bearer\s+/i, "");
-    if (!token) {
-      throw new UnauthorizedException("Token required");
-    }
-    const payload = await this.tokenProvider.validateToken(token);
-    if (!payload || !payload.id) {
-      throw new UnauthorizedException("Invalid token");
-    }
-    return payload.id;
-  }
-
   private handleResult<T>(result: Result<T>): T {
     if (result.isFailure) {
       if (result.error instanceof UserNotFoundException) {
@@ -80,7 +68,7 @@ export class UserSubscriptionController {
 
   @Get()
   async getProfileSubscriptionStatus(@Headers("authorization") auth: string) {
-    const userId = await this.getCurrentUserId(auth);
+    const userId = await this.tokenProvider.getUserIdFromAuthHeader(auth);
     const query = new GetOneUserById(userId);
     const userResult = await this.getOneUserById.execute(query);
     const user = this.handleResult(userResult) as User;
@@ -97,7 +85,7 @@ export class UserSubscriptionController {
 
   @Post()
   async enablePremiumSubscriptionPlan(@Headers("authorization") auth: string) {
-    const userId = await this.getCurrentUserId(auth);
+    const userId = await this.tokenProvider.getUserIdFromAuthHeader(auth);
     const command = new EnablePremiumMembership(userId, userId);
     const result = await this.enablePremiumMembership.execute(command);
     this.handleResult(result);
@@ -113,7 +101,7 @@ export class UserSubscriptionController {
     @Param() params: FindByIdParams,
     @Headers("authorization") auth: string
   ) {
-    const requesterUserId = await this.getCurrentUserId(auth);
+    const requesterUserId = await this.tokenProvider.getUserIdFromAuthHeader(auth);
     const command = new EnablePremiumMembership(params.id, requesterUserId);
     const result = await this.enablePremiumMembership.execute(command);
     this.handleResult(result);
@@ -126,7 +114,7 @@ export class UserSubscriptionController {
 
   @Delete()
   async enableFreeSubscriptionPlan(@Headers("authorization") auth: string) {
-    const userId = await this.getCurrentUserId(auth);
+    const userId = await this.tokenProvider.getUserIdFromAuthHeader(auth);
     const command = new EnableFreeMembership(userId, userId);
     const result = await this.enableFreeMembership.execute(command);
     this.handleResult(result);
@@ -142,7 +130,7 @@ export class UserSubscriptionController {
     @Param() params: FindByIdParams,
     @Headers("authorization") auth: string
   ) {
-    const requesterUserId = await this.getCurrentUserId(auth);
+    const requesterUserId = await this.tokenProvider.getUserIdFromAuthHeader(auth);
     const command = new EnableFreeMembership(params.id, requesterUserId);
     const result = await this.enableFreeMembership.execute(command);
     this.handleResult(result);
