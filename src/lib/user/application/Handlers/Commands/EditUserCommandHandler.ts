@@ -34,36 +34,53 @@ export class EditUserCommandHandler
     if (!existing) {
       return Result.fail(new UserNotFoundException());
     }
-    const userWithSameUserName = await this.userRepository.getOneByName(
-      new UserName(command.username)
-    );
-    if (
-      userWithSameUserName &&
-      userWithSameUserName.id.value !== command.targetUserId
-    ) {
-      return Result.fail(
-        new Error("That name already belongs to another user")
+    // Resolve new values, falling back to existing if omitted
+    const now = new Date();
+    const resolvedUsernameStr = command.username ?? existing.userName.value;
+    const resolvedEmailStr = command.email ?? existing.email.value;
+    const resolvedNameStr = command.name ?? existing.name.value;
+    const resolvedDescriptionStr =
+      command.description ?? existing.description.value;
+    const resolvedAvatarIdStr =
+      command.avatarAssetId ?? existing.avatarAssetId.value;
+    const resolvedThemeStr = command.themePreference ?? existing.theme.value;
+
+    // Username checks only matter if it changes
+    const newUserNameVo = new UserName(resolvedUsernameStr);
+    const isUserNameChanging = newUserNameVo.value !== existing.userName.value;
+    if (isUserNameChanging) {
+      const userWithSameUserName = await this.userRepository.getOneByName(
+        new UserName(resolvedUsernameStr)
       );
+      if (
+        userWithSameUserName &&
+        userWithSameUserName.id.value !== command.targetUserId
+      ) {
+        return Result.fail(
+          new Error("That name already belongs to another user")
+        );
+      }
+      try {
+        existing.ensureCanChangeUserName(newUserNameVo, now);
+      } catch (err) {
+        return Result.fail(err as Error);
+      }
     }
 
-    // Domain invariant: enforce annual username change in the aggregate
-    const now = new Date();
-    const newUserNameVo = new UserName(command.username);
-    try {
-      existing.ensureCanChangeUserName(newUserNameVo, now);
-    } catch (err) {
-      return Result.fail(err as Error);
-    }
-    const userWithSameEmail = await this.userRepository.getOneByEmail(
-      new UserEmail(command.email)
-    );
-    if (
-      userWithSameEmail &&
-      userWithSameEmail.id.value !== command.targetUserId
-    ) {
-      return Result.fail(
-        new Error("That email already belongs to another user")
-      );
+    // Email uniqueness check only if it changes
+    const newEmailVo = new UserEmail(resolvedEmailStr);
+    const isEmailChanging = newEmailVo.value !== existing.email.value;
+    if (isEmailChanging) {
+      const userWithSameEmail =
+        await this.userRepository.getOneByEmail(newEmailVo);
+      if (
+        userWithSameEmail &&
+        userWithSameEmail.id.value !== command.targetUserId
+      ) {
+        return Result.fail(
+          new Error("That email already belongs to another user")
+        );
+      }
     }
 
     // Determine new password or keep existing
@@ -96,15 +113,15 @@ export class EditUserCommandHandler
     }
 
     const user = new User(
-      new UserName(command.username),
-      new UserEmail(command.email),
+      new UserName(resolvedUsernameStr),
+      new UserEmail(resolvedEmailStr),
       newHashedPassword,
       existing.userType,
-      new UserAvatarId(command.avatarAssetId),
+      new UserAvatarId(resolvedAvatarIdStr),
       new UserId(command.targetUserId),
-      new UserPlainName(command.name),
-      new UserDescription(command.description ?? existing.description.value),
-      new UserTheme(command.themePreference),
+      new UserPlainName(resolvedNameStr),
+      new UserDescription(resolvedDescriptionStr),
+      new UserTheme(resolvedThemeStr),
       existing.language,
       existing.gameStreak,
       existing.membership,
