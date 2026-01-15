@@ -10,4 +10,8 @@ export interface MultiplayerSessionHistoryRepository {
     criteria: CompletedQuizQueryCriteria
   ): Promise<[MultiplayerSession[], number]>;
   findbyId(session: MultiplayerSessionId): Promise<MultiplayerSession | null>;
+  findOwnedSessionsById(
+    ownerId: UserId,
+    criteria: CompletedQuizQueryCriteria
+  ): Promise<[MultiplayerSession[], number]>;
 }

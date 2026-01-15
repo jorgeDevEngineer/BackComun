@@ -1,4 +1,4 @@
-import { Module } from "@nestjs/common";
+import { forwardRef, Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { TypeOrmQuizEntity } from "src/lib/kahoot/infrastructure/TypeOrm/TypeOrmQuizEntity";
 import { TypeOrmSinglePlayerGameEntity } from "src/lib/singlePlayerGame/infrastructure/TypeOrm/TypeOrmSinglePlayerGameEntity";
@@ -22,6 +22,7 @@ import { GetSessionReportDomainService } from "../../domain/services/GetSessionR
 import { GetSessionReportQueryHandler } from "../../application/Handlers/GetSessionReportQueryHandler";
 import { GetMultiPlayerCompletedQuizSummaryDomainService } from "../../domain/services/GetMultiPlayerCompletedQuizSummaryDomainService";
 import { GetMultiPlayerCompletedQuizSummaryQueryHandler } from "../../application/Handlers/GetMultiPlayerCompletedQuizSummaryQueryHandler";
+import { AuthModule } from "src/lib/auth/infrastructure/NestJs/auth.module";
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { GetMultiPlayerCompletedQuizSummaryQueryHandler } from "../../applicatio
       TypeOrmSinglePlayerGameEntity,
     ]),
     LoggerModule,
+    forwardRef(() => AuthModule),
     DatabaseModule,
   ],
   controllers: [StatisticsController],

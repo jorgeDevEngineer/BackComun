@@ -121,6 +121,9 @@ export class DynamicMultiplayerGameRepository
       return [sessions, total];
     } catch (error) {
       // 🔹 Postgres
+      console.log(
+        "MongoDB connection not avaliable for multiplayersession falling back to postgres"
+      );
       let qb = this.sessionRepository.createQueryBuilder("multiplayerSessions");
 
       qb.andWhere(`multiplayerSessions.sessionState = :status`, {
@@ -162,6 +165,57 @@ export class DynamicMultiplayerGameRepository
         where: { sessionId: sessionId.getId() },
       });
       return entity ? entity.toDomain() : null;
+    }
+  }
+
+  async findOwnedSessionsById(
+    ownerId: UserId,
+    criteria: CompletedQuizQueryCriteria
+  ): Promise<[MultiplayerSession[], number]> {
+    try {
+      // 🔹 Mongo
+      const db = await this.mongoAdapter.getConnection("multiplayersessions");
+      const collection = db.collection<MongoMultiplayerSessionDoc>(
+        "multiplayersessions"
+      );
+
+      const params = {
+        filter: {
+          sessionState: "end", // mismo valor que usas en Postgres
+          hostId: ownerId.getValue(),
+        },
+      };
+
+      // aplicar criterios adicionales
+      const { filter, options } = this.mongoCriteriaApplier.apply(
+        params,
+        criteria
+      );
+
+      // obtener documentos
+      const docs = await collection.find(filter, options).toArray();
+      const total = await collection.countDocuments(filter);
+
+      // mapear a dominio
+      const sessions = docs.map((doc) => this.mapMongoToDomain(doc));
+      return [sessions, total];
+    } catch (error) {
+      console.log(
+        "MongoDB connection not avaliable for multiplayersession falling back to postgres"
+      );
+      let qb = this.sessionRepository.createQueryBuilder("multiplayerSessions");
+
+      qb.andWhere(`multiplayerSessions.sessionState = :status`, {
+        status: "end",
+      });
+
+      qb.andWhere(`multiplayerSessions.hostId = :ownerId`, {
+        ownerId: ownerId.getValue(),
+      });
+
+      qb = this.pgCriteriaApplier.apply(qb, criteria, "multiplayerSessions");
+      const [entities, total] = await qb.getManyAndCount();
+      return [entities.map((entity) => entity.toDomain()), total];
     }
   }
 
