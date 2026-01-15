@@ -4,7 +4,6 @@ import {
   HttpCode,
   HttpStatus,
   Post,
-  Req,
   UseGuards,
   InternalServerErrorException,
   BadRequestException,
@@ -16,8 +15,6 @@ import {
   Inject,
   Headers,
 } from '@nestjs/common';
-import { Request } from 'express';
-import { FakeCurrentUserGuard } from '../../../groups/infraestructure/NestJs/FakeCurrentUser.guard';
 import { RegisterDeviceResponseDto, UnregisterDeviceDto } from '../../application/dtos/NotificationsResponse.dto';
 import { UpdateNotificationDto } from '../../application/dtos/NotificationsResponse.dto';
 import { RegisterDeviceCommand } from '../../application/parameterObjects/RegisterDeviceCommand';
@@ -35,7 +32,6 @@ import { ITokenProvider } from "src/lib/auth/application/providers/ITokenProvide
 
 
 @Controller('notifications')
-@UseGuards(FakeCurrentUserGuard)
 export class NotificationsController {
   constructor(
     private readonly registerDeviceHandler: RegisterDeviceCommandHandler,
