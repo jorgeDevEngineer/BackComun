@@ -211,7 +211,8 @@ export class UserController {
     @Body() body: Edit,
     @Headers("authorization") auth: string
   ) {
-    const requesterUserId = await this.tokenProvider.getUserIdFromAuthHeader(auth);
+    const requesterUserId =
+      await this.tokenProvider.getUserIdFromAuthHeader(auth);
     const query = new GetOneUserById(params.id);
     const userResult = await this.getOneUserById.execute(query);
     const user = this.handleResult(userResult);
@@ -251,7 +252,8 @@ export class UserController {
     @Param() params: FindByIdParams,
     @Headers("authorization") auth: string
   ) {
-    const requesterUserId = await this.tokenProvider.getUserIdFromAuthHeader(auth);
+    const requesterUserId =
+      await this.tokenProvider.getUserIdFromAuthHeader(auth);
     const query = new GetOneUserById(params.id);
     const userResult = await this.getOneUserById.execute(query);
     this.handleResult(userResult);
