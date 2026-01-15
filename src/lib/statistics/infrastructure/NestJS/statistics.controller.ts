@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Inject, Param, Query } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Get,
+  Inject,
+  Param,
+  Query,
+  Headers,
+  UnauthorizedException,
+} from "@nestjs/common";
 import { Either } from "src/lib/shared/Type Helpers/Either";
 import { DomainException } from "../../../shared/exceptions/DomainException";
 import { IHandler } from "src/lib/shared/IHandler";
@@ -20,10 +29,12 @@ import { SingleQuizPersonalResult } from "../../application/Response Types/Singl
 import { MultiQuizPersonalResult } from "../../application/Response Types/MultiQuizPersonalResult";
 import { GetSessionReport } from "../../application/Parameter Objects/GetSessionReport";
 import { SessionReportResponse } from "../../application/Response Types/SessionReportResponse";
+import { ITokenProvider } from "src/lib/auth/application/providers/ITokenProvider";
 
 @Controller("reports")
 export class StatisticsController {
   constructor(
+    @Inject("ITokenProvider") private readonly tokenProvider: ITokenProvider,
     @Inject("GetUserResultsQueryHandler")
     private readonly getUserResults: IHandler<
       GetUserResults,
@@ -49,12 +60,36 @@ export class StatisticsController {
     >
   ) {}
 
+  private async getCurrentUserId(authHeader: string): Promise<string> {
+    const token = authHeader?.replace(/^Bearer\s+/i, "");
+    if (!token) {
+      throw new UnauthorizedException("Token required");
+    }
+    const payload = await this.tokenProvider.validateToken(token);
+    if (!payload || !payload.id) {
+      throw new UnauthorizedException("Invalid token");
+    }
+    return payload.id;
+  }
+
+  private async isUserAuthorized(authHeader: string): Promise<void> {
+    const token = authHeader?.replace(/^Bearer\s+/i, "");
+    if (!token) {
+      throw new UnauthorizedException("Token required");
+    }
+    const payload = await this.tokenProvider.validateToken(token);
+    if (!payload || !payload.id) {
+      throw new UnauthorizedException("Invalid token");
+    }
+  }
+
   @Get("kahoots/my-results")
   async getUserQuizResults(
-    @Body() userId: UserIdDTO,
+    @Headers("authorization") auth: string,
     @Query() queryParams: CompletedQuizQueryParams
   ): Promise<QueryWithPaginationResponse<CompletedQuizResponse>> {
-    const playerId = UserId.of(userId.userId);
+    const userId = await this.getCurrentUserId(auth);
+    const playerId = UserId.of(userId);
     const command = new GetUserResults(playerId, queryParams);
     const results = await this.getUserResults.execute(command);
     if (results.isLeft()) {
@@ -65,8 +100,10 @@ export class StatisticsController {
 
   @Get("/singleplayer/:attemptId")
   async getSinglePlayerAttemptResults(
+    @Headers("authorization") auth: string,
     @Param("attemptId") attemptId: string
   ): Promise<SingleQuizPersonalResult> {
+    await this.isUserAuthorized(auth);
     const gameId = new AttemptIdDTO(attemptId.trim());
     const command = new GetSinglePlayerCompletedQuizSummary(
       SinglePlayerGameId.of(gameId.attemptId)
@@ -81,12 +118,13 @@ export class StatisticsController {
   @Get("/multiplayer/:sessionId")
   async getMultiPlayerAttemptResults(
     @Param("sessionId") sessionId: string,
-    @Body() userId: UserIdDTO
+    @Headers("authorization") auth: string
   ): Promise<MultiQuizPersonalResult> {
+    const userId = await this.getCurrentUserId(auth);
     const gameId = new SessionIdDTO(sessionId.trim());
     const command = new GetMultiPlayerCompletedQuizSummary(
       MultiplayerSessionId.of(gameId.sessionId),
-      UserIdDomain.of(userId.userId)
+      UserIdDomain.of(userId)
     );
     const results =
       await this.getMultiPlayerCompletedQuizSummary.execute(command);
@@ -99,12 +137,13 @@ export class StatisticsController {
   @Get("/sessions/:sessionid")
   async getSessionReport(
     @Param("sessionid") sessionId: string,
-    @Body() userId: UserIdDTO
+    @Headers("authorization") auth: string
   ) {
-    const gamenId = new SessionIdDTO(sessionId.trim());
+    const gameId = new SessionIdDTO(sessionId.trim());
+    const userId = await this.getCurrentUserId(auth);
     const command = new GetSessionReport(
-      MultiplayerSessionId.of(gamenId.sessionId),
-      UserIdDomain.of(userId.userId)
+      MultiplayerSessionId.of(gameId.sessionId),
+      UserIdDomain.of(userId)
     );
     const results = await this.getGameReport.execute(command);
     if (results.isLeft()) {
