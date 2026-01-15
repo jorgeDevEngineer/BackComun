@@ -101,7 +101,8 @@ export class UserSubscriptionController {
     @Param() params: FindByIdParams,
     @Headers("authorization") auth: string
   ) {
-    const requesterUserId = await this.tokenProvider.getUserIdFromAuthHeader(auth);
+    const requesterUserId =
+      await this.tokenProvider.getUserIdFromAuthHeader(auth);
     const command = new EnablePremiumMembership(params.id, requesterUserId);
     const result = await this.enablePremiumMembership.execute(command);
     this.handleResult(result);
@@ -130,7 +131,8 @@ export class UserSubscriptionController {
     @Param() params: FindByIdParams,
     @Headers("authorization") auth: string
   ) {
-    const requesterUserId = await this.tokenProvider.getUserIdFromAuthHeader(auth);
+    const requesterUserId =
+      await this.tokenProvider.getUserIdFromAuthHeader(auth);
     const command = new EnableFreeMembership(params.id, requesterUserId);
     const result = await this.enableFreeMembership.execute(command);
     this.handleResult(result);

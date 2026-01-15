@@ -64,7 +64,8 @@ export class SinglePlayerGameController {
     @Headers("authorization") authHeader: string
   ): Promise<StartGameResponseDto> {
     try {
-      const playerId = await this.tokenProvider.getUserIdFromAuthHeader(authHeader);
+      const playerId =
+        await this.tokenProvider.getUserIdFromAuthHeader(authHeader);
       return await this.StartSinglePlayerGameHandler.execute({
         kahootId: body.kahootId,
         playerId,
