@@ -11,9 +11,16 @@ export class FileSystemPinRepository implements IPinRepository, OnModuleInit {
     
     constructor() {
         const fileName = process.env.PIN_STORAGE_PATH || 'active_pins.txt';
-        this.PIN_FILE_PATH = path.isAbsolute(fileName) 
-            ? fileName 
-            : path.join(process.cwd(), fileName);
+        // Lógica simplificada para determinar la ruta
+        if (path.isAbsolute(fileName)) {
+            this.PIN_FILE_PATH = fileName;
+        } else {
+            // En Render -> /tmp, en local -> cwd
+            this.PIN_FILE_PATH = process.env.RENDER 
+                ? `/tmp/${fileName}`
+                : path.join(process.cwd(), fileName);
+        }
+        console.log(`🔧 Ruta configurada: ${this.PIN_FILE_PATH}`);
     }
 
     async onModuleInit() {
