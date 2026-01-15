@@ -7,13 +7,13 @@ import { QuizId } from "src/lib/kahoot/domain/valueObject/Quiz";
 import { UserId } from "src/lib/user/domain/valueObject/UserId";
 import { CriteriaApplier } from "src/lib/library/domain/port/CriteriaApplier";
 import { QuizQueryCriteria } from "src/lib/library/application/Response Types/QuizQueryCriteria";
-import { ObjectId } from "mongodb";
+import { randomUUID } from "crypto";
 import { MongoFindParams } from "../Criteria Appliers/Mongo/MongoAdvancedCriteriaApplier";
 import { DynamicMongoAdapter } from "src/lib/shared/infrastructure/database/dynamic-mongo.adapter";
 import { MongoCriteriaApplier } from "../Criteria Appliers/Mongo/MongoCriteriaApplier";
 
 type MongoUserFavoriteQuizDoc = {
-  _id: ObjectId;
+  _id: string;
   userId: string;
   quizId: string;
 };
@@ -32,15 +32,20 @@ export class DynamicUserFavoriteQuizRepository
     private readonly mongoCriteriaApplier: MongoCriteriaApplier<MongoUserFavoriteQuizDoc>
   ) {}
 
+  private async getMongoCollection() {
+    const db = await this.mongoAdapter.getConnection("favorite");
+    const collection = db.collection<MongoUserFavoriteQuizDoc>(
+      "userFavoriteQuizzes"
+    );
+    return collection;
+  }
+
   async addFavoriteQuiz(favorite: UserFavoriteQuiz): Promise<void> {
     try {
-      const db = await this.mongoAdapter.getConnection("favorite");
-      const collection = db.collection<MongoUserFavoriteQuizDoc>(
-        "userFavoriteQuizzes"
-      );
+      const collection = await this.getMongoCollection();
 
       await collection.insertOne({
-        _id: new ObjectId(),
+        _id: randomUUID(),
         userId: favorite.userId.value,
         quizId: favorite.quizId.value,
       });
@@ -54,10 +59,7 @@ export class DynamicUserFavoriteQuizRepository
 
   async removeFavoriteQuiz(favorite: UserFavoriteQuiz): Promise<void> {
     try {
-      const db = await this.mongoAdapter.getConnection("favorite");
-      const collection = db.collection<MongoUserFavoriteQuizDoc>(
-        "userFavoriteQuizzes"
-      );
+      const collection = await this.getMongoCollection();
 
       await collection.deleteOne({
         userId: favorite.userId.value,
@@ -73,10 +75,7 @@ export class DynamicUserFavoriteQuizRepository
 
   async isFavorite(userId: UserId, quizId: QuizId): Promise<boolean> {
     try {
-      const db = await this.mongoAdapter.getConnection("favorite");
-      const collection = db.collection<MongoUserFavoriteQuizDoc>(
-        "userFavoriteQuizzes"
-      );
+      const collection = await this.getMongoCollection();
 
       const count = await collection.countDocuments({
         userId: userId.value,
@@ -95,10 +94,7 @@ export class DynamicUserFavoriteQuizRepository
     criteria: QuizQueryCriteria
   ): Promise<QuizId[]> {
     try {
-      const db = await this.mongoAdapter.getConnection("favorite");
-      const collection = db.collection<MongoUserFavoriteQuizDoc>(
-        "userFavoriteQuizzes"
-      );
+      const collection = await this.getMongoCollection();
 
       const params: MongoFindParams<MongoUserFavoriteQuizDoc> = {
         filter: { userId: userId.value },
