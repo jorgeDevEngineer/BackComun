@@ -98,9 +98,9 @@ export class DynamicMultiplayerGameRepository
   ): Promise<[MultiplayerSession[], number]> {
     try {
       // 🔹 Mongo
-      const db = await this.mongoAdapter.getConnection("multiplayerSessions");
+      const db = await this.mongoAdapter.getConnection("multiplayersessions");
       const collection = db.collection<MongoMultiplayerSessionDoc>(
-        "multiplayerSessions"
+        "multiplayersessions"
       );
 
       const params = {
@@ -150,9 +150,9 @@ export class DynamicMultiplayerGameRepository
     sessionId: MultiplayerSessionId
   ): Promise<MultiplayerSession | null> {
     try {
-      const db = await this.mongoAdapter.getConnection("multiplayerSessions");
+      const db = await this.mongoAdapter.getConnection("multiplayersessions");
       const collection = db.collection<MongoMultiplayerSessionDoc>(
-        "multiplayerSessions"
+        "multiplayersessions"
       );
       const id = sessionId.getId();
       const doc = await collection.findOne({ id: id });

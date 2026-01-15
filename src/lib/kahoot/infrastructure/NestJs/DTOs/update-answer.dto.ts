@@ -7,6 +7,7 @@ export class UpdateAnswerDto {
     @IsUUID()
     id?: string;
 
+    @IsOptional()
     @IsString()
     text: string;
 

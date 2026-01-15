@@ -43,19 +43,22 @@ export class GetUserCompletedQuizzesDomainService {
   > {
     const [completedGames, totalCount] =
       await this.singlePlayerRepo.findCompletedGames(userId, criteria);
-    if (completedGames.length === 0) {
-      return Either.makeLeft(
-        new NotInProgressQuizzesException(
-          "No hay quizzes completados para este usuario"
-        )
-      );
-    }
+
+    console.log("Completed single player games:", completedGames);
 
     const [completeMultiGames, totalMultiCount] =
       await this.multiPlayerRepo.findCompletedSessions(
         UserId.of(userId.value),
         criteria
       );
+
+    if (completedGames.length === 0 && completeMultiGames.length === 0) {
+      return Either.makeLeft(
+        new NotInProgressQuizzesException(
+          "No hay quizzes completados para este usuario"
+        )
+      );
+    }
 
     const multiGameQuizIds = completeMultiGames.map((game) =>
       QuizId.of(game.getQuizId().value)

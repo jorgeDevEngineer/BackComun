@@ -1,3 +1,4 @@
+
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 
@@ -36,10 +37,11 @@ import { LoggerModule } from "src/lib/shared/aspects/logger/infrastructure/logge
 import { LoggingUseCaseDecorator } from "src/lib/shared/aspects/logger/application/decorators/logging.decorator";
 import { ILoggerPort, LOGGER_PORT } from "src/lib/shared/aspects/logger/domain/ports/logger.port";
 import { ErrorHandlingDecoratorWithEither } from "src/lib/shared/aspects/error-handling/application/decorators/error-handling-either";
-import { EventEmitter2 } from "@nestjs/event-emitter";
+import { EventEmitter2, EventEmitterModule } from "@nestjs/event-emitter";
 @Module({
   imports: [
     LoggerModule, 
+    EventEmitterModule.forRoot(),
     TypeOrmModule.forFeature([
       GroupOrmEntity,
       GroupMemberOrmEntity,
@@ -177,7 +179,7 @@ import { EventEmitter2 } from "@nestjs/event-emitter";
         const withError = new ErrorHandlingDecoratorWithEither(useCase, logger, "AssignQuizToGroupCommandHandler");
         return new LoggingUseCaseDecorator(withError, logger, "AssignQuizToGroupCommandHandler");
       },
-      inject: [LOGGER_PORT, "GroupRepository", "QuizReadService",EventEmitter2],
+      inject: [LOGGER_PORT, "GroupRepository", "QuizReadService", EventEmitter2],
     },
 
     {
