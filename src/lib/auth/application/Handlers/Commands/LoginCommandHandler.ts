@@ -8,6 +8,7 @@ import { Get, Inject } from "@nestjs/common";
 import * as bcrypt from "bcrypt";
 import { User } from "src/lib/user/domain/aggregate/User";
 import { DomainException } from "src/lib/shared/exceptions/domain.exception";
+import { TokenPayload } from "src/lib/auth/application/Parameter Objects/TokenPayload";
 
 export class LoginCommandHandler
   implements IHandler<LoginCommand, Result<string>>
@@ -39,12 +40,9 @@ export class LoginCommandHandler
     if (!isPasswordValid) {
       return Result.fail(new Error("Invalid credentials"));
     }
-    const token = await this.tokenProvider.generateToken({
-      id: user.id.value,
-      username: user.userName.value,
-      email: user.email.value,
-      roles: user.roles.value,
-    });
+    const token = await this.tokenProvider.generateToken(
+      TokenPayload.fromUser(user)
+    );
     return Result.ok(token);
   }
 }

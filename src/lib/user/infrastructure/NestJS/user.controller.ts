@@ -21,9 +21,11 @@ import { CreateUserCommandHandler } from "../../application/Handlers/Commands/Cr
 import { CreateUser } from "../../application/Parameter Objects/CreateUser";
 import { EditUserCommandHandler } from "../../application/Handlers/Commands/EditUserCommandHandler";
 import { DeleteUserCommandHandler } from "../../application/Handlers/Commands/DeleteUserCommandHandler";
-import { FindByIdParams, FindByUserNameParams } from "./Validations";
+import { FindByIdParams } from "../DTOs/FindByIdParams";
+import { FindByUserNameParams } from "../DTOs/FindByUserNameParams";
 import { UserNotFoundException } from "../../application/exceptions/UserNotFoundException";
-import { Create, Edit } from "./Validations";
+import { Create } from "../DTOs/Create";
+import { Edit } from "../DTOs/Edit";
 import { EnableFreeMembershipCommandHandler } from "../../application/Handlers/Commands/EnableFreeMembershipCommandHandler";
 import { EnablePremiumMembershipCommandHandler } from "../../application/Handlers/Commands/EnablePremiumMembershipCommandHandler";
 import { MEMBERSHIP_TYPES } from "../../domain/valueObject/MembershipType";
@@ -64,18 +66,6 @@ export class UserController {
     @Inject("IAssetUrlResolver")
     private readonly assetUrlResolver: IAssetUrlResolver
   ) {}
-
-  private async getCurrentUserId(authHeader: string): Promise<string> {
-    const token = authHeader?.replace(/^Bearer\s+/i, "");
-    if (!token) {
-      throw new UnauthorizedException("Token required");
-    }
-    const payload = await this.tokenProvider.validateToken(token);
-    if (!payload || !payload.id) {
-      throw new UnauthorizedException("Invalid token");
-    }
-    return payload.id;
-  }
 
   handleResult<T>(result: Result<T>): T {
     if (result.isFailure) {
@@ -154,7 +144,7 @@ export class UserController {
 
   @Get("profile")
   async getProfile(@Headers("authorization") auth: string) {
-    const userId = await this.getCurrentUserId(auth);
+    const userId = await this.tokenProvider.getUserIdFromAuthHeader(auth);
     const query = new GetOneUserById(userId);
     const result = await this.getOneUserById.execute(query);
     const userObj = this.handleResult(result).toPlainObject();
@@ -191,7 +181,7 @@ export class UserController {
     @Headers("authorization") auth: string,
     @Body() body: Edit
   ) {
-    const userId = await this.getCurrentUserId(auth);
+    const userId = await this.tokenProvider.getUserIdFromAuthHeader(auth);
     const query = new GetOneUserById(userId);
     const userResult = await this.getOneUserById.execute(query);
     const user = this.handleResult(userResult);
@@ -221,11 +211,11 @@ export class UserController {
     @Body() body: Edit,
     @Headers("authorization") auth: string
   ) {
-    const requesterUserId = await this.getCurrentUserId(auth);
+    const requesterUserId =
+      await this.tokenProvider.getUserIdFromAuthHeader(auth);
     const query = new GetOneUserById(params.id);
     const userResult = await this.getOneUserById.execute(query);
     const user = this.handleResult(userResult);
-
     const editUserCommand = new EditUser(
       body.username,
       body.email,
@@ -248,7 +238,7 @@ export class UserController {
 
   @Delete("profile")
   async deleteProfile(@Headers("authorization") auth: string) {
-    const userId = await this.getCurrentUserId(auth);
+    const userId = await this.tokenProvider.getUserIdFromAuthHeader(auth);
     const query = new GetOneUserById(userId);
     const userResult = await this.getOneUserById.execute(query);
     this.handleResult(userResult);
@@ -262,7 +252,8 @@ export class UserController {
     @Param() params: FindByIdParams,
     @Headers("authorization") auth: string
   ) {
-    const requesterUserId = await this.getCurrentUserId(auth);
+    const requesterUserId =
+      await this.tokenProvider.getUserIdFromAuthHeader(auth);
     const query = new GetOneUserById(params.id);
     const userResult = await this.getOneUserById.execute(query);
     this.handleResult(userResult);

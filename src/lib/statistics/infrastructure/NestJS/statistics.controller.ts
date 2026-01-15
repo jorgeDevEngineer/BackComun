@@ -59,36 +59,14 @@ export class StatisticsController {
       Either<DomainException, MultiQuizPersonalResult>
     >
   ) {}
-
-  private async getCurrentUserId(authHeader: string): Promise<string> {
-    const token = authHeader?.replace(/^Bearer\s+/i, "");
-    if (!token) {
-      throw new UnauthorizedException("Token required");
-    }
-    const payload = await this.tokenProvider.validateToken(token);
-    if (!payload || !payload.id) {
-      throw new UnauthorizedException("Invalid token");
-    }
-    return payload.id;
-  }
-
-  private async isUserAuthorized(authHeader: string): Promise<void> {
-    const token = authHeader?.replace(/^Bearer\s+/i, "");
-    if (!token) {
-      throw new UnauthorizedException("Token required");
-    }
-    const payload = await this.tokenProvider.validateToken(token);
-    if (!payload || !payload.id) {
-      throw new UnauthorizedException("Invalid token");
-    }
-  }
+  // Token payload and userId resolution is now done inline via ITokenProvider
 
   @Get("kahoots/my-results")
   async getUserQuizResults(
     @Headers("authorization") auth: string,
     @Query() queryParams: CompletedQuizQueryParams
   ): Promise<QueryWithPaginationResponse<CompletedQuizResponse>> {
-    const userId = await this.getCurrentUserId(auth);
+    const userId = await this.tokenProvider.getUserIdFromAuthHeader(auth);
     const playerId = UserId.of(userId);
     const command = new GetUserResults(playerId, queryParams);
     const results = await this.getUserResults.execute(command);
@@ -103,7 +81,7 @@ export class StatisticsController {
     @Headers("authorization") auth: string,
     @Param("attemptId") attemptId: string
   ): Promise<SingleQuizPersonalResult> {
-    await this.isUserAuthorized(auth);
+    await this.tokenProvider.getPayloadFromAuthHeader(auth);
     const gameId = new AttemptIdDTO(attemptId.trim());
     const command = new GetSinglePlayerCompletedQuizSummary(
       SinglePlayerGameId.of(gameId.attemptId)
@@ -120,7 +98,7 @@ export class StatisticsController {
     @Param("sessionId") sessionId: string,
     @Headers("authorization") auth: string
   ): Promise<MultiQuizPersonalResult> {
-    const userId = await this.getCurrentUserId(auth);
+    const userId = await this.tokenProvider.getUserIdFromAuthHeader(auth);
     const gameId = new SessionIdDTO(sessionId.trim());
     const command = new GetMultiPlayerCompletedQuizSummary(
       MultiplayerSessionId.of(gameId.sessionId),
@@ -140,7 +118,7 @@ export class StatisticsController {
     @Headers("authorization") auth: string
   ) {
     const gameId = new SessionIdDTO(sessionId.trim());
-    const userId = await this.getCurrentUserId(auth);
+    const userId = await this.tokenProvider.getUserIdFromAuthHeader(auth);
     const command = new GetSessionReport(
       MultiplayerSessionId.of(gameId.sessionId),
       UserIdDomain.of(userId)
