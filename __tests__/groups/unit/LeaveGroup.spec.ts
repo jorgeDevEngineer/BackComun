@@ -1,5 +1,5 @@
-import { LeaveGroupTestAPI } from "../../src/lib/groups/application/test/LeaveGroupTestBuilder";
-import { GroupMother } from "../../src/lib/groups/domain/test/GroupMotherBuilder";
+import { LeaveGroupTestAPI } from "../support/builders/LeaveGroupTestBuilder";
+import { GroupMother } from "../support/mothers/GroupMotherBuilder";
 
 describe('LeaveGroupCommandHandler Clean Test', () => {
     const api = new LeaveGroupTestAPI();

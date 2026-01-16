@@ -1,10 +1,10 @@
-import { Group } from "../entity/Group";
-import { GroupId } from "../valueObject/GroupId";
-import { GroupName } from "../valueObject/GroupName";
-import { GroupDescription } from "../valueObject/GroupDescription";
+import { Group } from "../../../../src/lib/groups/domain/entity/Group";
+import { GroupId } from "../../../../src/lib/groups/domain/valueObject/GroupId";
+import { GroupName } from "../../../../src/lib/groups/domain/valueObject/GroupName";
+import { GroupDescription } from "../../../../src/lib/groups/domain/valueObject/GroupDescription";
 import { UserId } from "src/lib/user/domain/valueObject/UserId";
 import { Optional } from "src/lib/shared/Type Helpers/Optional";
-import { GroupInvitationToken } from "../valueObject/GroupInvitationToken";
+import { GroupInvitationToken } from "../../../../src/lib/groups/domain/valueObject/GroupInvitationToken";
 
 export class GroupBuilder {
   private id: GroupId = GroupId.create("123e4567-e89b-42d3-a456-426614174123");

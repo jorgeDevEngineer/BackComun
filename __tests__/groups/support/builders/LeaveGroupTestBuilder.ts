@@ -1,8 +1,8 @@
 import { mock, MockProxy } from 'jest-mock-extended';
-import { GroupRepository } from '../../domain/port/GroupRepository';
-import { LeaveGroupCommandHandler } from '../Handlers/commands/LeaveGroupCommandHandler';
-import { LeaveGroupCommand } from '../../application/parameterObjects/LeaveGroupCommand';
-import { Group } from '../../domain/entity/Group';
+import { GroupRepository } from '../../../../src/lib/groups/domain/port/GroupRepository';
+import { LeaveGroupCommandHandler } from '../../../../src/lib/groups/application/Handlers/commands/LeaveGroupCommandHandler';
+import { LeaveGroupCommand } from '../../../../src/lib/groups/application/parameterObjects/LeaveGroupCommand';
+import { Group } from '../../../../src/lib/groups/domain/entity/Group';
 import { Optional } from 'src/lib/shared/Type Helpers/Optional';
 
 export class LeaveGroupTestAPI {

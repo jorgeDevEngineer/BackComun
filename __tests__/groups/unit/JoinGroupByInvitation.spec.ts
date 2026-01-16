@@ -1,5 +1,5 @@
-import { JoinGroupTestBuilder } from "../../src/lib/groups/application/test/JoinGroupTestBuilder";
-import { GroupMother } from "../../src/lib/groups/domain/test/GroupMotherBuilder";
+import { JoinGroupTestBuilder } from "../support/builders/JoinGroupTestBuilder";
+import { GroupMother } from "../support/mothers/GroupMotherBuilder";
 
 
 describe('JoinGroupByInvitationCommandHandler (Aplicación)', () => {
