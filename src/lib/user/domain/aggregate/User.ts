@@ -12,7 +12,7 @@ import { UserPlainName } from "../valueObject/UserPlainName";
 import { UserDescription } from "../valueObject/UserDescription";
 import { UserRoles } from "../valueObject/UserRoles";
 import { UserIsAdmin } from "../valueObject/UserIsAdmin";
-import { Membership } from "../entity/Membership.js";
+import { Membership } from "../entity/Membership";
 import { UserStatus } from "../valueObject/UserStatus";
 import { de } from "zod/v4/locales";
 import { DomainException } from "src/lib/shared/exceptions/domain.exception";

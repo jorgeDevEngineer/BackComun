@@ -1,5 +1,5 @@
-import { MembershipType } from "../valueObject/MembershipType.js";
-import { MembershipDate } from "../valueObject/MembershipDate.js";
+import { MembershipType } from "../valueObject/MembershipType";
+import { MembershipDate } from "../valueObject/MembershipDate";
 
 export class Membership {
   readonly type: MembershipType;
