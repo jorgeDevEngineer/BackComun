@@ -12,7 +12,9 @@ export class DeleteUserCommandHandler
 
   async execute(command: DeleteUser): Promise<Result<void>> {
     if (!command.targetUserId) {
-      return Result.fail(new DomainException("Missing required parameter: targetUserId"));
+      return Result.fail(
+        new DomainException("Missing required parameter: targetUserId")
+      );
     }
     const userId = new UserId(command.targetUserId);
     await this.userRepository.delete(userId);

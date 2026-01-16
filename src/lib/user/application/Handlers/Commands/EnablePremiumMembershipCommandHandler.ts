@@ -13,7 +13,9 @@ export class EnablePremiumMembershipCommandHandler
 
   async execute(command: EnablePremiumMembership): Promise<Result<void>> {
     if (!command.targetUserId) {
-      return Result.fail(new DomainException("Missing required parameter: targetUserId"));
+      return Result.fail(
+        new DomainException("Missing required parameter: targetUserId")
+      );
     }
     const user = await this.userRepository.getOneById(
       new UserId(command.targetUserId)

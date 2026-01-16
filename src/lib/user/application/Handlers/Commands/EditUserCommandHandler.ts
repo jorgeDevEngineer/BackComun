@@ -30,7 +30,9 @@ export class EditUserCommandHandler
 
   async execute(command: EditUser): Promise<Result<void>> {
     if (!command.targetUserId) {
-      return Result.fail(new DomainException("Missing required parameter: targetUserId"));
+      return Result.fail(
+        new DomainException("Missing required parameter: targetUserId")
+      );
     }
     const existing = await this.userRepository.getOneById(
       new UserId(command.targetUserId)
