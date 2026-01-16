@@ -5,6 +5,7 @@ import { CreateUserCommandHandler } from "src/lib/user/application/Handlers/Comm
 import { CreateUser } from "src/lib/user/application/Parameter Objects/CreateUser";
 import { Inject } from "@nestjs/common";
 import * as bcrypt from "bcrypt";
+import { DomainException } from "src/lib/shared/exceptions/domain.exception";
 
 export class RegisterCommandHandler
   implements IHandler<RegisterCommand, Result<void>>
@@ -15,8 +16,14 @@ export class RegisterCommandHandler
   ) {}
 
   async execute(command: RegisterCommand): Promise<Result<void>> {
+    if (!command.userName || command.userName.trim() === "") {
+      return Result.fail(new DomainException("Username is required"));
+    }
+    if (!command.email || command.email.trim() === "") {
+      return Result.fail(new DomainException("Email is required"));
+    }
     if (!command.password || command.password.trim() === "") {
-      return Result.fail(new Error("Password is required"));
+      return Result.fail(new DomainException("Password is required"));
     }
     const hashedPassword = await bcrypt.hash(command.password, 12);
     const createUserCommand = new CreateUser(
