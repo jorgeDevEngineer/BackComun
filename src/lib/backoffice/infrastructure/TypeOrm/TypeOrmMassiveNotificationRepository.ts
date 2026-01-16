@@ -113,6 +113,16 @@ export class TypeOrmMassiveNotificationRepository implements MassiveNotification
         new UserId(data.userId)
       );
 
+      if (!user) {
+        return {
+          id: domainNotification.id,
+          title: domainNotification.title,
+          message: domainNotification.message,
+          createdAt: domainNotification.createdAt,
+          sender: null,
+        };
+      }
+
       return {
         id: domainNotification.id,
         title: domainNotification.title,
@@ -153,8 +163,8 @@ export class TypeOrmMassiveNotificationRepository implements MassiveNotification
       const sort: Record<string, 1 | -1> = { [sortField]: sortDirection };
 
       // Paginación
-      const limit = params.limit || 20;
-      const page = params.page || 1;
+      const limit = Number(params.limit) || 20;
+      const page = Number(params.page) || 1;
       const skip = (page - 1) * limit;
 
       const data = await collection
@@ -180,9 +190,9 @@ export class TypeOrmMassiveNotificationRepository implements MassiveNotification
             ImageUrl: this.assetUrlResolver.resolveAvatarUrl(
               user.avatarAssetId.value
             ),
-            id: user.id.value,
-            name: user.name.value,
-            email: user.email.value,
+            id: notification.userId,
+            name: user.name.value || "",
+            email: user.email.value || "",
           },
         };
       });

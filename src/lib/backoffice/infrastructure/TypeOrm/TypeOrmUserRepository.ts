@@ -129,8 +129,8 @@ export class TypeOrmUserRepository implements UserRepository {
       const sort: Record<string, 1 | -1> = { [sortField]: sortDirection };
 
       // Paginación
-      const limit = params.limit || 20;
-      const page = params.page || 1;
+      const limit = Number(params.limit) || 20;
+      const page = Number(params.page) || 1;
       const skip = (page - 1) * limit;
 
       const data = await collection
@@ -521,7 +521,7 @@ export class TypeOrmUserRepository implements UserRepository {
         error.message 
       );
       const user = await this.pgRepository.findOne({ where: { id: id.value } });
-      if (!user) throw new UserNotFoundException("User not found");
+      if (!user) return null;
       return this.mapToDomain(user);
     }
   }
