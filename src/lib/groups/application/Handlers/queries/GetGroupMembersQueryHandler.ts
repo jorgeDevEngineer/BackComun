@@ -12,11 +12,11 @@ import { GroupId } from "../../../domain/valueObject/GroupId";
 import { UserId } from "src/lib/user/domain/valueObject/UserId";
 
 export class GetGroupMembersQueryHandler
-  implements IHandler<GetGroupMembersQuery, Either<DomainException, GetGroupMembersResponseDto>>
+  implements IHandler<GetGroupMembersQuery, Either<DomainException, GetGroupMembersResponseDto[]>>
 {
   constructor(private readonly groupRepository: GroupRepository) {}
 
-  async execute(query: GetGroupMembersQuery): Promise<Either<DomainException, GetGroupMembersResponseDto>> {
+  async execute(query: GetGroupMembersQuery): Promise<Either<DomainException, GetGroupMembersResponseDto[]>> {
     
     const groupId = GroupId.of(query.groupId);
     const currentUserId = new UserId(query.currentUserId);
@@ -37,14 +37,15 @@ export class GetGroupMembersQueryHandler
 
     const plain = group.toPlainObject();
 
-    return Either.makeRight({ 
-      name: plain.name,
-      members: plain.members.map((m) => ({
+    const groupsData: GetGroupMembersResponseDto[] = plain.members.map((m) => {
+      return {
         userId: m.userId,
         role: m.role,
         joinedAt: m.joinedAt,
-        completedQuizzes: m.completedQuizzes,
-      })),
-    });
+
+      }
+    })
+
+    return Either.makeRight(groupsData);
   }
 }
