@@ -40,7 +40,7 @@ export class BackofficeController {
 
     @Get('users')
     async searchUser(
-        @Headers('authorization') auth: string,
+        @Headers('Authorization') auth: string,
         @Query('q') q?: string,
         @Query('limit', new DefaultValuePipe(10)) limit?: number,
         @Query('page', new DefaultValuePipe(1)) page?: number,
@@ -64,7 +64,7 @@ export class BackofficeController {
 
     @Patch('blockUser/:userId')
     async blockUser(
-        @Headers('authorization') auth: string,
+        @Headers('Authorization') auth: string,
         @Param('userId') userId: string,
     ) {
         try {
@@ -77,7 +77,7 @@ export class BackofficeController {
 
     @Patch('unblockUser/:userId')
     async unblockUser(
-        @Headers('authorization') auth: string,
+        @Headers('Authorization') auth: string,
         @Param('userId') userId: string,
     ) {
         try {
@@ -90,7 +90,7 @@ export class BackofficeController {
 
     @Delete('user/:userId')
     async deleteUser(
-        @Headers('authorization') auth: string,
+        @Headers('Authorization') auth: string,
         @Param('userId') userId: string,
     ) {
         try {
@@ -103,7 +103,7 @@ export class BackofficeController {
 
     @Patch('giveAdmin/:userId')
     async giveAdminRole(
-        @Headers('authorization') auth: string,
+        @Headers('Authorization') auth: string,
         @Param('userId') userId: string,
     ) {
         try {
@@ -116,7 +116,7 @@ export class BackofficeController {
 
     @Patch('removeAdmin/:userId')
     async removeAdminRole(
-        @Headers('authorization') auth: string,
+        @Headers('Authorization') auth: string,
         @Param('userId') userId: string,
     ) {
         try {
@@ -129,7 +129,7 @@ export class BackofficeController {
 
     @Post('massNotifications')
     async sendNotification(
-        @Headers('authorization') auth: string,
+        @Headers('Authorization') auth: string,
         @Body() body: {
             title: string;
             message: string;
@@ -153,7 +153,7 @@ export class BackofficeController {
 
     @Get('massNotifications')
     async getNotifications(
-        @Headers('authorization') auth: string,
+        @Headers('Authorization') auth: string,
         @Query('userId') userId?: string,
         @Query('limit', new DefaultValuePipe(10)) limit?: number,
         @Query('page', new DefaultValuePipe(1)) page?: number,
