@@ -50,6 +50,7 @@ export class DynamicUserFavoriteQuizRepository
         quizId: favorite.quizId.value,
       });
     } catch {
+      console.log("MongoDB not connected. Falling back to postgres");
       const entity = new TypeOrmPostgresUserFavoriteQuizEntity();
       entity.user_id = favorite.userId.value;
       entity.quiz_id = favorite.quizId.value;
@@ -66,6 +67,7 @@ export class DynamicUserFavoriteQuizRepository
         quizId: favorite.quizId.value,
       });
     } catch {
+      console.log("MongoDB not connected. Falling back to postgres");
       await this.repository.delete({
         user_id: favorite.userId.value,
         quiz_id: favorite.quizId.value,
@@ -83,6 +85,7 @@ export class DynamicUserFavoriteQuizRepository
       });
       return count > 0;
     } catch {
+      console.log("MongoDB not connected. Falling back to postgres");
       return this.repository.exists({
         where: { user_id: userId.value, quiz_id: quizId.value },
       });
@@ -108,6 +111,7 @@ export class DynamicUserFavoriteQuizRepository
 
       return docs.map((doc) => QuizId.of(doc.quizId));
     } catch {
+      console.log("MongoDB not connected. Falling back to postgres");
       let qb = this.repository.createQueryBuilder("fav");
       qb.where("fav.user_id = :userId", { userId: userId.value });
 

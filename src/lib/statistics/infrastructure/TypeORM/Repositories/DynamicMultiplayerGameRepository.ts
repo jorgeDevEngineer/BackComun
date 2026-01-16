@@ -83,18 +83,19 @@ export class DynamicMultiplayerGameRepository
       console.log(
         "MongoDB connection not avaliable for multiplayersession falling back to postgres"
       );
+
       let qb = this.sessionRepository.createQueryBuilder("multiplayersessions");
 
       qb.andWhere(`multiplayersessions.sessionState = :status`, {
         status: "end",
       });
 
-      // ✅ Usar JOIN LATERAL para descomponer players
+      // ✅ Corrección: usar el mismo alias y castear a jsonb
       qb.andWhere(
         `
         EXISTS (
           SELECT 1
-          FROM jsonb_array_elements("multiplayerSessions"."players"::jsonb) AS elem
+          FROM jsonb_array_elements(("multiplayersessions"."players")::jsonb) AS elem
           WHERE elem->>'playerId' = :playerId
         )
       `,
