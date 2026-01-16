@@ -4,5 +4,6 @@ export class GenerateGroupInvitationCommand {
     public readonly currentUserId: string,
     public readonly ttlDays?: number,
     public readonly now?: Date,
+
   ) {}
 }

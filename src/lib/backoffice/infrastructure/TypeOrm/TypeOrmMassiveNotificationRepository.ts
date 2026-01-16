@@ -96,8 +96,8 @@ export class TypeOrmMassiveNotificationRepository implements MassiveNotification
     } catch (error) {
       // 2. Si MongoDB falla, usa PostgreSQL como fallback
       console.log(
-        "MongoDB connection not available, falling back to PostgreSQL for sendNotification operation.",
-        error
+        "MongoDB connection not available, falling back to PostgreSQL for sendNotification operation: ",
+        error.message
       );
 
       const entity = this.pgRepository.create({
@@ -112,6 +112,16 @@ export class TypeOrmMassiveNotificationRepository implements MassiveNotification
       const user = await this.userRepository.getOneById(
         new UserId(data.userId)
       );
+
+      if (!user) {
+        return {
+          id: domainNotification.id,
+          title: domainNotification.title,
+          message: domainNotification.message,
+          createdAt: domainNotification.createdAt,
+          sender: null,
+        };
+      }
 
       return {
         id: domainNotification.id,
@@ -153,8 +163,8 @@ export class TypeOrmMassiveNotificationRepository implements MassiveNotification
       const sort: Record<string, 1 | -1> = { [sortField]: sortDirection };
 
       // Paginación
-      const limit = params.limit || 20;
-      const page = params.page || 1;
+      const limit = Number(params.limit) || 20;
+      const page = Number(params.page) || 1;
       const skip = (page - 1) * limit;
 
       const data = await collection
@@ -180,9 +190,9 @@ export class TypeOrmMassiveNotificationRepository implements MassiveNotification
             ImageUrl: this.assetUrlResolver.resolveAvatarUrl(
               user.avatarAssetId.value
             ),
-            id: user.id.value,
-            name: user.name.value,
-            email: user.email.value,
+            id: notification.userId,
+            name: user.name.value || "",
+            email: user.email.value || "",
           },
         };
       });
@@ -201,8 +211,8 @@ export class TypeOrmMassiveNotificationRepository implements MassiveNotification
     } catch (error) {
       // 2. Si MongoDB falla, usa PostgreSQL como fallback
       console.log(
-        "MongoDB connection not available, falling back to PostgreSQL for searchUsers operation.",
-        error
+        "MongoDB connection not available, falling back to PostgreSQL for searchUsers operation: ",
+        error.message
       );
 
       const qb = this.pgRepository.createQueryBuilder("user");

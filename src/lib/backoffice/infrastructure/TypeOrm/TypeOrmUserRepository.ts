@@ -129,8 +129,8 @@ export class TypeOrmUserRepository implements UserRepository {
       const sort: Record<string, 1 | -1> = { [sortField]: sortDirection };
 
       // Paginación
-      const limit = params.limit || 20;
-      const page = params.page || 1;
+      const limit = Number(params.limit) || 20;
+      const page = Number(params.page) || 1;
       const skip = (page - 1) * limit;
 
       const data = await collection
@@ -166,8 +166,8 @@ export class TypeOrmUserRepository implements UserRepository {
     } catch (error) {
       // 2. Si MongoDB falla, usa PostgreSQL como fallback
       console.log(
-        "MongoDB connection not available, falling back to PostgreSQL for searchUsers operation.",
-        error
+        "MongoDB connection not available, falling back to PostgreSQL for searchUsers operation: ",
+        error.message
       );
 
       const qb = this.pgRepository.createQueryBuilder("user");
@@ -228,8 +228,8 @@ export class TypeOrmUserRepository implements UserRepository {
     } catch (error) {
       // 2. Si MongoDB falla, usa PostgreSQL como fallback
       console.log(
-        "MongoDB connection not available, falling back to PostgreSQL for deleteUser operation.",
-        error
+        "MongoDB connection not available, falling back to PostgreSQL for deleteUser operation: ",
+        error.message
       );
       await this.pgRepository.delete(id.value);
     }
@@ -280,8 +280,8 @@ export class TypeOrmUserRepository implements UserRepository {
       }
 
       console.log(
-        "MongoDB connection not available, falling back to PostgreSQL for blockUser operation.",
-        error
+        "MongoDB connection not available, falling back to PostgreSQL for blockUser operation: ",
+        error.message
       );
 
       const user = await this.pgRepository.findOne({ where: { id: id.value } });
@@ -346,8 +346,8 @@ export class TypeOrmUserRepository implements UserRepository {
       }
 
       console.log(
-        "MongoDB connection not available, falling back to PostgreSQL for blockUser operation.",
-        error
+        "MongoDB connection not available, falling back to PostgreSQL for blockUser operation: ",
+        error.message
       );
 
       const user = await this.pgRepository.findOne({ where: { id: id.value } });
@@ -414,8 +414,8 @@ export class TypeOrmUserRepository implements UserRepository {
       }
 
       console.log(
-        "MongoDB connection not available, falling back to PostgreSQL for blockUser operation.",
-        error
+        "MongoDB connection not available, falling back to PostgreSQL for blockUser operation: ",
+        error.message
       );
 
       const user = await this.pgRepository.findOne({ where: { id: id.value } });
@@ -483,8 +483,8 @@ export class TypeOrmUserRepository implements UserRepository {
       }
 
       console.log(
-        "MongoDB connection not available, falling back to PostgreSQL for blockUser operation.",
-        error
+        "MongoDB connection not available, falling back to PostgreSQL for blockUser operation: ",
+        error.message
       );
 
       const user = await this.pgRepository.findOne({ where: { id: id.value } });
@@ -517,11 +517,11 @@ export class TypeOrmUserRepository implements UserRepository {
     } catch (error) {
       // 2. Si MongoDB falla, usa PostgreSQL como fallback
       console.log(
-        "MongoDB connection not available, falling back to PostgreSQL for getOneById operation.",
-        error
+        "MongoDB connection not available, falling back to PostgreSQL for getOneById operation: ",
+        error.message 
       );
       const user = await this.pgRepository.findOne({ where: { id: id.value } });
-      if (!user) throw new UserNotFoundException("User not found");
+      if (!user) return null;
       return this.mapToDomain(user);
     }
   }
@@ -535,8 +535,8 @@ export class TypeOrmUserRepository implements UserRepository {
     } catch (error) {
       // 2. Si MongoDB falla, usa PostgreSQL como fallback
       console.log(
-        "MongoDB connection not available, falling back to PostgreSQL for getEmailNoadmin operation.",
-        error
+        "MongoDB connection not available, falling back to PostgreSQL for getEmailNoadmin operation: ",
+        error.message
       );
       const users = await this.pgRepository.find({ where: { isAdmin: false } });
       return users.map((user) => user.email);
@@ -552,8 +552,8 @@ export class TypeOrmUserRepository implements UserRepository {
     } catch (error) {
       // 2. Si MongoDB falla, usa PostgreSQL como fallback
       console.log(
-        "MongoDB connection not available, falling back to PostgreSQL for getEmailAdmin operation.",
-        error
+        "MongoDB connection not available, falling back to PostgreSQL for getEmailAdmin operation: ",
+        error.message
       );
       const users = await this.pgRepository.find({ where: { isAdmin: true } });
       return users.map((user) => user.email);

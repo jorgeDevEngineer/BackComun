@@ -1,10 +1,17 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { Inject } from "@nestjs/common";
 import { UserRepository } from "../domain/port/UserRepository";
 import { MassiveNotificationRepository } from "../domain/port/MassiveNotificationRepository";
 import { UserId } from "../domain/valueObject/UserId";
-import { BadRequestException } from "@nestjs/common";
-import { UnauthorizedException } from "@nestjs/common";
 import { ITokenProvider } from "src/lib/auth/application/providers/ITokenProvider";
+import { IHandler } from "src/lib/shared/IHandler";
+import { Result } from "src/lib/shared/Type Helpers/result";
+import { InvalidTokenException } from "../domain/exceptions/InvalidTokenException";
+import { UnauthorizedAdminException } from "../domain/exceptions/UnauthorizedAdminException";
+
+export interface GetNotificationsCommand {
+  auth: string;
+  params: GetNotificationsParamsDto;
+}
 
 export interface GetNotificationsParamsDto {
   userId?: string;
@@ -35,8 +42,7 @@ export interface GetNotificationsResultDto {
   };
 }
 
-@Injectable()
-export class GetNotificationsUseCase {
+export class GetNotificationsUseCase implements IHandler<GetNotificationsCommand, Result<GetNotificationsResultDto>> {
   constructor(
     @Inject("MassiveNotificationRepository")
     private readonly massiveNotificationRepository: MassiveNotificationRepository,
@@ -46,19 +52,18 @@ export class GetNotificationsUseCase {
     private readonly tokenProvider: ITokenProvider,
   ) {}
 
-  async run(
-    auth: string,
-    params: GetNotificationsParamsDto
-  ): Promise<GetNotificationsResultDto> {
-    const token = await this.tokenProvider.validateToken(auth);
+  async execute(command: GetNotificationsCommand): Promise<Result<GetNotificationsResultDto>> {
+    const token = await this.tokenProvider.validateToken(command.auth);
     if (!token) {
-      throw new BadRequestException("Invalid token");
+      return Result.fail<GetNotificationsResultDto>(new InvalidTokenException());
     }
+    
     const user = await this.userRepository.getOneById(new UserId(token.id));
     if (!user.isAdmin) {
-      throw new UnauthorizedException("Unauthorized");
+      return Result.fail<GetNotificationsResultDto>(new UnauthorizedAdminException());
     }
-    const result = await this.massiveNotificationRepository.getMassiveNotifications(params);
-    return result;
+    
+    const result = await this.massiveNotificationRepository.getMassiveNotifications(command.params);
+    return Result.ok<GetNotificationsResultDto>(result);
   }
 }
