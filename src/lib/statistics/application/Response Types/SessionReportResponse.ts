@@ -23,7 +23,7 @@ export type SessionReportResponse = {
   title: string;
   executionDate: Date;
   playerRanking: playerPosition[];
-  questionsAnalysis: questionAnalysis[];
+  questionAnalysis: questionAnalysis[];
 };
 
 function countCorrectAnswers(
@@ -91,6 +91,6 @@ export function toSessionReportResponse(
     title: kahoot.getTitle(),
     executionDate: game.getCompletionDate()!,
     playerRanking: createPlayerRanking(game),
-    questionsAnalysis: makeQuestionsAnalysis(game, kahoot),
+    questionAnalysis: makeQuestionsAnalysis(game, kahoot),
   };
 }

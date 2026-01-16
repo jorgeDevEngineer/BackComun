@@ -1,6 +1,7 @@
+import { AuthTokenPayload } from "src/lib/auth/application/parameterObjects/TokenPayload";
 export class EnablePremiumMembership {
   constructor(
     public readonly targetUserId: string,
-    public readonly requesterUserId?: string
+    public readonly requester?: AuthTokenPayload
   ) {}
 }

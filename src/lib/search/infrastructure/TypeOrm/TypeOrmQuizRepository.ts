@@ -143,7 +143,7 @@ export class TypeOrmQuizRepository implements QuizRepository {
       return this.mapToDomain(result);
     } catch (error) {
       // 2. Si MongoDB falla, usa PostgreSQL como fallback
-      console.log('MongoDB connection not available, falling back to PostgreSQL for find operation.',error);
+      console.log('MongoDB connection not available, falling back to PostgreSQL for find operation.',error.message);
       const quizEntity = await this.pgRepository.findOne({
         where: { id: id.value },
       });
@@ -201,7 +201,7 @@ export class TypeOrmQuizRepository implements QuizRepository {
             category: q.category,
             author: {
               id: authorId,
-              name: await this.userRepository.getNameById(authorId),
+              name: (await this.userRepository.getNameById(authorId)) ?? 'Usuario desconocido',
             },
             coverImageId: q.coverImageId || null,
             playCount: q.playCount,
@@ -225,7 +225,7 @@ export class TypeOrmQuizRepository implements QuizRepository {
       };
     } catch (error) {
       // 2. Si MongoDB falla, usa PostgreSQL como fallback
-      console.log('MongoDB connection not available, falling back to PostgreSQL for search operation.',error);
+      console.log('MongoDB connection not available, falling back to PostgreSQL for search operation.',error.message);
 
       const qb = this.pgRepository.createQueryBuilder('quiz');
 
@@ -264,7 +264,7 @@ export class TypeOrmQuizRepository implements QuizRepository {
           category: q.category,
           author: {
             id: q.userId,
-            name: await this.userRepository.getNameById(q.userId),
+            name: (await this.userRepository.getNameById(q.userId)) ?? 'Usuario desconocido',
           },
           coverImageId: q.coverImageId,
           playCount: q.playCount,
@@ -314,7 +314,7 @@ export class TypeOrmQuizRepository implements QuizRepository {
             category: q.category,
             author: {
               id: authorId,
-              name: await this.userRepository.getNameById(authorId),
+              name: (await this.userRepository.getNameById(authorId)) ?? 'Usuario desconocido',
             },
             coverImageId: q.coverImageId || null,
             playCount: q.playCount,
@@ -336,7 +336,7 @@ export class TypeOrmQuizRepository implements QuizRepository {
       };
     } catch (error) {
       // 2. Si MongoDB falla, usa PostgreSQL como fallback
-      console.log('MongoDB connection not available, falling back to PostgreSQL for findFeatured operation.',error);
+      console.log('MongoDB connection not available, falling back to PostgreSQL for findFeatured operation.',error.message);
 
       const quizzes = await this.pgRepository.find({
         where: {
@@ -358,7 +358,7 @@ export class TypeOrmQuizRepository implements QuizRepository {
           category: q.category,
           author: {
             id: q.userId,
-            name: await this.userRepository.getNameById(q.userId),
+            name: (await this.userRepository.getNameById(q.userId)) ?? 'Usuario desconocido',
           },
           coverImageId: q.coverImageId,
           playCount: q.playCount,
@@ -383,12 +383,16 @@ export class TypeOrmQuizRepository implements QuizRepository {
   async getCategories(): Promise<{ name: string }[]> {
     try {
       // 1. Intenta usar MongoDB
+      
       const collection = await this.getMongoCollection();
-      const categories = await collection.distinct('category');
-      return categories.map((c) => ({ name: c }));
+      const result = await collection.aggregate([
+        { $group: { _id: '$category' } },
+        { $match: { _id: { $ne: null } } },
+      ]).toArray();
+      return result.map((r) => ({ name: r._id as string }));
     } catch (error) {
       // 2. Si MongoDB falla, usa PostgreSQL como fallback
-      console.log('MongoDB connection not available, falling back to PostgreSQL for getCategories operation.',error);
+      console.log('MongoDB connection not available, falling back to PostgreSQL for getCategories operation: ',error.message);
 
       const categories = await this.pgRepository.createQueryBuilder('quiz')
         .select('category')

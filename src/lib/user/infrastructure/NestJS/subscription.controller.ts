@@ -68,7 +68,8 @@ export class UserSubscriptionController {
 
   @Get()
   async getProfileSubscriptionStatus(@Headers("authorization") auth: string) {
-    const userId = await this.tokenProvider.getUserIdFromAuthHeader(auth);
+    const payload = await this.tokenProvider.getPayloadFromAuthHeader(auth);
+    const userId = payload.id;
     const query = new GetOneUserById(userId);
     const userResult = await this.getOneUserById.execute(query);
     const user = this.handleResult(userResult) as User;
@@ -85,8 +86,9 @@ export class UserSubscriptionController {
 
   @Post()
   async enablePremiumSubscriptionPlan(@Headers("authorization") auth: string) {
-    const userId = await this.tokenProvider.getUserIdFromAuthHeader(auth);
-    const command = new EnablePremiumMembership(userId, userId);
+    const payload = await this.tokenProvider.getPayloadFromAuthHeader(auth);
+    const userId = payload.id;
+    const command = new EnablePremiumMembership(userId, payload);
     const result = await this.enablePremiumMembership.execute(command);
     this.handleResult(result);
     const updated = await this.getOneUserById.execute(
@@ -101,9 +103,8 @@ export class UserSubscriptionController {
     @Param() params: FindByIdParams,
     @Headers("authorization") auth: string
   ) {
-    const requesterUserId =
-      await this.tokenProvider.getUserIdFromAuthHeader(auth);
-    const command = new EnablePremiumMembership(params.id, requesterUserId);
+    const payload = await this.tokenProvider.getPayloadFromAuthHeader(auth);
+    const command = new EnablePremiumMembership(params.id, payload);
     const result = await this.enablePremiumMembership.execute(command);
     this.handleResult(result);
     const updated = await this.getOneUserById.execute(
@@ -115,8 +116,9 @@ export class UserSubscriptionController {
 
   @Delete()
   async enableFreeSubscriptionPlan(@Headers("authorization") auth: string) {
-    const userId = await this.tokenProvider.getUserIdFromAuthHeader(auth);
-    const command = new EnableFreeMembership(userId, userId);
+    const payload = await this.tokenProvider.getPayloadFromAuthHeader(auth);
+    const userId = payload.id;
+    const command = new EnableFreeMembership(userId, payload);
     const result = await this.enableFreeMembership.execute(command);
     this.handleResult(result);
     const updated = await this.getOneUserById.execute(
@@ -131,9 +133,8 @@ export class UserSubscriptionController {
     @Param() params: FindByIdParams,
     @Headers("authorization") auth: string
   ) {
-    const requesterUserId =
-      await this.tokenProvider.getUserIdFromAuthHeader(auth);
-    const command = new EnableFreeMembership(params.id, requesterUserId);
+    const payload = await this.tokenProvider.getPayloadFromAuthHeader(auth);
+    const command = new EnableFreeMembership(params.id, payload);
     const result = await this.enableFreeMembership.execute(command);
     this.handleResult(result);
     const updated = await this.getOneUserById.execute(

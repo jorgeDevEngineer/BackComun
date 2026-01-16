@@ -60,30 +60,23 @@ export class TypeOrmUserRepository implements UserRepository {
     );
   }
 
-  async getNameById(id: string): Promise<string> {
+  async getNameById(id: string): Promise<string | null> {
     try {
       // 1. Intenta usar MongoDB
       const collection = await this.getMongoCollection();
       // Buscar por 'id' o '_id' según cómo esté almacenado el documento
       const user = await collection.findOne({ $or: [{ id: id }, { _id: id }] });
 
-      if (!user) throw new Error("User not found");
-      return user.name;
+      return user?.name ?? null;
     } catch (error) {
       // 2. Si MongoDB falla, usa PostgreSQL como fallback
-      // Solo hacemos fallback si el error es de conexión, no si el usuario no existe
-      if (error.message === "User not found") {
-        throw error;
-      }
-
       console.log(
         "MongoDB connection not available, falling back to PostgreSQL for getNameById operation.",
-        error
+        error.message
       );
       const user = await this.pgRepository.findOne({ where: { id: id } });
 
-      if (!user) throw new Error("User not found");
-      return user.name;
+      return user?.name ?? null;
     }
   }
 }
