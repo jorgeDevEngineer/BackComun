@@ -1,8 +1,8 @@
-import { UserRepository } from "../../../domain/port/UserRepository.js";
-import { UserId } from "../../../domain/valueObject/UserId.js";
-import { UserNotFoundException } from "../../exceptions/UserNotFoundException.js";
+import { UserRepository } from "../../../domain/port/UserRepository";
+import { UserId } from "../../../domain/valueObject/UserId";
+import { UserNotFoundException } from "../../exceptions/UserNotFoundException";
 import { IHandler } from "src/lib/shared/IHandler";
-import { EnablePremiumMembership } from "../../Parameter Objects/EnablePremiumMembership.js";
+import { EnablePremiumMembership } from "../../Parameter Objects/EnablePremiumMembership";
 import { Result } from "src/lib/shared/Type Helpers/result";
 import { DomainException } from "src/lib/shared/exceptions/domain.exception";
 
