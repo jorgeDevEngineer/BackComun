@@ -7,8 +7,8 @@ import { ITokenProvider } from "src/lib/auth/application/providers/ITokenProvide
 import { Get, Inject } from "@nestjs/common";
 import * as bcrypt from "bcrypt";
 import { User } from "src/lib/user/domain/aggregate/User";
-import { DomainException } from "src/lib/shared/exceptions/domain.exception";
 import { TokenPayload } from "src/lib/auth/application/parameterObjects/TokenPayload";
+import { DomainException } from "src/lib/shared/exceptions/domain.exception";
 
 export class LoginCommandHandler
   implements IHandler<LoginCommand, Result<string>>
@@ -23,6 +23,9 @@ export class LoginCommandHandler
   ) {}
 
   async execute(command: LoginCommand): Promise<Result<string>> {
+    if (!command.userName || command.userName.trim() === "") {
+      return Result.fail(new DomainException("Username is required"));
+    }
     if (!command.password || command.password.trim() === "") {
       return Result.fail(new DomainException("Password is required"));
     }

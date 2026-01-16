@@ -17,7 +17,7 @@ import { MembershipDate } from "../../../domain/valueObject/MembershipDate.js";
 import { UserStatus } from "../../../domain/valueObject/UserStatus";
 import { IHandler } from "src/lib/shared/IHandler";
 import { Either } from "src/lib/shared/Type Helpers/Either";
-import { DomainException } from "src/lib/shared/exceptions/DomainException";
+import { DomainException } from "src/lib/shared/exceptions/domain.exception";
 import { CreateUser } from "../../Parameter Objects/CreateUser";
 import { Result } from "src/lib/shared/Type Helpers/result";
 import { UserPassword } from "../../../domain/valueObject/UserPassword";
@@ -29,6 +29,20 @@ export class CreateUserCommandHandler
   constructor(private readonly userRepository: UserRepository) {}
 
   async execute(command: CreateUser): Promise<Result<void>> {
+    // Basic, framework-agnostic input validation to surface missing params as domain failures
+    if (
+      !command.userName ||
+      !command.email ||
+      !command.password ||
+      !command.userType ||
+      !command.name
+    ) {
+      return Result.fail(
+        new DomainException(
+          "Missing required parameter(s): username, email, password, type, name"
+        )
+      );
+    }
     const password = new UserPassword(command.password);
     const newUser = new User(
       new UserName(command.userName),
@@ -42,19 +56,25 @@ export class CreateUserCommandHandler
     );
     const userWithSameId = await this.userRepository.getOneById(newUser.id);
     if (userWithSameId) {
-      throw new Error("User with this ID already exists");
+      return Result.fail(
+        new DomainException("User with this ID already exists")
+      );
     }
     const userWithSameUserName = await this.userRepository.getOneByName(
       newUser.userName
     );
     if (userWithSameUserName) {
-      throw new Error("User with this username already exists");
+      return Result.fail(
+        new DomainException("User with this username already exists")
+      );
     }
     const userWithSameEmail = await this.userRepository.getOneByEmail(
       newUser.email
     );
     if (userWithSameEmail) {
-      throw new Error("User with this email already exists");
+      return Result.fail(
+        new DomainException("User with this email already exists")
+      );
     }
     await this.userRepository.create(newUser);
     return Result.ok<void>();

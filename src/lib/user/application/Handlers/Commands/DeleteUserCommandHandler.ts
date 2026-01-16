@@ -3,6 +3,7 @@ import { UserId } from "../../../domain/valueObject/UserId";
 import { IHandler } from "src/lib/shared/IHandler";
 import { DeleteUser } from "../../Parameter Objects/DeleteUser";
 import { Result } from "src/lib/shared/Type Helpers/result";
+import { DomainException } from "src/lib/shared/exceptions/domain.exception";
 
 export class DeleteUserCommandHandler
   implements IHandler<DeleteUser, Result<void>>
@@ -10,6 +11,11 @@ export class DeleteUserCommandHandler
   constructor(private readonly userRepository: UserRepository) {}
 
   async execute(command: DeleteUser): Promise<Result<void>> {
+    if (!command.targetUserId) {
+      return Result.fail(
+        new DomainException("Missing required parameter: targetUserId")
+      );
+    }
     const userId = new UserId(command.targetUserId);
     await this.userRepository.delete(userId);
     return Result.ok(undefined);
