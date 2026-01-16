@@ -1,18 +1,18 @@
-import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { SearchController } from './search.controller';
-import { TypeOrmQuizRepository } from '../TypeOrm/TypeOrmQuizRepository';
-import { TypeOrmQuizEntity } from '../TypeOrm/TypeOrmQuizEntity';
-import { TypeOrmUserRepository } from '../TypeOrm/TypeOrmUserRepository';
-import { TypeOrmUserEntity } from '../TypeOrm/TypeOrmUserEntity';
-import { SearchQuizzesUseCase } from '../../application/SearchQuizzesUseCase';
-import { GetFeaturedQuizzesUseCase } from '../../application/GetFeaturedQuizzesUseCase';
-import { GetCategoriesUseCase } from '../../application/GetCategoriesUseCase';
-import { LoggerModule } from 'src/lib/shared/aspects/logger/infrastructure/logger.module';
-import { ILoggerPort } from 'src/lib/shared/aspects/logger/domain/ports/logger.port';
-import { QuizRepository } from '../../domain/port/QuizRepository';
-import { ErrorHandlingDecorator } from 'src/lib/shared/aspects/error-handling/application/decorators/error-handling.decorator';
-import { LoggingUseCaseDecorator } from 'src/lib/shared/aspects/logger/application/decorators/logging.decorator';
+import { Module } from "@nestjs/common";
+import { TypeOrmModule } from "@nestjs/typeorm";
+import { SearchController } from "./search.controller";
+import { TypeOrmQuizRepository } from "../TypeOrm/TypeOrmQuizRepository";
+import { TypeOrmQuizEntity } from "../TypeOrm/TypeOrmQuizEntity";
+import { TypeOrmUserRepository } from "../TypeOrm/TypeOrmUserRepository";
+import { TypeOrmUserEntity } from "../TypeOrm/TypeOrmUserEntity";
+import { SearchQuizzesUseCase } from "../../application/SearchQuizzesUseCase";
+import { GetFeaturedQuizzesUseCase } from "../../application/GetFeaturedQuizzesUseCase";
+import { GetCategoriesUseCase } from "../../application/GetCategoriesUseCase";
+import { LoggerModule } from "src/lib/shared/aspects/logger/infrastructure/logger.module";
+import { ILoggerPort } from "src/lib/shared/aspects/logger/application/ports/logger.port";
+import { QuizRepository } from "../../domain/port/QuizRepository";
+import { ErrorHandlingDecorator } from "src/lib/shared/aspects/error-handling/application/decorators/error-handling.decorator";
+import { LoggingUseCaseDecorator } from "src/lib/shared/aspects/logger/application/decorators/logging.decorator";
 
 @Module({
   imports: [
@@ -22,11 +22,11 @@ import { LoggingUseCaseDecorator } from 'src/lib/shared/aspects/logger/applicati
   controllers: [SearchController],
   providers: [
     {
-      provide: 'QuizRepository',
+      provide: "QuizRepository",
       useClass: TypeOrmQuizRepository,
     },
     {
-      provide: 'UserRepository',
+      provide: "UserRepository",
       useClass: TypeOrmUserRepository,
     },
     // SearchQuizzesUseCase con decoradores
@@ -37,15 +37,15 @@ import { LoggingUseCaseDecorator } from 'src/lib/shared/aspects/logger/applicati
         const withErrorHandling = new ErrorHandlingDecorator(
           useCase,
           logger,
-          'SearchQuizzesUseCase'
+          "SearchQuizzesUseCase"
         );
         return new LoggingUseCaseDecorator(
           withErrorHandling,
           logger,
-          'SearchQuizzesUseCase'
+          "SearchQuizzesUseCase"
         );
       },
-      inject: ['ILoggerPort', 'QuizRepository'],
+      inject: ["ILoggerPort", "QuizRepository"],
     },
     // GetFeaturedQuizzesUseCase con decoradores
     {
@@ -55,15 +55,15 @@ import { LoggingUseCaseDecorator } from 'src/lib/shared/aspects/logger/applicati
         const withErrorHandling = new ErrorHandlingDecorator(
           useCase,
           logger,
-          'GetFeaturedQuizzesUseCase'
+          "GetFeaturedQuizzesUseCase"
         );
         return new LoggingUseCaseDecorator(
           withErrorHandling,
           logger,
-          'GetFeaturedQuizzesUseCase'
+          "GetFeaturedQuizzesUseCase"
         );
       },
-      inject: ['ILoggerPort', 'QuizRepository'],
+      inject: ["ILoggerPort", "QuizRepository"],
     },
     // GetCategoriesUseCase con decoradores
     {
@@ -73,17 +73,21 @@ import { LoggingUseCaseDecorator } from 'src/lib/shared/aspects/logger/applicati
         const withErrorHandling = new ErrorHandlingDecorator(
           useCase,
           logger,
-          'GetCategoriesUseCase'
+          "GetCategoriesUseCase"
         );
         return new LoggingUseCaseDecorator(
           withErrorHandling,
           logger,
-          'GetCategoriesUseCase'
+          "GetCategoriesUseCase"
         );
       },
-      inject: ['ILoggerPort', 'QuizRepository'],
+      inject: ["ILoggerPort", "QuizRepository"],
     },
   ],
-  exports: [SearchQuizzesUseCase, GetFeaturedQuizzesUseCase, GetCategoriesUseCase],
+  exports: [
+    SearchQuizzesUseCase,
+    GetFeaturedQuizzesUseCase,
+    GetCategoriesUseCase,
+  ],
 })
 export class SearchModule {}

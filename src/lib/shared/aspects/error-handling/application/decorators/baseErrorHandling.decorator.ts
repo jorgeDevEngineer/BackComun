@@ -1,5 +1,5 @@
 import { IHandler } from "src/lib/shared/IHandler";
-import { ILoggerPort } from "../../../logger/domain/ports/logger.port";
+import { ILoggerPort } from "../../../logger/application/ports/logger.port";
 
 export abstract class BaseErrorHandlingDecorator<TParameterObject, TResponse>
   implements IHandler<TParameterObject, TResponse>

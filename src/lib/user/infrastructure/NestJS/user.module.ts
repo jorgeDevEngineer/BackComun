@@ -18,9 +18,8 @@ import { AuthorizationDecorator } from "src/lib/shared/aspects/auth/application/
 import {
   ILoggerPort,
   LOGGER_PORT,
-} from "src/lib/shared/aspects/logger/domain/ports/logger.port";
+} from "src/lib/shared/aspects/logger/application/ports/logger.port";
 import { LoggerModule } from "src/lib/shared/aspects/logger/infrastructure/logger.module";
-import { AuthAspectModule } from "src/lib/shared/aspects/auth/infrastructure/auth.module";
 import { AuthModule } from "src/lib/auth/infrastructure/NestJs/auth.module";
 import { AssetUrlResolver } from "src/lib/shared/infrastructure/providers/AssetUrlResolver";
 
@@ -29,7 +28,6 @@ import { AssetUrlResolver } from "src/lib/shared/infrastructure/providers/AssetU
     TypeOrmModule.forFeature([TypeOrmUserEntity]),
     forwardRef(() => AuthModule),
     LoggerModule,
-    AuthAspectModule,
   ],
   controllers: [UserController],
   providers: [

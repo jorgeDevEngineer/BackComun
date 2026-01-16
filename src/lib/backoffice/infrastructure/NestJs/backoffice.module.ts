@@ -17,7 +17,7 @@ import { ErrorHandlingDecorator } from "src/lib/shared/aspects/error-handling/ap
 import { LoggingUseCaseDecorator } from "src/lib/shared/aspects/logger/application/decorators/logging.decorator";
 
 // Puertos
-import { ILoggerPort } from "src/lib/shared/aspects/logger/domain/ports/logger.port";
+import { ILoggerPort } from "src/lib/shared/aspects/logger/application/ports/logger.port";
 import { UserRepository } from "../../domain/port/UserRepository";
 import { MassiveNotificationRepository } from "../../domain/port/MassiveNotificationRepository";
 import { SendMailService } from "../../domain/port/SendMailService";
@@ -35,7 +35,10 @@ import { LoggerModule } from "src/lib/shared/aspects/logger/infrastructure/logge
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([TypeOrmUserEntity, TypeOrmMassiveNotificationEntity]),
+    TypeOrmModule.forFeature([
+      TypeOrmUserEntity,
+      TypeOrmMassiveNotificationEntity,
+    ]),
     forwardRef(() => AuthModule),
     LoggerModule,
   ],

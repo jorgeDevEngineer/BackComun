@@ -1,11 +1,13 @@
-import { ILoggerPort } from '../../domain/ports/logger.port';
-import { IHandler } from 'src/lib/shared/IHandler';
+import { ILoggerPort } from "../ports/logger.port";
+import { IHandler } from "src/lib/shared/IHandler";
 
-export class LoggingUseCaseDecorator<TRequest, TResponse> implements IHandler<TRequest, TResponse> {
+export class LoggingUseCaseDecorator<TRequest, TResponse>
+  implements IHandler<TRequest, TResponse>
+{
   constructor(
     private readonly useCase: IHandler<TRequest, TResponse>,
     private readonly logger: ILoggerPort,
-    private readonly context: string,
+    private readonly context: string
   ) {}
 
   async execute(request?: TRequest): Promise<TResponse> {

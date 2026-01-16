@@ -1,4 +1,3 @@
-
 import { Module, forwardRef } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 
@@ -35,7 +34,10 @@ import { GetGroupQuizLeaderboardQueryHandler } from "../../application/Handlers/
 
 import { LoggerModule } from "src/lib/shared/aspects/logger/infrastructure/logger.module";
 import { LoggingUseCaseDecorator } from "src/lib/shared/aspects/logger/application/decorators/logging.decorator";
-import { ILoggerPort, LOGGER_PORT } from "src/lib/shared/aspects/logger/domain/ports/logger.port";
+import {
+  ILoggerPort,
+  LOGGER_PORT,
+} from "src/lib/shared/aspects/logger/application/ports/logger.port";
 import { ErrorHandlingDecoratorWithEither } from "src/lib/shared/aspects/error-handling/application/decorators/error-handling-either";
 import { EventEmitter2, EventEmitterModule } from "@nestjs/event-emitter";
 import { AuthModule } from "src/lib/auth/infrastructure/NestJs/auth.module";
@@ -48,7 +50,7 @@ import { UserRepository } from "src/lib/user/domain/port/UserRepository";
 
 @Module({
   imports: [
-    LoggerModule, 
+    LoggerModule,
     EventEmitterModule.forRoot(),
     TypeOrmModule.forFeature([
       GroupOrmEntity,
@@ -56,12 +58,11 @@ import { UserRepository } from "src/lib/user/domain/port/UserRepository";
       GroupQuizAssignmentOrmEntity,
       TypeOrmQuizEntity,
       TypeOrmSinglePlayerGameEntity,
-      
     ]),
     forwardRef(() => AuthModule),
     SinglePlayerGameModule,
     KahootModule,
-    UserModule
+    UserModule,
   ],
   controllers: [GroupsController],
   providers: [
@@ -81,7 +82,11 @@ import { UserRepository } from "src/lib/user/domain/port/UserRepository";
       provide: CreateGroupCommandHandler,
       useFactory: (logger: ILoggerPort, repo: GroupRepository) => {
         const useCase = new CreateGroupCommandHandler(repo);
-        return new LoggingUseCaseDecorator(useCase, logger, "CreateGroupCommandHandler");
+        return new LoggingUseCaseDecorator(
+          useCase,
+          logger,
+          "CreateGroupCommandHandler"
+        );
       },
       inject: [LOGGER_PORT, "GroupRepository"],
     },
@@ -90,8 +95,16 @@ import { UserRepository } from "src/lib/user/domain/port/UserRepository";
       provide: GetUserGroupsQueryHandler,
       useFactory: (logger: ILoggerPort, repo: GroupRepository) => {
         const useCase = new GetUserGroupsQueryHandler(repo);
-        const withError = new ErrorHandlingDecoratorWithEither(useCase, logger, "GetUserGroupsQueryHandler");
-        return new LoggingUseCaseDecorator(withError, logger, "GetUserGroupsQueryHandler");
+        const withError = new ErrorHandlingDecoratorWithEither(
+          useCase,
+          logger,
+          "GetUserGroupsQueryHandler"
+        );
+        return new LoggingUseCaseDecorator(
+          withError,
+          logger,
+          "GetUserGroupsQueryHandler"
+        );
       },
       inject: [LOGGER_PORT, "GroupRepository"],
     },
@@ -100,8 +113,16 @@ import { UserRepository } from "src/lib/user/domain/port/UserRepository";
       provide: GetGroupDetailsQueryHandler,
       useFactory: (logger: ILoggerPort, repo: GroupRepository) => {
         const useCase = new GetGroupDetailsQueryHandler(repo);
-        const withError = new ErrorHandlingDecoratorWithEither(useCase, logger, "GetGroupDetailsQueryHandler");
-        return new LoggingUseCaseDecorator(withError, logger, "GetGroupDetailsQueryHandler");
+        const withError = new ErrorHandlingDecoratorWithEither(
+          useCase,
+          logger,
+          "GetGroupDetailsQueryHandler"
+        );
+        return new LoggingUseCaseDecorator(
+          withError,
+          logger,
+          "GetGroupDetailsQueryHandler"
+        );
       },
       inject: [LOGGER_PORT, "GroupRepository"],
     },
@@ -110,8 +131,16 @@ import { UserRepository } from "src/lib/user/domain/port/UserRepository";
       provide: GetGroupMembersQueryHandler,
       useFactory: (logger: ILoggerPort, repo: GroupRepository) => {
         const useCase = new GetGroupMembersQueryHandler(repo);
-        const withError = new ErrorHandlingDecoratorWithEither(useCase, logger, "GetGroupMembersQueryHandler");
-        return new LoggingUseCaseDecorator(withError, logger, "GetGroupMembersQueryHandler");
+        const withError = new ErrorHandlingDecoratorWithEither(
+          useCase,
+          logger,
+          "GetGroupMembersQueryHandler"
+        );
+        return new LoggingUseCaseDecorator(
+          withError,
+          logger,
+          "GetGroupMembersQueryHandler"
+        );
       },
       inject: [LOGGER_PORT, "GroupRepository"],
     },
@@ -123,9 +152,20 @@ import { UserRepository } from "src/lib/user/domain/port/UserRepository";
         repo: GroupRepository,
         generator: InvitationTokenGenerator
       ) => {
-        const useCase = new GenerateGroupInvitationCommandHandler(repo, generator);
-        const withError = new ErrorHandlingDecoratorWithEither(useCase, logger, "GenerateGroupInvitationCommandHandler");
-        return new LoggingUseCaseDecorator(withError, logger, "GenerateGroupInvitationCommandHandler");
+        const useCase = new GenerateGroupInvitationCommandHandler(
+          repo,
+          generator
+        );
+        const withError = new ErrorHandlingDecoratorWithEither(
+          useCase,
+          logger,
+          "GenerateGroupInvitationCommandHandler"
+        );
+        return new LoggingUseCaseDecorator(
+          withError,
+          logger,
+          "GenerateGroupInvitationCommandHandler"
+        );
       },
       inject: [LOGGER_PORT, "GroupRepository", "InvitationTokenGenerator"],
     },
@@ -134,8 +174,16 @@ import { UserRepository } from "src/lib/user/domain/port/UserRepository";
       provide: JoinGroupByInvitationCommandHandler,
       useFactory: (logger: ILoggerPort, repo: GroupRepository) => {
         const useCase = new JoinGroupByInvitationCommandHandler(repo);
-        const withError = new ErrorHandlingDecoratorWithEither(useCase, logger, "JoinGroupByInvitationCommandHandler");
-        return new LoggingUseCaseDecorator(withError, logger, "JoinGroupByInvitationCommandHandler");
+        const withError = new ErrorHandlingDecoratorWithEither(
+          useCase,
+          logger,
+          "JoinGroupByInvitationCommandHandler"
+        );
+        return new LoggingUseCaseDecorator(
+          withError,
+          logger,
+          "JoinGroupByInvitationCommandHandler"
+        );
       },
       inject: [LOGGER_PORT, "GroupRepository"],
     },
@@ -144,8 +192,16 @@ import { UserRepository } from "src/lib/user/domain/port/UserRepository";
       provide: LeaveGroupCommandHandler,
       useFactory: (logger: ILoggerPort, repo: GroupRepository) => {
         const useCase = new LeaveGroupCommandHandler(repo);
-        const withError = new ErrorHandlingDecoratorWithEither(useCase, logger, "LeaveGroupCommandHandler");
-        return new LoggingUseCaseDecorator(withError, logger, "LeaveGroupCommandHandler");
+        const withError = new ErrorHandlingDecoratorWithEither(
+          useCase,
+          logger,
+          "LeaveGroupCommandHandler"
+        );
+        return new LoggingUseCaseDecorator(
+          withError,
+          logger,
+          "LeaveGroupCommandHandler"
+        );
       },
       inject: [LOGGER_PORT, "GroupRepository"],
     },
@@ -154,8 +210,16 @@ import { UserRepository } from "src/lib/user/domain/port/UserRepository";
       provide: RemoveGroupMemberCommandHandler,
       useFactory: (logger: ILoggerPort, repo: GroupRepository) => {
         const useCase = new RemoveGroupMemberCommandHandler(repo);
-        const withError = new ErrorHandlingDecoratorWithEither(useCase, logger, "RemoveGroupMemberCommandHandler");
-        return new LoggingUseCaseDecorator(withError, logger, "RemoveGroupMemberCommandHandler");
+        const withError = new ErrorHandlingDecoratorWithEither(
+          useCase,
+          logger,
+          "RemoveGroupMemberCommandHandler"
+        );
+        return new LoggingUseCaseDecorator(
+          withError,
+          logger,
+          "RemoveGroupMemberCommandHandler"
+        );
       },
       inject: [LOGGER_PORT, "GroupRepository"],
     },
@@ -164,8 +228,16 @@ import { UserRepository } from "src/lib/user/domain/port/UserRepository";
       provide: UpdateGroupDetailsCommandHandler,
       useFactory: (logger: ILoggerPort, repo: GroupRepository) => {
         const useCase = new UpdateGroupDetailsCommandHandler(repo);
-        const withError = new ErrorHandlingDecoratorWithEither(useCase, logger, "UpdateGroupDetailsCommandHandler");
-        return new LoggingUseCaseDecorator(withError, logger, "UpdateGroupDetailsCommandHandler");
+        const withError = new ErrorHandlingDecoratorWithEither(
+          useCase,
+          logger,
+          "UpdateGroupDetailsCommandHandler"
+        );
+        return new LoggingUseCaseDecorator(
+          withError,
+          logger,
+          "UpdateGroupDetailsCommandHandler"
+        );
       },
       inject: [LOGGER_PORT, "GroupRepository"],
     },
@@ -174,8 +246,16 @@ import { UserRepository } from "src/lib/user/domain/port/UserRepository";
       provide: TransferGroupAdminCommandHandler,
       useFactory: (logger: ILoggerPort, repo: GroupRepository) => {
         const useCase = new TransferGroupAdminCommandHandler(repo);
-        const withError = new ErrorHandlingDecoratorWithEither(useCase, logger, "TransferGroupAdminCommandHandler");
-        return new LoggingUseCaseDecorator(withError, logger, "TransferGroupAdminCommandHandler");
+        const withError = new ErrorHandlingDecoratorWithEither(
+          useCase,
+          logger,
+          "TransferGroupAdminCommandHandler"
+        );
+        return new LoggingUseCaseDecorator(
+          withError,
+          logger,
+          "TransferGroupAdminCommandHandler"
+        );
       },
       inject: [LOGGER_PORT, "GroupRepository"],
     },
@@ -188,42 +268,119 @@ import { UserRepository } from "src/lib/user/domain/port/UserRepository";
         quizReadService: QuizReadService,
         eventEmitter: EventEmitter2
       ) => {
-        const useCase = new AssignQuizToGroupCommandHandler(groupRepo, quizReadService, eventEmitter);
-        const withError = new ErrorHandlingDecoratorWithEither(useCase, logger, "AssignQuizToGroupCommandHandler");
-        return new LoggingUseCaseDecorator(withError, logger, "AssignQuizToGroupCommandHandler");
+        const useCase = new AssignQuizToGroupCommandHandler(
+          groupRepo,
+          quizReadService,
+          eventEmitter
+        );
+        const withError = new ErrorHandlingDecoratorWithEither(
+          useCase,
+          logger,
+          "AssignQuizToGroupCommandHandler"
+        );
+        return new LoggingUseCaseDecorator(
+          withError,
+          logger,
+          "AssignQuizToGroupCommandHandler"
+        );
       },
-      inject: [LOGGER_PORT, "GroupRepository", "QuizReadService", EventEmitter2],
+      inject: [
+        LOGGER_PORT,
+        "GroupRepository",
+        "QuizReadService",
+        EventEmitter2,
+      ],
     },
 
     {
       provide: GetGroupQuizzesQueryHandler,
-      useFactory: (logger: ILoggerPort, repo: GroupRepository,
-      quizRepo: QuizRepository, gameRepo: SinglePlayerGameRepository,
-  ) => {
-        const useCase = new GetGroupQuizzesQueryHandler(repo, quizRepo, gameRepo);
-        const withError = new ErrorHandlingDecoratorWithEither(useCase, logger, "GetGroupQuizzesQueryHandler");
-        return new LoggingUseCaseDecorator(withError, logger, "GetGroupQuizzesQueryHandler");
+      useFactory: (
+        logger: ILoggerPort,
+        repo: GroupRepository,
+        quizRepo: QuizRepository,
+        gameRepo: SinglePlayerGameRepository
+      ) => {
+        const useCase = new GetGroupQuizzesQueryHandler(
+          repo,
+          quizRepo,
+          gameRepo
+        );
+        const withError = new ErrorHandlingDecoratorWithEither(
+          useCase,
+          logger,
+          "GetGroupQuizzesQueryHandler"
+        );
+        return new LoggingUseCaseDecorator(
+          withError,
+          logger,
+          "GetGroupQuizzesQueryHandler"
+        );
       },
-      inject: [LOGGER_PORT, "GroupRepository", "QuizRepository", "SinglePlayerGameRepository"],
+      inject: [
+        LOGGER_PORT,
+        "GroupRepository",
+        "QuizRepository",
+        "SinglePlayerGameRepository",
+      ],
     },
 
     {
       provide: GetGroupLeaderboardQueryHandler,
-      useFactory: (logger: ILoggerPort, repo: GroupRepository, gameRepo: SinglePlayerGameRepository, UserRepo: UserRepository) => {
-        const useCase = new GetGroupLeaderboardQueryHandler(repo, gameRepo, UserRepo);
-        const withError = new ErrorHandlingDecoratorWithEither(useCase, logger, "GetGroupLeaderboardQueryHandler");
-        return new LoggingUseCaseDecorator(withError, logger, "GetGroupLeaderboardQueryHandler");
+      useFactory: (
+        logger: ILoggerPort,
+        repo: GroupRepository,
+        gameRepo: SinglePlayerGameRepository,
+        UserRepo: UserRepository
+      ) => {
+        const useCase = new GetGroupLeaderboardQueryHandler(
+          repo,
+          gameRepo,
+          UserRepo
+        );
+        const withError = new ErrorHandlingDecoratorWithEither(
+          useCase,
+          logger,
+          "GetGroupLeaderboardQueryHandler"
+        );
+        return new LoggingUseCaseDecorator(
+          withError,
+          logger,
+          "GetGroupLeaderboardQueryHandler"
+        );
       },
-      inject: [LOGGER_PORT, "GroupRepository", "SinglePlayerGameRepository", "UserRepository"],
+      inject: [
+        LOGGER_PORT,
+        "GroupRepository",
+        "SinglePlayerGameRepository",
+        "UserRepository",
+      ],
     },
 
     {
       provide: GetGroupQuizLeaderboardQueryHandler,
-      useFactory: (logger: ILoggerPort, repo: GroupRepository, gameRepo: SinglePlayerGameRepository, UserRepo: UserRepository,) => {
-        const useCase = new GetGroupQuizLeaderboardQueryHandler(repo, gameRepo, UserRepo);
-        return new LoggingUseCaseDecorator(useCase, logger, "GetGroupQuizLeaderboardQueryHandler");
+      useFactory: (
+        logger: ILoggerPort,
+        repo: GroupRepository,
+        gameRepo: SinglePlayerGameRepository,
+        UserRepo: UserRepository
+      ) => {
+        const useCase = new GetGroupQuizLeaderboardQueryHandler(
+          repo,
+          gameRepo,
+          UserRepo
+        );
+        return new LoggingUseCaseDecorator(
+          useCase,
+          logger,
+          "GetGroupQuizLeaderboardQueryHandler"
+        );
       },
-      inject: [LOGGER_PORT, "GroupRepository", "SinglePlayerGameRepository", "UserRepository"],
+      inject: [
+        LOGGER_PORT,
+        "GroupRepository",
+        "SinglePlayerGameRepository",
+        "UserRepository",
+      ],
     },
   ],
   exports: ["GroupRepository", TypeOrmModule],
