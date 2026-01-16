@@ -1,0 +1,29 @@
+# Carpeta para seeds de MongoDB
+#
+# ESTRUCTURA:
+# seed-data-mongo/
+# ├── kahoot/              <- Nombre de la base de datos
+# │   ├── quizzes.json     <- Colección "quizzes"
+# │   └── questions.json   <- Colección "questions"
+# ├── media/
+# │   └── files.json
+# ├── user/
+# │   └── users.json
+# ├── groups/
+# │   └── members.json
+# └── notifications/
+#     └── notifications.json
+#
+# FORMATO DE ARCHIVOS JSON:
+# Cada archivo debe contener un array de documentos:
+# [
+#   { "_id": "...", "field1": "value1" },
+#   { "_id": "...", "field1": "value2" }
+# ]
+#
+# NOTAS:
+# - El nombre de la carpeta = nombre de la base de datos
+# - El nombre del archivo (sin .json) = nombre de la colección
+# - Los documentos se importan con --drop (reemplaza la colección existente)
+
+

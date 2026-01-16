@@ -1,0 +1,48 @@
+[{
+  "_id": "fcm-token-simulado-android-1234567898",
+  "userId": "123e4567-e89b-42d3-a456-426614174123",
+  "deviceType": "android",
+  "updatedAt": {
+    "$date": "2026-01-12T22:00:16.093Z"
+  }
+},
+{
+  "_id": "duW8SI58QUO41JIm_xM_IE:APA91bEamFo1XoYMzLutNIin7YUi1pPZF6yTzH5LikqXQBmf2jdYymESI9W9-oxwIZ2anMUUm6pkyHe6g64Iawj05iWfjZjxo27q9N3LK3lsPqzmQHQIIyk",
+  "userId": "847b5325-8e9b-4b17-a8fb-ffc983e7c24c",
+  "deviceType": "android",
+  "updatedAt": {
+    "$date": "2026-01-15T19:20:57.147Z"
+  }
+},
+{
+  "_id": "fqGvIKbdSLG5kWLK1-K3Ub:APA91bFzw4oqTKbKDZDZfBSQipHZwH8S-gLfYtXEm2p0yAfsDBBSH2PqmihpsV1uQp7ZpsNak1SjYJUg-x5SwXjG__558JHzzV7_cWasHStV2AgdfExVM18",
+  "userId": "12d64e8e-0183-4b0e-bb17-a9f8dc416c3e",
+  "deviceType": "android",
+  "updatedAt": {
+    "$date": "2026-01-15T21:17:45.171Z"
+  }
+},
+{
+  "_id": "dxTzS78ETGq59sTPFCM8le:APA91bFJx0r8KGgkCsgx7qUSbWAjNKqqvpxHST4BHnv7hVC4bsHXcM10-OCZNlt6DXLqbeYjVzopZ76Gwm5pFckRueXG1clypkymSJFbD5dnOcHFS2MpvME",
+  "userId": "12d64e8e-0183-4b0e-bb17-a9f8dc416c3e",
+  "deviceType": "android",
+  "updatedAt": {
+    "$date": "2026-01-16T13:20:52.801Z"
+  }
+},
+{
+  "_id": "dTRGkeQjTFOcpRbVxuzKy3:APA91bHIAtovu1ph47-pmKdbJYW415K0EbpDhBXuLq7TF4bM79hZpk2ekjZX8SmADtFM55UnXM0zY0U2s2EPJKeBhRAph7RpE5e3884sBKAWHRkHN3eA5fA",
+  "userId": "b99e1779-50cb-446a-b0c2-5b42b9937aa3",
+  "deviceType": "android",
+  "updatedAt": {
+    "$date": "2026-01-16T13:30:39.535Z"
+  }
+},
+{
+  "_id": "dM-lcW8yQ1m1BYGVnxeVwU:APA91bGIiK6JgyIQDDHG-0bBGhIFmJNsEhvGRcP5Ne_LaQjPkNhc7nR8JzpJML2Px-1I2M55vNNNxSL0hhOyuvObIRtmHaaxxZjcoJMAaaFJ07Yx7pr61Hs",
+  "userId": "847b5325-8e9b-4b17-a8fb-ffc983e7c24c",
+  "deviceType": "android",
+  "updatedAt": {
+    "$date": "2026-01-16T13:33:03.968Z"
+  }
+}]

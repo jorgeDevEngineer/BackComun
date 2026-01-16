@@ -1,0 +1,14 @@
+[{
+  "_id": "412a6cad-78a5-4527-af17-8aaf1f461dae",
+  "title": "Notificacion de Prueba (solo admins)",
+  "message": "Hola mundo 222",
+  "userId": "b99e1779-50cb-446a-b0c2-5b42b9937aa3",
+  "createdAt": "2026-01-12 17:46:51.394000"
+},
+{
+  "_id": "a93db9b6-a6b0-4121-ae11-06907b809c6a",
+  "title": "Notificacion de Prueba (ahora con auth)",
+  "message": "Hola mundo 222",
+  "userId": "847b5325-8e9b-4b17-a8fb-ffc983e7c24c",
+  "createdAt": "2026-01-13 14:09:31.908000"
+}]

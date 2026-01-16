@@ -1,0 +1,23 @@
+[{
+  "_id": "7d9542d9-2f9d-4f53-b7b8-99cbe8bf8904",
+  "userId": "123e4567-e89b-42d3-a456-426614174000",
+  "type": "quiz_assigned",
+  "title": "Nuevo Quiz: Quiz de Prueba",
+  "body": "El administrador ha asignado un nuevo quiz en el grupo Grupo pruba BackP. ¡Juégalo antes de que venza!",
+  "isRead": false,
+  "resourceId": "06114c5d-75b5-4169-8f6c-936355667577",
+  "createdAt": {
+    "$date": "2026-01-12T21:59:10.869Z"
+  }
+},
+{
+  "_id": "6a6fc8ca-371c-45f1-a04e-68b4d55f4866",
+  "userId": "12d64e8e-0183-4b0e-bb17-a9f8dc416c3e",
+  "type": "quiz_assigned",
+  "message": "El administrador ha asignado un nuevo quiz en el grupo prueba. ¡Juégalo antes de que venza!",
+  "isRead": false,
+  "resourceId": "fbc82e50-6ed8-46d1-bcc2-1fcd1b38e489",
+  "createdAt": {
+    "$date": "2026-01-16T13:42:12.038Z"
+  }
+}]

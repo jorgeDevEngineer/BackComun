@@ -1,0 +1,336 @@
+[{
+  "_id": "5a943c3b-97c1-48d9-a39b-d1374a790a8a",
+  "name": "Grupo pruba mongo",
+  "description": "",
+  "adminId": "123e4567-e89b-42d3-a456-426614174123",
+  "createdAt": {
+    "$date": "2026-01-12T18:22:29.704Z"
+  },
+  "updatedAt": {
+    "$date": "2026-01-12T18:22:29.704Z"
+  },
+  "invitationToken": null,
+  "invitationExpiresAt": null,
+  "members": [
+    {
+      "groupId": "5a943c3b-97c1-48d9-a39b-d1374a790a8a",
+      "userId": "123e4567-e89b-42d3-a456-426614174123",
+      "role": "admin",
+      "joinedAt": "2026-01-12T18:22:29.704Z",
+      "completedQuizzes": 0
+    }
+  ],
+  "assignments": []
+},
+{
+  "_id": "d6211f4d-217f-4272-8f65-9c79c0e3fcdb",
+  "name": "Grupo pruba BackP",
+  "description": "",
+  "adminId": "123e4567-e89b-42d3-a456-426614174123",
+  "createdAt": {
+    "$date": "2026-01-12T21:57:27.386Z"
+  },
+  "updatedAt": {
+    "$date": "2026-01-12T21:59:10.857Z"
+  },
+  "invitationToken": "5beec3adbeee52bdbfec16920145343d",
+  "invitationExpiresAt": {
+    "$date": "2026-01-19T21:57:53.471Z"
+  },
+  "members": [
+    {
+      "groupId": "d6211f4d-217f-4272-8f65-9c79c0e3fcdb",
+      "userId": "123e4567-e89b-42d3-a456-426614174123",
+      "role": "admin",
+      "joinedAt": "2026-01-12T21:57:27.386Z",
+      "completedQuizzes": 0
+    },
+    {
+      "groupId": "d6211f4d-217f-4272-8f65-9c79c0e3fcdb",
+      "userId": "123e4567-e89b-42d3-a456-426614174000",
+      "role": "member",
+      "joinedAt": "2026-01-12T21:58:50.480Z",
+      "completedQuizzes": 0
+    }
+  ],
+  "assignments": [
+    {
+      "id": "34529dbb-b370-4fe9-9104-ec52f7d7ab9e",
+      "groupId": "d6211f4d-217f-4272-8f65-9c79c0e3fcdb",
+      "quizId": "06114c5d-75b5-4169-8f6c-936355667577",
+      "assignedBy": "123e4567-e89b-42d3-a456-426614174123",
+      "createdAt": "2026-01-12T21:59:10.857Z",
+      "availableFrom": "2026-01-12T21:59:10.857Z",
+      "availableUntil": "2026-12-31T23:59:00.000Z",
+      "isActive": true
+    }
+  ]
+},
+{
+  "_id": "5deaeb15-2741-4a7f-8aa7-9254462c3e50",
+  "name": "prueba",
+  "description": "",
+  "adminId": "7c4f0221-c6bf-4224-8e8a-c5c89c9e9835",
+  "createdAt": {
+    "$date": "2026-01-14T18:11:59.722Z"
+  },
+  "updatedAt": {
+    "$date": "2026-01-14T18:11:59.722Z"
+  },
+  "invitationToken": null,
+  "invitationExpiresAt": null,
+  "members": [
+    {
+      "groupId": "5deaeb15-2741-4a7f-8aa7-9254462c3e50",
+      "userId": "7c4f0221-c6bf-4224-8e8a-c5c89c9e9835",
+      "role": "admin",
+      "joinedAt": "2026-01-14T18:11:59.722Z",
+      "completedQuizzes": 0
+    }
+  ],
+  "assignments": []
+},
+{
+  "_id": "f23b4611-f3c8-4fc9-94a5-3c29c0bba67f",
+  "name": "Grupo pruba final",
+  "description": "",
+  "adminId": "743cf348-8e61-42ac-9e64-f88f74256891",
+  "createdAt": {
+    "$date": "2026-01-15T16:07:57.717Z"
+  },
+  "updatedAt": {
+    "$date": "2026-01-15T19:01:46.236Z"
+  },
+  "invitationToken": "2e4849eb572eb60cd2e6caa8e8af1deb",
+  "invitationExpiresAt": {
+    "$date": "2026-01-22T18:59:56.278Z"
+  },
+  "members": [
+    {
+      "groupId": "f23b4611-f3c8-4fc9-94a5-3c29c0bba67f",
+      "userId": "743cf348-8e61-42ac-9e64-f88f74256891",
+      "role": "admin",
+      "joinedAt": "2026-01-15T16:07:57.717Z",
+      "completedQuizzes": 0
+    },
+    {
+      "groupId": "f23b4611-f3c8-4fc9-94a5-3c29c0bba67f",
+      "userId": "de4fcfc9-9b84-4ff6-bd4c-a51997c8eb8b",
+      "role": "member",
+      "joinedAt": "2026-01-15T19:01:46.236Z",
+      "completedQuizzes": 0
+    }
+  ],
+  "assignments": []
+},
+{
+  "_id": "122e5af4-b488-44da-b908-1c9c4819c11d",
+  "name": "test grupo",
+  "description": "",
+  "adminId": "5d646993-f8ec-4354-85e8-c5ecf561cc07",
+  "createdAt": {
+    "$date": "2026-01-15T16:11:30.241Z"
+  },
+  "updatedAt": {
+    "$date": "2026-01-16T05:05:03.522Z"
+  },
+  "invitationToken": "9701c1ae83f9706f8dab4f145c06b87e",
+  "invitationExpiresAt": {
+    "$date": "2026-01-23T04:57:36.140Z"
+  },
+  "members": [
+    {
+      "groupId": "122e5af4-b488-44da-b908-1c9c4819c11d",
+      "userId": "5d646993-f8ec-4354-85e8-c5ecf561cc07",
+      "role": "admin",
+      "joinedAt": "2026-01-15T16:11:30.241Z",
+      "completedQuizzes": 0
+    },
+    {
+      "groupId": "122e5af4-b488-44da-b908-1c9c4819c11d",
+      "userId": "95b7e1fe-90ee-4d7f-b2e2-5de26b93bb5a",
+      "role": "member",
+      "joinedAt": "2026-01-16T05:05:03.522Z",
+      "completedQuizzes": 0
+    }
+  ],
+  "assignments": []
+},
+{
+  "_id": "8fd71773-3205-403e-9860-bdca46e64c9f",
+  "name": "Grupo pruba final",
+  "description": "",
+  "adminId": "743cf348-8e61-42ac-9e64-f88f74256891",
+  "createdAt": {
+    "$date": "2026-01-15T19:58:52.718Z"
+  },
+  "updatedAt": {
+    "$date": "2026-01-15T19:58:52.718Z"
+  },
+  "invitationToken": null,
+  "invitationExpiresAt": null,
+  "members": [
+    {
+      "groupId": "8fd71773-3205-403e-9860-bdca46e64c9f",
+      "userId": "743cf348-8e61-42ac-9e64-f88f74256891",
+      "role": "admin",
+      "joinedAt": "2026-01-15T19:58:52.718Z",
+      "completedQuizzes": 0
+    }
+  ],
+  "assignments": []
+},
+{
+  "_id": "e0128232-838d-45a0-89c8-eb246fa2cbc6",
+  "name": "Prueba nuevo grupo",
+  "description": "",
+  "adminId": "a25c1189-d3c0-4990-8e30-e5f5603c202c",
+  "createdAt": {
+    "$date": "2026-01-16T01:10:08.092Z"
+  },
+  "updatedAt": {
+    "$date": "2026-01-16T01:10:08.092Z"
+  },
+  "invitationToken": null,
+  "invitationExpiresAt": null,
+  "members": [
+    {
+      "groupId": "e0128232-838d-45a0-89c8-eb246fa2cbc6",
+      "userId": "a25c1189-d3c0-4990-8e30-e5f5603c202c",
+      "role": "admin",
+      "joinedAt": "2026-01-16T01:10:08.092Z",
+      "completedQuizzes": 0
+    }
+  ],
+  "assignments": []
+},
+{
+  "_id": "81fbc2ab-1cd4-422b-aa29-6832a52678b1",
+  "name": "Grupo pruba final",
+  "description": "",
+  "adminId": "b41a10c4-4e3e-44c2-9cb8-7cdb7a798006",
+  "createdAt": {
+    "$date": "2026-01-16T04:15:43.164Z"
+  },
+  "updatedAt": {
+    "$date": "2026-01-16T04:15:43.164Z"
+  },
+  "invitationToken": null,
+  "invitationExpiresAt": null,
+  "members": [
+    {
+      "groupId": "81fbc2ab-1cd4-422b-aa29-6832a52678b1",
+      "userId": "b41a10c4-4e3e-44c2-9cb8-7cdb7a798006",
+      "role": "admin",
+      "joinedAt": "2026-01-16T04:15:43.164Z",
+      "completedQuizzes": 0
+    }
+  ],
+  "assignments": []
+},
+{
+  "_id": "0115b91f-3600-48f0-b8ff-756a6150be14",
+  "name": "grupo1",
+  "description": "",
+  "adminId": "12d64e8e-0183-4b0e-bb17-a9f8dc416c3e",
+  "createdAt": {
+    "$date": "2026-01-16T05:04:32.662Z"
+  },
+  "updatedAt": {
+    "$date": "2026-01-16T13:21:22.959Z"
+  },
+  "invitationToken": "7a8fa0eb004f74f845cc54abce6870ad",
+  "invitationExpiresAt": {
+    "$date": "2026-01-23T05:04:39.301Z"
+  },
+  "members": [
+    {
+      "groupId": "0115b91f-3600-48f0-b8ff-756a6150be14",
+      "userId": "12d64e8e-0183-4b0e-bb17-a9f8dc416c3e",
+      "role": "admin",
+      "joinedAt": "2026-01-16T05:04:32.662Z",
+      "completedQuizzes": 0
+    }
+  ],
+  "assignments": [
+    {
+      "id": "e8a8a47c-a2bd-45a7-9284-91b3ea6e4ae2",
+      "groupId": "0115b91f-3600-48f0-b8ff-756a6150be14",
+      "quizId": "4f1ada51-18f0-4fc4-b805-e9fdb3ba48ba",
+      "assignedBy": "12d64e8e-0183-4b0e-bb17-a9f8dc416c3e",
+      "createdAt": "2026-01-16T13:21:22.692Z",
+      "availableFrom": "2026-01-16T13:21:22.692Z",
+      "availableUntil": "2026-01-17T00:00:00.000Z",
+      "isActive": true
+    },
+    {
+      "id": "1da4bb25-96f1-4d2b-ad43-9e3b419571a0",
+      "groupId": "0115b91f-3600-48f0-b8ff-756a6150be14",
+      "quizId": "4f1ada51-18f0-4fc4-b805-e9fdb3ba48ba",
+      "assignedBy": "12d64e8e-0183-4b0e-bb17-a9f8dc416c3e",
+      "createdAt": "2026-01-16T13:21:22.959Z",
+      "availableFrom": "2026-01-16T13:21:22.959Z",
+      "availableUntil": "2026-01-17T00:00:00.000Z",
+      "isActive": true
+    }
+  ]
+},
+{
+  "_id": "7e68f19a-f9df-4436-a208-7cd83856b051",
+  "name": "prueba",
+  "description": "",
+  "adminId": "12d64e8e-0183-4b0e-bb17-a9f8dc416c3e",
+  "createdAt": {
+    "$date": "2026-01-16T13:22:25.531Z"
+  },
+  "updatedAt": {
+    "$date": "2026-01-16T13:22:32.880Z"
+  },
+  "invitationToken": "1b96b490fbf21888d3b24187fbfa0392",
+  "invitationExpiresAt": {
+    "$date": "2026-01-23T13:22:32.880Z"
+  },
+  "members": [
+    {
+      "groupId": "7e68f19a-f9df-4436-a208-7cd83856b051",
+      "userId": "12d64e8e-0183-4b0e-bb17-a9f8dc416c3e",
+      "role": "admin",
+      "joinedAt": "2026-01-16T13:22:25.531Z",
+      "completedQuizzes": 0
+    }
+  ],
+  "assignments": []
+},
+{
+  "_id": "2922f3d0-4ec5-4c31-99d5-0e72b433e65e",
+  "name": "prueba",
+  "description": "",
+  "adminId": "847b5325-8e9b-4b17-a8fb-ffc983e7c24c",
+  "createdAt": {
+    "$date": "2026-01-16T13:24:34.947Z"
+  },
+  "updatedAt": {
+    "$date": "2026-01-16T13:25:05.471Z"
+  },
+  "invitationToken": "7f0c6249c28ea475030daa0757e6c47b",
+  "invitationExpiresAt": {
+    "$date": "2026-01-23T13:24:39.192Z"
+  },
+  "members": [
+    {
+      "groupId": "2922f3d0-4ec5-4c31-99d5-0e72b433e65e",
+      "userId": "847b5325-8e9b-4b17-a8fb-ffc983e7c24c",
+      "role": "admin",
+      "joinedAt": "2026-01-16T13:24:34.947Z",
+      "completedQuizzes": 0
+    },
+    {
+      "groupId": "2922f3d0-4ec5-4c31-99d5-0e72b433e65e",
+      "userId": "12d64e8e-0183-4b0e-bb17-a9f8dc416c3e",
+      "role": "member",
+      "joinedAt": "2026-01-16T13:25:05.471Z",
+      "completedQuizzes": 0
+    }
+  ],
+  "assignments": []
+}]

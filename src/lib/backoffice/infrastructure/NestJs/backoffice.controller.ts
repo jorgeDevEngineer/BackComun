@@ -167,7 +167,7 @@ export class BackofficeController {
     return result.getValue();
   }
 
-  @Post("massNotifications")
+  @Post("massNotification")
   async sendNotification(
     @Headers("Authorization") auth: string,
     @Body()
