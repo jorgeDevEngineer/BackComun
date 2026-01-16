@@ -8,24 +8,34 @@ import { GetUserGroupsResponseDto } from "../../dtos/GroupResponse.dto";
 import { GroupRepository } from "../../../domain/port/GroupRepository";
 import { UserId } from "src/lib/user/domain/valueObject/UserId";
 
-export class GetUserGroupsQueryHandler implements IHandler<GetUserGroupsQuery, Either<DomainException, GetUserGroupsResponseDto>> {
+export class GetUserGroupsQueryHandler implements IHandler<GetUserGroupsQuery, Either<DomainException, GetUserGroupsResponseDto[]>> {
     constructor(
         private readonly groupRepository: GroupRepository
     ) {}
     
-    async execute(query: GetUserGroupsQuery): Promise<Either<DomainException, GetUserGroupsResponseDto>> {
+    async execute(query: GetUserGroupsQuery): Promise<Either<DomainException, GetUserGroupsResponseDto[]>> {
         const userId = new UserId(query.currentUserId);
 
         const groups = await this.groupRepository.findByMember(userId);
 
-        return Either.makeRight({
-            groups: groups.map((g) => ({
-                id: g.id.value,
-                name: g.name.value,
-                adminId: g.adminId.value,
-                memberCount: g.members.length,
-                createdAt: g.createdAt.toISOString(),
-            })),
-        });
-    }
+        const groupsData: GetUserGroupsResponseDto[] = groups.map((g) => {
+        const userRole = g.adminId.value === userId.value ? "ADMIN" : "MEMBER";
+        
+        const descriptionValue = g.description.hasValue() 
+            ? g.description.getValue().value 
+            : "";
+
+        return {
+            id: g.id.value,
+            name: g.name.value,
+            adminId: g.adminId.value, 
+            description: descriptionValue,
+            role: userRole,
+            memberCount: g.members.length,
+            createdAt: g.createdAt.toISOString(),
+        };
+    });
+    return Either.makeRight(groupsData);
 }
+}
+//
