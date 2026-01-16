@@ -204,12 +204,12 @@ export class GroupsController {
 
   @Post("join")
   async joinByInvitation(
-    @Body() body: { token: string },
+    @Body() body: { invitationToken: string },
     @Headers('authorization') authHeader: string 
   ) {
     const currentUserId = await this.getCurrentUserId(authHeader);
     const command = new JoinGroupByInvitationCommand(
-      body.token,
+      body.invitationToken,
       currentUserId,
     );
     const result = await this.joinGroupByInvitationHandler.execute(command);
