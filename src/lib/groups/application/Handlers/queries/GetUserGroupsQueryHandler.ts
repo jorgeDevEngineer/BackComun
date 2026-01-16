@@ -38,3 +38,4 @@ export class GetUserGroupsQueryHandler implements IHandler<GetUserGroupsQuery, E
     return Either.makeRight(groupsData);
 }
 }
+//
