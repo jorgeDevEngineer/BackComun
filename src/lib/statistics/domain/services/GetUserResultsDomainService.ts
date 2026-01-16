@@ -1,6 +1,5 @@
 import { Either } from "../../../shared/Type Helpers/Either";
 import { DomainException } from "../../../shared/exceptions/DomainException";
-import { QuizzesNotFoundException } from "../../../shared/exceptions/QuizzesNotFoundException";
 import { SinglePlayerGameRepository } from "../port/SinglePlayerRepository";
 import { CompletedQuizQueryCriteria } from "../../application/Response Types/CompletedQuizQueryCriteria";
 import { UserId } from "src/lib/kahoot/domain/valueObject/Quiz";
@@ -52,18 +51,6 @@ export class GetUserResultsDomainService {
         UserIdFromUser.of(userId.getValue()),
         criteria
       );
-
-    if (
-      completedQuizzes.length === 0 &&
-      completeMultiGames.length === 0 &&
-      ownedGames.length === 0
-    ) {
-      return Either.makeLeft(
-        new QuizzesNotFoundException(
-          "El usuario no ha completado nigun kahoot ni ha sido el host de una partida multijugador."
-        )
-      );
-    }
 
     const quizzes: Quiz[] = [];
 
