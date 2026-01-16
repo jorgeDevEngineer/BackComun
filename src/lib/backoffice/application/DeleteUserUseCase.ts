@@ -1,12 +1,18 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { Inject } from "@nestjs/common";
 import { UserRepository } from "../domain/port/UserRepository";
 import { UserId } from "../domain/valueObject/UserId";
-import { BadRequestException } from "@nestjs/common";
-import { UnauthorizedException } from "@nestjs/common";
 import { ITokenProvider } from "src/lib/auth/application/providers/ITokenProvider";
+import { IHandler } from "src/lib/shared/IHandler";
+import { Result } from "src/lib/shared/Type Helpers/result";
+import { InvalidTokenException } from "../domain/exceptions/InvalidTokenException";
+import { UnauthorizedAdminException } from "../domain/exceptions/UnauthorizedAdminException";
 
-@Injectable()
-export class DeleteUserUseCase {
+export interface DeleteUserCommand {
+  auth: string;
+  userId: string;
+}
+
+export class DeleteUserUseCase implements IHandler<DeleteUserCommand, Result<void>> {
   constructor(
     @Inject("UserRepository")
     private readonly userRepository: UserRepository,
@@ -14,16 +20,19 @@ export class DeleteUserUseCase {
     private readonly tokenProvider: ITokenProvider,
   ) {}
 
-  async run(auth: string, id: string): Promise<void> {
-    const token = await this.tokenProvider.validateToken(auth);
+  async execute(command: DeleteUserCommand): Promise<Result<void>> {
+    const token = await this.tokenProvider.validateToken(command.auth);
     if (!token) {
-      throw new BadRequestException("Invalid token");
+      return Result.fail<void>(new InvalidTokenException());
     }
+    
     const user = await this.userRepository.getOneById(new UserId(token.id));
     if (!user.isAdmin) {
-      throw new UnauthorizedException("Unauthorized");
+      return Result.fail<void>(new UnauthorizedAdminException());
     }
-    const userId = new UserId(id);
+    
+    const userId = new UserId(command.userId);
     await this.userRepository.deleteUser(userId);
+    return Result.ok<void>();
   }
 }

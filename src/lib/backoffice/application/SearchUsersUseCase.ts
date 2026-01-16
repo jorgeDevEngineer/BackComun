@@ -1,9 +1,16 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { Inject } from "@nestjs/common";
 import { UserRepository } from "../domain/port/UserRepository";
 import { UserId } from "../domain/valueObject/UserId";
-import { BadRequestException } from "@nestjs/common";
-import { UnauthorizedException } from "@nestjs/common";
 import { ITokenProvider } from "src/lib/auth/application/providers/ITokenProvider";
+import { IHandler } from "src/lib/shared/IHandler";
+import { Result } from "src/lib/shared/Type Helpers/result";
+import { InvalidTokenException } from "../domain/exceptions/InvalidTokenException";
+import { UnauthorizedAdminException } from "../domain/exceptions/UnauthorizedAdminException";
+
+export interface SearchUsersCommand {
+  auth: string;
+  params: SearchParamsDto;
+}
 
 export interface SearchParamsDto {
   q?: string;
@@ -30,8 +37,7 @@ export interface SearchResultDto {
   };
 }
 
-@Injectable()
-export class SearchUsersUseCase {
+export class SearchUsersUseCase implements IHandler<SearchUsersCommand, Result<SearchResultDto>> {
   constructor(
     @Inject("UserRepository")
     private readonly userRepository: UserRepository,
@@ -39,20 +45,18 @@ export class SearchUsersUseCase {
     private readonly tokenProvider: ITokenProvider,
   ) {}
 
-  async run(
-    auth: string,
-    params: SearchParamsDto
-  ): Promise<SearchResultDto> {
-
-    const token = await this.tokenProvider.validateToken(auth);
+  async execute(command: SearchUsersCommand): Promise<Result<SearchResultDto>> {
+    const token = await this.tokenProvider.validateToken(command.auth);
     if (!token) {
-      throw new BadRequestException("Invalid token");
+      return Result.fail<SearchResultDto>(new InvalidTokenException());
     }
+    
     const user = await this.userRepository.getOneById(new UserId(token.id));
     if (!user.isAdmin) {
-      throw new UnauthorizedException("Unauthorized");
+      return Result.fail<SearchResultDto>(new UnauthorizedAdminException());
     }
-    const result = await this.userRepository.searchUsers(params);
-    return result;
+    
+    const result = await this.userRepository.searchUsers(command.params);
+    return Result.ok<SearchResultDto>(result);
   }
 }
