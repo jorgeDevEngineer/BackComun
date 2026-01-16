@@ -1,102 +1,54 @@
-import { EnablePremiumMembershipCommandHandler } from "../../../src/lib/user/application/Handlers/Commands/EnablePremiumMembershipCommandHandler";
-import { EnableFreeMembershipCommandHandler } from "../../../src/lib/user/application/Handlers/Commands/EnableFreeMembershipCommandHandler";
-import { EnablePremiumMembership } from "../../../src/lib/user/application/Parameter Objects/EnablePremiumMembership";
-import { EnableFreeMembership } from "../../../src/lib/user/application/Parameter Objects/EnableFreeMembership";
-import { UserRepository } from "../../../src/lib/user/domain/port/UserRepository";
 import { User } from "../../../src/lib/user/domain/aggregate/User";
-import { UserName } from "../../../src/lib/user/domain/valueObject/UserName";
-import { UserEmail } from "../../../src/lib/user/domain/valueObject/UserEmail";
-import { UserHashedPassword } from "../../../src/lib/user/domain/valueObject/UserHashedPassword";
-import { UserType } from "../../../src/lib/user/domain/valueObject/UserType";
-import { UserPlainName } from "../../../src/lib/user/domain/valueObject/UserPlainName";
-import { UserDescription } from "../../../src/lib/user/domain/valueObject/UserDescription";
-import { Result } from "../../../src/lib/shared/Type Helpers/result";
 import { DomainException } from "../../../src/lib/shared/exceptions/domain.exception";
 import { UserNotFoundException } from "../../../src/lib/user/application/exceptions/UserNotFoundException";
 import { UserId } from "../../../src/lib/user/domain/valueObject/UserId";
-import * as bcrypt from "bcrypt";
-
-const makeUser = async (): Promise<User> => {
-  return new User(
-    new UserName("john_doe"),
-    new UserEmail("john@example.com"),
-    new UserHashedPassword(await bcrypt.hash("StrongPass1!", 12)),
-    new UserType("STUDENT" as any),
-    undefined,
-    undefined,
-    new UserPlainName("John"),
-    new UserDescription("desc")
-  );
-};
+import { EnableMembershipTestBuilder } from "./EnableMembershipTestBuilder";
+import { EnableMembershipMother } from "../domain/EnableMembershipMother";
+import { UserMother } from "../domain/UserMother";
 
 describe("Enable Membership Handlers", () => {
-  let repo: jest.Mocked<UserRepository>;
-
+  let api: EnableMembershipTestBuilder;
   beforeEach(() => {
-    repo = {
-      getAll: jest.fn(),
-      getOneById: jest.fn(),
-      getOneByName: jest.fn(),
-      getOneByEmail: jest.fn(),
-      create: jest.fn(),
-      edit: jest.fn().mockResolvedValue(undefined),
-      delete: jest.fn(),
-    };
+    api = new EnableMembershipTestBuilder();
   });
 
   it("premium: fails when targetUserId is missing", async () => {
-    const handler = new EnablePremiumMembershipCommandHandler(repo);
-    const cmd = new EnablePremiumMembership(undefined);
-    const result = await handler.execute(cmd);
-    expect(result.isFailure).toBe(true);
-    expect(result.error).toBeInstanceOf(DomainException);
+    const cmd = EnableMembershipMother.premiumMissingId();
+    await api.whenPremiumEnabled(cmd);
+    api.thenShouldFailMissingId();
   });
 
   it("premium: fails when user not found", async () => {
-    const handler = new EnablePremiumMembershipCommandHandler(repo);
-    repo.getOneById.mockResolvedValue(null);
-    const cmd = new EnablePremiumMembership(UserId.generateId().value);
-    const result = await handler.execute(cmd);
-    expect(result.isFailure).toBe(true);
-    expect(result.error).toBeInstanceOf(UserNotFoundException);
+    api.givenUserDoesNotExist();
+    const cmd = EnableMembershipMother.premiumWithId(UserId.generateId().value);
+    await api.whenPremiumEnabled(cmd);
+    api.thenShouldFailNotFound();
   });
 
   it("premium: succeeds enabling premium for existing user", async () => {
-    const handler = new EnablePremiumMembershipCommandHandler(repo);
-    const user = await makeUser();
-    repo.getOneById.mockResolvedValue(user);
-    const cmd = new EnablePremiumMembership(user.id.value);
-    const result = await handler.execute(cmd);
-    expect(result.isSuccess).toBe(true);
-    expect(repo.edit).toHaveBeenCalledTimes(1);
-    expect(user.hasPremiumMembershipEnabled()).toBe(true);
+    const user = api.givenExistingUser();
+    const cmd = EnableMembershipMother.premiumWithId(user.id.value);
+    await api.whenPremiumEnabled(cmd);
+    api.thenPremiumShouldSucceed(user);
   });
 
   it("free: fails when targetUserId is missing", async () => {
-    const handler = new EnableFreeMembershipCommandHandler(repo);
-    const cmd = new EnableFreeMembership(undefined);
-    const result = await handler.execute(cmd);
-    expect(result.isFailure).toBe(true);
-    expect(result.error).toBeInstanceOf(DomainException);
+    const cmd = EnableMembershipMother.freeMissingId();
+    await api.whenFreeEnabled(cmd);
+    api.thenShouldFailMissingId();
   });
 
   it("free: fails when user not found", async () => {
-    const handler = new EnableFreeMembershipCommandHandler(repo);
-    repo.getOneById.mockResolvedValue(null);
-    const cmd = new EnableFreeMembership(UserId.generateId().value);
-    const result = await handler.execute(cmd);
-    expect(result.isFailure).toBe(true);
-    expect(result.error).toBeInstanceOf(UserNotFoundException);
+    api.givenUserDoesNotExist();
+    const cmd = EnableMembershipMother.freeWithId(UserId.generateId().value);
+    await api.whenFreeEnabled(cmd);
+    api.thenShouldFailNotFound();
   });
 
   it("free: succeeds enabling free for existing user", async () => {
-    const handler = new EnableFreeMembershipCommandHandler(repo);
-    const user = await makeUser();
-    repo.getOneById.mockResolvedValue(user);
-    const cmd = new EnableFreeMembership(user.id.value);
-    const result = await handler.execute(cmd);
-    expect(result.isSuccess).toBe(true);
-    expect(repo.edit).toHaveBeenCalledTimes(1);
-    expect(user.hasPremiumMembershipEnabled()).toBe(false);
+    const user = api.givenExistingUser();
+    const cmd = EnableMembershipMother.freeWithId(user.id.value);
+    await api.whenFreeEnabled(cmd);
+    api.thenFreeShouldSucceed(user);
   });
 });
