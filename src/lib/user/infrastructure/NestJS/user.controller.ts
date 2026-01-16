@@ -144,7 +144,8 @@ export class UserController {
 
   @Get("profile")
   async getProfile(@Headers("authorization") auth: string) {
-    const userId = await this.tokenProvider.getUserIdFromAuthHeader(auth);
+    const payload = await this.tokenProvider.getPayloadFromAuthHeader(auth);
+    const userId = payload.id;
     const query = new GetOneUserById(userId);
     const result = await this.getOneUserById.execute(query);
     const userObj = this.handleResult(result).toPlainObject();
@@ -181,7 +182,8 @@ export class UserController {
     @Headers("authorization") auth: string,
     @Body() body: Edit
   ) {
-    const userId = await this.tokenProvider.getUserIdFromAuthHeader(auth);
+    const payload = await this.tokenProvider.getPayloadFromAuthHeader(auth);
+    const userId = payload.id;
     const query = new GetOneUserById(userId);
     const userResult = await this.getOneUserById.execute(query);
     const user = this.handleResult(userResult);
@@ -196,7 +198,7 @@ export class UserController {
       body.avatarAssetId,
       body.themePreference,
       user.id.value,
-      userId
+      payload
     );
     const editResult = await this.editUser.execute(editUserCommand);
     this.handleResult(editResult);
@@ -211,8 +213,17 @@ export class UserController {
     @Body() body: Edit,
     @Headers("authorization") auth: string
   ) {
-    const requesterUserId =
-      await this.tokenProvider.getUserIdFromAuthHeader(auth);
+    const token = auth?.replace(/^Bearer\s+/i, "");
+    const payloadRaw = await this.tokenProvider.validateToken(token);
+    if (!payloadRaw || !payloadRaw.id || !Array.isArray(payloadRaw.roles)) {
+      throw new UnauthorizedException("Invalid token");
+    }
+    const payload = {
+      id: payloadRaw.id,
+      username: payloadRaw.username,
+      email: payloadRaw.email,
+      roles: payloadRaw.roles,
+    };
     const query = new GetOneUserById(params.id);
     const userResult = await this.getOneUserById.execute(query);
     const user = this.handleResult(userResult);
@@ -227,7 +238,7 @@ export class UserController {
       body.avatarAssetId,
       body.themePreference,
       user.id.value,
-      requesterUserId
+      payload
     );
     const editResult = await this.editUser.execute(editUserCommand);
     this.handleResult(editResult);
@@ -238,11 +249,12 @@ export class UserController {
 
   @Delete("profile")
   async deleteProfile(@Headers("authorization") auth: string) {
-    const userId = await this.tokenProvider.getUserIdFromAuthHeader(auth);
+    const payload = await this.tokenProvider.getPayloadFromAuthHeader(auth);
+    const userId = payload.id;
     const query = new GetOneUserById(userId);
     const userResult = await this.getOneUserById.execute(query);
     this.handleResult(userResult);
-    const deleteUserCommand = new DeleteUser(userId, userId);
+    const deleteUserCommand = new DeleteUser(userId, payload);
     const deleteResult = await this.deleteUser.execute(deleteUserCommand);
     return this.handleResult(deleteResult);
   }
@@ -252,12 +264,11 @@ export class UserController {
     @Param() params: FindByIdParams,
     @Headers("authorization") auth: string
   ) {
-    const requesterUserId =
-      await this.tokenProvider.getUserIdFromAuthHeader(auth);
+    const payload = await this.tokenProvider.getPayloadFromAuthHeader(auth);
     const query = new GetOneUserById(params.id);
     const userResult = await this.getOneUserById.execute(query);
     this.handleResult(userResult);
-    const deleteUserCommand = new DeleteUser(params.id, requesterUserId);
+    const deleteUserCommand = new DeleteUser(params.id, payload);
     const deleteResult = await this.deleteUser.execute(deleteUserCommand);
     return this.handleResult(deleteResult);
   }

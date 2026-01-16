@@ -8,7 +8,7 @@ import { Get, Inject } from "@nestjs/common";
 import * as bcrypt from "bcrypt";
 import { User } from "src/lib/user/domain/aggregate/User";
 import { DomainException } from "src/lib/shared/exceptions/domain.exception";
-import { TokenPayload } from "src/lib/auth/application/Parameter Objects/TokenPayload";
+import { TokenPayload } from "src/lib/auth/application/parameterObjects/TokenPayload";
 
 export class LoginCommandHandler
   implements IHandler<LoginCommand, Result<string>>
