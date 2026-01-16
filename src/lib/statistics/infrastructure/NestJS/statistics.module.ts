@@ -12,7 +12,7 @@ import { GetSingleCompletedQuizSummaryDomainService } from "../../domain/service
 import { GetSingleCompletedQuizSummaryQueryHandler } from "../../application/Handlers/GetSingleCompletedQuizSummaryQueryHandler";
 import { LoggerModule } from "src/lib/shared/aspects/logger/infrastructure/logger.module";
 import { LoggingUseCaseDecorator } from "src/lib/shared/aspects/logger/application/decorators/logging.decorator";
-import { ILoggerPort } from "src/lib/shared/aspects/logger/domain/ports/logger.port";
+import { ILoggerPort } from "src/lib/shared/aspects/logger/application/ports/logger.port";
 import { ErrorHandlingDecoratorWithEither } from "src/lib/shared/aspects/error-handling/application/decorators/error-handling-either";
 import { StatisticsRepositoryBuilder } from "../TypeORM/statisticsBuilder";
 import { DynamicMongoAdapter } from "src/lib/shared/infrastructure/database/dynamic-mongo.adapter";

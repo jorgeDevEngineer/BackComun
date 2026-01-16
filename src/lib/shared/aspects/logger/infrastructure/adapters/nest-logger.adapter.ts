@@ -1,5 +1,5 @@
-import { ConsoleLogger, Injectable } from '@nestjs/common';
-import { ILoggerPort } from '../../domain/ports/logger.port';
+import { ConsoleLogger, Injectable } from "@nestjs/common";
+import { ILoggerPort } from "../../application/ports/logger.port";
 
 @Injectable()
 export class NestLoggerAdapter extends ConsoleLogger implements ILoggerPort {
