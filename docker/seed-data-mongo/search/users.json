@@ -1,0 +1,816 @@
+[{
+  "_id": "b99e1779-50cb-446a-b0c2-5b42b9937aa3",
+  "userName": "diegos",
+  "email": "email@gmail.com",
+  "hashedPassword": "$2b$12$R8nY2f4jzh8rwKZpAO90eucBGF7c7/shEcdat8wHhnIj4lpR6qu3i",
+  "userType": "STUDENT",
+  "avatarAssetId": "",
+  "name": "SuperDiego",
+  "description": "description",
+  "roles": [
+    "user"
+  ],
+  "theme": "LIGHT",
+  "language": "es",
+  "gameStreak": 0,
+  "membershipType": "free",
+  "membershipStartedAt": {
+    "$date": "2026-01-15T04:27:21.384Z"
+  },
+  "membershipExpiresAt": {
+    "$date": "2026-01-15T04:27:21.384Z"
+  },
+  "isAdmin": true,
+  "createdAt": {
+    "$date": "2026-01-12T16:08:19.468Z"
+  },
+  "updatedAt": {
+    "$date": "2026-01-15T22:11:22.691Z"
+  },
+  "lastUserNameChangeAt": {
+    "$date": "2026-01-12T16:08:19.468Z"
+  },
+  "status": "active"
+},
+{
+  "_id": "3b26a3dd-5b64-4f23-88a8-63412729d414",
+  "userName": "diegosa",
+  "email": "testing@gmail.com",
+  "hashedPassword": "$2b$12$8BC9psZMSmInw/v/sWy0R.W44oDY0lMWqe0QxYOtKcpoZGB4gxtz2",
+  "userType": "STUDENT",
+  "avatarAssetId": "",
+  "name": "Diego Garcia",
+  "description": "",
+  "roles": [
+    "user"
+  ],
+  "theme": "LIGHT",
+  "language": "es",
+  "gameStreak": 0,
+  "membershipType": "free",
+  "membershipStartedAt": {
+    "$date": "2026-01-14T03:49:17.233Z"
+  },
+  "membershipExpiresAt": {
+    "$date": "2026-01-14T03:49:17.233Z"
+  },
+  "isAdmin": false,
+  "createdAt": {
+    "$date": "2026-01-12T16:16:47.459Z"
+  },
+  "updatedAt": {
+    "$date": "2026-01-14T03:49:17.233Z"
+  },
+  "lastUserNameChangeAt": {
+    "$date": "2026-01-12T16:16:47.459Z"
+  },
+  "status": "active"
+},
+{
+  "_id": "5c87459d-075a-42a3-8980-0b87d9d6cf03",
+  "userName": "arausyta",
+  "email": "arausyta@correo.com",
+  "hashedPassword": "$2b$12$aG2UlZ46tDt5rQDXAmO1s.2KYrPYeu0uvZmuJAXBu5bcdd1xqykOW",
+  "userType": "STUDENT",
+  "avatarAssetId": "",
+  "name": "Arausy Corzo",
+  "description": "",
+  "roles": [
+    "user"
+  ],
+  "theme": "LIGHT",
+  "language": "es",
+  "gameStreak": 0,
+  "membershipType": "free",
+  "membershipStartedAt": {
+    "$date": "2026-01-12T18:45:50.288Z"
+  },
+  "membershipExpiresAt": {
+    "$date": "2026-01-12T18:45:50.288Z"
+  },
+  "isAdmin": false,
+  "createdAt": {
+    "$date": "2026-01-12T18:45:50.288Z"
+  },
+  "updatedAt": {
+    "$date": "2026-01-12T18:45:50.288Z"
+  },
+  "lastUserNameChangeAt": {
+    "$date": "2026-01-12T18:45:50.288Z"
+  },
+  "status": "active"
+},
+{
+  "_id": "d4b32315-48c1-4100-b88d-5fb358f2d055",
+  "userName": "diegoprueba",
+  "email": "diegoprueba@prueba.com",
+  "hashedPassword": "$2b$12$bq1FbOEo/bkesl1DJovr/.bvb0l68vQ209KTSXw9cFD9VSi55x3u2",
+  "userType": "STUDENT",
+  "avatarAssetId": "",
+  "name": "Diego",
+  "description": "",
+  "roles": [
+    "user"
+  ],
+  "theme": "LIGHT",
+  "language": "es",
+  "gameStreak": 0,
+  "membershipType": "free",
+  "membershipStartedAt": {
+    "$date": "2026-01-13T01:48:15.814Z"
+  },
+  "membershipExpiresAt": {
+    "$date": "2026-01-13T01:48:15.814Z"
+  },
+  "isAdmin": false,
+  "createdAt": {
+    "$date": "2026-01-13T01:48:15.814Z"
+  },
+  "updatedAt": {
+    "$date": "2026-01-13T01:48:15.814Z"
+  },
+  "lastUserNameChangeAt": {
+    "$date": "2026-01-13T01:48:15.814Z"
+  },
+  "status": "active"
+},
+{
+  "_id": "54ac1e46-2ab5-40c0-801a-c45e232dcb91",
+  "userName": "pruebafinal99",
+  "email": "pruebafinal99@test.com",
+  "hashedPassword": "$2b$12$caDad9uW4QVg85slJC6/BOOnSR6VjzrVlEMs49weu04vcs669uSEC",
+  "userType": "STUDENT",
+  "avatarAssetId": "",
+  "name": "prueba",
+  "description": "rty",
+  "roles": [
+    "user"
+  ],
+  "theme": "LIGHT",
+  "language": "es",
+  "gameStreak": 0,
+  "membershipType": "free",
+  "membershipStartedAt": {
+    "$date": "2026-01-13T20:49:31.560Z"
+  },
+  "membershipExpiresAt": {
+    "$date": "2026-01-13T20:49:31.560Z"
+  },
+  "isAdmin": false,
+  "createdAt": {
+    "$date": "2026-01-13T20:49:31.560Z"
+  },
+  "updatedAt": {
+    "$date": "2026-01-15T21:23:53.852Z"
+  },
+  "lastUserNameChangeAt": {
+    "$date": "2026-01-13T20:49:31.560Z"
+  },
+  "status": "active"
+},
+{
+  "_id": "847b5325-8e9b-4b17-a8fb-ffc983e7c24c",
+  "userName": "eagarciay",
+  "email": "egarciayustiz@gmail.com",
+  "hashedPassword": "$2b$12$F55tX5s85blW0EbRNvM4SOECgB1UKtPE.SVjZI764bPg/tOLb7pZC",
+  "userType": "STUDENT",
+  "avatarAssetId": "",
+  "name": "Eduardo",
+  "description": "",
+  "roles": [
+    "user"
+  ],
+  "theme": "LIGHT",
+  "language": "es",
+  "gameStreak": 0,
+  "membershipType": "free",
+  "membershipStartedAt": {
+    "$date": "2026-01-14T02:22:18.914Z"
+  },
+  "membershipExpiresAt": {
+    "$date": "2026-01-14T02:22:18.914Z"
+  },
+  "isAdmin": false,
+  "createdAt": {
+    "$date": "2026-01-14T02:22:18.914Z"
+  },
+  "updatedAt": {
+    "$date": "2026-01-14T02:22:18.914Z"
+  },
+  "lastUserNameChangeAt": {
+    "$date": "2026-01-14T02:22:18.914Z"
+  },
+  "status": "active"
+},
+{
+  "_id": "7c4f0221-c6bf-4224-8e8a-c5c89c9e9835",
+  "userName": "massip",
+  "email": "m@gmail.com",
+  "hashedPassword": "$2b$12$urdHf1FzgIOa514MrPrJtuLtUKOIxvKfxf1bzCBEtoXIGxaF16Lye",
+  "userType": "STUDENT",
+  "avatarAssetId": "tiger",
+  "name": "massiPerozob",
+  "description": "cambio",
+  "roles": [
+    "user"
+  ],
+  "theme": "LIGHT",
+  "language": "es",
+  "gameStreak": 0,
+  "membershipType": "free",
+  "membershipStartedAt": {
+    "$date": "2026-01-14T03:44:02.807Z"
+  },
+  "membershipExpiresAt": {
+    "$date": "2026-01-14T03:44:02.807Z"
+  },
+  "isAdmin": false,
+  "createdAt": {
+    "$date": "2026-01-14T03:44:02.808Z"
+  },
+  "updatedAt": {
+    "$date": "2026-01-15T04:53:35.368Z"
+  },
+  "lastUserNameChangeAt": {
+    "$date": "2026-01-14T03:44:02.808Z"
+  },
+  "status": "active"
+},
+{
+  "_id": "7f2d0b7d-5fe6-455d-ae0c-cc1066479fcc",
+  "userName": "Santi11E7",
+  "email": "pruebas11E7@quizzy.com",
+  "hashedPassword": "$2b$12$QETMMBfMrNk.v4YFC0HdPeK/ADqhugmznF93W/ZOKHEdgODgiEm1W",
+  "userType": "STUDENT",
+  "avatarAssetId": "",
+  "name": "Santiago Silva",
+  "description": "",
+  "roles": [
+    "user"
+  ],
+  "theme": "LIGHT",
+  "language": "es",
+  "gameStreak": 0,
+  "membershipType": "free",
+  "membershipStartedAt": {
+    "$date": "2026-01-14T04:15:12.150Z"
+  },
+  "membershipExpiresAt": {
+    "$date": "2026-01-14T04:15:12.150Z"
+  },
+  "isAdmin": false,
+  "createdAt": {
+    "$date": "2026-01-14T04:15:12.150Z"
+  },
+  "updatedAt": {
+    "$date": "2026-01-14T04:15:12.150Z"
+  },
+  "lastUserNameChangeAt": {
+    "$date": "2026-01-14T04:15:12.150Z"
+  },
+  "status": "active"
+},
+{
+  "_id": "e3577bec-5364-42e7-a83c-a875c5f24655",
+  "userName": "JorgeCurioso",
+  "email": "testinsg@m.com",
+  "hashedPassword": "$2b$12$Hs5iOvEvzd.j5clMBEqUaOi173qozjs.I1DCc.dc7Cm6vOI.E/EHi",
+  "userType": "STUDENT",
+  "avatarAssetId": "",
+  "name": "Jorge Ramirez",
+  "description": "",
+  "roles": [
+    "user"
+  ],
+  "theme": "LIGHT",
+  "language": "es",
+  "gameStreak": 0,
+  "membershipType": "free",
+  "membershipStartedAt": {
+    "$date": "2026-01-14T04:36:44.652Z"
+  },
+  "membershipExpiresAt": {
+    "$date": "2026-01-14T04:36:44.652Z"
+  },
+  "isAdmin": false,
+  "createdAt": {
+    "$date": "2026-01-14T04:36:44.652Z"
+  },
+  "updatedAt": {
+    "$date": "2026-01-14T04:36:44.652Z"
+  },
+  "lastUserNameChangeAt": {
+    "$date": "2026-01-14T04:36:44.652Z"
+  },
+  "status": "active"
+},
+{
+  "_id": "95b7e1fe-90ee-4d7f-b2e2-5de26b93bb5a",
+  "userName": "diegoprueba1",
+  "email": "diegoprueba@example.com",
+  "hashedPassword": "$2b$12$oUoxHFPyN//nNsIATSHFBOQ0Fo/IdRGxMjArpFBT4SicTjAbVKDV6",
+  "userType": "STUDENT",
+  "avatarAssetId": "",
+  "name": "Diego Sperandio",
+  "description": "",
+  "roles": [
+    "user"
+  ],
+  "theme": "LIGHT",
+  "language": "es",
+  "gameStreak": 0,
+  "membershipType": "free",
+  "membershipStartedAt": {
+    "$date": "2026-01-14T14:27:02.350Z"
+  },
+  "membershipExpiresAt": {
+    "$date": "2026-01-14T14:27:02.350Z"
+  },
+  "isAdmin": false,
+  "createdAt": {
+    "$date": "2026-01-14T14:27:02.350Z"
+  },
+  "updatedAt": {
+    "$date": "2026-01-14T14:27:02.350Z"
+  },
+  "lastUserNameChangeAt": {
+    "$date": "2026-01-14T14:27:02.350Z"
+  },
+  "status": "active"
+},
+{
+  "_id": "6af29672-048c-47e2-9820-7c60b4318daa",
+  "userName": "AndresitoGOD",
+  "email": "andresguillarte@email.com",
+  "hashedPassword": "$2b$12$u5wSsox5NQ12UIOmikrLI.QEttKzk.KQS86pQkhn0Mu7GSNJHiJ2y",
+  "userType": "STUDENT",
+  "avatarAssetId": "",
+  "name": "Andres Guilarte",
+  "description": "",
+  "roles": [
+    "user"
+  ],
+  "theme": "LIGHT",
+  "language": "es",
+  "gameStreak": 0,
+  "membershipType": "free",
+  "membershipStartedAt": {
+    "$date": "2026-01-14T16:22:34.850Z"
+  },
+  "membershipExpiresAt": {
+    "$date": "2026-01-14T16:22:34.850Z"
+  },
+  "isAdmin": false,
+  "createdAt": {
+    "$date": "2026-01-14T16:22:34.850Z"
+  },
+  "updatedAt": {
+    "$date": "2026-01-14T16:22:34.850Z"
+  },
+  "lastUserNameChangeAt": {
+    "$date": "2026-01-14T16:22:34.850Z"
+  },
+  "status": "active"
+},
+{
+  "_id": "5d646993-f8ec-4354-85e8-c5ecf561cc07",
+  "userName": "tesito",
+  "email": "tesito@example.com",
+  "hashedPassword": "$2b$12$zEj.s5hbcFgX5GWoDqnHXukqWUh.KXxhbap765ZggjWtRaJLzmlIO",
+  "userType": "STUDENT",
+  "avatarAssetId": "",
+  "name": "Tesito",
+  "description": "",
+  "roles": [
+    "user"
+  ],
+  "theme": "LIGHT",
+  "language": "es",
+  "gameStreak": 0,
+  "membershipType": "free",
+  "membershipStartedAt": {
+    "$date": "2026-01-14T20:51:32.241Z"
+  },
+  "membershipExpiresAt": {
+    "$date": "2026-01-14T20:51:32.241Z"
+  },
+  "isAdmin": false,
+  "createdAt": {
+    "$date": "2026-01-14T20:51:32.241Z"
+  },
+  "updatedAt": {
+    "$date": "2026-01-14T20:51:32.241Z"
+  },
+  "lastUserNameChangeAt": {
+    "$date": "2026-01-14T20:51:32.241Z"
+  },
+  "status": "active"
+},
+{
+  "_id": "cfc1ddf2-3399-4f87-bd67-39230348101d",
+  "userName": "Israel",
+  "email": "israelmejiasp@gmai.com",
+  "hashedPassword": "$2b$12$MysuZOuWWuIOveErBl8jxuCMzZ5135LbcegathNIO/16zpfyXUtqK",
+  "userType": "STUDENT",
+  "avatarAssetId": "",
+  "name": "Israel",
+  "description": "",
+  "roles": [
+    "user"
+  ],
+  "theme": "LIGHT",
+  "language": "es",
+  "gameStreak": 0,
+  "membershipType": "premium",
+  "membershipStartedAt": {
+    "$date": "2026-01-15T01:40:20.943Z"
+  },
+  "membershipExpiresAt": {
+    "$date": "2027-01-15T01:40:20.943Z"
+  },
+  "isAdmin": false,
+  "createdAt": {
+    "$date": "2026-01-14T22:38:18.918Z"
+  },
+  "updatedAt": {
+    "$date": "2026-01-15T01:40:20.943Z"
+  },
+  "lastUserNameChangeAt": {
+    "$date": "2026-01-14T22:38:18.918Z"
+  },
+  "status": "active"
+},
+{
+  "_id": "ceaf0964-23f1-466e-a71e-29f641698488",
+  "userName": "isabel",
+  "email": "reina@gmaila.com",
+  "hashedPassword": "$2b$12$PtB958gmO7m1yJtEQhAPDevQDhPAYHger9aGebm3hS7gEryJDq7Fm",
+  "userType": "STUDENT",
+  "avatarAssetId": "",
+  "name": "Isabelita",
+  "description": "",
+  "roles": [
+    "user"
+  ],
+  "theme": "LIGHT",
+  "language": "es",
+  "gameStreak": 0,
+  "membershipType": "free",
+  "membershipStartedAt": {
+    "$date": "2026-01-15T01:20:27.129Z"
+  },
+  "membershipExpiresAt": {
+    "$date": "2026-01-15T01:20:27.129Z"
+  },
+  "isAdmin": false,
+  "createdAt": {
+    "$date": "2026-01-15T01:20:27.129Z"
+  },
+  "updatedAt": {
+    "$date": "2026-01-15T01:20:27.129Z"
+  },
+  "lastUserNameChangeAt": {
+    "$date": "2026-01-15T01:20:27.129Z"
+  },
+  "status": "active"
+},
+{
+  "_id": "87c24641-cc4a-4285-9116-7dce0a514a42",
+  "userName": "diegoplayer1",
+  "email": "diego@example.com",
+  "hashedPassword": "$2b$12$rTGProbFhHZx3uPa//N/jej5cQtJp2bAaD6DpsV9xD6ORonEstSVG",
+  "userType": "STUDENT",
+  "avatarAssetId": "",
+  "name": "Diego",
+  "description": "",
+  "roles": [
+    "user"
+  ],
+  "theme": "LIGHT",
+  "language": "es",
+  "gameStreak": 0,
+  "membershipType": "free",
+  "membershipStartedAt": {
+    "$date": "2026-01-15T01:31:08.331Z"
+  },
+  "membershipExpiresAt": {
+    "$date": "2026-01-15T01:31:08.331Z"
+  },
+  "isAdmin": false,
+  "createdAt": {
+    "$date": "2026-01-15T01:31:08.331Z"
+  },
+  "updatedAt": {
+    "$date": "2026-01-15T01:31:08.331Z"
+  },
+  "lastUserNameChangeAt": {
+    "$date": "2026-01-15T01:31:08.331Z"
+  },
+  "status": "active"
+},
+{
+  "_id": "b0b32fa4-0b44-45b7-9101-3e9b3fe19310",
+  "userName": "massielp",
+  "email": "mp@gmail.com",
+  "hashedPassword": "$2b$12$GUqi9TQiZJriunXrqawOBuFCbS1XJHQxfmWVbSF5oHnKBn0wbyHJC",
+  "userType": "STUDENT",
+  "avatarAssetId": "earth",
+  "name": "massip",
+  "description": "cambié descripción",
+  "roles": [
+    "user"
+  ],
+  "theme": "LIGHT",
+  "language": "es",
+  "gameStreak": 0,
+  "membershipType": "free",
+  "membershipStartedAt": {
+    "$date": "2026-01-15T01:55:51.429Z"
+  },
+  "membershipExpiresAt": {
+    "$date": "2026-01-15T01:55:51.429Z"
+  },
+  "isAdmin": false,
+  "createdAt": {
+    "$date": "2026-01-15T01:55:51.429Z"
+  },
+  "updatedAt": {
+    "$date": "2026-01-15T04:10:08.432Z"
+  },
+  "lastUserNameChangeAt": {
+    "$date": "2026-01-15T01:55:51.429Z"
+  },
+  "status": "active"
+},
+{
+  "_id": "eee8a38f-e2f0-4249-bb53-b717ba4582d8",
+  "userName": "cristiano",
+  "email": "fuchibol@gmail.com",
+  "hashedPassword": "$2b$12$F6q0dNXin.u8dJ.xnnbtVusGeE6.spvvfxNO6ySy.QekcBoO7qX9y",
+  "userType": "STUDENT",
+  "avatarAssetId": "",
+  "name": "ronaldo",
+  "description": "",
+  "roles": [
+    "user"
+  ],
+  "theme": "LIGHT",
+  "language": "es",
+  "gameStreak": 0,
+  "membershipType": "free",
+  "membershipStartedAt": {
+    "$date": "2026-01-15T03:56:03.394Z"
+  },
+  "membershipExpiresAt": {
+    "$date": "2026-01-15T03:56:03.394Z"
+  },
+  "isAdmin": false,
+  "createdAt": {
+    "$date": "2026-01-15T03:56:03.394Z"
+  },
+  "updatedAt": {
+    "$date": "2026-01-15T03:56:03.394Z"
+  },
+  "lastUserNameChangeAt": {
+    "$date": "2026-01-15T03:56:03.394Z"
+  },
+  "status": "active"
+},
+{
+  "_id": "743cf348-8e61-42ac-9e64-f88f74256891",
+  "userName": "Gabov25",
+  "email": "gabov25@gmail.com",
+  "hashedPassword": "$2b$12$f0ygthct83INWGcsoCGtluEA1ahINlyJ2WI00LC4rJl6z2yc6QaHa",
+  "userType": "STUDENT",
+  "avatarAssetId": "",
+  "name": "Gabriel Vilchez",
+  "description": "",
+  "roles": [
+    "user"
+  ],
+  "theme": "LIGHT",
+  "language": "es",
+  "gameStreak": 0,
+  "membershipType": "free",
+  "membershipStartedAt": {
+    "$date": "2026-01-15T15:39:15.795Z"
+  },
+  "membershipExpiresAt": {
+    "$date": "2026-01-15T15:39:15.795Z"
+  },
+  "isAdmin": false,
+  "createdAt": {
+    "$date": "2026-01-15T15:39:15.795Z"
+  },
+  "updatedAt": {
+    "$date": "2026-01-15T15:39:15.795Z"
+  },
+  "lastUserNameChangeAt": {
+    "$date": "2026-01-15T15:39:15.795Z"
+  },
+  "status": "active"
+},
+{
+  "_id": "62d07629-03de-4eb0-a4e0-cfbf6fd475cc",
+  "userName": "diegopruebita",
+  "email": "diego@gmail.com",
+  "hashedPassword": "$2b$12$yq3OZly344Rdqv1M8QJQn.5rYb1oWu3dw2oF.1h5KhOkDQh1a98k6",
+  "userType": "STUDENT",
+  "avatarAssetId": "",
+  "name": "Diego",
+  "description": "",
+  "roles": [
+    "user"
+  ],
+  "theme": "LIGHT",
+  "language": "es",
+  "gameStreak": 0,
+  "membershipType": "free",
+  "membershipStartedAt": {
+    "$date": "2026-01-15T16:34:21.346Z"
+  },
+  "membershipExpiresAt": {
+    "$date": "2026-01-15T16:34:21.346Z"
+  },
+  "isAdmin": false,
+  "createdAt": {
+    "$date": "2026-01-15T16:34:21.346Z"
+  },
+  "updatedAt": {
+    "$date": "2026-01-15T16:34:21.346Z"
+  },
+  "lastUserNameChangeAt": {
+    "$date": "2026-01-15T16:34:21.346Z"
+  },
+  "status": "active"
+},
+{
+  "_id": "4b15730c-5d08-493a-afec-fb2fc29d33ec",
+  "userName": "aleprueba",
+  "email": "algo@gmail.com",
+  "hashedPassword": "$2b$12$cTWStZ3ol3tSeEngKvWG8eZ34G0nvLyn5K1u8zk6iho4y2BIU2PDG",
+  "userType": "STUDENT",
+  "avatarAssetId": "",
+  "name": "aleprueba",
+  "description": "",
+  "roles": [
+    "user"
+  ],
+  "theme": "LIGHT",
+  "language": "es",
+  "gameStreak": 0,
+  "membershipType": "free",
+  "membershipStartedAt": {
+    "$date": "2026-01-15T17:47:11.214Z"
+  },
+  "membershipExpiresAt": {
+    "$date": "2026-01-15T17:47:11.214Z"
+  },
+  "isAdmin": true,
+  "createdAt": {
+    "$date": "2026-01-15T17:47:11.214Z"
+  },
+  "updatedAt": {
+    "$date": "2026-01-15T17:47:11.214Z"
+  },
+  "lastUserNameChangeAt": {
+    "$date": "2026-01-15T17:47:11.214Z"
+  },
+  "status": "active"
+},
+{
+  "_id": "de4fcfc9-9b84-4ff6-bd4c-a51997c8eb8b",
+  "userName": "josegabo",
+  "email": "jgvilchez25@gmail.com",
+  "hashedPassword": "$2b$12$v0mQD1s//7ajFVE.INRFd.cSl3JnFiZhMVmXA0vOv/aTfvgzQpP2G",
+  "userType": "STUDENT",
+  "avatarAssetId": "",
+  "name": "Gabriel Vilchez",
+  "description": "",
+  "roles": [
+    "user"
+  ],
+  "theme": "LIGHT",
+  "language": "es",
+  "gameStreak": 0,
+  "membershipType": "free",
+  "membershipStartedAt": {
+    "$date": "2026-01-15T19:01:21.557Z"
+  },
+  "membershipExpiresAt": {
+    "$date": "2026-01-15T19:01:21.557Z"
+  },
+  "isAdmin": false,
+  "createdAt": {
+    "$date": "2026-01-15T19:01:21.557Z"
+  },
+  "updatedAt": {
+    "$date": "2026-01-15T19:01:21.557Z"
+  },
+  "lastUserNameChangeAt": {
+    "$date": "2026-01-15T19:01:21.557Z"
+  },
+  "status": "active"
+},
+{
+  "_id": "12d64e8e-0183-4b0e-bb17-a9f8dc416c3e",
+  "userName": "melimeli",
+  "email": "melissanessigarcia@gmail.com",
+  "hashedPassword": "$2b$12$sih5MnBN2mtnCSRchJ/7yuRGN.OxZxyAa5JgTPQDAC4nFJkONkPLy",
+  "userType": "STUDENT",
+  "avatarAssetId": "",
+  "name": "melissa",
+  "description": "siu",
+  "roles": [
+    "user"
+  ],
+  "theme": "LIGHT",
+  "language": "es",
+  "gameStreak": 0,
+  "membershipType": "free",
+  "membershipStartedAt": {
+    "$date": "2026-01-15T21:17:28.989Z"
+  },
+  "membershipExpiresAt": {
+    "$date": "2026-01-15T21:17:28.989Z"
+  },
+  "isAdmin": false,
+  "createdAt": {
+    "$date": "2026-01-15T21:17:28.989Z"
+  },
+  "updatedAt": {
+    "$date": "2026-01-15T21:37:11.232Z"
+  },
+  "lastUserNameChangeAt": {
+    "$date": "2026-01-15T21:17:28.989Z"
+  },
+  "status": "active"
+},
+{
+  "_id": "cda68771-e81d-4098-8c4d-d9d62901e43b",
+  "userName": "Juanjuan",
+  "email": "juan@gmail.com",
+  "hashedPassword": "$2b$12$8sgZZ9Y5Vi1Uar.84BbTmOBlXl4rBDD/qxsiWiXGlophDd2sriL2y",
+  "userType": "STUDENT",
+  "avatarAssetId": "",
+  "name": "Juan Cammarano",
+  "description": "",
+  "roles": [
+    "user"
+  ],
+  "theme": "LIGHT",
+  "language": "es",
+  "gameStreak": 0,
+  "membershipType": "free",
+  "membershipStartedAt": {
+    "$date": "2026-01-15T22:47:12.207Z"
+  },
+  "membershipExpiresAt": {
+    "$date": "2026-01-15T22:47:12.207Z"
+  },
+  "isAdmin": false,
+  "createdAt": {
+    "$date": "2026-01-15T22:47:12.207Z"
+  },
+  "updatedAt": {
+    "$date": "2026-01-15T22:47:12.207Z"
+  },
+  "lastUserNameChangeAt": {
+    "$date": "2026-01-15T22:47:12.207Z"
+  },
+  "status": "active"
+},
+{
+  "_id": "23cca8e9-c19a-4215-8f6e-083581c74827",
+  "userName": "juanito23",
+  "email": "testnomail@mail.com",
+  "hashedPassword": "$2b$12$NOjuIeIBCO8yHCeA2fcbme1ulIBqoIHM8cr6iRmzAlWC4qPIpXAr.",
+  "userType": "STUDENT",
+  "avatarAssetId": "",
+  "name": "juanito",
+  "description": "",
+  "roles": [
+    "user"
+  ],
+  "theme": "LIGHT",
+  "language": "es",
+  "gameStreak": 0,
+  "membershipType": "free",
+  "membershipStartedAt": {
+    "$date": "2026-01-16T00:11:47.232Z"
+  },
+  "membershipExpiresAt": {
+    "$date": "2026-01-16T00:11:47.232Z"
+  },
+  "isAdmin": false,
+  "createdAt": {
+    "$date": "2026-01-16T00:11:47.232Z"
+  },
+  "updatedAt": {
+    "$date": "2026-01-16T00:11:47.232Z"
+  },
+  "lastUserNameChangeAt": {
+    "$date": "2026-01-16T00:11:47.232Z"
+  },
+  "status": "active"
+}]

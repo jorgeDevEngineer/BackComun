@@ -1,0 +1,4884 @@
+[{
+  "_id": "06114c5d-75b5-4169-8f6c-936355667577",
+  "id": "06114c5d-75b5-4169-8f6c-936355667577",
+  "authorId": "123e4567-e89b-42d3-a456-426614174123",
+  "title": "Patrones de Diseño de Software 3",
+  "description": "Evaluación sobre los 23 patrones clásicos de diseño de software.",
+  "visibility": "public",
+  "status": "publish",
+  "category": "Tecnología",
+  "themeId": "a452aab3-5eeb-4d8f-8330-b465ddcf45c8",
+  "coverImageId": "cd433fc5-8614-48d2-98c1-9cd0283796be",
+  "createdAt": {
+    "$date": "2026-01-12T21:57:38.696Z"
+  },
+  "playCount": 0,
+  "questions": [
+    {
+      "id": "563ddadc-68ec-4a30-b2e1-e048daccd686",
+      "quizId": "06114c5d-75b5-4169-8f6c-936355667577",
+      "text": "¿Cuáles son las tres categorías principales de los patrones GoF?",
+      "mediaId": null,
+      "type": "quiz",
+      "timeLimit": 30,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "a5e9870e-4005-457e-89b4-a33ed3b4ea16",
+          "questionId": "563ddadc-68ec-4a30-b2e1-e048daccd686",
+          "text": "Creacionales, Estructurales y de Comportamiento",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "5105d245-2ddb-42fc-a573-f4065fae85bb",
+          "questionId": "563ddadc-68ec-4a30-b2e1-e048daccd686",
+          "text": "Arquitectónicos, De Interfaz y De Datos",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "4756a104-e286-4c33-9077-b33c78059140",
+          "questionId": "563ddadc-68ec-4a30-b2e1-e048daccd686",
+          "text": "Simples, Complejos y Compuestos",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "adbc42d1-2f58-4867-bfc0-f98d8d454878",
+          "questionId": "563ddadc-68ec-4a30-b2e1-e048daccd686",
+          "text": "Funcionales, Reactivos y Objetos",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "f8a946d6-b5a5-4fff-a816-e371c7b6d874",
+      "quizId": "06114c5d-75b5-4169-8f6c-936355667577",
+      "text": "El patrón Singleton garantiza que una clase tenga solo una instancia y proporciona un punto de acceso global a ella.",
+      "mediaId": null,
+      "type": "true_false",
+      "timeLimit": 20,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "96750ffa-97ec-42b8-b455-41717ef14d2b",
+          "questionId": "f8a946d6-b5a5-4fff-a816-e371c7b6d874",
+          "text": "Verdadero",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "1238a75d-3a4f-4813-8e27-6d12d41542a0",
+          "questionId": "f8a946d6-b5a5-4fff-a816-e371c7b6d874",
+          "text": "Falso",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "253cfdc2-cde8-4a95-9170-cb981e02b0c6",
+      "quizId": "06114c5d-75b5-4169-8f6c-936355667577",
+      "text": "¿Qué patrones pertenecen a la categoría de 'Comportamiento' (Behavioral)? Selecciona todos los que apliquen.",
+      "mediaId": null,
+      "type": "multiple",
+      "timeLimit": 45,
+      "points": 500,
+      "answers": [
+        {
+          "id": "bb5fdb81-2dde-4e6f-9c50-f413f6c225ee",
+          "questionId": "253cfdc2-cde8-4a95-9170-cb981e02b0c6",
+          "text": "Observer",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "321a364d-bbd4-4693-baa7-4db60bf5028d",
+          "questionId": "253cfdc2-cde8-4a95-9170-cb981e02b0c6",
+          "text": "Strategy",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "8f61f979-f5cb-42f6-ad57-ff01fe426320",
+          "questionId": "253cfdc2-cde8-4a95-9170-cb981e02b0c6",
+          "text": "Adapter",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "2f6cd7f2-db3d-4394-ba7e-fbcfcac67fca",
+          "questionId": "253cfdc2-cde8-4a95-9170-cb981e02b0c6",
+          "text": "Factory Method",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "2e7ff889-30a7-4926-8daa-3e1f52e719ea",
+      "quizId": "06114c5d-75b5-4169-8f6c-936355667577",
+      "text": "¿Qué patrón estructural se utiliza para permitir que interfaces incompatibles trabajen juntas?",
+      "mediaId": null,
+      "type": "quiz",
+      "timeLimit": 30,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "483bb089-4c91-4a72-9319-7633860b675b",
+          "questionId": "2e7ff889-30a7-4926-8daa-3e1f52e719ea",
+          "text": "Adapter",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "c6b3be44-8002-473e-8e75-58db2c00a0bb",
+          "questionId": "2e7ff889-30a7-4926-8daa-3e1f52e719ea",
+          "text": "Bridge",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "0d17940e-b8cd-4402-bdc5-8093f16300a8",
+          "questionId": "2e7ff889-30a7-4926-8daa-3e1f52e719ea",
+          "text": "Proxy",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "581dc1d0-3bb3-4ed8-bad6-df11481f0c47",
+          "questionId": "2e7ff889-30a7-4926-8daa-3e1f52e719ea",
+          "text": "Decorator",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    }
+  ]
+},
+{
+  "_id": "560dedc4-3966-49ad-bddb-98b81d579121",
+  "id": "560dedc4-3966-49ad-bddb-98b81d579121",
+  "authorId": "123e4567-e89b-42d3-a456-426614174123",
+  "title": "Patrones de Diseño de Software 3",
+  "description": "Evaluación sobre los 23 patrones clásicos de diseño de software.",
+  "visibility": "public",
+  "status": "publish",
+  "category": "Tecnología",
+  "themeId": "a452aab3-5eeb-4d8f-8330-b465ddcf45c8",
+  "coverImageId": "cd433fc5-8614-48d2-98c1-9cd0283796be",
+  "createdAt": {
+    "$date": "2026-01-12T23:17:34.585Z"
+  },
+  "playCount": 0,
+  "questions": [
+    {
+      "id": "e073bac3-de2e-489d-9c55-8e02abd3ac8c",
+      "quizId": "560dedc4-3966-49ad-bddb-98b81d579121",
+      "text": "¿Cuáles son las tres categorías principales de los patrones GoF?",
+      "mediaId": null,
+      "type": "quiz",
+      "timeLimit": 30,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "3006bbe7-c6e8-4432-9b2b-b70cab02a399",
+          "questionId": "e073bac3-de2e-489d-9c55-8e02abd3ac8c",
+          "text": "Creacionales, Estructurales y de Comportamiento",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "5f7ea901-ba69-402f-85e0-fd39e23697b7",
+          "questionId": "e073bac3-de2e-489d-9c55-8e02abd3ac8c",
+          "text": "Arquitectónicos, De Interfaz y De Datos",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "7dd316fc-ce2a-4527-bb3c-adf670ffa71c",
+          "questionId": "e073bac3-de2e-489d-9c55-8e02abd3ac8c",
+          "text": "Simples, Complejos y Compuestos",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "8ad7b4e6-cd14-4a5d-9685-f063bf706709",
+          "questionId": "e073bac3-de2e-489d-9c55-8e02abd3ac8c",
+          "text": "Funcionales, Reactivos y Objetos",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "318f75b8-8b09-4ab7-860c-2cb9621e6a42",
+      "quizId": "560dedc4-3966-49ad-bddb-98b81d579121",
+      "text": "El patrón Singleton garantiza que una clase tenga solo una instancia y proporciona un punto de acceso global a ella.",
+      "mediaId": null,
+      "type": "true_false",
+      "timeLimit": 20,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "54f41094-eb11-4f29-90bc-f55a330b2d57",
+          "questionId": "318f75b8-8b09-4ab7-860c-2cb9621e6a42",
+          "text": "Verdadero",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "2c0e783b-972f-4746-b33c-d7069a716cd9",
+          "questionId": "318f75b8-8b09-4ab7-860c-2cb9621e6a42",
+          "text": "Falso",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "8ef8d440-f9ca-481f-8479-920e48301bd3",
+      "quizId": "560dedc4-3966-49ad-bddb-98b81d579121",
+      "text": "¿Qué patrones pertenecen a la categoría de 'Comportamiento' (Behavioral)? Selecciona todos los que apliquen.",
+      "mediaId": null,
+      "type": "multiple",
+      "timeLimit": 45,
+      "points": 500,
+      "answers": [
+        {
+          "id": "2bbd8dff-8e40-4826-bdcf-c0e6336c1ef2",
+          "questionId": "8ef8d440-f9ca-481f-8479-920e48301bd3",
+          "text": "Observer",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "559ba968-231d-4415-aa0f-1af9b5ca0a9a",
+          "questionId": "8ef8d440-f9ca-481f-8479-920e48301bd3",
+          "text": "Strategy",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "247f4109-0796-4af5-ada1-d8bba179c9ad",
+          "questionId": "8ef8d440-f9ca-481f-8479-920e48301bd3",
+          "text": "Adapter",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "8e8f86f6-dc92-43ba-a75a-a361ec2534ed",
+          "questionId": "8ef8d440-f9ca-481f-8479-920e48301bd3",
+          "text": "Factory Method",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "b32d2437-48e0-4ba6-ad2b-c4b13f03fd19",
+      "quizId": "560dedc4-3966-49ad-bddb-98b81d579121",
+      "text": "¿Qué patrón estructural se utiliza para permitir que interfaces incompatibles trabajen juntas?",
+      "mediaId": null,
+      "type": "quiz",
+      "timeLimit": 30,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "9d95f61b-1d23-48be-966a-188cad2f9c07",
+          "questionId": "b32d2437-48e0-4ba6-ad2b-c4b13f03fd19",
+          "text": "Adapter",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "8cb98932-b73d-4bd1-8443-e5ce6c9df043",
+          "questionId": "b32d2437-48e0-4ba6-ad2b-c4b13f03fd19",
+          "text": "Bridge",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "9e5a47a0-952a-482d-8f7f-feb1886fb116",
+          "questionId": "b32d2437-48e0-4ba6-ad2b-c4b13f03fd19",
+          "text": "Proxy",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "3a1e81e6-c725-456a-9cef-18f2fa66e3cc",
+          "questionId": "b32d2437-48e0-4ba6-ad2b-c4b13f03fd19",
+          "text": "Decorator",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    }
+  ]
+},
+{
+  "_id": "ed04171a-750e-4d9a-9fbc-d63e26e4955c",
+  "id": "ed04171a-750e-4d9a-9fbc-d63e26e4955c",
+  "authorId": "f47ac10b-58cc-4372-a567-0e02b2c3d234",
+  "title": "dcvfdvh",
+  "description": "ghjff",
+  "visibility": "public",
+  "status": "draft",
+  "category": "General",
+  "themeId": "f1986c62-7dc1-47c5-9a1f-03d34043e8f4",
+  "coverImageId": null,
+  "createdAt": {
+    "$date": "2026-01-14T07:59:25.123Z"
+  },
+  "playCount": 0,
+  "questions": [
+    {
+      "id": "9c3529f3-4536-4d6c-9196-14a94da5bb7d",
+      "quizId": "ed04171a-750e-4d9a-9fbc-d63e26e4955c",
+      "text": "Verdadero o Falso 1: Ejemplo de enunciado",
+      "mediaId": null,
+      "type": "true_false",
+      "timeLimit": 20,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "3d6c26a4-8341-4157-9323-be487bbdd07d",
+          "questionId": "9c3529f3-4536-4d6c-9196-14a94da5bb7d",
+          "text": "Verdadero",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "321a9a76-0f3d-4c31-aa06-40e5babd2c59",
+          "questionId": "9c3529f3-4536-4d6c-9196-14a94da5bb7d",
+          "text": "Falso",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "dc1e667b-aebd-4cb9-b3ee-b2c8f15c451e",
+      "quizId": "ed04171a-750e-4d9a-9fbc-d63e26e4955c",
+      "text": "Verdadero o Falso 2: Ejemplo de enunciado",
+      "mediaId": null,
+      "type": "true_false",
+      "timeLimit": 20,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "6e07fc51-635f-4dbc-afd8-edc1420b2d4b",
+          "questionId": "dc1e667b-aebd-4cb9-b3ee-b2c8f15c451e",
+          "text": "Verdadero",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "d4ecc2ee-1be1-4664-afc8-3debc6dbfa9a",
+          "questionId": "dc1e667b-aebd-4cb9-b3ee-b2c8f15c451e",
+          "text": "Falso",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "58569648-0d79-40ef-b138-c9ff6b06b7d9",
+      "quizId": "ed04171a-750e-4d9a-9fbc-d63e26e4955c",
+      "text": "Verdadero o Falso 3: Ejemplo de enunciado",
+      "mediaId": null,
+      "type": "true_false",
+      "timeLimit": 20,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "c0cb6309-7ebf-440d-8d66-84fcbcab7cbf",
+          "questionId": "58569648-0d79-40ef-b138-c9ff6b06b7d9",
+          "text": "Verdadero",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "1770536c-d71b-4a75-8c6f-dc886989f228",
+          "questionId": "58569648-0d79-40ef-b138-c9ff6b06b7d9",
+          "text": "Falso",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "b9b29bd6-b317-4572-989f-6e040d9294e7",
+      "quizId": "ed04171a-750e-4d9a-9fbc-d63e26e4955c",
+      "text": "Verdadero o Falso 4: Ejemplo de enunciado",
+      "mediaId": null,
+      "type": "true_false",
+      "timeLimit": 20,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "4bc8601c-cbc0-4fd0-adc7-f39a1a20e569",
+          "questionId": "b9b29bd6-b317-4572-989f-6e040d9294e7",
+          "text": "Verdadero",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "7e1bb2fa-80cd-4715-8d19-18f736519d49",
+          "questionId": "b9b29bd6-b317-4572-989f-6e040d9294e7",
+          "text": "Falso",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "695e455e-8564-4b75-994a-0dfd4a051d7e",
+      "quizId": "ed04171a-750e-4d9a-9fbc-d63e26e4955c",
+      "text": "Verdadero o Falso 5: Ejemplo de enunciado",
+      "mediaId": null,
+      "type": "true_false",
+      "timeLimit": 20,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "86e133b0-a628-4464-92c5-630ab9f624fd",
+          "questionId": "695e455e-8564-4b75-994a-0dfd4a051d7e",
+          "text": "Verdadero",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "cc910064-e92d-4d5f-a306-124de9fbc435",
+          "questionId": "695e455e-8564-4b75-994a-0dfd4a051d7e",
+          "text": "Falso",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "f4be79ec-7ee9-4892-9cc8-d72be36d19d6",
+      "quizId": "ed04171a-750e-4d9a-9fbc-d63e26e4955c",
+      "text": "Verdadero o Falso 6: Ejemplo de enunciado",
+      "mediaId": null,
+      "type": "true_false",
+      "timeLimit": 20,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "1925daa9-bed6-4969-854e-90997c8f4286",
+          "questionId": "f4be79ec-7ee9-4892-9cc8-d72be36d19d6",
+          "text": "Verdadero",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "db9d9896-e96e-4966-839e-686196018213",
+          "questionId": "f4be79ec-7ee9-4892-9cc8-d72be36d19d6",
+          "text": "Falso",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "9674db33-449a-41e2-ac0f-256cf453e381",
+      "quizId": "ed04171a-750e-4d9a-9fbc-d63e26e4955c",
+      "text": "Verdadero o Falso 7: Ejemplo de enunciado",
+      "mediaId": null,
+      "type": "true_false",
+      "timeLimit": 20,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "72ded754-80ed-4e77-96d2-f02bf18d43b2",
+          "questionId": "9674db33-449a-41e2-ac0f-256cf453e381",
+          "text": "Verdadero",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "bbeb6629-05d8-4ebd-8aa7-15a623a311b5",
+          "questionId": "9674db33-449a-41e2-ac0f-256cf453e381",
+          "text": "Falso",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "1d1b1fce-067f-419a-97af-04a971514f50",
+      "quizId": "ed04171a-750e-4d9a-9fbc-d63e26e4955c",
+      "text": "Verdadero o Falso 8: Ejemplo de enunciado",
+      "mediaId": null,
+      "type": "true_false",
+      "timeLimit": 20,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "f75304a9-db4a-468d-aeae-02ddc8163140",
+          "questionId": "1d1b1fce-067f-419a-97af-04a971514f50",
+          "text": "Verdadero",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "9827486e-07f0-4d1d-94e8-36ffb6250069",
+          "questionId": "1d1b1fce-067f-419a-97af-04a971514f50",
+          "text": "Falso",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "11c56bd7-239d-4cc6-b4b2-cadf53a4afd3",
+      "quizId": "ed04171a-750e-4d9a-9fbc-d63e26e4955c",
+      "text": "Verdadero o Falso 9: Ejemplo de enunciado",
+      "mediaId": null,
+      "type": "true_false",
+      "timeLimit": 20,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "24756112-4863-4294-a368-ec0d8c814fc9",
+          "questionId": "11c56bd7-239d-4cc6-b4b2-cadf53a4afd3",
+          "text": "Verdadero",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "37074bf2-6400-4f05-9974-b94a5fccc6fa",
+          "questionId": "11c56bd7-239d-4cc6-b4b2-cadf53a4afd3",
+          "text": "Falso",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "82bdb37a-58f3-4d33-ae90-b0789f356887",
+      "quizId": "ed04171a-750e-4d9a-9fbc-d63e26e4955c",
+      "text": "Verdadero o Falso 10: Ejemplo de enunciado",
+      "mediaId": null,
+      "type": "true_false",
+      "timeLimit": 20,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "8cc42140-76a7-4fa0-814a-d1f08805a60b",
+          "questionId": "82bdb37a-58f3-4d33-ae90-b0789f356887",
+          "text": "Verdadero",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "83561423-46f2-482c-b37b-5bddfb31d2ff",
+          "questionId": "82bdb37a-58f3-4d33-ae90-b0789f356887",
+          "text": "Falso",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    }
+  ]
+},
+{
+  "_id": "92ad5bbb-13ef-4a93-87d6-2edde7bec415",
+  "id": "92ad5bbb-13ef-4a93-87d6-2edde7bec415",
+  "authorId": "e3577bec-5364-42e7-a83c-a875c5f24655",
+  "title": "TEST",
+  "description": "TEST.",
+  "visibility": "public",
+  "status": "publish",
+  "category": "Computer Science",
+  "themeId": "5f0e8c89-f434-4dff-baaf-83a4aa4feb26",
+  "coverImageId": "f410f1f5-7c7f-4db3-a71f-58a584f7802a",
+  "createdAt": {
+    "$date": "2026-01-14T09:43:16.426Z"
+  },
+  "playCount": 0,
+  "questions": [
+    {
+      "id": "1ec1381a-d26c-4151-a801-d7751280d436",
+      "quizId": "92ad5bbb-13ef-4a93-87d6-2edde7bec415",
+      "text": "SINGLE SLIDE",
+      "mediaId": "516da741-0643-497e-a9ca-6ef952f0e574",
+      "type": "quiz",
+      "timeLimit": 45,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "35bf35d5-8091-4343-84ba-823698598e9d",
+          "questionId": "1ec1381a-d26c-4151-a801-d7751280d436",
+          "text": "OPTION 1",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "c26557a5-858d-4851-a211-a2e231cd4308",
+          "questionId": "1ec1381a-d26c-4151-a801-d7751280d436",
+          "text": "OPTION 2",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "e7d0df38-b155-4a19-b369-7d217f65a719",
+          "questionId": "1ec1381a-d26c-4151-a801-d7751280d436",
+          "text": null,
+          "mediaId": "81f1dbb5-2f1d-40d7-b021-8f4cc948a432",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "bdf783a9-10f8-4f0e-97ec-ddf40c550242",
+      "quizId": "92ad5bbb-13ef-4a93-87d6-2edde7bec415",
+      "text": "MULTIPLE SLIDE",
+      "mediaId": "81f1dbb5-2f1d-40d7-b021-8f4cc948a432",
+      "type": "quiz",
+      "timeLimit": 30,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "a92ba970-2483-44ff-8d9f-c38183595417",
+          "questionId": "bdf783a9-10f8-4f0e-97ec-ddf40c550242",
+          "text": "OPTION 1",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "0eaa8867-12f3-43dc-b89e-fc09019f03e3",
+          "questionId": "bdf783a9-10f8-4f0e-97ec-ddf40c550242",
+          "text": "OPTION 2",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "b46ea96f-2224-4580-9e10-6609290a82e9",
+          "questionId": "bdf783a9-10f8-4f0e-97ec-ddf40c550242",
+          "text": "OPTION 3",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "baac4e43-3b29-4a3d-9fbb-9c233546e03e",
+      "quizId": "92ad5bbb-13ef-4a93-87d6-2edde7bec415",
+      "text": "TRUE_FALSE SLIDE",
+      "mediaId": "f410f1f5-7c7f-4db3-a71f-58a584f7802a",
+      "type": "true_false",
+      "timeLimit": 30,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "50ec7f39-5a29-49ee-b125-c527cc7e5d73",
+          "questionId": "baac4e43-3b29-4a3d-9fbb-9c233546e03e",
+          "text": "True",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "5a708999-b298-4bc8-ab7f-9f0d43dc1913",
+          "questionId": "baac4e43-3b29-4a3d-9fbb-9c233546e03e",
+          "text": "False",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    }
+  ]
+},
+{
+  "_id": "d27bd68d-608e-4196-a5df-d8ac9351d255",
+  "id": "d27bd68d-608e-4196-a5df-d8ac9351d255",
+  "authorId": "e3577bec-5364-42e7-a83c-a875c5f24655",
+  "title": "Certificación en Arquitectura de Software Moderna",
+  "description": "Examen avanzado sobre GoF, Hexagonal, DDD y principios SOLID.",
+  "visibility": "public",
+  "status": "publish",
+  "category": "Computer Science",
+  "themeId": "5f0e8c89-f434-4dff-baaf-83a4aa4feb26",
+  "coverImageId": "f410f1f5-7c7f-4db3-a71f-58a584f7802a",
+  "createdAt": {
+    "$date": "2026-01-14T09:53:09.143Z"
+  },
+  "playCount": 0,
+  "questions": [
+    {
+      "id": "a17e275a-0062-4449-8723-7cce3500bfd2",
+      "quizId": "d27bd68d-608e-4196-a5df-d8ac9351d255",
+      "text": "¿Cómo se implementa DIP en Arq. Hexagonal para desacoplar la persistencia?",
+      "mediaId": "516da741-0643-497e-a9ca-6ef952f0e574",
+      "type": "quiz",
+      "timeLimit": 45,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "0c3de0ba-bbb6-4a7a-a16c-08c6309a2302",
+          "questionId": "a17e275a-0062-4449-8723-7cce3500bfd2",
+          "text": "Dominio define interfaz (Port) e infraestructura la implementa.",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "93081582-3b55-4d01-ba81-85ff927a8b5a",
+          "questionId": "a17e275a-0062-4449-8723-7cce3500bfd2",
+          "text": "El dominio importa directamente las clases de persistencia.",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "99a4d0fa-ae1f-4c50-af2c-e740c444385e",
+          "questionId": "a17e275a-0062-4449-8723-7cce3500bfd2",
+          "text": null,
+          "mediaId": "81f1dbb5-2f1d-40d7-b021-8f4cc948a432",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "d4dcc916-a207-4a76-a8a5-4a95063ec281",
+      "quizId": "d27bd68d-608e-4196-a5df-d8ac9351d255",
+      "text": "En el diseño orientado a dominios (DDD), ¿qué es un Value Object?",
+      "mediaId": "81f1dbb5-2f1d-40d7-b021-8f4cc948a432",
+      "type": "quiz",
+      "timeLimit": 30,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "6747ce6e-582a-4d2f-b77f-8437d95d2441",
+          "questionId": "d4dcc916-a207-4a76-a8a5-4a95063ec281",
+          "text": "Objeto sin identidad propia definido solo por sus atributos.",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "985e5e28-ba1c-46cd-9f7b-623f96a140e6",
+          "questionId": "d4dcc916-a207-4a76-a8a5-4a95063ec281",
+          "text": "Objeto que se identifica mediante un ID único y persistente.",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "d4cd90c8-75dd-4b0f-8829-12abf0d60c39",
+          "questionId": "d4dcc916-a207-4a76-a8a5-4a95063ec281",
+          "text": "Un servicio que orquestra llamadas a la base de datos.",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "9d54d283-a2d0-46c5-9bc6-15d4e116883a",
+      "quizId": "d27bd68d-608e-4196-a5df-d8ac9351d255",
+      "text": "¿Qué patrón GoF proporciona una interfaz unificada para un subsistema?",
+      "mediaId": "f410f1f5-7c7f-4db3-a71f-58a584f7802a",
+      "type": "quiz",
+      "timeLimit": 30,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "4a40fdcc-9f66-47c6-bfbe-fe34d303a8ea",
+          "questionId": "9d54d283-a2d0-46c5-9bc6-15d4e116883a",
+          "text": "Facade",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "d8fb007f-8e1f-4043-9db9-374dbb3174f1",
+          "questionId": "9d54d283-a2d0-46c5-9bc6-15d4e116883a",
+          "text": "Proxy",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "b3b22567-65de-4e3d-862f-86fad97af312",
+          "questionId": "9d54d283-a2d0-46c5-9bc6-15d4e116883a",
+          "text": null,
+          "mediaId": "5f0e8c89-f434-4dff-baaf-83a4aa4feb26",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "ec818812-fc25-45c1-aa41-8a80550d665c",
+      "quizId": "d27bd68d-608e-4196-a5df-d8ac9351d255",
+      "text": "¿Cuál es la regla de comunicación entre Bounded Contexts en DDD?",
+      "mediaId": "5f0e8c89-f434-4dff-baaf-83a4aa4feb26",
+      "type": "quiz",
+      "timeLimit": 90,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "3f4e25a8-8553-49b5-9421-5b2870959bbd",
+          "questionId": "ec818812-fc25-45c1-aa41-8a80550d665c",
+          "text": "Usar un Anti-Corruption Layer (ACL) para proteger el dominio.",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "2f39ae78-c8dc-48e3-ad4a-d9121e0d1262",
+          "questionId": "ec818812-fc25-45c1-aa41-8a80550d665c",
+          "text": "Compartir la base de datos para asegurar consistencia.",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "e07cbbf8-61d5-4e6e-818e-768988b0c4e6",
+          "questionId": "ec818812-fc25-45c1-aa41-8a80550d665c",
+          "text": null,
+          "mediaId": "516da741-0643-497e-a9ca-6ef952f0e574",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "62e531b5-c869-4cde-8f7a-ae1bdcd8f89c",
+      "quizId": "d27bd68d-608e-4196-a5df-d8ac9351d255",
+      "text": "El patrón Strategy es fundamental para cumplir con el principio Open/Closed.",
+      "mediaId": "516da741-0643-497e-a9ca-6ef952f0e574",
+      "type": "true_false",
+      "timeLimit": 20,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "baa2bf6f-191b-47b0-b27d-9e5a0c47a36f",
+          "questionId": "62e531b5-c869-4cde-8f7a-ae1bdcd8f89c",
+          "text": "Verdadero",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "d3acf7c0-e6f8-401b-be19-2f1720d04103",
+          "questionId": "62e531b5-c869-4cde-8f7a-ae1bdcd8f89c",
+          "text": "Falso",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "3aec82f1-d89f-42ca-b00e-11055ab7ebbb",
+      "quizId": "d27bd68d-608e-4196-a5df-d8ac9351d255",
+      "text": "¿Qué patrón GoF separa la construcción de un objeto de su representación?",
+      "mediaId": "81f1dbb5-2f1d-40d7-b021-8f4cc948a432",
+      "type": "quiz",
+      "timeLimit": 30,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "c5e892f1-e43a-4963-b893-793f6cf42715",
+          "questionId": "3aec82f1-d89f-42ca-b00e-11055ab7ebbb",
+          "text": "Builder",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "46dda4bc-e092-4648-bc9a-cb2dba2b8e5d",
+          "questionId": "3aec82f1-d89f-42ca-b00e-11055ab7ebbb",
+          "text": "Prototype",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "bc28d496-e06a-4c91-8735-01772e460230",
+          "questionId": "3aec82f1-d89f-42ca-b00e-11055ab7ebbb",
+          "text": null,
+          "mediaId": "f410f1f5-7c7f-4db3-a71f-58a584f7802a",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "ec29ac11-9065-4e28-b368-0cde4ee18120",
+      "quizId": "d27bd68d-608e-4196-a5df-d8ac9351d255",
+      "text": "En Arq. Hexagonal, los adaptadores de entrada son responsables de:",
+      "mediaId": "f410f1f5-7c7f-4db3-a71f-58a584f7802a",
+      "type": "quiz",
+      "timeLimit": 45,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "5cf69784-a130-44f9-bc51-a919681bd804",
+          "questionId": "ec29ac11-9065-4e28-b368-0cde4ee18120",
+          "text": "Transformar la petición externa en una llamada al puerto.",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "a17440fd-8576-4155-8864-1d1733963d27",
+          "questionId": "ec29ac11-9065-4e28-b368-0cde4ee18120",
+          "text": "Almacenar el estado de la aplicación en memoria RAM.",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "896f3d56-cd72-4bc2-b518-de9fb5d56034",
+          "questionId": "ec29ac11-9065-4e28-b368-0cde4ee18120",
+          "text": "Definir las reglas de negocio críticas del dominio.",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "76657202-33eb-4a34-b709-a5628287d0d0",
+      "quizId": "d27bd68d-608e-4196-a5df-d8ac9351d255",
+      "text": "¿Qué asegura que un Agregado en DDD sea consistente?",
+      "mediaId": "5f0e8c89-f434-4dff-baaf-83a4aa4feb26",
+      "type": "quiz",
+      "timeLimit": 60,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "6c83ab93-f50a-46af-9b67-703de7e06d8e",
+          "questionId": "76657202-33eb-4a34-b709-a5628287d0d0",
+          "text": "Las modificaciones se realizan vía su Aggregate Root.",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "5c24c568-b8f2-4b60-b41a-e6616c393fac",
+          "questionId": "76657202-33eb-4a34-b709-a5628287d0d0",
+          "text": "El uso de transacciones distribuidas globales.",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "fa091c42-784a-4356-a328-0ebe136d03a3",
+          "questionId": "76657202-33eb-4a34-b709-a5628287d0d0",
+          "text": null,
+          "mediaId": "81f1dbb5-2f1d-40d7-b021-8f4cc948a432",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "1803e2f8-ba58-482c-acba-0da98248f718",
+      "quizId": "d27bd68d-608e-4196-a5df-d8ac9351d255",
+      "text": "El patrón GoF 'Chain of Responsibility' es un patrón de Comportamiento.",
+      "mediaId": "516da741-0643-497e-a9ca-6ef952f0e574",
+      "type": "true_false",
+      "timeLimit": 20,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "0729915d-f84e-4b90-9f5a-2ca72fd4905f",
+          "questionId": "1803e2f8-ba58-482c-acba-0da98248f718",
+          "text": "Verdadero",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "c81edde6-4a73-46c4-8297-1c218c1a3294",
+          "questionId": "1803e2f8-ba58-482c-acba-0da98248f718",
+          "text": "Falso",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "8bf576c4-10aa-451d-89a2-507540fff075",
+      "quizId": "d27bd68d-608e-4196-a5df-d8ac9351d255",
+      "text": "¿Cuál es el objetivo del patrón GoF 'Flyweight'?",
+      "mediaId": "81f1dbb5-2f1d-40d7-b021-8f4cc948a432",
+      "type": "quiz",
+      "timeLimit": 60,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "92b92580-5b8e-4748-b78a-0af5ec61b7fb",
+          "questionId": "8bf576c4-10aa-451d-89a2-507540fff075",
+          "text": "Compartir estados comunes para reducir uso de memoria.",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "5b74c881-328d-41b8-aa5c-80d863ec18f3",
+          "questionId": "8bf576c4-10aa-451d-89a2-507540fff075",
+          "text": "Controlar el acceso a un objeto mediante un sustituto.",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "f0f1d0b9-b41f-4695-aa9d-f07dd88e9f6a",
+          "questionId": "8bf576c4-10aa-451d-89a2-507540fff075",
+          "text": null,
+          "mediaId": "f410f1f5-7c7f-4db3-a71f-58a584f7802a",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "f470a27c-eb95-4a25-9f35-bf73b5d7018d",
+      "quizId": "d27bd68d-608e-4196-a5df-d8ac9351d255",
+      "text": "En Clean Architecture, los Use Cases residen en la capa de Aplicación.",
+      "mediaId": "f410f1f5-7c7f-4db3-a71f-58a584f7802a",
+      "type": "true_false",
+      "timeLimit": 30,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "681c9b9c-c096-426d-8db8-0ddc5f79fff8",
+          "questionId": "f470a27c-eb95-4a25-9f35-bf73b5d7018d",
+          "text": "Verdadero",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "1ae7ed81-a23f-4639-8445-9e94fc418e7c",
+          "questionId": "f470a27c-eb95-4a25-9f35-bf73b5d7018d",
+          "text": "Falso",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "39fbc1a6-9a12-44bc-bdb5-be193dece913",
+      "quizId": "d27bd68d-608e-4196-a5df-d8ac9351d255",
+      "text": "¿Qué patrón GoF permite notificar cambios de estado sin acoplamiento?",
+      "mediaId": "5f0e8c89-f434-4dff-baaf-83a4aa4feb26",
+      "type": "quiz",
+      "timeLimit": 30,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "e020553e-b755-4b97-9c74-cfb7569df985",
+          "questionId": "39fbc1a6-9a12-44bc-bdb5-be193dece913",
+          "text": "Observer",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "ccd317ae-f21f-4a57-881c-110733cba3f2",
+          "questionId": "39fbc1a6-9a12-44bc-bdb5-be193dece913",
+          "text": "Mediator",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "409e2bdf-f96e-4458-bd44-5b9652567046",
+          "questionId": "39fbc1a6-9a12-44bc-bdb5-be193dece913",
+          "text": null,
+          "mediaId": "516da741-0643-497e-a9ca-6ef952f0e574",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "14e071a5-2e95-45fe-a163-c9e41eaec8ae",
+      "quizId": "d27bd68d-608e-4196-a5df-d8ac9351d255",
+      "text": "El principio ISP dicta que no se debe obligar a depender de métodos no usados.",
+      "mediaId": "516da741-0643-497e-a9ca-6ef952f0e574",
+      "type": "true_false",
+      "timeLimit": 20,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "7d1b93b3-999d-4377-8ac5-e242d6b2f86a",
+          "questionId": "14e071a5-2e95-45fe-a163-c9e41eaec8ae",
+          "text": "Verdadero",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "bae4e031-0ab2-4800-8411-e07d14cadfcb",
+          "questionId": "14e071a5-2e95-45fe-a163-c9e41eaec8ae",
+          "text": "Falso",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "784b9e61-bff5-4993-83ca-38789ad7598b",
+      "quizId": "d27bd68d-608e-4196-a5df-d8ac9351d255",
+      "text": "Patrones CREACIONALES de GoF:",
+      "mediaId": "f410f1f5-7c7f-4db3-a71f-58a584f7802a",
+      "type": "multiple",
+      "timeLimit": 60,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "e74c6b3f-b97f-4287-b785-bd56f3332943",
+          "questionId": "784b9e61-bff5-4993-83ca-38789ad7598b",
+          "text": "Abstract Factory",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "292ff199-8638-4ada-927a-a2dba8f42409",
+          "questionId": "784b9e61-bff5-4993-83ca-38789ad7598b",
+          "text": "Singleton",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "c0d3464a-ca15-48bb-a76c-5c59ec69ed6b",
+          "questionId": "784b9e61-bff5-4993-83ca-38789ad7598b",
+          "text": "Prototype",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "dae001c4-4105-4185-b81b-f72b5821f264",
+          "questionId": "784b9e61-bff5-4993-83ca-38789ad7598b",
+          "text": null,
+          "mediaId": "5f0e8c89-f434-4dff-baaf-83a4aa4feb26",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "b7bcdcef-6a51-496e-bca4-1a85f8c0ff30",
+      "quizId": "d27bd68d-608e-4196-a5df-d8ac9351d255",
+      "text": "En DDD, una Entidad se define exclusivamente por sus atributos.",
+      "mediaId": "81f1dbb5-2f1d-40d7-b021-8f4cc948a432",
+      "type": "true_false",
+      "timeLimit": 20,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "0f1b86f8-cafb-479a-a438-cf3675bdb38f",
+          "questionId": "b7bcdcef-6a51-496e-bca4-1a85f8c0ff30",
+          "text": "Falso",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "ff6df7b0-9661-4218-879e-8ebca5b24461",
+          "questionId": "b7bcdcef-6a51-496e-bca4-1a85f8c0ff30",
+          "text": "Verdadero",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    }
+  ]
+},
+{
+  "_id": "3f680a04-8323-4051-a2ec-9ca9e03253c8",
+  "id": "3f680a04-8323-4051-a2ec-9ca9e03253c8",
+  "authorId": "e3577bec-5364-42e7-a83c-a875c5f24655",
+  "title": "Certificación en Arquitectura de Software Moderna",
+  "description": "Examen avanzado sobre GoF, Hexagonal, DDD y principios SOLID.",
+  "visibility": "public",
+  "status": "publish",
+  "category": "Computer Science",
+  "themeId": "5f0e8c89-f434-4dff-baaf-83a4aa4feb26",
+  "coverImageId": "f410f1f5-7c7f-4db3-a71f-58a584f7802a",
+  "createdAt": {
+    "$date": "2026-01-14T09:54:00.635Z"
+  },
+  "playCount": 0,
+  "questions": [
+    {
+      "id": "9c3649b7-e3a7-4624-8fb6-56c8664a026d",
+      "quizId": "3f680a04-8323-4051-a2ec-9ca9e03253c8",
+      "text": "¿Cómo se implementa DIP en Arq. Hexagonal para desacoplar la persistencia?",
+      "mediaId": "516da741-0643-497e-a9ca-6ef952f0e574",
+      "type": "quiz",
+      "timeLimit": 45,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "59488849-dec3-4c32-972e-48b89b77ff17",
+          "questionId": "9c3649b7-e3a7-4624-8fb6-56c8664a026d",
+          "text": "Dominio define interfaz (Port) e infraestructura la implementa.",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "89614d81-e04e-4cf5-af7f-f9b9cb6d7f9b",
+          "questionId": "9c3649b7-e3a7-4624-8fb6-56c8664a026d",
+          "text": "El dominio importa directamente las clases de persistencia.",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "b7961c81-142b-477f-9cdf-08c6864ffad9",
+          "questionId": "9c3649b7-e3a7-4624-8fb6-56c8664a026d",
+          "text": null,
+          "mediaId": "81f1dbb5-2f1d-40d7-b021-8f4cc948a432",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "ae94f0b4-54fb-4ec3-a923-129ea729d52c",
+      "quizId": "3f680a04-8323-4051-a2ec-9ca9e03253c8",
+      "text": "En el diseño orientado a dominios (DDD), ¿qué es un Value Object?",
+      "mediaId": "81f1dbb5-2f1d-40d7-b021-8f4cc948a432",
+      "type": "quiz",
+      "timeLimit": 30,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "bca89bbe-0db8-4ae5-a3e0-6b3c04f78c89",
+          "questionId": "ae94f0b4-54fb-4ec3-a923-129ea729d52c",
+          "text": "Objeto sin identidad propia definido solo por sus atributos.",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "b034b225-a5c2-4aba-8b2d-4a3807ee0a43",
+          "questionId": "ae94f0b4-54fb-4ec3-a923-129ea729d52c",
+          "text": "Objeto que se identifica mediante un ID único y persistente.",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "6eb7f5f9-0cfd-4258-a3b8-4d382cdee970",
+          "questionId": "ae94f0b4-54fb-4ec3-a923-129ea729d52c",
+          "text": "Un servicio que orquestra llamadas a la base de datos.",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "b39d8e60-bd20-4001-b5fc-87f567ec1fec",
+      "quizId": "3f680a04-8323-4051-a2ec-9ca9e03253c8",
+      "text": "¿Qué patrón GoF proporciona una interfaz unificada para un subsistema?",
+      "mediaId": "f410f1f5-7c7f-4db3-a71f-58a584f7802a",
+      "type": "quiz",
+      "timeLimit": 30,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "6662f742-34a6-429e-bd75-dfe8313a760d",
+          "questionId": "b39d8e60-bd20-4001-b5fc-87f567ec1fec",
+          "text": "Facade",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "b71156c8-d574-47f4-8519-6dd75d1af98a",
+          "questionId": "b39d8e60-bd20-4001-b5fc-87f567ec1fec",
+          "text": "Proxy",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "e42a8d1b-85c3-46e3-bc67-f600cb17a1b5",
+          "questionId": "b39d8e60-bd20-4001-b5fc-87f567ec1fec",
+          "text": null,
+          "mediaId": "5f0e8c89-f434-4dff-baaf-83a4aa4feb26",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "f43bf9f6-71ef-440d-829e-5070fb9b3d5b",
+      "quizId": "3f680a04-8323-4051-a2ec-9ca9e03253c8",
+      "text": "¿Cuál es la regla de comunicación entre Bounded Contexts en DDD?",
+      "mediaId": "5f0e8c89-f434-4dff-baaf-83a4aa4feb26",
+      "type": "quiz",
+      "timeLimit": 90,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "c0b52e76-d357-47b8-bc55-c240da591803",
+          "questionId": "f43bf9f6-71ef-440d-829e-5070fb9b3d5b",
+          "text": "Usar un Anti-Corruption Layer (ACL) para proteger el dominio.",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "ad2985e3-828d-47dc-b940-26aa62c53c36",
+          "questionId": "f43bf9f6-71ef-440d-829e-5070fb9b3d5b",
+          "text": "Compartir la base de datos para asegurar consistencia.",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "55218535-4d9d-4f7c-87df-b358010b9e49",
+          "questionId": "f43bf9f6-71ef-440d-829e-5070fb9b3d5b",
+          "text": null,
+          "mediaId": "516da741-0643-497e-a9ca-6ef952f0e574",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "bed5cd51-f996-4dbb-a35c-3e4f8106dfd1",
+      "quizId": "3f680a04-8323-4051-a2ec-9ca9e03253c8",
+      "text": "El patrón Strategy es fundamental para cumplir con el principio Open/Closed.",
+      "mediaId": "516da741-0643-497e-a9ca-6ef952f0e574",
+      "type": "true_false",
+      "timeLimit": 20,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "aa19f408-47c8-428c-91ed-2d66b30c6052",
+          "questionId": "bed5cd51-f996-4dbb-a35c-3e4f8106dfd1",
+          "text": "Verdadero",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "490b6f32-bd80-4b43-aea7-594c0166b5c7",
+          "questionId": "bed5cd51-f996-4dbb-a35c-3e4f8106dfd1",
+          "text": "Falso",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "6c00f74c-6d7f-4c61-abd0-1a4979fdcee8",
+      "quizId": "3f680a04-8323-4051-a2ec-9ca9e03253c8",
+      "text": "¿Qué patrón GoF separa la construcción de un objeto de su representación?",
+      "mediaId": "81f1dbb5-2f1d-40d7-b021-8f4cc948a432",
+      "type": "quiz",
+      "timeLimit": 30,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "ffa6b8ce-b818-44fd-912f-bf9990d7605e",
+          "questionId": "6c00f74c-6d7f-4c61-abd0-1a4979fdcee8",
+          "text": "Builder",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "6dddccd3-d0c3-4fdc-90db-c2f4ce192112",
+          "questionId": "6c00f74c-6d7f-4c61-abd0-1a4979fdcee8",
+          "text": "Prototype",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "f2487a50-1914-44e7-a258-a855d73d5382",
+          "questionId": "6c00f74c-6d7f-4c61-abd0-1a4979fdcee8",
+          "text": null,
+          "mediaId": "f410f1f5-7c7f-4db3-a71f-58a584f7802a",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "a0b446e2-13d2-4d4c-8a21-072420c462ca",
+      "quizId": "3f680a04-8323-4051-a2ec-9ca9e03253c8",
+      "text": "En Arq. Hexagonal, los adaptadores de entrada son responsables de:",
+      "mediaId": "f410f1f5-7c7f-4db3-a71f-58a584f7802a",
+      "type": "quiz",
+      "timeLimit": 45,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "dfc504cf-f599-4c4c-8787-559525b673d9",
+          "questionId": "a0b446e2-13d2-4d4c-8a21-072420c462ca",
+          "text": "Transformar la petición externa en una llamada al puerto.",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "3f9269fb-5160-41b3-a566-a3d274a64c41",
+          "questionId": "a0b446e2-13d2-4d4c-8a21-072420c462ca",
+          "text": "Almacenar el estado de la aplicación en memoria RAM.",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "c605c6bf-c773-49dd-b63e-a01302aaeecc",
+          "questionId": "a0b446e2-13d2-4d4c-8a21-072420c462ca",
+          "text": "Definir las reglas de negocio críticas del dominio.",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "a6a94ce3-0d55-41cf-9273-9ba5c8e80b7f",
+      "quizId": "3f680a04-8323-4051-a2ec-9ca9e03253c8",
+      "text": "¿Qué asegura que un Agregado en DDD sea consistente?",
+      "mediaId": "5f0e8c89-f434-4dff-baaf-83a4aa4feb26",
+      "type": "quiz",
+      "timeLimit": 60,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "84c53003-3b89-41c1-b278-d3adfdf2c8d5",
+          "questionId": "a6a94ce3-0d55-41cf-9273-9ba5c8e80b7f",
+          "text": "Las modificaciones se realizan vía su Aggregate Root.",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "438f883a-5248-44c4-8531-d32058baea55",
+          "questionId": "a6a94ce3-0d55-41cf-9273-9ba5c8e80b7f",
+          "text": "El uso de transacciones distribuidas globales.",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "ccc6ea8f-47a3-4e06-800f-d4e9e0359275",
+          "questionId": "a6a94ce3-0d55-41cf-9273-9ba5c8e80b7f",
+          "text": null,
+          "mediaId": "81f1dbb5-2f1d-40d7-b021-8f4cc948a432",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "e20ecd0d-c686-4b3e-9488-af5f1f108b14",
+      "quizId": "3f680a04-8323-4051-a2ec-9ca9e03253c8",
+      "text": "El patrón GoF 'Chain of Responsibility' es un patrón de Comportamiento.",
+      "mediaId": "516da741-0643-497e-a9ca-6ef952f0e574",
+      "type": "true_false",
+      "timeLimit": 20,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "6178f994-f8c2-448f-bfe3-aacff014f03b",
+          "questionId": "e20ecd0d-c686-4b3e-9488-af5f1f108b14",
+          "text": "Verdadero",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "34bf7db9-b490-48d3-b3c8-4596cbbe37e1",
+          "questionId": "e20ecd0d-c686-4b3e-9488-af5f1f108b14",
+          "text": "Falso",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "cf390c78-cb3e-41c5-8901-fe09ce817a9b",
+      "quizId": "3f680a04-8323-4051-a2ec-9ca9e03253c8",
+      "text": "¿Cuál es el objetivo del patrón GoF 'Flyweight'?",
+      "mediaId": "81f1dbb5-2f1d-40d7-b021-8f4cc948a432",
+      "type": "quiz",
+      "timeLimit": 60,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "fa7ee8ad-1923-4621-9652-15cc05e0e92d",
+          "questionId": "cf390c78-cb3e-41c5-8901-fe09ce817a9b",
+          "text": "Compartir estados comunes para reducir uso de memoria.",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "869b646d-835e-4460-a287-85be06516a0a",
+          "questionId": "cf390c78-cb3e-41c5-8901-fe09ce817a9b",
+          "text": "Controlar el acceso a un objeto mediante un sustituto.",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "f0d2e98c-a91b-420a-a2dd-0971c48bc862",
+          "questionId": "cf390c78-cb3e-41c5-8901-fe09ce817a9b",
+          "text": null,
+          "mediaId": "f410f1f5-7c7f-4db3-a71f-58a584f7802a",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "43c4f04d-2381-4cd2-9eb6-638f31cba21e",
+      "quizId": "3f680a04-8323-4051-a2ec-9ca9e03253c8",
+      "text": "En Clean Architecture, los Use Cases residen en la capa de Aplicación.",
+      "mediaId": "f410f1f5-7c7f-4db3-a71f-58a584f7802a",
+      "type": "true_false",
+      "timeLimit": 30,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "15688a45-e657-4fe3-a073-f3eb3a7056b0",
+          "questionId": "43c4f04d-2381-4cd2-9eb6-638f31cba21e",
+          "text": "Verdadero",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "228037a1-b740-402e-8ac8-ea69248d086a",
+          "questionId": "43c4f04d-2381-4cd2-9eb6-638f31cba21e",
+          "text": "Falso",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "4701f32a-e7f9-4392-be68-6b8566e35314",
+      "quizId": "3f680a04-8323-4051-a2ec-9ca9e03253c8",
+      "text": "¿Qué patrón GoF permite notificar cambios de estado sin acoplamiento?",
+      "mediaId": "5f0e8c89-f434-4dff-baaf-83a4aa4feb26",
+      "type": "quiz",
+      "timeLimit": 30,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "ed7c6780-7e3a-4a7e-8f6b-f47872fcfc5f",
+          "questionId": "4701f32a-e7f9-4392-be68-6b8566e35314",
+          "text": "Observer",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "a78c32ad-ae4f-4996-8d82-1b7826d02dec",
+          "questionId": "4701f32a-e7f9-4392-be68-6b8566e35314",
+          "text": "Mediator",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "2b7c221b-7814-46b2-b97e-db6599968f7c",
+          "questionId": "4701f32a-e7f9-4392-be68-6b8566e35314",
+          "text": null,
+          "mediaId": "516da741-0643-497e-a9ca-6ef952f0e574",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "58af6bb1-8c31-418b-b9af-7b5e64ac3db8",
+      "quizId": "3f680a04-8323-4051-a2ec-9ca9e03253c8",
+      "text": "El principio ISP dicta que no se debe obligar a depender de métodos no usados.",
+      "mediaId": "516da741-0643-497e-a9ca-6ef952f0e574",
+      "type": "true_false",
+      "timeLimit": 20,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "0192bdc7-14ae-477b-8d8d-e8984c3f850e",
+          "questionId": "58af6bb1-8c31-418b-b9af-7b5e64ac3db8",
+          "text": "Verdadero",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "35078fe8-bc74-42e4-9e28-1c11be05aed3",
+          "questionId": "58af6bb1-8c31-418b-b9af-7b5e64ac3db8",
+          "text": "Falso",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "ae8cb945-a057-407a-b946-1b0913ee1489",
+      "quizId": "3f680a04-8323-4051-a2ec-9ca9e03253c8",
+      "text": "Patrones CREACIONALES de GoF:",
+      "mediaId": "f410f1f5-7c7f-4db3-a71f-58a584f7802a",
+      "type": "multiple",
+      "timeLimit": 60,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "0857f7bd-0549-4d20-adc1-743220b236de",
+          "questionId": "ae8cb945-a057-407a-b946-1b0913ee1489",
+          "text": "Abstract Factory",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "fcef6063-2693-49e5-8399-ad38e1116dca",
+          "questionId": "ae8cb945-a057-407a-b946-1b0913ee1489",
+          "text": "Singleton",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "1f7111cc-d41a-47d5-8a13-f531acd858cb",
+          "questionId": "ae8cb945-a057-407a-b946-1b0913ee1489",
+          "text": "Prototype",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "e20a2403-7fb3-4c30-9487-3a8ab908672d",
+          "questionId": "ae8cb945-a057-407a-b946-1b0913ee1489",
+          "text": null,
+          "mediaId": "5f0e8c89-f434-4dff-baaf-83a4aa4feb26",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "96f55864-3a95-4b7c-88b8-ac783931c85a",
+      "quizId": "3f680a04-8323-4051-a2ec-9ca9e03253c8",
+      "text": "En DDD, una Entidad se define exclusivamente por sus atributos.",
+      "mediaId": "81f1dbb5-2f1d-40d7-b021-8f4cc948a432",
+      "type": "true_false",
+      "timeLimit": 20,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "75da11aa-7576-4576-9d6b-327071479f59",
+          "questionId": "96f55864-3a95-4b7c-88b8-ac783931c85a",
+          "text": "Falso",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "68c21ada-3908-4fd2-a13d-de3178de82d2",
+          "questionId": "96f55864-3a95-4b7c-88b8-ac783931c85a",
+          "text": "Verdadero",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    }
+  ]
+},
+{
+  "_id": "49a9867c-2c96-4b53-81e5-96d0363694ef",
+  "id": "49a9867c-2c96-4b53-81e5-96d0363694ef",
+  "authorId": "6af29672-048c-47e2-9820-7c60b4318daa",
+  "title": "Historia Básica",
+  "description": "Preguntas sobre hechos históricos.",
+  "visibility": "public",
+  "status": "publish",
+  "category": "Historia",
+  "themeId": "a452aab3-5eeb-4d8f-8330-b465ddcf45c8",
+  "coverImageId": "cd433fc5-8614-48d2-98c1-9cd0283796be",
+  "createdAt": {
+    "$date": "2026-01-14T17:01:11.741Z"
+  },
+  "playCount": 0,
+  "questions": [
+    {
+      "id": "39ef0ce4-f178-4623-a8c8-f782dcae9911",
+      "quizId": "49a9867c-2c96-4b53-81e5-96d0363694ef",
+      "text": "¿En que año empezó la II Guerra Mundial?",
+      "mediaId": null,
+      "type": "quiz",
+      "timeLimit": 30,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "6ba1b8f8-f174-4050-aaa2-50bd5870ddfa",
+          "questionId": "39ef0ce4-f178-4623-a8c8-f782dcae9911",
+          "text": "1939",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "00dc3d58-ffa2-4d0d-8eca-d3c721a35698",
+          "questionId": "39ef0ce4-f178-4623-a8c8-f782dcae9911",
+          "text": "1938",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "dfe7433f-b36a-4852-833b-58b7183ab742",
+          "questionId": "39ef0ce4-f178-4623-a8c8-f782dcae9911",
+          "text": "1940",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "92c72b09-3811-42e5-ba6e-4a5d6b9c643e",
+          "questionId": "39ef0ce4-f178-4623-a8c8-f782dcae9911",
+          "text": "1935",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "b057f753-dfc0-4dff-a434-3180c3b5502b",
+      "quizId": "49a9867c-2c96-4b53-81e5-96d0363694ef",
+      "text": "Alejandro Magno era macedonio",
+      "mediaId": null,
+      "type": "true_false",
+      "timeLimit": 20,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "78ee2fef-a113-4b4f-aee4-aa960872e20d",
+          "questionId": "b057f753-dfc0-4dff-a434-3180c3b5502b",
+          "text": "Verdadero",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "0e71bc14-181b-4a57-8ac9-a507054f407f",
+          "questionId": "b057f753-dfc0-4dff-a434-3180c3b5502b",
+          "text": "Falso",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "3e25cfe2-c941-48c8-9b34-5015730d0be6",
+      "quizId": "49a9867c-2c96-4b53-81e5-96d0363694ef",
+      "text": "¿Qué países formaron parte de las Potencias Centrales en la I Guerra Mundial? Selecciona todos los que apliquen.",
+      "mediaId": null,
+      "type": "multiple",
+      "timeLimit": 45,
+      "points": 500,
+      "answers": [
+        {
+          "id": "92e23add-c57f-486c-bb6e-00f1451f8e5f",
+          "questionId": "3e25cfe2-c941-48c8-9b34-5015730d0be6",
+          "text": "Alemania",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "28027a2f-5190-40de-9181-876294c996a8",
+          "questionId": "3e25cfe2-c941-48c8-9b34-5015730d0be6",
+          "text": "Imperio Otomano",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "15e4b3d6-4a88-4958-944c-5756cff94a19",
+          "questionId": "3e25cfe2-c941-48c8-9b34-5015730d0be6",
+          "text": "Reino Unido",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "f5e9a035-2f8d-4a76-abc0-274870f277db",
+          "questionId": "3e25cfe2-c941-48c8-9b34-5015730d0be6",
+          "text": "Estados Unidos",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "80201847-2e7a-4f13-81af-5cb9c8b60a50",
+      "quizId": "49a9867c-2c96-4b53-81e5-96d0363694ef",
+      "text": "¿Cuál imperio colonial europeo fue conocido como El imperio donde nunca se pone el sol?",
+      "mediaId": null,
+      "type": "quiz",
+      "timeLimit": 30,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "d2025cb2-08dc-490d-b206-a7ae37b03586",
+          "questionId": "80201847-2e7a-4f13-81af-5cb9c8b60a50",
+          "text": "Imperio Español",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "b1d9c997-3b30-4f4d-bc56-e931340f8aa5",
+          "questionId": "80201847-2e7a-4f13-81af-5cb9c8b60a50",
+          "text": "Imperio Portugués",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "bdcd5a9f-1a30-4781-94c6-b3fb5b12c8ce",
+          "questionId": "80201847-2e7a-4f13-81af-5cb9c8b60a50",
+          "text": "Imperio Británico",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "00a84e26-8735-4e48-a4f8-8dc7b2e9af6b",
+          "questionId": "80201847-2e7a-4f13-81af-5cb9c8b60a50",
+          "text": "Imperio Francés",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    }
+  ]
+},
+{
+  "_id": "283fb0bd-1b40-4d1e-b7e7-1e38a9763fc1",
+  "id": "283fb0bd-1b40-4d1e-b7e7-1e38a9763fc1",
+  "authorId": "ceaf0964-23f1-466e-a71e-29f641698488",
+  "title": "Certificación en Arquitectura de Software Moderna",
+  "description": "Examen avanzado sobre GoF, Hexagonal, DDD y principios SOLID.",
+  "visibility": "public",
+  "status": "publish",
+  "category": "Computer Science",
+  "themeId": "5f0e8c89-f434-4dff-baaf-83a4aa4feb26",
+  "coverImageId": "f410f1f5-7c7f-4db3-a71f-58a584f7802a",
+  "createdAt": {
+    "$date": "2026-01-15T01:21:14.337Z"
+  },
+  "playCount": 0,
+  "questions": [
+    {
+      "id": "c3bac3ed-474f-4b78-bdb0-16e4342cb9a6",
+      "quizId": "283fb0bd-1b40-4d1e-b7e7-1e38a9763fc1",
+      "text": "¿Cómo se implementa DIP en Arq. Hexagonal para desacoplar la persistencia?",
+      "mediaId": "516da741-0643-497e-a9ca-6ef952f0e574",
+      "type": "quiz",
+      "timeLimit": 45,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "3e19195d-bfa3-4703-ab24-5886466e2073",
+          "questionId": "c3bac3ed-474f-4b78-bdb0-16e4342cb9a6",
+          "text": "Dominio define interfaz (Port) e infraestructura la implementa.",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "3b5e9ef0-b92d-47be-9823-020b8613d31f",
+          "questionId": "c3bac3ed-474f-4b78-bdb0-16e4342cb9a6",
+          "text": "El dominio importa directamente las clases de persistencia.",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "30e4ce4e-fc59-40f9-8035-4e78ce10e787",
+          "questionId": "c3bac3ed-474f-4b78-bdb0-16e4342cb9a6",
+          "text": null,
+          "mediaId": "81f1dbb5-2f1d-40d7-b021-8f4cc948a432",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "88585279-b073-465c-8f9d-a99c0cd8b007",
+      "quizId": "283fb0bd-1b40-4d1e-b7e7-1e38a9763fc1",
+      "text": "En el diseño orientado a dominios (DDD), ¿qué es un Value Object?",
+      "mediaId": "81f1dbb5-2f1d-40d7-b021-8f4cc948a432",
+      "type": "quiz",
+      "timeLimit": 30,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "3c49bace-46fc-438d-8bd2-780b23d3fe41",
+          "questionId": "88585279-b073-465c-8f9d-a99c0cd8b007",
+          "text": "Objeto sin identidad propia definido solo por sus atributos.",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "b9539890-d257-46a7-9312-bf0943568c95",
+          "questionId": "88585279-b073-465c-8f9d-a99c0cd8b007",
+          "text": "Objeto que se identifica mediante un ID único y persistente.",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "cc8ec7c5-714c-474c-aa34-55ce68b922a5",
+          "questionId": "88585279-b073-465c-8f9d-a99c0cd8b007",
+          "text": "Un servicio que orquestra llamadas a la base de datos.",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "edb79aab-b2e8-4d02-a3d5-2f7c2d5d391c",
+      "quizId": "283fb0bd-1b40-4d1e-b7e7-1e38a9763fc1",
+      "text": "¿Qué patrón GoF proporciona una interfaz unificada para un subsistema?",
+      "mediaId": "f410f1f5-7c7f-4db3-a71f-58a584f7802a",
+      "type": "quiz",
+      "timeLimit": 30,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "e980cf01-cb2d-403e-b577-92f7517809c6",
+          "questionId": "edb79aab-b2e8-4d02-a3d5-2f7c2d5d391c",
+          "text": "Facade",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "2d537bd2-465e-4096-9f50-5b89a56613f6",
+          "questionId": "edb79aab-b2e8-4d02-a3d5-2f7c2d5d391c",
+          "text": "Proxy",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "2dd73014-18c9-4e8d-8d11-b107c40ffd94",
+          "questionId": "edb79aab-b2e8-4d02-a3d5-2f7c2d5d391c",
+          "text": null,
+          "mediaId": "5f0e8c89-f434-4dff-baaf-83a4aa4feb26",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "e884316b-4719-48e5-9f1b-5cb290b35c7b",
+      "quizId": "283fb0bd-1b40-4d1e-b7e7-1e38a9763fc1",
+      "text": "¿Cuál es la regla de comunicación entre Bounded Contexts en DDD?",
+      "mediaId": "5f0e8c89-f434-4dff-baaf-83a4aa4feb26",
+      "type": "quiz",
+      "timeLimit": 90,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "fb123748-36e0-45d2-8728-f5320dfe611c",
+          "questionId": "e884316b-4719-48e5-9f1b-5cb290b35c7b",
+          "text": "Usar un Anti-Corruption Layer (ACL) para proteger el dominio.",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "bf69c8f6-c4b9-4435-b6b1-ff0f7055f989",
+          "questionId": "e884316b-4719-48e5-9f1b-5cb290b35c7b",
+          "text": "Compartir la base de datos para asegurar consistencia.",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "63f1f1f8-65fe-4b1e-a8dd-48e89ae2dd63",
+          "questionId": "e884316b-4719-48e5-9f1b-5cb290b35c7b",
+          "text": null,
+          "mediaId": "516da741-0643-497e-a9ca-6ef952f0e574",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "4b79816f-2586-4f7d-9b1d-2947c58ed631",
+      "quizId": "283fb0bd-1b40-4d1e-b7e7-1e38a9763fc1",
+      "text": "El patrón Strategy es fundamental para cumplir con el principio Open/Closed.",
+      "mediaId": "516da741-0643-497e-a9ca-6ef952f0e574",
+      "type": "true_false",
+      "timeLimit": 20,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "8d2481ac-17c0-47c2-8b16-f43852d69d5d",
+          "questionId": "4b79816f-2586-4f7d-9b1d-2947c58ed631",
+          "text": "Verdadero",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "2385916b-7c67-4566-861b-f1ef2c04c1ed",
+          "questionId": "4b79816f-2586-4f7d-9b1d-2947c58ed631",
+          "text": "Falso",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "c8c90da8-f78c-4457-81f8-5d80bbe437e2",
+      "quizId": "283fb0bd-1b40-4d1e-b7e7-1e38a9763fc1",
+      "text": "¿Qué patrón GoF separa la construcción de un objeto de su representación?",
+      "mediaId": "81f1dbb5-2f1d-40d7-b021-8f4cc948a432",
+      "type": "quiz",
+      "timeLimit": 30,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "4d355bc6-50d1-49f7-8f4a-7655562f3f72",
+          "questionId": "c8c90da8-f78c-4457-81f8-5d80bbe437e2",
+          "text": "Builder",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "d0f0db0b-548e-4461-90d1-cdc96ae3c946",
+          "questionId": "c8c90da8-f78c-4457-81f8-5d80bbe437e2",
+          "text": "Prototype",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "63342df8-e0bd-4938-aa45-fe6d6f9af4e4",
+          "questionId": "c8c90da8-f78c-4457-81f8-5d80bbe437e2",
+          "text": null,
+          "mediaId": "f410f1f5-7c7f-4db3-a71f-58a584f7802a",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "933977e6-9f8f-4ec0-9b95-b805244fac9d",
+      "quizId": "283fb0bd-1b40-4d1e-b7e7-1e38a9763fc1",
+      "text": "En Arq. Hexagonal, los adaptadores de entrada son responsables de:",
+      "mediaId": "f410f1f5-7c7f-4db3-a71f-58a584f7802a",
+      "type": "quiz",
+      "timeLimit": 45,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "c6235d5d-681d-4a3c-a468-d46205808f18",
+          "questionId": "933977e6-9f8f-4ec0-9b95-b805244fac9d",
+          "text": "Transformar la petición externa en una llamada al puerto.",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "5ed1d62b-d0a0-499d-8759-3cdfdd1a6770",
+          "questionId": "933977e6-9f8f-4ec0-9b95-b805244fac9d",
+          "text": "Almacenar el estado de la aplicación en memoria RAM.",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "d142d544-530a-4a05-963f-530d04a97349",
+          "questionId": "933977e6-9f8f-4ec0-9b95-b805244fac9d",
+          "text": "Definir las reglas de negocio críticas del dominio.",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "406f2dd6-ca52-4798-87e5-249f6839b4f6",
+      "quizId": "283fb0bd-1b40-4d1e-b7e7-1e38a9763fc1",
+      "text": "¿Qué asegura que un Agregado en DDD sea consistente?",
+      "mediaId": "5f0e8c89-f434-4dff-baaf-83a4aa4feb26",
+      "type": "quiz",
+      "timeLimit": 60,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "94563360-5a67-4fdc-9662-a633dd46e0d1",
+          "questionId": "406f2dd6-ca52-4798-87e5-249f6839b4f6",
+          "text": "Las modificaciones se realizan vía su Aggregate Root.",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "8c38b1af-60a2-47dd-b401-6c431ff1fada",
+          "questionId": "406f2dd6-ca52-4798-87e5-249f6839b4f6",
+          "text": "El uso de transacciones distribuidas globales.",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "49441a68-2406-490d-b879-cc6ad1310651",
+          "questionId": "406f2dd6-ca52-4798-87e5-249f6839b4f6",
+          "text": null,
+          "mediaId": "81f1dbb5-2f1d-40d7-b021-8f4cc948a432",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "110d74cb-baf7-4da9-97fa-ad54b5f2f250",
+      "quizId": "283fb0bd-1b40-4d1e-b7e7-1e38a9763fc1",
+      "text": "El patrón GoF 'Chain of Responsibility' es un patrón de Comportamiento.",
+      "mediaId": "516da741-0643-497e-a9ca-6ef952f0e574",
+      "type": "true_false",
+      "timeLimit": 20,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "6a017da2-e510-4c06-a9c6-ce101592b02f",
+          "questionId": "110d74cb-baf7-4da9-97fa-ad54b5f2f250",
+          "text": "Verdadero",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "702e69c9-c5aa-49fa-959d-342277eed766",
+          "questionId": "110d74cb-baf7-4da9-97fa-ad54b5f2f250",
+          "text": "Falso",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "e5423e3a-3765-4150-80a0-4457af825500",
+      "quizId": "283fb0bd-1b40-4d1e-b7e7-1e38a9763fc1",
+      "text": "¿Cuál es el objetivo del patrón GoF 'Flyweight'?",
+      "mediaId": "81f1dbb5-2f1d-40d7-b021-8f4cc948a432",
+      "type": "quiz",
+      "timeLimit": 60,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "1e34f43c-2297-4454-9386-198f8b32c716",
+          "questionId": "e5423e3a-3765-4150-80a0-4457af825500",
+          "text": "Compartir estados comunes para reducir uso de memoria.",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "fed52b73-d6bb-4a3e-9a6d-82772d9b6bbe",
+          "questionId": "e5423e3a-3765-4150-80a0-4457af825500",
+          "text": "Controlar el acceso a un objeto mediante un sustituto.",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "88e6ff2e-28a2-48ba-a24a-dbbd6df61a25",
+          "questionId": "e5423e3a-3765-4150-80a0-4457af825500",
+          "text": null,
+          "mediaId": "f410f1f5-7c7f-4db3-a71f-58a584f7802a",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "a8501d99-4e39-4308-b980-1ecb778b472e",
+      "quizId": "283fb0bd-1b40-4d1e-b7e7-1e38a9763fc1",
+      "text": "En Clean Architecture, los Use Cases residen en la capa de Aplicación.",
+      "mediaId": "f410f1f5-7c7f-4db3-a71f-58a584f7802a",
+      "type": "true_false",
+      "timeLimit": 30,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "f6655d9e-2842-4167-a9f2-be4dc1d06340",
+          "questionId": "a8501d99-4e39-4308-b980-1ecb778b472e",
+          "text": "Verdadero",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "f6479a8c-c2ea-4b73-b88d-2b121a23f8d6",
+          "questionId": "a8501d99-4e39-4308-b980-1ecb778b472e",
+          "text": "Falso",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "5291b3f6-b6fa-441c-ac45-eab13a1aa505",
+      "quizId": "283fb0bd-1b40-4d1e-b7e7-1e38a9763fc1",
+      "text": "¿Qué patrón GoF permite notificar cambios de estado sin acoplamiento?",
+      "mediaId": "5f0e8c89-f434-4dff-baaf-83a4aa4feb26",
+      "type": "quiz",
+      "timeLimit": 30,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "ff90f194-2648-450e-9d38-78e640545dff",
+          "questionId": "5291b3f6-b6fa-441c-ac45-eab13a1aa505",
+          "text": "Observer",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "ffd6b21e-dd76-404e-9a91-154bf7586f4f",
+          "questionId": "5291b3f6-b6fa-441c-ac45-eab13a1aa505",
+          "text": "Mediator",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "c05d85f1-3611-4e3a-b718-e6e7d4df316a",
+          "questionId": "5291b3f6-b6fa-441c-ac45-eab13a1aa505",
+          "text": null,
+          "mediaId": "516da741-0643-497e-a9ca-6ef952f0e574",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "5de2fcc1-ad0c-418a-94fc-fb5055a3fd9b",
+      "quizId": "283fb0bd-1b40-4d1e-b7e7-1e38a9763fc1",
+      "text": "El principio ISP dicta que no se debe obligar a depender de métodos no usados.",
+      "mediaId": "516da741-0643-497e-a9ca-6ef952f0e574",
+      "type": "true_false",
+      "timeLimit": 20,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "59e91b56-f34f-486a-b4ec-140faf8f2b3d",
+          "questionId": "5de2fcc1-ad0c-418a-94fc-fb5055a3fd9b",
+          "text": "Verdadero",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "8e531d80-1bce-48d4-aad5-0f363f1baa36",
+          "questionId": "5de2fcc1-ad0c-418a-94fc-fb5055a3fd9b",
+          "text": "Falso",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "78bb4650-faf0-47ca-a1ab-df48a89cc136",
+      "quizId": "283fb0bd-1b40-4d1e-b7e7-1e38a9763fc1",
+      "text": "Patrones CREACIONALES de GoF:",
+      "mediaId": "f410f1f5-7c7f-4db3-a71f-58a584f7802a",
+      "type": "multiple",
+      "timeLimit": 60,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "1da69c2a-b7c6-4964-aeb2-97f42bd8115d",
+          "questionId": "78bb4650-faf0-47ca-a1ab-df48a89cc136",
+          "text": "Abstract Factory",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "b492d98d-a2e8-47d6-8929-2ee1c35c523e",
+          "questionId": "78bb4650-faf0-47ca-a1ab-df48a89cc136",
+          "text": "Singleton",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "0dc76007-e8d2-4c9c-8523-84a3082c5cdd",
+          "questionId": "78bb4650-faf0-47ca-a1ab-df48a89cc136",
+          "text": "Prototype",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "79fe9701-16c8-4dbd-9caf-6f1ecf09dd3b",
+          "questionId": "78bb4650-faf0-47ca-a1ab-df48a89cc136",
+          "text": null,
+          "mediaId": "5f0e8c89-f434-4dff-baaf-83a4aa4feb26",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "c2443edf-dd04-424b-84ca-cd0b6ed1e89e",
+      "quizId": "283fb0bd-1b40-4d1e-b7e7-1e38a9763fc1",
+      "text": "En DDD, una Entidad se define exclusivamente por sus atributos.",
+      "mediaId": "81f1dbb5-2f1d-40d7-b021-8f4cc948a432",
+      "type": "true_false",
+      "timeLimit": 20,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "bf1c5df3-4210-4259-9b76-0336403f9e94",
+          "questionId": "c2443edf-dd04-424b-84ca-cd0b6ed1e89e",
+          "text": "Falso",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "dde02b02-2ab1-44ea-9cfb-a487ae2c57b7",
+          "questionId": "c2443edf-dd04-424b-84ca-cd0b6ed1e89e",
+          "text": "Verdadero",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    }
+  ]
+},
+{
+  "_id": "0404d98e-e7c4-46c6-b696-893543768f09",
+  "id": "0404d98e-e7c4-46c6-b696-893543768f09",
+  "authorId": "5c87459d-075a-42a3-8980-0b87d9d6cf03",
+  "title": "hshs",
+  "description": "djjeju",
+  "visibility": "public",
+  "status": "publish",
+  "category": "shhs",
+  "themeId": "3ef13730-7081-4c9d-881a-d3755c408272",
+  "coverImageId": null,
+  "createdAt": {
+    "$date": "2026-01-15T01:38:45.468Z"
+  },
+  "playCount": 0,
+  "questions": [
+    {
+      "id": "fdb74a31-bdfd-43eb-a931-84262933adbb",
+      "quizId": "0404d98e-e7c4-46c6-b696-893543768f09",
+      "text": "a",
+      "mediaId": null,
+      "type": "multiple",
+      "timeLimit": 20,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "bc1d8b96-fd61-4d34-844c-feeb6ae626b1",
+          "questionId": "fdb74a31-bdfd-43eb-a931-84262933adbb",
+          "text": "v",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "9a25e0a3-8b4c-460c-bd9c-ec38961757ab",
+          "questionId": "fdb74a31-bdfd-43eb-a931-84262933adbb",
+          "text": "c",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "6ccb1ffc-cb24-49bb-bc4f-31e0302ee4eb",
+          "questionId": "fdb74a31-bdfd-43eb-a931-84262933adbb",
+          "text": "w",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "37821ef9-5ec1-46ab-ab41-125d7be8cb1b",
+          "questionId": "fdb74a31-bdfd-43eb-a931-84262933adbb",
+          "text": "f",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    }
+  ]
+},
+{
+  "_id": "b540897f-703f-40b8-bfac-ca6d8f3d9ff3",
+  "id": "b540897f-703f-40b8-bfac-ca6d8f3d9ff3",
+  "authorId": "5c87459d-075a-42a3-8980-0b87d9d6cf03",
+  "title": "hshs",
+  "description": "djjeju",
+  "visibility": "public",
+  "status": "publish",
+  "category": "shhs",
+  "themeId": "3ef13730-7081-4c9d-881a-d3755c408272",
+  "coverImageId": null,
+  "createdAt": {
+    "$date": "2026-01-15T01:38:46.111Z"
+  },
+  "playCount": 0,
+  "questions": [
+    {
+      "id": "101fc71c-6bc9-4fe5-b898-1fbeb111b062",
+      "quizId": "b540897f-703f-40b8-bfac-ca6d8f3d9ff3",
+      "text": "a",
+      "mediaId": null,
+      "type": "multiple",
+      "timeLimit": 20,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "60a9ef98-5871-4bec-9a25-91204e46950d",
+          "questionId": "101fc71c-6bc9-4fe5-b898-1fbeb111b062",
+          "text": "v",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "ce88e3cc-d3b0-493f-b20f-45a334bf3ee7",
+          "questionId": "101fc71c-6bc9-4fe5-b898-1fbeb111b062",
+          "text": "c",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "e2db363f-11ab-4c4e-9d64-ee70de7d3276",
+          "questionId": "101fc71c-6bc9-4fe5-b898-1fbeb111b062",
+          "text": "w",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "0a3c4dd4-6eeb-48e2-9054-31b1cb6d9265",
+          "questionId": "101fc71c-6bc9-4fe5-b898-1fbeb111b062",
+          "text": "f",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    }
+  ]
+},
+{
+  "_id": "77f3d614-33bc-4dd6-a5e7-62c0f8e90135",
+  "id": "77f3d614-33bc-4dd6-a5e7-62c0f8e90135",
+  "authorId": "ac3195f9-dc00-45ec-bc19-ba3479fb26b0",
+  "title": "Certificación en Arquitectura de Software Moderna",
+  "description": "Examen avanzado sobre GoF, Hexagonal, DDD y principios SOLID.",
+  "visibility": "public",
+  "status": "publish",
+  "category": "Computer Science",
+  "themeId": "5f0e8c89-f434-4dff-baaf-83a4aa4feb26",
+  "coverImageId": "f410f1f5-7c7f-4db3-a71f-58a584f7802a",
+  "createdAt": {
+    "$date": "2026-01-15T03:16:41.120Z"
+  },
+  "playCount": 0,
+  "questions": [
+    {
+      "id": "84b98bd8-b6f9-4e78-96d5-708ecaf6f118",
+      "quizId": "77f3d614-33bc-4dd6-a5e7-62c0f8e90135",
+      "text": "¿Cómo se implementa DIP en Arq. Hexagonal para desacoplar la persistencia?",
+      "mediaId": "516da741-0643-497e-a9ca-6ef952f0e574",
+      "type": "quiz",
+      "timeLimit": 45,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "1e5bd23f-817c-4100-bd69-1e381c31b6b4",
+          "questionId": "84b98bd8-b6f9-4e78-96d5-708ecaf6f118",
+          "text": "Dominio define interfaz (Port) e infraestructura la implementa.",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "9e67b40c-6965-42f9-8264-0cbbafc14b2b",
+          "questionId": "84b98bd8-b6f9-4e78-96d5-708ecaf6f118",
+          "text": "El dominio importa directamente las clases de persistencia.",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "d2f9ccf3-829d-468f-9dea-5b04e7509a85",
+          "questionId": "84b98bd8-b6f9-4e78-96d5-708ecaf6f118",
+          "text": null,
+          "mediaId": "81f1dbb5-2f1d-40d7-b021-8f4cc948a432",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "03f57ca9-2e67-4fd8-b2c6-73f6584d6dbe",
+      "quizId": "77f3d614-33bc-4dd6-a5e7-62c0f8e90135",
+      "text": "En el diseño orientado a dominios (DDD), ¿qué es un Value Object?",
+      "mediaId": "81f1dbb5-2f1d-40d7-b021-8f4cc948a432",
+      "type": "quiz",
+      "timeLimit": 30,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "331aa0b4-1cc7-4f67-b349-3da7cca2bc14",
+          "questionId": "03f57ca9-2e67-4fd8-b2c6-73f6584d6dbe",
+          "text": "Objeto sin identidad propia definido solo por sus atributos.",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "9cfd5f2d-561a-418a-8ac2-786cf9f02f71",
+          "questionId": "03f57ca9-2e67-4fd8-b2c6-73f6584d6dbe",
+          "text": "Objeto que se identifica mediante un ID único y persistente.",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "243ec309-2da5-4353-b10a-f38127ed584f",
+          "questionId": "03f57ca9-2e67-4fd8-b2c6-73f6584d6dbe",
+          "text": "Un servicio que orquestra llamadas a la base de datos.",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "362346a1-6f49-4453-a683-40b8536940fb",
+      "quizId": "77f3d614-33bc-4dd6-a5e7-62c0f8e90135",
+      "text": "¿Qué patrón GoF proporciona una interfaz unificada para un subsistema?",
+      "mediaId": "f410f1f5-7c7f-4db3-a71f-58a584f7802a",
+      "type": "quiz",
+      "timeLimit": 30,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "b50610ea-58dd-417b-abbd-9ecf206ddf2e",
+          "questionId": "362346a1-6f49-4453-a683-40b8536940fb",
+          "text": "Facade",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "37556ae1-dc15-4139-a53c-9d9f45286275",
+          "questionId": "362346a1-6f49-4453-a683-40b8536940fb",
+          "text": "Proxy",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "10d5fff1-a37b-479e-99b6-5a8204e53747",
+          "questionId": "362346a1-6f49-4453-a683-40b8536940fb",
+          "text": null,
+          "mediaId": "5f0e8c89-f434-4dff-baaf-83a4aa4feb26",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "582f72fc-da3a-45f3-a54c-8b457cc60777",
+      "quizId": "77f3d614-33bc-4dd6-a5e7-62c0f8e90135",
+      "text": "¿Cuál es la regla de comunicación entre Bounded Contexts en DDD?",
+      "mediaId": "5f0e8c89-f434-4dff-baaf-83a4aa4feb26",
+      "type": "quiz",
+      "timeLimit": 90,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "3a32bf6f-d7e7-4a11-855c-2de9ea5c3e6d",
+          "questionId": "582f72fc-da3a-45f3-a54c-8b457cc60777",
+          "text": "Usar un Anti-Corruption Layer (ACL) para proteger el dominio.",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "68439f89-84a3-4e55-a590-3b169da9199a",
+          "questionId": "582f72fc-da3a-45f3-a54c-8b457cc60777",
+          "text": "Compartir la base de datos para asegurar consistencia.",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "c34c7a5e-d6b3-4195-9097-f66ffa1035a8",
+          "questionId": "582f72fc-da3a-45f3-a54c-8b457cc60777",
+          "text": null,
+          "mediaId": "516da741-0643-497e-a9ca-6ef952f0e574",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "10f1cf29-c27e-48d5-bc4a-1beca7ac8bb3",
+      "quizId": "77f3d614-33bc-4dd6-a5e7-62c0f8e90135",
+      "text": "El patrón Strategy es fundamental para cumplir con el principio Open/Closed.",
+      "mediaId": "516da741-0643-497e-a9ca-6ef952f0e574",
+      "type": "true_false",
+      "timeLimit": 20,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "8996808f-158e-4a00-98d1-e016b798aa09",
+          "questionId": "10f1cf29-c27e-48d5-bc4a-1beca7ac8bb3",
+          "text": "Verdadero",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "66ada987-43c6-4ebe-923e-5d596e06be0e",
+          "questionId": "10f1cf29-c27e-48d5-bc4a-1beca7ac8bb3",
+          "text": "Falso",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "b6448d08-b3f1-4c76-9854-74a2e9f318a3",
+      "quizId": "77f3d614-33bc-4dd6-a5e7-62c0f8e90135",
+      "text": "¿Qué patrón GoF separa la construcción de un objeto de su representación?",
+      "mediaId": "81f1dbb5-2f1d-40d7-b021-8f4cc948a432",
+      "type": "quiz",
+      "timeLimit": 30,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "e1f943d8-ffd6-4fcd-a7e9-40ce0e8206cb",
+          "questionId": "b6448d08-b3f1-4c76-9854-74a2e9f318a3",
+          "text": "Builder",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "88228e7c-d681-4c0e-9220-efda0c135320",
+          "questionId": "b6448d08-b3f1-4c76-9854-74a2e9f318a3",
+          "text": "Prototype",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "f2b17a49-bd47-46af-a96f-99a28bb8c44c",
+          "questionId": "b6448d08-b3f1-4c76-9854-74a2e9f318a3",
+          "text": null,
+          "mediaId": "f410f1f5-7c7f-4db3-a71f-58a584f7802a",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "ac7d59a9-3164-4728-86e6-1f00be82bdb0",
+      "quizId": "77f3d614-33bc-4dd6-a5e7-62c0f8e90135",
+      "text": "En Arq. Hexagonal, los adaptadores de entrada son responsables de:",
+      "mediaId": "f410f1f5-7c7f-4db3-a71f-58a584f7802a",
+      "type": "quiz",
+      "timeLimit": 45,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "c676d97e-f274-4969-8202-9ba8821ff581",
+          "questionId": "ac7d59a9-3164-4728-86e6-1f00be82bdb0",
+          "text": "Transformar la petición externa en una llamada al puerto.",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "e4878879-1344-4da8-90c2-550ab0c0cda4",
+          "questionId": "ac7d59a9-3164-4728-86e6-1f00be82bdb0",
+          "text": "Almacenar el estado de la aplicación en memoria RAM.",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "4b721b3d-3d66-4b27-8cd4-5e4ff60c14c9",
+          "questionId": "ac7d59a9-3164-4728-86e6-1f00be82bdb0",
+          "text": "Definir las reglas de negocio críticas del dominio.",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "a7c95d21-5637-4b38-b22f-6e1bf588ef0c",
+      "quizId": "77f3d614-33bc-4dd6-a5e7-62c0f8e90135",
+      "text": "¿Qué asegura que un Agregado en DDD sea consistente?",
+      "mediaId": "5f0e8c89-f434-4dff-baaf-83a4aa4feb26",
+      "type": "quiz",
+      "timeLimit": 60,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "aa35eaba-2a42-4f2c-a885-75316c382e11",
+          "questionId": "a7c95d21-5637-4b38-b22f-6e1bf588ef0c",
+          "text": "Las modificaciones se realizan vía su Aggregate Root.",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "00b7cb9a-fd1a-4257-8248-40f5a7bc2a7b",
+          "questionId": "a7c95d21-5637-4b38-b22f-6e1bf588ef0c",
+          "text": "El uso de transacciones distribuidas globales.",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "594c9a79-309d-4d91-9b06-883d44b0df92",
+          "questionId": "a7c95d21-5637-4b38-b22f-6e1bf588ef0c",
+          "text": null,
+          "mediaId": "81f1dbb5-2f1d-40d7-b021-8f4cc948a432",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "0cb37e87-f2ed-4391-a025-d92a412b859e",
+      "quizId": "77f3d614-33bc-4dd6-a5e7-62c0f8e90135",
+      "text": "El patrón GoF 'Chain of Responsibility' es un patrón de Comportamiento.",
+      "mediaId": "516da741-0643-497e-a9ca-6ef952f0e574",
+      "type": "true_false",
+      "timeLimit": 20,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "0ab370d9-d135-481b-895e-0499e592e337",
+          "questionId": "0cb37e87-f2ed-4391-a025-d92a412b859e",
+          "text": "Verdadero",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "2ba8248d-6ff6-4dc5-8b69-d7eb2b93cebb",
+          "questionId": "0cb37e87-f2ed-4391-a025-d92a412b859e",
+          "text": "Falso",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "cf0aae29-ef16-4477-a495-86c50389b3e6",
+      "quizId": "77f3d614-33bc-4dd6-a5e7-62c0f8e90135",
+      "text": "¿Cuál es el objetivo del patrón GoF 'Flyweight'?",
+      "mediaId": "81f1dbb5-2f1d-40d7-b021-8f4cc948a432",
+      "type": "quiz",
+      "timeLimit": 60,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "03f6d86d-7228-4a35-a338-9491c064865e",
+          "questionId": "cf0aae29-ef16-4477-a495-86c50389b3e6",
+          "text": "Compartir estados comunes para reducir uso de memoria.",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "f3f7c87f-4e50-4aa7-b73a-8303d82c48b8",
+          "questionId": "cf0aae29-ef16-4477-a495-86c50389b3e6",
+          "text": "Controlar el acceso a un objeto mediante un sustituto.",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "197f0320-7923-4f51-b0c3-73a3b3837352",
+          "questionId": "cf0aae29-ef16-4477-a495-86c50389b3e6",
+          "text": null,
+          "mediaId": "f410f1f5-7c7f-4db3-a71f-58a584f7802a",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "88aadbc2-d7ce-4cf5-a078-8a69c54851cd",
+      "quizId": "77f3d614-33bc-4dd6-a5e7-62c0f8e90135",
+      "text": "En Clean Architecture, los Use Cases residen en la capa de Aplicación.",
+      "mediaId": "f410f1f5-7c7f-4db3-a71f-58a584f7802a",
+      "type": "true_false",
+      "timeLimit": 30,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "daaadf66-9467-4a80-9e50-fd579c81df00",
+          "questionId": "88aadbc2-d7ce-4cf5-a078-8a69c54851cd",
+          "text": "Verdadero",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "2f70d794-374a-46de-a086-293e48a34580",
+          "questionId": "88aadbc2-d7ce-4cf5-a078-8a69c54851cd",
+          "text": "Falso",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "13ffd235-1101-4ec8-b188-e1786b6c8ac2",
+      "quizId": "77f3d614-33bc-4dd6-a5e7-62c0f8e90135",
+      "text": "¿Qué patrón GoF permite notificar cambios de estado sin acoplamiento?",
+      "mediaId": "5f0e8c89-f434-4dff-baaf-83a4aa4feb26",
+      "type": "quiz",
+      "timeLimit": 30,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "518ddf55-ed7d-4230-8585-3e27b1b8fec6",
+          "questionId": "13ffd235-1101-4ec8-b188-e1786b6c8ac2",
+          "text": "Observer",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "508b81c3-0a7d-45e4-b2ae-27fe32d7aae1",
+          "questionId": "13ffd235-1101-4ec8-b188-e1786b6c8ac2",
+          "text": "Mediator",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "287593ef-dbfe-4402-ad03-e3c742d72e3c",
+          "questionId": "13ffd235-1101-4ec8-b188-e1786b6c8ac2",
+          "text": null,
+          "mediaId": "516da741-0643-497e-a9ca-6ef952f0e574",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "d3bb9956-84ae-4116-a4d8-322318575c34",
+      "quizId": "77f3d614-33bc-4dd6-a5e7-62c0f8e90135",
+      "text": "El principio ISP dicta que no se debe obligar a depender de métodos no usados.",
+      "mediaId": "516da741-0643-497e-a9ca-6ef952f0e574",
+      "type": "true_false",
+      "timeLimit": 20,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "130ac79e-b447-4968-bead-44578bf61d41",
+          "questionId": "d3bb9956-84ae-4116-a4d8-322318575c34",
+          "text": "Verdadero",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "9f29c224-7102-4208-9109-7a63c6163168",
+          "questionId": "d3bb9956-84ae-4116-a4d8-322318575c34",
+          "text": "Falso",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "6644ca5e-0d5f-4f0a-a0d2-519901d04b88",
+      "quizId": "77f3d614-33bc-4dd6-a5e7-62c0f8e90135",
+      "text": "Patrones CREACIONALES de GoF:",
+      "mediaId": "f410f1f5-7c7f-4db3-a71f-58a584f7802a",
+      "type": "multiple",
+      "timeLimit": 60,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "a4b3dfbd-53b0-4373-8650-aecd3b1f58fc",
+          "questionId": "6644ca5e-0d5f-4f0a-a0d2-519901d04b88",
+          "text": "Abstract Factory",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "4673d80d-ab84-4731-8628-53ccd503f9eb",
+          "questionId": "6644ca5e-0d5f-4f0a-a0d2-519901d04b88",
+          "text": "Singleton",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "28237f09-ca34-42ab-86a8-703bd24ae882",
+          "questionId": "6644ca5e-0d5f-4f0a-a0d2-519901d04b88",
+          "text": "Prototype",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "b3966dbf-6189-4fe5-bb1b-6ee667a9b5f9",
+          "questionId": "6644ca5e-0d5f-4f0a-a0d2-519901d04b88",
+          "text": null,
+          "mediaId": "5f0e8c89-f434-4dff-baaf-83a4aa4feb26",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "0dbaa41b-35b0-4594-810e-fcca96528f29",
+      "quizId": "77f3d614-33bc-4dd6-a5e7-62c0f8e90135",
+      "text": "En DDD, una Entidad se define exclusivamente por sus atributos.",
+      "mediaId": "81f1dbb5-2f1d-40d7-b021-8f4cc948a432",
+      "type": "true_false",
+      "timeLimit": 20,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "9d60109b-2ec6-4b3c-8343-ecedde15d1e9",
+          "questionId": "0dbaa41b-35b0-4594-810e-fcca96528f29",
+          "text": "Falso",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "13cc7233-b527-4291-85df-c4eac20a1431",
+          "questionId": "0dbaa41b-35b0-4594-810e-fcca96528f29",
+          "text": "Verdadero",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    }
+  ]
+},
+{
+  "_id": "0191e546-9279-46e1-be6d-d0cdcdafef84",
+  "id": "0191e546-9279-46e1-be6d-d0cdcdafef84",
+  "authorId": "de4fcfc9-9b84-4ff6-bd4c-a51997c8eb8b",
+  "title": "patrones",
+  "description": "Evaluación sobre los 23 patrones clásicos de diseño de software.",
+  "visibility": "public",
+  "status": "publish",
+  "category": "Tecnología",
+  "themeId": "a452aab3-5eeb-4d8f-8330-b465ddcf45c8",
+  "coverImageId": "cd433fc5-8614-48d2-98c1-9cd0283796be",
+  "createdAt": {
+    "$date": "2026-01-15T19:02:34.614Z"
+  },
+  "playCount": 0,
+  "questions": [
+    {
+      "id": "bc71fce3-e29c-4bec-a44f-60f3d815c95a",
+      "quizId": "0191e546-9279-46e1-be6d-d0cdcdafef84",
+      "text": "¿Cuáles son las tres categorías principales de los patrones GoF?",
+      "mediaId": null,
+      "type": "quiz",
+      "timeLimit": 30,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "f1425dff-97b6-4211-96f9-a4e1caaf4576",
+          "questionId": "bc71fce3-e29c-4bec-a44f-60f3d815c95a",
+          "text": "Creacionales, Estructurales y de Comportamiento",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "114d5ef0-2880-42ee-b8a3-d11abf04c1dc",
+          "questionId": "bc71fce3-e29c-4bec-a44f-60f3d815c95a",
+          "text": "Arquitectónicos, De Interfaz y De Datos",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "cbf95b6f-eb77-4b09-a6b2-519d548f2f3c",
+          "questionId": "bc71fce3-e29c-4bec-a44f-60f3d815c95a",
+          "text": "Simples, Complejos y Compuestos",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "3320b61a-8663-4d73-842c-bb668184843d",
+          "questionId": "bc71fce3-e29c-4bec-a44f-60f3d815c95a",
+          "text": "Funcionales, Reactivos y Objetos",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "3b8cbace-2b8f-4275-8b58-8dabd242aa48",
+      "quizId": "0191e546-9279-46e1-be6d-d0cdcdafef84",
+      "text": "El patrón Singleton garantiza que una clase tenga solo una instancia y proporciona un punto de acceso global a ella.",
+      "mediaId": null,
+      "type": "true_false",
+      "timeLimit": 20,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "71989a7d-9091-4d88-9a09-6da5a547cd04",
+          "questionId": "3b8cbace-2b8f-4275-8b58-8dabd242aa48",
+          "text": "Verdadero",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "7adc185e-2493-476c-b72c-df1197776da0",
+          "questionId": "3b8cbace-2b8f-4275-8b58-8dabd242aa48",
+          "text": "Falso",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "2be99ac0-3e03-4c17-9832-3ba89604374a",
+      "quizId": "0191e546-9279-46e1-be6d-d0cdcdafef84",
+      "text": "¿Qué patrones pertenecen a la categoría de 'Comportamiento' (Behavioral)? Selecciona todos los que apliquen.",
+      "mediaId": null,
+      "type": "multiple",
+      "timeLimit": 45,
+      "points": 500,
+      "answers": [
+        {
+          "id": "ba7a90d0-01e4-4f20-be6c-e37e44da1419",
+          "questionId": "2be99ac0-3e03-4c17-9832-3ba89604374a",
+          "text": "Observer",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "1d58099e-0a67-4973-9fd0-282538898e04",
+          "questionId": "2be99ac0-3e03-4c17-9832-3ba89604374a",
+          "text": "Strategy",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "165be895-bbee-49a1-ad63-7d06e17903b8",
+          "questionId": "2be99ac0-3e03-4c17-9832-3ba89604374a",
+          "text": "Adapter",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "fe2ec1e1-6f3e-4a6c-a679-de0d2d297dbd",
+          "questionId": "2be99ac0-3e03-4c17-9832-3ba89604374a",
+          "text": "Factory Method",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "c7fbbfd5-ea5e-4921-8445-5954381fecb4",
+      "quizId": "0191e546-9279-46e1-be6d-d0cdcdafef84",
+      "text": "¿Qué patrón estructural se utiliza para permitir que interfaces incompatibles trabajen juntas?",
+      "mediaId": null,
+      "type": "quiz",
+      "timeLimit": 30,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "91447e87-a173-4fc6-a83e-1be243a8a85e",
+          "questionId": "c7fbbfd5-ea5e-4921-8445-5954381fecb4",
+          "text": "Adapter",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "b08c398a-a012-44ba-82b5-64a1cb65474d",
+          "questionId": "c7fbbfd5-ea5e-4921-8445-5954381fecb4",
+          "text": "Bridge",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "64fe20b0-8566-4a82-bc69-cd72b09d1d94",
+          "questionId": "c7fbbfd5-ea5e-4921-8445-5954381fecb4",
+          "text": "Proxy",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "be5d73cd-1a11-4973-a32f-2705375f8612",
+          "questionId": "c7fbbfd5-ea5e-4921-8445-5954381fecb4",
+          "text": "Decorator",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    }
+  ]
+},
+{
+  "_id": "afff9e9f-e475-431e-8a96-8a82bc944816",
+  "id": "afff9e9f-e475-431e-8a96-8a82bc944816",
+  "authorId": "743cf348-8e61-42ac-9e64-f88f74256891",
+  "title": "patrones",
+  "description": "Evaluación sobre los 23 patrones clásicos de diseño de software.",
+  "visibility": "public",
+  "status": "publish",
+  "category": "Tecnología",
+  "themeId": "a452aab3-5eeb-4d8f-8330-b465ddcf45c8",
+  "coverImageId": "cd433fc5-8614-48d2-98c1-9cd0283796be",
+  "createdAt": {
+    "$date": "2026-01-15T19:03:15.727Z"
+  },
+  "playCount": 0,
+  "questions": [
+    {
+      "id": "2cfdcca8-61b8-414c-a841-cccde990ad1c",
+      "quizId": "afff9e9f-e475-431e-8a96-8a82bc944816",
+      "text": "¿Cuáles son las tres categorías principales de los patrones GoF?",
+      "mediaId": null,
+      "type": "quiz",
+      "timeLimit": 30,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "69ce49d6-eaf6-440a-a071-01568d8b5b21",
+          "questionId": "2cfdcca8-61b8-414c-a841-cccde990ad1c",
+          "text": "Creacionales, Estructurales y de Comportamiento",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "687439cb-030e-423e-9c53-facbb4dfed1c",
+          "questionId": "2cfdcca8-61b8-414c-a841-cccde990ad1c",
+          "text": "Arquitectónicos, De Interfaz y De Datos",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "c9cc25a8-6a79-4fe4-a9b2-d55b7c92f01f",
+          "questionId": "2cfdcca8-61b8-414c-a841-cccde990ad1c",
+          "text": "Simples, Complejos y Compuestos",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "dd681eb9-a45c-4e9d-86dc-704c375b4423",
+          "questionId": "2cfdcca8-61b8-414c-a841-cccde990ad1c",
+          "text": "Funcionales, Reactivos y Objetos",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "bc4c6986-2654-404c-b97d-ad387f7387b6",
+      "quizId": "afff9e9f-e475-431e-8a96-8a82bc944816",
+      "text": "El patrón Singleton garantiza que una clase tenga solo una instancia y proporciona un punto de acceso global a ella.",
+      "mediaId": null,
+      "type": "true_false",
+      "timeLimit": 20,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "73632d8e-a80d-4dba-8d0e-fdb835363479",
+          "questionId": "bc4c6986-2654-404c-b97d-ad387f7387b6",
+          "text": "Verdadero",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "f385be54-776a-4a73-b780-1ff8972dd5f3",
+          "questionId": "bc4c6986-2654-404c-b97d-ad387f7387b6",
+          "text": "Falso",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "3d466cf1-b907-4088-b0b1-8f6cd5ec5e25",
+      "quizId": "afff9e9f-e475-431e-8a96-8a82bc944816",
+      "text": "¿Qué patrones pertenecen a la categoría de 'Comportamiento' (Behavioral)? Selecciona todos los que apliquen.",
+      "mediaId": null,
+      "type": "multiple",
+      "timeLimit": 45,
+      "points": 500,
+      "answers": [
+        {
+          "id": "18feac59-8e96-4174-853c-1d4adaddee7b",
+          "questionId": "3d466cf1-b907-4088-b0b1-8f6cd5ec5e25",
+          "text": "Observer",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "afbfea2f-0141-4bcd-8870-634688e1a852",
+          "questionId": "3d466cf1-b907-4088-b0b1-8f6cd5ec5e25",
+          "text": "Strategy",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "7ace90c0-da59-4f4d-8962-13a3c6cda0f9",
+          "questionId": "3d466cf1-b907-4088-b0b1-8f6cd5ec5e25",
+          "text": "Adapter",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "e20f773e-bb7a-406c-88f0-b3dd3c312a28",
+          "questionId": "3d466cf1-b907-4088-b0b1-8f6cd5ec5e25",
+          "text": "Factory Method",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "68cdec2d-8630-463f-84b0-9ca531f11208",
+      "quizId": "afff9e9f-e475-431e-8a96-8a82bc944816",
+      "text": "¿Qué patrón estructural se utiliza para permitir que interfaces incompatibles trabajen juntas?",
+      "mediaId": null,
+      "type": "quiz",
+      "timeLimit": 30,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "2d33be93-0f71-408f-8beb-e16fb4aebefa",
+          "questionId": "68cdec2d-8630-463f-84b0-9ca531f11208",
+          "text": "Adapter",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "326ddf51-1f09-407e-9166-53b5e3f88e66",
+          "questionId": "68cdec2d-8630-463f-84b0-9ca531f11208",
+          "text": "Bridge",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "483ef7d6-658f-43ef-b4fc-a17d47e14454",
+          "questionId": "68cdec2d-8630-463f-84b0-9ca531f11208",
+          "text": "Proxy",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "9f5364f7-9581-43c0-aa9c-5ce72b0d697a",
+          "questionId": "68cdec2d-8630-463f-84b0-9ca531f11208",
+          "text": "Decorator",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    }
+  ]
+},
+{
+  "_id": "29fcbeb6-21bf-4108-ab1d-4d1f94c2325f",
+  "id": "29fcbeb6-21bf-4108-ab1d-4d1f94c2325f",
+  "authorId": "12d64e8e-0183-4b0e-bb17-a9f8dc416c3e",
+  "title": "Quiz de prueba",
+  "description": "Quiz",
+  "visibility": "private",
+  "status": "publish",
+  "category": "General",
+  "themeId": "343b3fec-35fe-47e9-b950-4af6fef2c5e5",
+  "coverImageId": null,
+  "createdAt": {
+    "$date": "2026-01-15T21:53:34.873Z"
+  },
+  "playCount": 0,
+  "questions": [
+    {
+      "id": "1d4ea0e1-9616-4cd4-a0b2-d0f53b293d30",
+      "quizId": "29fcbeb6-21bf-4108-ab1d-4d1f94c2325f",
+      "text": "h?",
+      "mediaId": null,
+      "type": "quiz",
+      "timeLimit": 60,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "52c0df18-ef48-45d3-8ce5-ecfce72e78fb",
+          "questionId": "1d4ea0e1-9616-4cd4-a0b2-d0f53b293d30",
+          "text": "h",
+          "mediaId": null,
+          "isCorrect": true
+        }
+      ]
+    },
+    {
+      "id": "356467e1-5193-4a28-ad77-05de89b730ac",
+      "quizId": "29fcbeb6-21bf-4108-ab1d-4d1f94c2325f",
+      "text": "si",
+      "mediaId": null,
+      "type": "quiz",
+      "timeLimit": 20,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "2c504a78-d1c2-4924-a68b-2945e5f1ed46",
+          "questionId": "356467e1-5193-4a28-ad77-05de89b730ac",
+          "text": "si",
+          "mediaId": null,
+          "isCorrect": true
+        }
+      ]
+    }
+  ]
+},
+{
+  "_id": "a0db22a3-7f42-4e33-8025-afcd673d2d0e",
+  "id": "a0db22a3-7f42-4e33-8025-afcd673d2d0e",
+  "authorId": "5c87459d-075a-42a3-8980-0b87d9d6cf03",
+  "title": "jssj",
+  "description": "djjeju",
+  "visibility": "public",
+  "status": "publish",
+  "category": "snns",
+  "themeId": "3ef13730-7081-4c9d-881a-d3755c408272",
+  "coverImageId": null,
+  "createdAt": {
+    "$date": "2026-01-16T01:00:18.302Z"
+  },
+  "playCount": 0,
+  "questions": [
+    {
+      "id": "f793c3a9-f08a-4f87-885f-a2e30b1f735c",
+      "quizId": "a0db22a3-7f42-4e33-8025-afcd673d2d0e",
+      "text": "a",
+      "mediaId": null,
+      "type": "multiple",
+      "timeLimit": 20,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "eebcb8c5-ee6d-48d8-8f1a-7a2a47ad9e50",
+          "questionId": "f793c3a9-f08a-4f87-885f-a2e30b1f735c",
+          "text": "c",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "15d3fc74-1457-4d56-90e2-37edb36c5df2",
+          "questionId": "f793c3a9-f08a-4f87-885f-a2e30b1f735c",
+          "text": "e",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "4b4af781-43b7-4848-862f-7edc4809f841",
+          "questionId": "f793c3a9-f08a-4f87-885f-a2e30b1f735c",
+          "text": "e",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "d87c2993-922e-46e4-9129-8c6d57018a36",
+          "questionId": "f793c3a9-f08a-4f87-885f-a2e30b1f735c",
+          "text": "h",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "2320faf0-ee55-44f4-b55b-e23a3933ac4c",
+      "quizId": "a0db22a3-7f42-4e33-8025-afcd673d2d0e",
+      "text": "jdjdjdd",
+      "mediaId": null,
+      "type": "true_false",
+      "timeLimit": 20,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "52d78f34-5570-4d4e-b34f-4d1544683a9c",
+          "questionId": "2320faf0-ee55-44f4-b55b-e23a3933ac4c",
+          "text": "Verdadero",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "fb250265-8070-49b2-8098-9c3aeb5b37d3",
+          "questionId": "2320faf0-ee55-44f4-b55b-e23a3933ac4c",
+          "text": "Falso",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    }
+  ]
+},
+{
+  "_id": "3c9576ee-6afa-4fa5-9890-cfa67f3c07c9",
+  "id": "3c9576ee-6afa-4fa5-9890-cfa67f3c07c9",
+  "authorId": "12d64e8e-0183-4b0e-bb17-a9f8dc416c3e",
+  "title": "ingeniería",
+  "description": "í",
+  "visibility": "private",
+  "status": "publish",
+  "category": "Historia",
+  "themeId": "343b3fec-35fe-47e9-b950-4af6fef2c5e5",
+  "coverImageId": null,
+  "createdAt": {
+    "$date": "2026-01-16T03:36:30.034Z"
+  },
+  "playCount": 0,
+  "questions": [
+    {
+      "id": "9f8e7b6f-e661-40d8-8160-0bf5d148a7b7",
+      "quizId": "3c9576ee-6afa-4fa5-9890-cfa67f3c07c9",
+      "text": "¿En qué conferencia se acuñó por primera vez el término 'Ingeniería de Software'?",
+      "mediaId": null,
+      "type": "quiz",
+      "timeLimit": 20,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "ad9edaf0-7735-4ca9-b13e-1b058e4e779f",
+          "questionId": "9f8e7b6f-e661-40d8-8160-0bf5d148a7b7",
+          "text": "NATO Science Committee Conference, Garmisch, 1968",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "19506de8-fa72-4a72-82aa-735210c21e88",
+          "questionId": "9f8e7b6f-e661-40d8-8160-0bf5d148a7b7",
+          "text": null,
+          "mediaId": "6778f59f-4dab-45f6-b068-c1e4410c5f9e",
+          "isCorrect": false
+        },
+        {
+          "id": "e6da0f69-f5de-47ac-a300-d29838552ed1",
+          "questionId": "9f8e7b6f-e661-40d8-8160-0bf5d148a7b7",
+          "text": "IEEE Software Engineering Symposium, 1980",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "91ae015c-26de-4a0b-a81b-eb720bdd2a68",
+          "questionId": "9f8e7b6f-e661-40d8-8160-0bf5d148a7b7",
+          "text": "DARPA Internet Conference, 1969",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "922d4ef7-ab40-4c19-b8eb-3f24118bc69b",
+      "quizId": "3c9576ee-6afa-4fa5-9890-cfa67f3c07c9",
+      "text": "¿Cuál fue el principal problema que llevó a la necesidad y al nacimiento de la disciplina de la Ingeniería de Software e",
+      "mediaId": null,
+      "type": "quiz",
+      "timeLimit": 20,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "63f019cc-3761-45b0-8ab5-5e8841092f3c",
+          "questionId": "922d4ef7-ab40-4c19-b8eb-3f24118bc69b",
+          "text": "La 'Crisis del Software'",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "c48ec47c-f63d-401e-938d-9abe4e789b9b",
+          "questionId": "922d4ef7-ab40-4c19-b8eb-3f24118bc69b",
+          "text": "La escasez de hardware",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "eb263d72-e0eb-462e-987e-2823cf03ed8a",
+          "questionId": "922d4ef7-ab40-4c19-b8eb-3f24118bc69b",
+          "text": "La falta de programadores cualificados",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "f7c3473a-ecbd-4a52-a55e-c9a8e3f2ce02",
+          "questionId": "922d4ef7-ab40-4c19-b8eb-3f24118bc69b",
+          "text": "El alto costo de las licencias de software",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "691ec381-8e84-4c92-9a55-6947f16ed74f",
+      "quizId": "3c9576ee-6afa-4fa5-9890-cfa67f3c07c9",
+      "text": "¿Cuál de las siguientes metodologías de desarrollo de software fue una de las primeras en ser ampliamente adoptada y es ",
+      "mediaId": null,
+      "type": "quiz",
+      "timeLimit": 20,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "d1a1ba4e-0f93-4051-865f-382dd7fef025",
+          "questionId": "691ec381-8e84-4c92-9a55-6947f16ed74f",
+          "text": "Modelo en Cascada (Waterfall)",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "d3a004f1-416f-4e18-a764-f37784d59cce",
+          "questionId": "691ec381-8e84-4c92-9a55-6947f16ed74f",
+          "text": "Scrum",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "3245c24c-0a79-45e6-b56c-7a64af57b88c",
+          "questionId": "691ec381-8e84-4c92-9a55-6947f16ed74f",
+          "text": "Kanban",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "1192e63c-a3f8-4cfc-b2e7-43fca2524f76",
+          "questionId": "691ec381-8e84-4c92-9a55-6947f16ed74f",
+          "text": "Programación Extrema (XP)",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "34f94670-01e1-49b1-8e2e-5775327734d6",
+      "quizId": "3c9576ee-6afa-4fa5-9890-cfa67f3c07c9",
+      "text": "¿Qué autor es conocido por la 'Ley de Brooks', que afirma que 'añadir personal a un proyecto de software retrasado lo re",
+      "mediaId": null,
+      "type": "quiz",
+      "timeLimit": 20,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "8bb7c119-f88c-405d-997a-c515f5bdf04b",
+          "questionId": "34f94670-01e1-49b1-8e2e-5775327734d6",
+          "text": "Frederick Brooks Jr.",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "1acd86b3-5f82-4b84-8766-a2e14e367e7c",
+          "questionId": "34f94670-01e1-49b1-8e2e-5775327734d6",
+          "text": "Donald Knuth",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "5c121dd7-aec9-4019-b60a-43392002940d",
+          "questionId": "34f94670-01e1-49b1-8e2e-5775327734d6",
+          "text": "Edsger Dijkstra",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "49bb14b2-2c19-4a2c-89fe-2312848e55fd",
+          "questionId": "34f94670-01e1-49b1-8e2e-5775327734d6",
+          "text": "Martin Fowler",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "faa8b9b4-af16-4c19-aaba-f50150ce5b5e",
+      "quizId": "3c9576ee-6afa-4fa5-9890-cfa67f3c07c9",
+      "text": "¿Quién propuso el Modelo Espiral de desarrollo de software, que combina elementos de los modelos en cascada y prototipos",
+      "mediaId": null,
+      "type": "quiz",
+      "timeLimit": 20,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "5f9d218f-b425-4da3-b96d-9bf81048262f",
+          "questionId": "faa8b9b4-af16-4c19-aaba-f50150ce5b5e",
+          "text": "Barry Boehm",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "103ad399-336f-4a33-9e92-1b8f844c14eb",
+          "questionId": "faa8b9b4-af16-4c19-aaba-f50150ce5b5e",
+          "text": "Winston Royce",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "b5962359-69de-4569-8f49-03051c42508c",
+          "questionId": "faa8b9b4-af16-4c19-aaba-f50150ce5b5e",
+          "text": "Kent Beck",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "74bff8f9-1b1a-4e1a-8fb8-9fb69c3ddd50",
+          "questionId": "faa8b9b4-af16-4c19-aaba-f50150ce5b5e",
+          "text": "Alistair Cockburn",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "6d3b55b6-a222-4cba-ab39-6143f08d499e",
+      "quizId": "3c9576ee-6afa-4fa5-9890-cfa67f3c07c9",
+      "text": "¿Qué documento clave marcó un hito en la historia de las metodologías ágiles a principios de los años 2000?",
+      "mediaId": null,
+      "type": "quiz",
+      "timeLimit": 20,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "286a1765-f510-41f7-bd67-405d757a6fd0",
+          "questionId": "6d3b55b6-a222-4cba-ab39-6143f08d499e",
+          "text": "El Manifiesto Ágil",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "8393836f-38af-41cd-a3bf-16a25e4cc7dd",
+          "questionId": "6d3b55b6-a222-4cba-ab39-6143f08d499e",
+          "text": "El Estándar ISO 9000",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "88d53526-5539-4117-bff0-abc73346bf91",
+          "questionId": "6d3b55b6-a222-4cba-ab39-6143f08d499e",
+          "text": "La Guía PMBOK",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "40334c29-e0ba-466b-80f0-894f1773eea1",
+          "questionId": "6d3b55b6-a222-4cba-ab39-6143f08d499e",
+          "text": "El Modelo CMMI",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "0a3c105f-aad9-4bd4-99e5-34a792b1b13d",
+      "quizId": "3c9576ee-6afa-4fa5-9890-cfa67f3c07c9",
+      "text": "¿Cuál fue uno de los primeros grandes proyectos de software que ilustró los desafíos de la ingeniería de software a gran",
+      "mediaId": null,
+      "type": "quiz",
+      "timeLimit": 20,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "f612148a-5f2e-41ab-b13f-12e8da0a71a7",
+          "questionId": "0a3c105f-aad9-4bd4-99e5-34a792b1b13d",
+          "text": "El sistema SAGE (Semi-Automatic Ground Environment)",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "81fb73fa-356a-436b-9093-ba04ca155787",
+          "questionId": "0a3c105f-aad9-4bd4-99e5-34a792b1b13d",
+          "text": "El sistema operativo UNIX",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "8865e28d-bf5d-4f55-867a-48cbca4118ed",
+          "questionId": "0a3c105f-aad9-4bd4-99e5-34a792b1b13d",
+          "text": "El navegador web Mosaic",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "10d3c983-3d2c-4111-8d00-22cb6999ea5b",
+          "questionId": "0a3c105f-aad9-4bd4-99e5-34a792b1b13d",
+          "text": "El procesador de texto WordStar",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "ecc483ae-31f1-49f3-844b-466fc1da0b39",
+      "quizId": "3c9576ee-6afa-4fa5-9890-cfa67f3c07c9",
+      "text": "¿Qué lenguaje de programación, desarrollado por IBM en los años 50, fue fundamental para el cálculo científico y la inge",
+      "mediaId": null,
+      "type": "quiz",
+      "timeLimit": 20,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "b9fec845-830b-41d6-805e-46d396835a37",
+          "questionId": "ecc483ae-31f1-49f3-844b-466fc1da0b39",
+          "text": "FORTRAN (Formula Translation)",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "1a80a92e-e57a-48fe-8807-734ae775edb8",
+          "questionId": "ecc483ae-31f1-49f3-844b-466fc1da0b39",
+          "text": "COBOL",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "d3b9b23f-a7d6-4680-bdea-7c2f737ff70f",
+          "questionId": "ecc483ae-31f1-49f3-844b-466fc1da0b39",
+          "text": "LISP",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "f532793b-ba93-4d2d-ae94-fea0cca0515d",
+          "questionId": "ecc483ae-31f1-49f3-844b-466fc1da0b39",
+          "text": "Pascal",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "4bdb26a5-f526-4447-9ab0-4b23e3336a5a",
+      "quizId": "3c9576ee-6afa-4fa5-9890-cfa67f3c07c9",
+      "text": "¿Qué herramientas surgieron en los años 80 y 90 para intentar automatizar y apoyar las diferentes fases del ciclo de vid",
+      "mediaId": null,
+      "type": "quiz",
+      "timeLimit": 20,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "79e4c641-2dcf-4195-b7f7-ad0834535b11",
+          "questionId": "4bdb26a5-f526-4447-9ab0-4b23e3336a5a",
+          "text": "Herramientas CASE (Computer-Aided Software Engineering)",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "cf3cc968-4038-4190-a066-2ec28bd00369",
+          "questionId": "4bdb26a5-f526-4447-9ab0-4b23e3336a5a",
+          "text": "Compiladores JIT",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "e17a7334-8433-401f-a621-6f76e9bda11c",
+          "questionId": "4bdb26a5-f526-4447-9ab0-4b23e3336a5a",
+          "text": "Entornos de Desarrollo Integrado (IDE)",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "5ae06b37-9570-4594-8d14-8b328a5c7d91",
+          "questionId": "4bdb26a5-f526-4447-9ab0-4b23e3336a5a",
+          "text": "Sistemas de Control de Versiones (VCS)",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "3aa0d2c7-8be5-4a7c-9228-bff6155ee2ce",
+      "quizId": "3c9576ee-6afa-4fa5-9890-cfa67f3c07c9",
+      "text": "A lo largo de la historia de la ingeniería de software, ¿cuál ha sido un desafío persistente relacionado con la calidad ",
+      "mediaId": null,
+      "type": "quiz",
+      "timeLimit": 20,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "50b4757e-cf01-4fd3-b053-7f2afb7a3ac2",
+          "questionId": "3aa0d2c7-8be5-4a7c-9228-bff6155ee2ce",
+          "text": "La depuración y las pruebas de software",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "42ad68dc-391c-4e36-a9f2-bcd8682f65d0",
+          "questionId": "3aa0d2c7-8be5-4a7c-9228-bff6155ee2ce",
+          "text": "La gestión de la configuración de hardware",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "25a2d92b-7597-4a2a-a886-efab567bc225",
+          "questionId": "3aa0d2c7-8be5-4a7c-9228-bff6155ee2ce",
+          "text": "La optimización del rendimiento de la red",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "c5a30952-702c-42f4-8c41-31c8c611d194",
+          "questionId": "3aa0d2c7-8be5-4a7c-9228-bff6155ee2ce",
+          "text": "La seguridad física de los centros de datos",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    }
+  ]
+},
+{
+  "_id": "79739a56-eda2-4681-869e-ea63af0ca9ba",
+  "id": "79739a56-eda2-4681-869e-ea63af0ca9ba",
+  "authorId": "12d64e8e-0183-4b0e-bb17-a9f8dc416c3e",
+  "title": "Melissa",
+  "description": "Melissa",
+  "visibility": "private",
+  "status": "draft",
+  "category": "Historia",
+  "themeId": "343b3fec-35fe-47e9-b950-4af6fef2c5e5",
+  "coverImageId": null,
+  "createdAt": {
+    "$date": "2026-01-16T03:44:30.841Z"
+  },
+  "playCount": 0,
+  "questions": [
+    {
+      "id": "80b992c0-fc05-4623-b2e0-fa4a5ca29196",
+      "quizId": "79739a56-eda2-4681-869e-ea63af0ca9ba",
+      "text": "¿De qué idioma proviene principalmente el nombre \"Melissa\"?",
+      "mediaId": null,
+      "type": "quiz",
+      "timeLimit": 20,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "24dd8b22-10a7-484d-98e4-9558b98ad866",
+          "questionId": "80b992c0-fc05-4623-b2e0-fa4a5ca29196",
+          "text": "Griego",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "950936c2-130d-426e-9853-7e23b8a15ff7",
+          "questionId": "80b992c0-fc05-4623-b2e0-fa4a5ca29196",
+          "text": "Latín",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "68ce624d-5769-4b68-a3ee-4f3e31fa3238",
+          "questionId": "80b992c0-fc05-4623-b2e0-fa4a5ca29196",
+          "text": "Hebreo",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "447a19b9-f6d0-49ac-a531-c62d72ff3fd6",
+          "questionId": "80b992c0-fc05-4623-b2e0-fa4a5ca29196",
+          "text": "Egipcio",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "6f537ce9-0acd-4008-b42f-997989a90573",
+      "quizId": "79739a56-eda2-4681-869e-ea63af0ca9ba",
+      "text": "¿Cuál es el significado directo del nombre \"Melissa\" en su idioma de origen?",
+      "mediaId": null,
+      "type": "quiz",
+      "timeLimit": 20,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "2043a6e4-1539-4a5b-83d7-e0ca42c6fcdc",
+          "questionId": "6f537ce9-0acd-4008-b42f-997989a90573",
+          "text": "Abeja",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "3c9cd876-ede8-446d-9ea8-8eb10d988b27",
+          "questionId": "6f537ce9-0acd-4008-b42f-997989a90573",
+          "text": "Flor",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "ddea7935-884f-4806-8bf7-5bdc757dda5d",
+          "questionId": "6f537ce9-0acd-4008-b42f-997989a90573",
+          "text": "Dulce",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "3d94c180-4d68-4caa-aa79-9fc5ea4c8077",
+          "questionId": "6f537ce9-0acd-4008-b42f-997989a90573",
+          "text": "Reina",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "37d98c27-b581-4188-be42-168a738917a6",
+      "quizId": "79739a56-eda2-4681-869e-ea63af0ca9ba",
+      "text": "En la mitología griega, ¿quién era Melissa?",
+      "mediaId": null,
+      "type": "quiz",
+      "timeLimit": 20,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "4a157832-d1c9-4667-a2bd-9eb2d3031b05",
+          "questionId": "37d98c27-b581-4188-be42-168a738917a6",
+          "text": "Una ninfa que cuidó a Zeus de niño",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "26cf2425-fff5-486e-939c-94ad6bad0039",
+          "questionId": "37d98c27-b581-4188-be42-168a738917a6",
+          "text": "La diosa de la miel",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "245dce98-fcdc-4439-934f-0d57a1402106",
+          "questionId": "37d98c27-b581-4188-be42-168a738917a6",
+          "text": "Una de las Musas",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "52cc54dd-3f26-4651-88c9-1ec5426d501f",
+          "questionId": "37d98c27-b581-4188-be42-168a738917a6",
+          "text": "La reina de las Amazonas",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "20a6f356-6ca9-454a-95dd-a8172cb0d6f5",
+      "quizId": "79739a56-eda2-4681-869e-ea63af0ca9ba",
+      "text": "¿Por qué el nombre Melissa está fuertemente asociado con la miel y las abejas?",
+      "mediaId": null,
+      "type": "quiz",
+      "timeLimit": 20,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "796c4c61-7d5d-41f1-8c55-5f5aa068b7d1",
+          "questionId": "20a6f356-6ca9-454a-95dd-a8172cb0d6f5",
+          "text": "Por su significado etimológico \"abeja\" y el mito de la ninfa",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "e6d7bda2-5699-4a7f-ae4a-b1b1dccdb1d6",
+          "questionId": "20a6f356-6ca9-454a-95dd-a8172cb0d6f5",
+          "text": "Era el nombre de una antigua reina que descubrió la miel",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "e672de3a-3559-44bd-a5a6-98d500c5ab59",
+          "questionId": "20a6f356-6ca9-454a-95dd-a8172cb0d6f5",
+          "text": "Se creía que las flores llamadas Melissa atraían a las abejas",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "6ac9aac8-2c4d-4f96-b082-754b21542800",
+          "questionId": "20a6f356-6ca9-454a-95dd-a8172cb0d6f5",
+          "text": "Es una palabra latina para describir el panal",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "953effc0-2af6-456e-a4f7-4dfd686935f1",
+      "quizId": "79739a56-eda2-4681-869e-ea63af0ca9ba",
+      "text": "¿En qué período comenzó a ganar popularidad el nombre Melissa en el mundo occidental?",
+      "mediaId": null,
+      "type": "quiz",
+      "timeLimit": 20,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "b571a062-90ad-4005-901d-7ae5d81d6ae9",
+          "questionId": "953effc0-2af6-456e-a4f7-4dfd686935f1",
+          "text": "En el siglo XX, especialmente a partir de los años 50-60",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "9466f357-afba-477a-8587-640a2856a5d0",
+          "questionId": "953effc0-2af6-456e-a4f7-4dfd686935f1",
+          "text": "Durante la Antigua Grecia",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "800f9224-69b2-4de1-9c0d-8813a763253e",
+          "questionId": "953effc0-2af6-456e-a4f7-4dfd686935f1",
+          "text": "En la Edad Media",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "6590009d-9284-49e9-a724-3b5ff5a3e3c6",
+          "questionId": "953effc0-2af6-456e-a4f7-4dfd686935f1",
+          "text": "En el Renacimiento",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "d6ea3cc8-3656-463c-b40f-70c6d6f081b6",
+      "quizId": "79739a56-eda2-4681-869e-ea63af0ca9ba",
+      "text": "¿Cuál de los siguientes nombres es una variante o diminutivo común de Melissa?",
+      "mediaId": null,
+      "type": "quiz",
+      "timeLimit": 20,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "be7d6e96-7c4d-4af9-88e2-42912579a812",
+          "questionId": "d6ea3cc8-3656-463c-b40f-70c6d6f081b6",
+          "text": "Mel",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "180fd9c0-2820-411f-9983-666398da3d84",
+          "questionId": "d6ea3cc8-3656-463c-b40f-70c6d6f081b6",
+          "text": "Elisa",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "429e7bcf-6210-4926-ad4d-af7df9d6d249",
+          "questionId": "d6ea3cc8-3656-463c-b40f-70c6d6f081b6",
+          "text": "Lissa",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "066bdcf6-813a-4cf3-86f8-c180f0544a5c",
+          "questionId": "d6ea3cc8-3656-463c-b40f-70c6d6f081b6",
+          "text": "Mia",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "cbb7802a-2ad5-4dd0-a815-45ecf2881974",
+      "quizId": "79739a56-eda2-4681-869e-ea63af0ca9ba",
+      "text": "A menudo, ¿qué cualidades se asocian con las personas llamadas Melissa, basándose en el significado del nombre?",
+      "mediaId": null,
+      "type": "quiz",
+      "timeLimit": 20,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "1708aced-c2a0-41fe-847a-d842116a1463",
+          "questionId": "cbb7802a-2ad5-4dd0-a815-45ecf2881974",
+          "text": "Dulzura, diligencia y naturaleza trabajadora",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "2c755442-3043-456f-8fef-3bf8df6e68b0",
+          "questionId": "cbb7802a-2ad5-4dd0-a815-45ecf2881974",
+          "text": "Valentía y fuerza",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "e7249ed5-22c3-4f27-ba20-62b747ea4f02",
+          "questionId": "cbb7802a-2ad5-4dd0-a815-45ecf2881974",
+          "text": "Sabiduría y misterio",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "5ab89739-d17c-4780-9be8-b1e7c9fd8d8d",
+          "questionId": "cbb7802a-2ad5-4dd0-a815-45ecf2881974",
+          "text": "Belleza y gracia",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "10057bbe-e3aa-4033-b2f6-64bfac9d6870",
+      "quizId": "79739a56-eda2-4681-869e-ea63af0ca9ba",
+      "text": "Además de la ninfa, ¿con qué otra figura mitológica griega se relaciona a veces a Melissa?",
+      "mediaId": null,
+      "type": "quiz",
+      "timeLimit": 20,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "2ee2ef80-dfb6-4b48-9cf4-e2ab3c6f404e",
+          "questionId": "10057bbe-e3aa-4033-b2f6-64bfac9d6870",
+          "text": "Con una de las hijas del rey Cretense Meliseo",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "2014944a-b82e-4c5e-82b5-58ef8138238b",
+          "questionId": "10057bbe-e3aa-4033-b2f6-64bfac9d6870",
+          "text": "Con la esposa de Cronos",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "b3d2bde5-c54f-4f66-ace2-0d2eda890afd",
+          "questionId": "10057bbe-e3aa-4033-b2f6-64bfac9d6870",
+          "text": "Con la madre de Dionisio",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "ab7153e3-d45c-439d-b8c8-c1d3c195839b",
+          "questionId": "10057bbe-e3aa-4033-b2f6-64bfac9d6870",
+          "text": "Con una de las Harpías",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "c4eacb54-078e-4e68-8ae5-cf3397d11223",
+      "quizId": "79739a56-eda2-4681-869e-ea63af0ca9ba",
+      "text": "Existe una planta aromática conocida como \"Melissa officinalis\". ¿Por qué se le dio este nombre?",
+      "mediaId": null,
+      "type": "quiz",
+      "timeLimit": 20,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "a80abe70-f03b-49a4-9db9-9ecffa8f0780",
+          "questionId": "c4eacb54-078e-4e68-8ae5-cf3397d11223",
+          "text": "Atrae a las abejas y su nombre significa \"abeja\"",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "febdb2cc-e281-4dc4-9e71-dcd3969cab60",
+          "questionId": "c4eacb54-078e-4e68-8ae5-cf3397d11223",
+          "text": "Fue descubierta por una botánica llamada Melissa",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "e510e67b-e1e2-4b81-94d2-71306b9591ee",
+          "questionId": "c4eacb54-078e-4e68-8ae5-cf3397d11223",
+          "text": "Su forma recuerda a la de una abeja",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "7575e325-a0e9-48dc-bf8c-3903870570f0",
+          "questionId": "c4eacb54-078e-4e68-8ae5-cf3397d11223",
+          "text": "Se usa para curar picaduras de abeja",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "d0574dd1-ccb6-4ff0-81c8-e6d979a1aefd",
+      "quizId": "79739a56-eda2-4681-869e-ea63af0ca9ba",
+      "text": "¿En qué tipo de obras literarias o artísticas antiguas se podría encontrar referencias a \"Melissa\" en su contexto origin",
+      "mediaId": null,
+      "type": "quiz",
+      "timeLimit": 20,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "9aa4b5bb-7a00-406a-9aca-5deb12bae990",
+          "questionId": "d0574dd1-ccb6-4ff0-81c8-e6d979a1aefd",
+          "text": "Mitología y poesía épica griega",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "50c61bcd-879f-4191-822f-7925492c03e0",
+          "questionId": "d0574dd1-ccb6-4ff0-81c8-e6d979a1aefd",
+          "text": "Tragedias romanas",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "28010ad7-77f6-48f8-bcf0-2ede45b54f45",
+          "questionId": "d0574dd1-ccb6-4ff0-81c8-e6d979a1aefd",
+          "text": "Cuentos de hadas medievales",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "bad6c7ba-f64a-4df7-b5d9-5d1f5404115c",
+          "questionId": "d0574dd1-ccb6-4ff0-81c8-e6d979a1aefd",
+          "text": "Novelas de caballerías",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    }
+  ]
+},
+{
+  "_id": "b6900a7a-c9ff-4b5d-a937-a0a3fcf55f71",
+  "id": "b6900a7a-c9ff-4b5d-a937-a0a3fcf55f71",
+  "authorId": "12d64e8e-0183-4b0e-bb17-a9f8dc416c3e",
+  "title": "si",
+  "description": "si",
+  "visibility": "public",
+  "status": "publish",
+  "category": "Historia",
+  "themeId": "343b3fec-35fe-47e9-b950-4af6fef2c5e5",
+  "coverImageId": "4305943c-bc83-4ae5-8d84-75b535cece04",
+  "createdAt": {
+    "$date": "2026-01-16T04:17:46.950Z"
+  },
+  "playCount": 0,
+  "questions": [
+    {
+      "id": "3789464e-a31e-41ba-931f-6284aedabdf0",
+      "quizId": "b6900a7a-c9ff-4b5d-a937-a0a3fcf55f71",
+      "text": "yes ",
+      "mediaId": null,
+      "type": "quiz",
+      "timeLimit": 20,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "9d36f4ae-904c-411c-a892-b9f258c1fc46",
+          "questionId": "3789464e-a31e-41ba-931f-6284aedabdf0",
+          "text": "yes",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "0e3b19f9-0a5c-4da5-a369-fa00d32ba596",
+          "questionId": "3789464e-a31e-41ba-931f-6284aedabdf0",
+          "text": "nouu",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    }
+  ]
+},
+{
+  "_id": "4f1ada51-18f0-4fc4-b805-e9fdb3ba48ba",
+  "id": "4f1ada51-18f0-4fc4-b805-e9fdb3ba48ba",
+  "authorId": "12d64e8e-0183-4b0e-bb17-a9f8dc416c3e",
+  "title": "✨ Disney Magic Quiz",
+  "description": "Un viaje mágico por el mundo de Disney. ¿Cuánto sabes sobre las películas más icónicas?",
+  "visibility": "public",
+  "status": "publish",
+  "category": "General",
+  "themeId": "343b3fec-35fe-47e9-b950-4af6fef2c5e5",
+  "coverImageId": "296bcaeb-321e-4b39-a2a8-e6f5b0658720",
+  "createdAt": {
+    "$date": "2026-01-16T04:44:19.304Z"
+  },
+  "playCount": 0,
+  "questions": [
+    {
+      "id": "adb7883d-7e09-495c-abe2-2d3b947eb7fe",
+      "quizId": "4f1ada51-18f0-4fc4-b805-e9fdb3ba48ba",
+      "text": "¿Cuál fue la primera película animada de Disney?",
+      "mediaId": null,
+      "type": "quiz",
+      "timeLimit": 20,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "8b266f5b-9e43-4a60-9d56-ec9c3ea56944",
+          "questionId": "adb7883d-7e09-495c-abe2-2d3b947eb7fe",
+          "text": "Blancanieves y los Siete Enanitos",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "6b25ff65-747e-4914-b921-d5096911b224",
+          "questionId": "adb7883d-7e09-495c-abe2-2d3b947eb7fe",
+          "text": "Pinocho",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "fee4cddb-dfa9-4b33-b519-ccf13bb6784f",
+          "questionId": "adb7883d-7e09-495c-abe2-2d3b947eb7fe",
+          "text": "Fantasía",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "f6fe8cbe-109c-4d8f-a079-2bce0bc175ad",
+          "questionId": "adb7883d-7e09-495c-abe2-2d3b947eb7fe",
+          "text": "Dumbo",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "62dd4a4f-77d4-4813-8977-699f715e495a",
+      "quizId": "4f1ada51-18f0-4fc4-b805-e9fdb3ba48ba",
+      "text": "¿Cómo se llama el pez payaso protagonista de \"Buscando a Nemo\"?",
+      "mediaId": null,
+      "type": "quiz",
+      "timeLimit": 20,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "d6a79b80-81bf-476a-876e-e4eb18b41e3a",
+          "questionId": "62dd4a4f-77d4-4813-8977-699f715e495a",
+          "text": "Marlin",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "32c45188-a3dc-4c97-99c5-9171a4644011",
+          "questionId": "62dd4a4f-77d4-4813-8977-699f715e495a",
+          "text": "Nemo",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "6352e0b2-8b69-4e0e-9f40-c1d2a03ee2d0",
+          "questionId": "62dd4a4f-77d4-4813-8977-699f715e495a",
+          "text": "Dory",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "7dd49a71-43af-476d-9d9b-6ad467a6683a",
+          "questionId": "62dd4a4f-77d4-4813-8977-699f715e495a",
+          "text": "Gill",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "a4b58b90-fe81-45b2-950e-9136e8e73f51",
+      "quizId": "4f1ada51-18f0-4fc4-b805-e9fdb3ba48ba",
+      "text": "¿En qué año se inauguró Disneyland en California?",
+      "mediaId": null,
+      "type": "quiz",
+      "timeLimit": 20,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "71fc0a6e-4694-4ee2-b8d9-40282e8c361f",
+          "questionId": "a4b58b90-fe81-45b2-950e-9136e8e73f51",
+          "text": "1955",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "4c67513c-5d0b-47b5-b63d-7ed256b4a283",
+          "questionId": "a4b58b90-fe81-45b2-950e-9136e8e73f51",
+          "text": "1960",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "417890bf-1b37-49de-b737-3af4b16050e4",
+          "questionId": "a4b58b90-fe81-45b2-950e-9136e8e73f51",
+          "text": "1950",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "ec64765b-2041-4f78-8fd8-c596059b12fc",
+          "questionId": "a4b58b90-fe81-45b2-950e-9136e8e73f51",
+          "text": "1965",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "c94ae27a-80ce-430b-a493-b8e813477714",
+      "quizId": "4f1ada51-18f0-4fc4-b805-e9fdb3ba48ba",
+      "text": "¿Cuántos enanitos tiene Blancanieves?",
+      "mediaId": null,
+      "type": "quiz",
+      "timeLimit": 20,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "3793395e-e194-4531-a931-941ddada86df",
+          "questionId": "c94ae27a-80ce-430b-a493-b8e813477714",
+          "text": "7",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "81f0e2fd-ec74-4916-994f-f2f8e2164505",
+          "questionId": "c94ae27a-80ce-430b-a493-b8e813477714",
+          "text": "6",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "72508fe1-a22d-4690-93c2-5fff3f10874a",
+          "questionId": "c94ae27a-80ce-430b-a493-b8e813477714",
+          "text": "8",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "91937252-418d-4265-b4e1-98208098d60a",
+          "questionId": "c94ae27a-80ce-430b-a493-b8e813477714",
+          "text": "5",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "86e14d4d-de52-44af-8995-07b94eb18b3d",
+      "quizId": "4f1ada51-18f0-4fc4-b805-e9fdb3ba48ba",
+      "text": "¿Cómo se llama la villana de \"La Sirenita\"?",
+      "mediaId": null,
+      "type": "quiz",
+      "timeLimit": 20,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "9fdb65b6-fec9-4f1d-9490-aba6190119b6",
+          "questionId": "86e14d4d-de52-44af-8995-07b94eb18b3d",
+          "text": "Úrsula",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "6192da3b-6bcc-48df-908a-e8c0d98e2193",
+          "questionId": "86e14d4d-de52-44af-8995-07b94eb18b3d",
+          "text": "Maléfica",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "7cb60c65-4155-4fe2-94d1-96d04b255fd8",
+          "questionId": "86e14d4d-de52-44af-8995-07b94eb18b3d",
+          "text": "Cruella",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "8b7dbaee-c0e3-4637-8b3a-33c48f93cd22",
+          "questionId": "86e14d4d-de52-44af-8995-07b94eb18b3d",
+          "text": "La Reina Malvada",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    }
+  ]
+},
+{
+  "_id": "2162c736-519d-4375-b857-d97dfed0da74",
+  "id": "2162c736-519d-4375-b857-d97dfed0da74",
+  "authorId": "12d64e8e-0183-4b0e-bb17-a9f8dc416c3e",
+  "title": "a",
+  "description": "a",
+  "visibility": "private",
+  "status": "draft",
+  "category": "Historia",
+  "themeId": "343b3fec-35fe-47e9-b950-4af6fef2c5e5",
+  "coverImageId": null,
+  "createdAt": {
+    "$date": "2026-01-16T04:46:59.226Z"
+  },
+  "playCount": 0,
+  "questions": [
+    {
+      "id": "9b36a2ca-30b0-443a-aff6-7be7cd9ca478",
+      "quizId": "2162c736-519d-4375-b857-d97dfed0da74",
+      "text": "a",
+      "mediaId": null,
+      "type": "quiz",
+      "timeLimit": 20,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "a0401146-3f3c-4d47-8f23-556a9da78ec2",
+          "questionId": "9b36a2ca-30b0-443a-aff6-7be7cd9ca478",
+          "text": "si",
+          "mediaId": null,
+          "isCorrect": true
+        }
+      ]
+    }
+  ]
+},
+{
+  "_id": "3b6eacae-6ee6-4d81-b94d-ccea86b4a5cd",
+  "id": "3b6eacae-6ee6-4d81-b94d-ccea86b4a5cd",
+  "authorId": "12d64e8e-0183-4b0e-bb17-a9f8dc416c3e",
+  "title": "a",
+  "description": "a",
+  "visibility": "private",
+  "status": "draft",
+  "category": "Historia",
+  "themeId": "343b3fec-35fe-47e9-b950-4af6fef2c5e5",
+  "coverImageId": null,
+  "createdAt": {
+    "$date": "2026-01-16T04:46:59.334Z"
+  },
+  "playCount": 0,
+  "questions": [
+    {
+      "id": "b85bc8a3-5b57-49a1-95b3-791b0231b7d1",
+      "quizId": "3b6eacae-6ee6-4d81-b94d-ccea86b4a5cd",
+      "text": "a",
+      "mediaId": null,
+      "type": "quiz",
+      "timeLimit": 20,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "69b64a5b-6d99-412d-ac24-1e5e94580816",
+          "questionId": "b85bc8a3-5b57-49a1-95b3-791b0231b7d1",
+          "text": "si",
+          "mediaId": null,
+          "isCorrect": true
+        }
+      ]
+    }
+  ]
+},
+{
+  "_id": "f38acf0d-720a-4e03-8a99-84bec920629f",
+  "id": "f38acf0d-720a-4e03-8a99-84bec920629f",
+  "authorId": "12d64e8e-0183-4b0e-bb17-a9f8dc416c3e",
+  "title": "publico",
+  "description": "public",
+  "visibility": "public",
+  "status": "draft",
+  "category": "Historia",
+  "themeId": "343b3fec-35fe-47e9-b950-4af6fef2c5e5",
+  "coverImageId": null,
+  "createdAt": {
+    "$date": "2026-01-16T04:47:40.130Z"
+  },
+  "playCount": 0,
+  "questions": [
+    {
+      "id": "ed751a55-fd89-424c-8c23-f834907533d8",
+      "quizId": "f38acf0d-720a-4e03-8a99-84bec920629f",
+      "text": "public",
+      "mediaId": null,
+      "type": "quiz",
+      "timeLimit": 20,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "0416c040-4004-471c-9127-d5a8a3cb7303",
+          "questionId": "ed751a55-fd89-424c-8c23-f834907533d8",
+          "text": "si",
+          "mediaId": null,
+          "isCorrect": true
+        }
+      ]
+    }
+  ]
+},
+{
+  "_id": "629ac341-79c8-4a15-9c5f-87ec94259f25",
+  "id": "629ac341-79c8-4a15-9c5f-87ec94259f25",
+  "authorId": "12d64e8e-0183-4b0e-bb17-a9f8dc416c3e",
+  "title": "🎃 Halloween Trivia",
+  "description": "¿Cuánto sabes sobre la noche más terrorífica del año? Pon a prueba tus conocimientos sobre Halloween.",
+  "visibility": "public",
+  "status": "draft",
+  "category": "Historia",
+  "themeId": "343b3fec-35fe-47e9-b950-4af6fef2c5e5",
+  "coverImageId": "be03de84-7d33-4bc1-9c50-018798c28109",
+  "createdAt": {
+    "$date": "2026-01-16T05:02:08.632Z"
+  },
+  "playCount": 0,
+  "questions": [
+    {
+      "id": "756440b9-25b3-41ca-9e05-ab0f8914e803",
+      "quizId": "629ac341-79c8-4a15-9c5f-87ec94259f25",
+      "text": "¿En qué país se originó Halloween?",
+      "mediaId": null,
+      "type": "quiz",
+      "timeLimit": 20,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "836cae04-ce8a-4b8c-af5e-7c167a84bd5c",
+          "questionId": "756440b9-25b3-41ca-9e05-ab0f8914e803",
+          "text": "Irlanda",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "a5c62fa3-f054-407f-b058-0cb511141d00",
+          "questionId": "756440b9-25b3-41ca-9e05-ab0f8914e803",
+          "text": "Estados Unidos",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "93ed30a1-339f-4a31-b13d-0a13d5005979",
+          "questionId": "756440b9-25b3-41ca-9e05-ab0f8914e803",
+          "text": "México",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "e0ddd2e4-d07b-44e0-8c13-9c0bb5d4a48f",
+          "questionId": "756440b9-25b3-41ca-9e05-ab0f8914e803",
+          "text": "Inglaterra",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "4fb5983f-2911-4bfb-85d5-53fb195d48af",
+      "quizId": "629ac341-79c8-4a15-9c5f-87ec94259f25",
+      "text": "¿Qué vegetal se usaba originalmente para hacer linternas antes de las calabazas?",
+      "mediaId": null,
+      "type": "quiz",
+      "timeLimit": 20,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "b0a3ae45-ed7d-4654-9fe6-448584252262",
+          "questionId": "4fb5983f-2911-4bfb-85d5-53fb195d48af",
+          "text": "Nabo",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "e48a9a75-b640-48a7-af6d-df419a983585",
+          "questionId": "4fb5983f-2911-4bfb-85d5-53fb195d48af",
+          "text": "Calabaza",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "a52d986a-3709-45f4-bb09-f91e84da0fa4",
+          "questionId": "4fb5983f-2911-4bfb-85d5-53fb195d48af",
+          "text": "Zanahoria",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "6459a928-e08d-4fa8-bd66-398e418d4358",
+          "questionId": "4fb5983f-2911-4bfb-85d5-53fb195d48af",
+          "text": "Remolacha",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "3b968366-f78d-4639-8e54-66887ac4e666",
+      "quizId": "629ac341-79c8-4a15-9c5f-87ec94259f25",
+      "text": "¿Cómo se llama la fobia al Halloween?",
+      "mediaId": null,
+      "type": "quiz",
+      "timeLimit": 20,
+      "points": 2000,
+      "answers": [
+        {
+          "id": "c62d04c2-6b5e-4815-848c-ddd3bec0a3b4",
+          "questionId": "3b968366-f78d-4639-8e54-66887ac4e666",
+          "text": "Samhainofobia",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "4e1b1566-3121-45f4-8437-d839b3619f02",
+          "questionId": "3b968366-f78d-4639-8e54-66887ac4e666",
+          "text": "Aracnofobia",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "2e18b366-6805-4fb1-ac9a-e88bf859ede7",
+          "questionId": "3b968366-f78d-4639-8e54-66887ac4e666",
+          "text": "Coulrofobia",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "0fec53aa-07e0-4d36-bab3-5379df24b46a",
+          "questionId": "3b968366-f78d-4639-8e54-66887ac4e666",
+          "text": "Nictalofobia",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "d73f0331-4d4b-42a0-995f-c27a7dc04a80",
+      "quizId": "629ac341-79c8-4a15-9c5f-87ec94259f25",
+      "text": "¿En qué fecha se celebra Halloween?",
+      "mediaId": null,
+      "type": "quiz",
+      "timeLimit": 20,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "a38e71b7-2e49-4799-8c79-caa445346273",
+          "questionId": "d73f0331-4d4b-42a0-995f-c27a7dc04a80",
+          "text": "31 de octubre",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "95201390-c180-433e-b678-363667fb4dde",
+          "questionId": "d73f0331-4d4b-42a0-995f-c27a7dc04a80",
+          "text": "1 de noviembre",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "db4087cf-d4e4-4cec-b349-5a8b5bb92d4a",
+          "questionId": "d73f0331-4d4b-42a0-995f-c27a7dc04a80",
+          "text": "30 de octubre",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "b7b09e41-ac19-4baf-a93e-8ad6f31dc61f",
+          "questionId": "d73f0331-4d4b-42a0-995f-c27a7dc04a80",
+          "text": "2 de noviembre",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "a98f7c1b-a0fc-4858-a38b-c189ee4a2889",
+      "quizId": "629ac341-79c8-4a15-9c5f-87ec94259f25",
+      "text": "¿Qué significa la palabra \"Halloween\"?",
+      "mediaId": null,
+      "type": "quiz",
+      "timeLimit": 20,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "4f1edb25-a670-4033-bf2c-6df212a2dd74",
+          "questionId": "a98f7c1b-a0fc-4858-a38b-c189ee4a2889",
+          "text": "Víspera de Todos los Santos",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "738ef299-5412-4b4b-a42d-b529a1d6256b",
+          "questionId": "a98f7c1b-a0fc-4858-a38b-c189ee4a2889",
+          "text": "Noche de brujas",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "90d4c641-8716-4fbf-9cc1-047a12e994e1",
+          "questionId": "a98f7c1b-a0fc-4858-a38b-c189ee4a2889",
+          "text": "Día de los muertos",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "3cd7225a-d132-4628-bce6-aecd0900a832",
+          "questionId": "a98f7c1b-a0fc-4858-a38b-c189ee4a2889",
+          "text": "Fiesta de disfraces",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    }
+  ]
+},
+{
+  "_id": "bbfa9007-e445-4919-92fb-896ee6314195",
+  "id": "bbfa9007-e445-4919-92fb-896ee6314195",
+  "authorId": "12d64e8e-0183-4b0e-bb17-a9f8dc416c3e",
+  "title": "ziii",
+  "description": "siiii",
+  "visibility": "public",
+  "status": "draft",
+  "category": "General",
+  "themeId": "343b3fec-35fe-47e9-b950-4af6fef2c5e5",
+  "coverImageId": "526890d0-f17a-4296-a8a1-e7e9d3c14da4",
+  "createdAt": {
+    "$date": "2026-01-16T05:02:53.780Z"
+  },
+  "playCount": 0,
+  "questions": [
+    {
+      "id": "10c2c965-4bf7-477a-b1aa-0017cb958766",
+      "quizId": "bbfa9007-e445-4919-92fb-896ee6314195",
+      "text": "ziiiii",
+      "mediaId": null,
+      "type": "quiz",
+      "timeLimit": 20,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "b1615b4e-c45c-4472-b32b-973d47344e5b",
+          "questionId": "10c2c965-4bf7-477a-b1aa-0017cb958766",
+          "text": "si",
+          "mediaId": null,
+          "isCorrect": true
+        }
+      ]
+    }
+  ]
+},
+{
+  "_id": "5105c2ef-ee36-479c-a326-2252b127564b",
+  "id": "5105c2ef-ee36-479c-a326-2252b127564b",
+  "authorId": "5c87459d-075a-42a3-8980-0b87d9d6cf03",
+  "title": "sbsjbzbs",
+  "description": "djjeju",
+  "visibility": "public",
+  "status": "publish",
+  "category": "Historia",
+  "themeId": "3ef13730-7081-4c9d-881a-d3755c408272",
+  "coverImageId": null,
+  "createdAt": {
+    "$date": "2026-01-16T05:57:22.995Z"
+  },
+  "playCount": 0,
+  "questions": [
+    {
+      "id": "b7b1db7e-0625-4114-a1ef-6f1bab238826",
+      "quizId": "5105c2ef-ee36-479c-a326-2252b127564b",
+      "text": "a",
+      "mediaId": null,
+      "type": "multiple",
+      "timeLimit": 20,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "c97e46cd-bbf0-427b-8ceb-75107ad0f8db",
+          "questionId": "b7b1db7e-0625-4114-a1ef-6f1bab238826",
+          "text": "b",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "8897a004-fe68-4f8c-9a3c-5f57a52b6b83",
+          "questionId": "b7b1db7e-0625-4114-a1ef-6f1bab238826",
+          "text": "e",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "a32bd3e1-69cd-43e2-8990-827ed55253fa",
+          "questionId": "b7b1db7e-0625-4114-a1ef-6f1bab238826",
+          "text": "g",
+          "mediaId": null,
+          "isCorrect": false
+        },
+        {
+          "id": "511c145d-5a1f-47b4-9e9f-5d1e3e512163",
+          "questionId": "b7b1db7e-0625-4114-a1ef-6f1bab238826",
+          "text": "h",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    }
+  ]
+},
+{
+  "_id": "a340aa91-c750-4ab8-84ff-b2321e6cf3b8",
+  "id": "a340aa91-c750-4ab8-84ff-b2321e6cf3b8",
+  "authorId": "cfc1ddf2-3399-4f87-bd67-39230348101d",
+  "title": "Prueba Isra",
+  "description": "Prueba",
+  "visibility": "public",
+  "status": "publish",
+  "category": "General",
+  "themeId": "f1986c62-7dc1-47c5-9a1f-03d34043e8f4",
+  "coverImageId": null,
+  "createdAt": {
+    "$date": "2026-01-16T07:46:14.278Z"
+  },
+  "playCount": 0,
+  "questions": [
+    {
+      "id": "6c9cd7ce-2014-424c-a88a-2d3e402389c1",
+      "quizId": "a340aa91-c750-4ab8-84ff-b2321e6cf3b8",
+      "text": "Verdadero o Falso 1: Ejemplo de enunciado",
+      "mediaId": null,
+      "type": "true_false",
+      "timeLimit": 20,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "0a7e700e-8cfa-4dcf-a93e-6430463ac01d",
+          "questionId": "6c9cd7ce-2014-424c-a88a-2d3e402389c1",
+          "text": "Verdadero",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "7fb3b21a-8d30-4c19-8e79-8341b1d26ca5",
+          "questionId": "6c9cd7ce-2014-424c-a88a-2d3e402389c1",
+          "text": "Falso",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "cac2ebe3-9978-424d-9b55-048e589d258e",
+      "quizId": "a340aa91-c750-4ab8-84ff-b2321e6cf3b8",
+      "text": "Verdadero o Falso 2: Ejemplo de enunciado",
+      "mediaId": null,
+      "type": "true_false",
+      "timeLimit": 20,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "2c5b2a5d-fb0c-4c98-9361-4910e70f4fad",
+          "questionId": "cac2ebe3-9978-424d-9b55-048e589d258e",
+          "text": "Verdadero",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "c5984280-4cc4-4712-92f0-71616209e983",
+          "questionId": "cac2ebe3-9978-424d-9b55-048e589d258e",
+          "text": "Falso",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "id": "0d9d4725-8223-4457-aaf4-df85d4c9cc8b",
+      "quizId": "a340aa91-c750-4ab8-84ff-b2321e6cf3b8",
+      "text": "Verdadero o Falso 3: Ejemplo de enunciado",
+      "mediaId": null,
+      "type": "true_false",
+      "timeLimit": 20,
+      "points": 1000,
+      "answers": [
+        {
+          "id": "62bf9c99-3c60-4f87-a9e3-533266dc4abe",
+          "questionId": "0d9d4725-8223-4457-aaf4-df85d4c9cc8b",
+          "text": "Verdadero",
+          "mediaId": null,
+          "isCorrect": true
+        },
+        {
+          "id": "af35ebea-b13b-4f37-8312-ff7ff23f5220",
+          "questionId": "0d9d4725-8223-4457-aaf4-df85d4c9cc8b",
+          "text": "Falso",
+          "mediaId": null,
+          "isCorrect": false
+        }
+      ]
+    }
+  ]
+}]
