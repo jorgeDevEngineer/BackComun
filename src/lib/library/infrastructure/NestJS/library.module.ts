@@ -23,7 +23,7 @@ import { GetUserFavoriteQuizzesDomainService } from "../../domain/services/Queri
 import { GetUserCompletedQuizzesDomainService } from "../../domain/services/Queries/GetUserCompletedQuizzesDomainService";
 import { AddUserFavoriteQuizDomainService } from "../../domain/services/Commands/AddUserFavoriteQuizDomainService";
 import { DeleteUserFavoriteQuizDomainService } from "../../domain/services/Commands/DeleteUserFavoriteQuizDomainService";
-import { ILoggerPort } from "src/lib/shared/aspects/logger/domain/ports/logger.port";
+import { ILoggerPort } from "src/lib/shared/aspects/logger/application/ports/logger.port";
 import { LoggingUseCaseDecorator } from "src/lib/shared/aspects/logger/application/decorators/logging.decorator";
 import { ErrorHandlingDecoratorWithEither } from "src/lib/shared/aspects/error-handling/application/decorators/error-handling-either";
 import { LoggerModule } from "src/lib/shared/aspects/logger/infrastructure/logger.module";
