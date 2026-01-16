@@ -62,7 +62,7 @@ export class GenerateGroupInvitationCommandHandler
 
     return Either.makeRight({
       groupId: group.id.value,
-      invitationToken: fullInvitationLink,
+      invitationLink: fullInvitationLink,
       expiresAt: token.expiresAt.toISOString(),//
     });
   }

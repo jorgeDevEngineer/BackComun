@@ -19,7 +19,7 @@ export class JoinGroupByInvitationResponseDto {
 
 export class GenerateGroupInvitationResponseDto {
   groupId: string;
-  invitationToken: string;
+  invitationLink: string;
   expiresAt: string;
 }
 
