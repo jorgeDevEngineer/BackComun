@@ -61,16 +61,10 @@ export class GetUserGroupsResponseDto {
 }
 
 
-export class GetGroupMembersItem {
+export class GetGroupMembersResponseDto {
   userId: string;
   role: string;
   joinedAt: string;
-  completedQuizzes: number;
-}
-
-export class GetGroupMembersResponseDto {
-  name: string;
-  members: GetGroupMembersItem[];
 }
 
 export interface GroupMemberitem {
@@ -117,7 +111,11 @@ export interface GroupLeaderboardItemDto {
 };
 
 export interface GetGroupLeaderboardResponseDto {
-  leaderboard: GroupLeaderboardItemDto[];
+  userId: string;
+  name: string;              
+  completedQuizzes: number;
+  totalPoints: number;
+  position: number;
 }
 
 export interface GetGroupQuizLeaderboardResponseDto {
