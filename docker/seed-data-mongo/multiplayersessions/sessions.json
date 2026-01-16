@@ -1,0 +1,1192 @@
+[{
+  "_id": "c4cae5bd-0544-45b6-bf9c-740c32f7f639",
+  "hostId": "eee8a38f-e2f0-4249-bb53-b717ba4582d8",
+  "quizId": "77f3d614-33bc-4dd6-a5e7-62c0f8e90135",
+  "sessionPin": "84566826",
+  "startedAt": {
+    "$date": "2026-01-15T04:30:05.085Z"
+  },
+  "completedAt": {
+    "$date": "2026-01-15T04:32:17.213Z"
+  },
+  "currentQuestionStartTime": {
+    "$date": "2026-01-15T04:32:12.758Z"
+  },
+  "sessionState": "end",
+  "leaderboard": [
+    {
+      "playerId": "ceaf0964-23f1-466e-a71e-29f641698488",
+      "nickname": "Jovani",
+      "score": 0,
+      "rank": 1,
+      "previousRank": 1
+    }
+  ],
+  "progress": {
+    "currentQuestion": "0dbaa41b-35b0-4594-810e-fcca96528f29",
+    "previousQuestion": "6644ca5e-0d5f-4f0a-a0d2-519901d04b88",
+    "totalQuestions": 15,
+    "questionsAnswered": 15
+  },
+  "players": [
+    {
+      "playerId": "ceaf0964-23f1-466e-a71e-29f641698488",
+      "nickname": "Jovani",
+      "score": 0,
+      "streak": 0,
+      "isGuest": false
+    }
+  ],
+  "playersAnswers": [
+    {
+      "questionId": "84b98bd8-b6f9-4e78-96d5-708ecaf6f118",
+      "answers": []
+    },
+    {
+      "questionId": "03f57ca9-2e67-4fd8-b2c6-73f6584d6dbe",
+      "answers": []
+    },
+    {
+      "questionId": "362346a1-6f49-4453-a683-40b8536940fb",
+      "answers": []
+    },
+    {
+      "questionId": "582f72fc-da3a-45f3-a54c-8b457cc60777",
+      "answers": []
+    },
+    {
+      "questionId": "10f1cf29-c27e-48d5-bc4a-1beca7ac8bb3",
+      "answers": []
+    },
+    {
+      "questionId": "b6448d08-b3f1-4c76-9854-74a2e9f318a3",
+      "answers": []
+    },
+    {
+      "questionId": "ac7d59a9-3164-4728-86e6-1f00be82bdb0",
+      "answers": []
+    },
+    {
+      "questionId": "a7c95d21-5637-4b38-b22f-6e1bf588ef0c",
+      "answers": []
+    },
+    {
+      "questionId": "0cb37e87-f2ed-4391-a025-d92a412b859e",
+      "answers": []
+    },
+    {
+      "questionId": "cf0aae29-ef16-4477-a495-86c50389b3e6",
+      "answers": []
+    },
+    {
+      "questionId": "88aadbc2-d7ce-4cf5-a078-8a69c54851cd",
+      "answers": []
+    },
+    {
+      "questionId": "13ffd235-1101-4ec8-b188-e1786b6c8ac2",
+      "answers": []
+    },
+    {
+      "questionId": "d3bb9956-84ae-4116-a4d8-322318575c34",
+      "answers": []
+    },
+    {
+      "questionId": "6644ca5e-0d5f-4f0a-a0d2-519901d04b88",
+      "answers": []
+    },
+    {
+      "questionId": "0dbaa41b-35b0-4594-810e-fcca96528f29",
+      "answers": []
+    }
+  ]
+},
+{
+  "_id": "b1a6387d-469b-4c3e-8256-1cf8d224dd9b",
+  "hostId": "87c24641-cc4a-4285-9116-7dce0a514a42",
+  "quizId": "283fb0bd-1b40-4d1e-b7e7-1e38a9763fc1",
+  "sessionPin": "9141106162",
+  "startedAt": {
+    "$date": "2026-01-15T16:31:17.791Z"
+  },
+  "completedAt": {
+    "$date": "2026-01-15T16:45:54.553Z"
+  },
+  "currentQuestionStartTime": {
+    "$date": "2026-01-15T16:45:52.863Z"
+  },
+  "sessionState": "end",
+  "leaderboard": [
+    {
+      "playerId": "62d07629-03de-4eb0-a4e0-cfbf6fd475cc",
+      "nickname": "DiegoMuyPro",
+      "score": 3970,
+      "rank": 1,
+      "previousRank": 1
+    }
+  ],
+  "progress": {
+    "currentQuestion": "c2443edf-dd04-424b-84ca-cd0b6ed1e89e",
+    "previousQuestion": "78bb4650-faf0-47ca-a1ab-df48a89cc136",
+    "totalQuestions": 15,
+    "questionsAnswered": 15
+  },
+  "players": [
+    {
+      "playerId": "62d07629-03de-4eb0-a4e0-cfbf6fd475cc",
+      "nickname": "DiegoMuyPro",
+      "score": 3970,
+      "streak": 0,
+      "isGuest": false
+    }
+  ],
+  "playersAnswers": [
+    {
+      "questionId": "c3bac3ed-474f-4b78-bdb0-16e4342cb9a6",
+      "answers": [
+        {
+          "playerId": "62d07629-03de-4eb0-a4e0-cfbf6fd475cc",
+          "questionId": "c3bac3ed-474f-4b78-bdb0-16e4342cb9a6",
+          "answerIndex": [
+            1
+          ],
+          "isCorrect": true,
+          "earnedScore": 1440,
+          "timeElapsed": 14770
+        }
+      ]
+    },
+    {
+      "questionId": "88585279-b073-465c-8f9d-a99c0cd8b007",
+      "answers": [
+        {
+          "playerId": "62d07629-03de-4eb0-a4e0-cfbf6fd475cc",
+          "questionId": "88585279-b073-465c-8f9d-a99c0cd8b007",
+          "answerIndex": [
+            2
+          ],
+          "isCorrect": false,
+          "earnedScore": 0,
+          "timeElapsed": 18953
+        }
+      ]
+    },
+    {
+      "questionId": "edb79aab-b2e8-4d02-a3d5-2f7c2d5d391c",
+      "answers": [
+        {
+          "playerId": "62d07629-03de-4eb0-a4e0-cfbf6fd475cc",
+          "questionId": "edb79aab-b2e8-4d02-a3d5-2f7c2d5d391c",
+          "answerIndex": [
+            2
+          ],
+          "isCorrect": false,
+          "earnedScore": 0,
+          "timeElapsed": 3875
+        }
+      ]
+    },
+    {
+      "questionId": "e884316b-4719-48e5-9f1b-5cb290b35c7b",
+      "answers": [
+        {
+          "playerId": "62d07629-03de-4eb0-a4e0-cfbf6fd475cc",
+          "questionId": "e884316b-4719-48e5-9f1b-5cb290b35c7b",
+          "answerIndex": [
+            1
+          ],
+          "isCorrect": true,
+          "earnedScore": 1380,
+          "timeElapsed": 35366
+        }
+      ]
+    },
+    {
+      "questionId": "4b79816f-2586-4f7d-9b1d-2947c58ed631",
+      "answers": [
+        {
+          "playerId": "62d07629-03de-4eb0-a4e0-cfbf6fd475cc",
+          "questionId": "4b79816f-2586-4f7d-9b1d-2947c58ed631",
+          "answerIndex": [
+            1
+          ],
+          "isCorrect": true,
+          "earnedScore": 1150,
+          "timeElapsed": 13356
+        }
+      ]
+    },
+    {
+      "questionId": "c8c90da8-f78c-4457-81f8-5d80bbe437e2",
+      "answers": []
+    },
+    {
+      "questionId": "933977e6-9f8f-4ec0-9b95-b805244fac9d",
+      "answers": []
+    },
+    {
+      "questionId": "406f2dd6-ca52-4798-87e5-249f6839b4f6",
+      "answers": []
+    },
+    {
+      "questionId": "110d74cb-baf7-4da9-97fa-ad54b5f2f250",
+      "answers": []
+    },
+    {
+      "questionId": "e5423e3a-3765-4150-80a0-4457af825500",
+      "answers": []
+    },
+    {
+      "questionId": "a8501d99-4e39-4308-b980-1ecb778b472e",
+      "answers": []
+    },
+    {
+      "questionId": "5291b3f6-b6fa-441c-ac45-eab13a1aa505",
+      "answers": []
+    },
+    {
+      "questionId": "5de2fcc1-ad0c-418a-94fc-fb5055a3fd9b",
+      "answers": []
+    },
+    {
+      "questionId": "78bb4650-faf0-47ca-a1ab-df48a89cc136",
+      "answers": [
+        {
+          "playerId": "62d07629-03de-4eb0-a4e0-cfbf6fd475cc",
+          "questionId": "78bb4650-faf0-47ca-a1ab-df48a89cc136",
+          "answerIndex": [
+            1,
+            2
+          ],
+          "isCorrect": false,
+          "earnedScore": 0,
+          "timeElapsed": 4948
+        }
+      ]
+    },
+    {
+      "questionId": "c2443edf-dd04-424b-84ca-cd0b6ed1e89e",
+      "answers": []
+    }
+  ]
+},
+{
+  "_id": "14015dcd-a312-4cd5-8760-09a538369b3e",
+  "hostId": "62d07629-03de-4eb0-a4e0-cfbf6fd475cc",
+  "quizId": "283fb0bd-1b40-4d1e-b7e7-1e38a9763fc1",
+  "sessionPin": "9998245",
+  "startedAt": {
+    "$date": "2026-01-15T17:31:20.118Z"
+  },
+  "completedAt": {
+    "$date": "2026-01-15T17:34:23.605Z"
+  },
+  "currentQuestionStartTime": {
+    "$date": "2026-01-15T17:34:22.082Z"
+  },
+  "sessionState": "end",
+  "leaderboard": [
+    {
+      "playerId": "87c24641-cc4a-4285-9116-7dce0a514a42",
+      "nickname": "pepito",
+      "score": 1750,
+      "rank": 1,
+      "previousRank": 1
+    }
+  ],
+  "progress": {
+    "currentQuestion": "c2443edf-dd04-424b-84ca-cd0b6ed1e89e",
+    "previousQuestion": "78bb4650-faf0-47ca-a1ab-df48a89cc136",
+    "totalQuestions": 15,
+    "questionsAnswered": 15
+  },
+  "players": [
+    {
+      "playerId": "87c24641-cc4a-4285-9116-7dce0a514a42",
+      "nickname": "pepito",
+      "score": 1750,
+      "streak": 1,
+      "isGuest": false
+    }
+  ],
+  "playersAnswers": [
+    {
+      "questionId": "c3bac3ed-474f-4b78-bdb0-16e4342cb9a6",
+      "answers": []
+    },
+    {
+      "questionId": "88585279-b073-465c-8f9d-a99c0cd8b007",
+      "answers": []
+    },
+    {
+      "questionId": "edb79aab-b2e8-4d02-a3d5-2f7c2d5d391c",
+      "answers": []
+    },
+    {
+      "questionId": "e884316b-4719-48e5-9f1b-5cb290b35c7b",
+      "answers": [
+        {
+          "playerId": "87c24641-cc4a-4285-9116-7dce0a514a42",
+          "questionId": "e884316b-4719-48e5-9f1b-5cb290b35c7b",
+          "answerIndex": [
+            1
+          ],
+          "isCorrect": true,
+          "earnedScore": 1750,
+          "timeElapsed": 4092
+        }
+      ]
+    },
+    {
+      "questionId": "4b79816f-2586-4f7d-9b1d-2947c58ed631",
+      "answers": []
+    },
+    {
+      "questionId": "c8c90da8-f78c-4457-81f8-5d80bbe437e2",
+      "answers": []
+    },
+    {
+      "questionId": "933977e6-9f8f-4ec0-9b95-b805244fac9d",
+      "answers": []
+    },
+    {
+      "questionId": "406f2dd6-ca52-4798-87e5-249f6839b4f6",
+      "answers": []
+    },
+    {
+      "questionId": "110d74cb-baf7-4da9-97fa-ad54b5f2f250",
+      "answers": []
+    },
+    {
+      "questionId": "e5423e3a-3765-4150-80a0-4457af825500",
+      "answers": []
+    },
+    {
+      "questionId": "a8501d99-4e39-4308-b980-1ecb778b472e",
+      "answers": []
+    },
+    {
+      "questionId": "5291b3f6-b6fa-441c-ac45-eab13a1aa505",
+      "answers": []
+    },
+    {
+      "questionId": "5de2fcc1-ad0c-418a-94fc-fb5055a3fd9b",
+      "answers": []
+    },
+    {
+      "questionId": "78bb4650-faf0-47ca-a1ab-df48a89cc136",
+      "answers": []
+    },
+    {
+      "questionId": "c2443edf-dd04-424b-84ca-cd0b6ed1e89e",
+      "answers": []
+    }
+  ]
+},
+{
+  "_id": "6fe6f3a1-d3ff-4d22-bd9c-5e87ea187653",
+  "hostId": "62d07629-03de-4eb0-a4e0-cfbf6fd475cc",
+  "quizId": "283fb0bd-1b40-4d1e-b7e7-1e38a9763fc1",
+  "sessionPin": "327571",
+  "startedAt": {
+    "$date": "2026-01-15T17:36:49.428Z"
+  },
+  "completedAt": {
+    "$date": "2026-01-15T17:39:39.900Z"
+  },
+  "currentQuestionStartTime": {
+    "$date": "2026-01-15T17:38:53.967Z"
+  },
+  "sessionState": "end",
+  "leaderboard": [
+    {
+      "playerId": "87c24641-cc4a-4285-9116-7dce0a514a42",
+      "nickname": "pepito",
+      "score": 1570,
+      "rank": 1,
+      "previousRank": 1
+    }
+  ],
+  "progress": {
+    "currentQuestion": "c2443edf-dd04-424b-84ca-cd0b6ed1e89e",
+    "previousQuestion": "78bb4650-faf0-47ca-a1ab-df48a89cc136",
+    "totalQuestions": 15,
+    "questionsAnswered": 15
+  },
+  "players": [
+    {
+      "playerId": "87c24641-cc4a-4285-9116-7dce0a514a42",
+      "nickname": "pepito",
+      "score": 1570,
+      "streak": 1,
+      "isGuest": false
+    }
+  ],
+  "playersAnswers": [
+    {
+      "questionId": "c3bac3ed-474f-4b78-bdb0-16e4342cb9a6",
+      "answers": []
+    },
+    {
+      "questionId": "88585279-b073-465c-8f9d-a99c0cd8b007",
+      "answers": []
+    },
+    {
+      "questionId": "edb79aab-b2e8-4d02-a3d5-2f7c2d5d391c",
+      "answers": []
+    },
+    {
+      "questionId": "e884316b-4719-48e5-9f1b-5cb290b35c7b",
+      "answers": []
+    },
+    {
+      "questionId": "4b79816f-2586-4f7d-9b1d-2947c58ed631",
+      "answers": []
+    },
+    {
+      "questionId": "c8c90da8-f78c-4457-81f8-5d80bbe437e2",
+      "answers": []
+    },
+    {
+      "questionId": "933977e6-9f8f-4ec0-9b95-b805244fac9d",
+      "answers": []
+    },
+    {
+      "questionId": "406f2dd6-ca52-4798-87e5-249f6839b4f6",
+      "answers": []
+    },
+    {
+      "questionId": "110d74cb-baf7-4da9-97fa-ad54b5f2f250",
+      "answers": []
+    },
+    {
+      "questionId": "e5423e3a-3765-4150-80a0-4457af825500",
+      "answers": []
+    },
+    {
+      "questionId": "a8501d99-4e39-4308-b980-1ecb778b472e",
+      "answers": []
+    },
+    {
+      "questionId": "5291b3f6-b6fa-441c-ac45-eab13a1aa505",
+      "answers": []
+    },
+    {
+      "questionId": "5de2fcc1-ad0c-418a-94fc-fb5055a3fd9b",
+      "answers": []
+    },
+    {
+      "questionId": "78bb4650-faf0-47ca-a1ab-df48a89cc136",
+      "answers": []
+    },
+    {
+      "questionId": "c2443edf-dd04-424b-84ca-cd0b6ed1e89e",
+      "answers": [
+        {
+          "playerId": "87c24641-cc4a-4285-9116-7dce0a514a42",
+          "questionId": "c2443edf-dd04-424b-84ca-cd0b6ed1e89e",
+          "answerIndex": [
+            1
+          ],
+          "isCorrect": true,
+          "earnedScore": 1570,
+          "timeElapsed": 4092
+        }
+      ]
+    }
+  ]
+},
+{
+  "_id": "aaed8b3c-cd81-4565-839b-ccaaca60d6be",
+  "hostId": "6af29672-048c-47e2-9820-7c60b4318daa",
+  "quizId": "49a9867c-2c96-4b53-81e5-96d0363694ef",
+  "sessionPin": "7811095",
+  "startedAt": {
+    "$date": "2026-01-15T21:09:25.840Z"
+  },
+  "completedAt": {
+    "$date": "2026-01-15T21:10:01.887Z"
+  },
+  "currentQuestionStartTime": {
+    "$date": "2026-01-15T21:10:00.571Z"
+  },
+  "sessionState": "end",
+  "leaderboard": [
+    {
+      "playerId": "95b7e1fe-90ee-4d7f-b2e2-5de26b93bb5a",
+      "nickname": "pepito",
+      "score": 0,
+      "rank": 1,
+      "previousRank": 1
+    }
+  ],
+  "progress": {
+    "currentQuestion": "80201847-2e7a-4f13-81af-5cb9c8b60a50",
+    "previousQuestion": "3e25cfe2-c941-48c8-9b34-5015730d0be6",
+    "totalQuestions": 4,
+    "questionsAnswered": 4
+  },
+  "players": [
+    {
+      "playerId": "95b7e1fe-90ee-4d7f-b2e2-5de26b93bb5a",
+      "nickname": "pepito",
+      "score": 0,
+      "streak": 0,
+      "isGuest": false
+    }
+  ],
+  "playersAnswers": [
+    {
+      "questionId": "39ef0ce4-f178-4623-a8c8-f782dcae9911",
+      "answers": []
+    },
+    {
+      "questionId": "b057f753-dfc0-4dff-a434-3180c3b5502b",
+      "answers": []
+    },
+    {
+      "questionId": "3e25cfe2-c941-48c8-9b34-5015730d0be6",
+      "answers": []
+    },
+    {
+      "questionId": "80201847-2e7a-4f13-81af-5cb9c8b60a50",
+      "answers": []
+    }
+  ]
+},
+{
+  "_id": "1d64ce0e-c935-4341-b6a1-d33f5bba5d87",
+  "hostId": "6af29672-048c-47e2-9820-7c60b4318daa",
+  "quizId": "3f680a04-8323-4051-a2ec-9ca9e03253c8",
+  "sessionPin": "4310954",
+  "startedAt": {
+    "$date": "2026-01-16T00:31:23.984Z"
+  },
+  "completedAt": {
+    "$date": "2026-01-16T00:33:28.486Z"
+  },
+  "currentQuestionStartTime": {
+    "$date": "2026-01-16T00:33:26.550Z"
+  },
+  "sessionState": "end",
+  "leaderboard": [
+    {
+      "playerId": "95b7e1fe-90ee-4d7f-b2e2-5de26b93bb5a",
+      "nickname": "pepito",
+      "score": 1690,
+      "rank": 1,
+      "previousRank": 1
+    }
+  ],
+  "progress": {
+    "currentQuestion": "96f55864-3a95-4b7c-88b8-ac783931c85a",
+    "previousQuestion": "ae8cb945-a057-407a-b946-1b0913ee1489",
+    "totalQuestions": 15,
+    "questionsAnswered": 15
+  },
+  "players": [
+    {
+      "playerId": "95b7e1fe-90ee-4d7f-b2e2-5de26b93bb5a",
+      "nickname": "pepito",
+      "score": 1690,
+      "streak": 1,
+      "isGuest": false
+    }
+  ],
+  "playersAnswers": [
+    {
+      "questionId": "9c3649b7-e3a7-4624-8fb6-56c8664a026d",
+      "answers": [
+        {
+          "playerId": "95b7e1fe-90ee-4d7f-b2e2-5de26b93bb5a",
+          "questionId": "9c3649b7-e3a7-4624-8fb6-56c8664a026d",
+          "answerIndex": [
+            0
+          ],
+          "isCorrect": true,
+          "earnedScore": 1690,
+          "timeElapsed": 4092
+        }
+      ]
+    },
+    {
+      "questionId": "ae94f0b4-54fb-4ec3-a923-129ea729d52c",
+      "answers": []
+    },
+    {
+      "questionId": "b39d8e60-bd20-4001-b5fc-87f567ec1fec",
+      "answers": []
+    },
+    {
+      "questionId": "f43bf9f6-71ef-440d-829e-5070fb9b3d5b",
+      "answers": []
+    },
+    {
+      "questionId": "bed5cd51-f996-4dbb-a35c-3e4f8106dfd1",
+      "answers": []
+    },
+    {
+      "questionId": "6c00f74c-6d7f-4c61-abd0-1a4979fdcee8",
+      "answers": []
+    },
+    {
+      "questionId": "a0b446e2-13d2-4d4c-8a21-072420c462ca",
+      "answers": []
+    },
+    {
+      "questionId": "a6a94ce3-0d55-41cf-9273-9ba5c8e80b7f",
+      "answers": []
+    },
+    {
+      "questionId": "e20ecd0d-c686-4b3e-9488-af5f1f108b14",
+      "answers": []
+    },
+    {
+      "questionId": "cf390c78-cb3e-41c5-8901-fe09ce817a9b",
+      "answers": []
+    },
+    {
+      "questionId": "43c4f04d-2381-4cd2-9eb6-638f31cba21e",
+      "answers": []
+    },
+    {
+      "questionId": "4701f32a-e7f9-4392-be68-6b8566e35314",
+      "answers": []
+    },
+    {
+      "questionId": "58af6bb1-8c31-418b-b9af-7b5e64ac3db8",
+      "answers": []
+    },
+    {
+      "questionId": "ae8cb945-a057-407a-b946-1b0913ee1489",
+      "answers": []
+    },
+    {
+      "questionId": "96f55864-3a95-4b7c-88b8-ac783931c85a",
+      "answers": []
+    }
+  ]
+},
+{
+  "_id": "c97e94a8-de1c-4182-810d-360f8d7a3154",
+  "hostId": "6af29672-048c-47e2-9820-7c60b4318daa",
+  "quizId": "3f680a04-8323-4051-a2ec-9ca9e03253c8",
+  "sessionPin": "947362597",
+  "startedAt": {
+    "$date": "2026-01-16T00:35:01.211Z"
+  },
+  "completedAt": {
+    "$date": "2026-01-16T00:38:04.680Z"
+  },
+  "currentQuestionStartTime": {
+    "$date": "2026-01-16T00:38:04.327Z"
+  },
+  "sessionState": "end",
+  "leaderboard": [
+    {
+      "playerId": "95b7e1fe-90ee-4d7f-b2e2-5de26b93bb5a",
+      "nickname": "pepito",
+      "score": 1690,
+      "rank": 1,
+      "previousRank": 1
+    },
+    {
+      "playerId": "87c24641-cc4a-4285-9116-7dce0a514a42",
+      "nickname": "giorgio",
+      "score": 1640,
+      "rank": 2,
+      "previousRank": 2
+    }
+  ],
+  "progress": {
+    "currentQuestion": "96f55864-3a95-4b7c-88b8-ac783931c85a",
+    "previousQuestion": "ae8cb945-a057-407a-b946-1b0913ee1489",
+    "totalQuestions": 15,
+    "questionsAnswered": 15
+  },
+  "players": [
+    {
+      "playerId": "87c24641-cc4a-4285-9116-7dce0a514a42",
+      "nickname": "giorgio",
+      "score": 1640,
+      "streak": 1,
+      "isGuest": false
+    },
+    {
+      "playerId": "95b7e1fe-90ee-4d7f-b2e2-5de26b93bb5a",
+      "nickname": "pepito",
+      "score": 1690,
+      "streak": 1,
+      "isGuest": false
+    }
+  ],
+  "playersAnswers": [
+    {
+      "questionId": "9c3649b7-e3a7-4624-8fb6-56c8664a026d",
+      "answers": [
+        {
+          "playerId": "95b7e1fe-90ee-4d7f-b2e2-5de26b93bb5a",
+          "questionId": "9c3649b7-e3a7-4624-8fb6-56c8664a026d",
+          "answerIndex": [
+            0
+          ],
+          "isCorrect": true,
+          "earnedScore": 1690,
+          "timeElapsed": 4092
+        },
+        {
+          "playerId": "87c24641-cc4a-4285-9116-7dce0a514a42",
+          "questionId": "9c3649b7-e3a7-4624-8fb6-56c8664a026d",
+          "answerIndex": [
+            2
+          ],
+          "isCorrect": false,
+          "earnedScore": 0,
+          "timeElapsed": 4092
+        }
+      ]
+    },
+    {
+      "questionId": "ae94f0b4-54fb-4ec3-a923-129ea729d52c",
+      "answers": [
+        {
+          "playerId": "87c24641-cc4a-4285-9116-7dce0a514a42",
+          "questionId": "ae94f0b4-54fb-4ec3-a923-129ea729d52c",
+          "answerIndex": [
+            0
+          ],
+          "isCorrect": true,
+          "earnedScore": 1640,
+          "timeElapsed": 4092
+        }
+      ]
+    },
+    {
+      "questionId": "b39d8e60-bd20-4001-b5fc-87f567ec1fec",
+      "answers": []
+    },
+    {
+      "questionId": "f43bf9f6-71ef-440d-829e-5070fb9b3d5b",
+      "answers": []
+    },
+    {
+      "questionId": "bed5cd51-f996-4dbb-a35c-3e4f8106dfd1",
+      "answers": []
+    },
+    {
+      "questionId": "6c00f74c-6d7f-4c61-abd0-1a4979fdcee8",
+      "answers": []
+    },
+    {
+      "questionId": "a0b446e2-13d2-4d4c-8a21-072420c462ca",
+      "answers": []
+    },
+    {
+      "questionId": "a6a94ce3-0d55-41cf-9273-9ba5c8e80b7f",
+      "answers": []
+    },
+    {
+      "questionId": "e20ecd0d-c686-4b3e-9488-af5f1f108b14",
+      "answers": []
+    },
+    {
+      "questionId": "cf390c78-cb3e-41c5-8901-fe09ce817a9b",
+      "answers": []
+    },
+    {
+      "questionId": "43c4f04d-2381-4cd2-9eb6-638f31cba21e",
+      "answers": []
+    },
+    {
+      "questionId": "4701f32a-e7f9-4392-be68-6b8566e35314",
+      "answers": []
+    },
+    {
+      "questionId": "58af6bb1-8c31-418b-b9af-7b5e64ac3db8",
+      "answers": []
+    },
+    {
+      "questionId": "ae8cb945-a057-407a-b946-1b0913ee1489",
+      "answers": []
+    },
+    {
+      "questionId": "96f55864-3a95-4b7c-88b8-ac783931c85a",
+      "answers": []
+    }
+  ]
+},
+{
+  "_id": "9ba7c0e5-0684-4f31-8209-0de88c57f0ba",
+  "hostId": "95b7e1fe-90ee-4d7f-b2e2-5de26b93bb5a",
+  "quizId": "283fb0bd-1b40-4d1e-b7e7-1e38a9763fc1",
+  "sessionPin": "62541742",
+  "startedAt": {
+    "$date": "2026-01-16T00:39:26.171Z"
+  },
+  "completedAt": {
+    "$date": "2026-01-16T00:41:26.175Z"
+  },
+  "currentQuestionStartTime": {
+    "$date": "2026-01-16T00:41:22.915Z"
+  },
+  "sessionState": "end",
+  "leaderboard": [
+    {
+      "playerId": "6af29672-048c-47e2-9820-7c60b4318daa",
+      "nickname": "DiegoPropro",
+      "score": 15750,
+      "rank": 1,
+      "previousRank": 1
+    }
+  ],
+  "progress": {
+    "currentQuestion": "c2443edf-dd04-424b-84ca-cd0b6ed1e89e",
+    "previousQuestion": "78bb4650-faf0-47ca-a1ab-df48a89cc136",
+    "totalQuestions": 15,
+    "questionsAnswered": 15
+  },
+  "players": [
+    {
+      "playerId": "6af29672-048c-47e2-9820-7c60b4318daa",
+      "nickname": "DiegoPropro",
+      "score": 15750,
+      "streak": 0,
+      "isGuest": false
+    }
+  ],
+  "playersAnswers": [
+    {
+      "questionId": "c3bac3ed-474f-4b78-bdb0-16e4342cb9a6",
+      "answers": [
+        {
+          "playerId": "6af29672-048c-47e2-9820-7c60b4318daa",
+          "questionId": "c3bac3ed-474f-4b78-bdb0-16e4342cb9a6",
+          "answerIndex": [
+            2
+          ],
+          "isCorrect": false,
+          "earnedScore": 0,
+          "timeElapsed": 5272
+        }
+      ]
+    },
+    {
+      "questionId": "88585279-b073-465c-8f9d-a99c0cd8b007",
+      "answers": [
+        {
+          "playerId": "6af29672-048c-47e2-9820-7c60b4318daa",
+          "questionId": "88585279-b073-465c-8f9d-a99c0cd8b007",
+          "answerIndex": [
+            0
+          ],
+          "isCorrect": true,
+          "earnedScore": 1770,
+          "timeElapsed": 822
+        }
+      ]
+    },
+    {
+      "questionId": "edb79aab-b2e8-4d02-a3d5-2f7c2d5d391c",
+      "answers": [
+        {
+          "playerId": "6af29672-048c-47e2-9820-7c60b4318daa",
+          "questionId": "edb79aab-b2e8-4d02-a3d5-2f7c2d5d391c",
+          "answerIndex": [
+            1
+          ],
+          "isCorrect": false,
+          "earnedScore": 0,
+          "timeElapsed": 711
+        }
+      ]
+    },
+    {
+      "questionId": "e884316b-4719-48e5-9f1b-5cb290b35c7b",
+      "answers": [
+        {
+          "playerId": "6af29672-048c-47e2-9820-7c60b4318daa",
+          "questionId": "e884316b-4719-48e5-9f1b-5cb290b35c7b",
+          "answerIndex": [
+            0
+          ],
+          "isCorrect": true,
+          "earnedScore": 1790,
+          "timeElapsed": 965
+        }
+      ]
+    },
+    {
+      "questionId": "4b79816f-2586-4f7d-9b1d-2947c58ed631",
+      "answers": [
+        {
+          "playerId": "6af29672-048c-47e2-9820-7c60b4318daa",
+          "questionId": "4b79816f-2586-4f7d-9b1d-2947c58ed631",
+          "answerIndex": [
+            0
+          ],
+          "isCorrect": true,
+          "earnedScore": 1690,
+          "timeElapsed": 1796
+        }
+      ]
+    },
+    {
+      "questionId": "c8c90da8-f78c-4457-81f8-5d80bbe437e2",
+      "answers": [
+        {
+          "playerId": "6af29672-048c-47e2-9820-7c60b4318daa",
+          "questionId": "c8c90da8-f78c-4457-81f8-5d80bbe437e2",
+          "answerIndex": [
+            0
+          ],
+          "isCorrect": true,
+          "earnedScore": 1770,
+          "timeElapsed": 825
+        }
+      ]
+    },
+    {
+      "questionId": "933977e6-9f8f-4ec0-9b95-b805244fac9d",
+      "answers": [
+        {
+          "playerId": "6af29672-048c-47e2-9820-7c60b4318daa",
+          "questionId": "933977e6-9f8f-4ec0-9b95-b805244fac9d",
+          "answerIndex": [
+            2
+          ],
+          "isCorrect": false,
+          "earnedScore": 0,
+          "timeElapsed": 829
+        }
+      ]
+    },
+    {
+      "questionId": "406f2dd6-ca52-4798-87e5-249f6839b4f6",
+      "answers": [
+        {
+          "playerId": "6af29672-048c-47e2-9820-7c60b4318daa",
+          "questionId": "406f2dd6-ca52-4798-87e5-249f6839b4f6",
+          "answerIndex": [
+            0
+          ],
+          "isCorrect": true,
+          "earnedScore": 1780,
+          "timeElapsed": 947
+        }
+      ]
+    },
+    {
+      "questionId": "110d74cb-baf7-4da9-97fa-ad54b5f2f250",
+      "answers": [
+        {
+          "playerId": "6af29672-048c-47e2-9820-7c60b4318daa",
+          "questionId": "110d74cb-baf7-4da9-97fa-ad54b5f2f250",
+          "answerIndex": [
+            0
+          ],
+          "isCorrect": true,
+          "earnedScore": 1690,
+          "timeElapsed": 1955
+        }
+      ]
+    },
+    {
+      "questionId": "e5423e3a-3765-4150-80a0-4457af825500",
+      "answers": [
+        {
+          "playerId": "6af29672-048c-47e2-9820-7c60b4318daa",
+          "questionId": "e5423e3a-3765-4150-80a0-4457af825500",
+          "answerIndex": [
+            1
+          ],
+          "isCorrect": false,
+          "earnedScore": 0,
+          "timeElapsed": 1079
+        }
+      ]
+    },
+    {
+      "questionId": "a8501d99-4e39-4308-b980-1ecb778b472e",
+      "answers": [
+        {
+          "playerId": "6af29672-048c-47e2-9820-7c60b4318daa",
+          "questionId": "a8501d99-4e39-4308-b980-1ecb778b472e",
+          "answerIndex": [
+            1
+          ],
+          "isCorrect": false,
+          "earnedScore": 0,
+          "timeElapsed": 1922
+        }
+      ]
+    },
+    {
+      "questionId": "5291b3f6-b6fa-441c-ac45-eab13a1aa505",
+      "answers": [
+        {
+          "playerId": "6af29672-048c-47e2-9820-7c60b4318daa",
+          "questionId": "5291b3f6-b6fa-441c-ac45-eab13a1aa505",
+          "answerIndex": [
+            0
+          ],
+          "isCorrect": true,
+          "earnedScore": 1770,
+          "timeElapsed": 762
+        }
+      ]
+    },
+    {
+      "questionId": "5de2fcc1-ad0c-418a-94fc-fb5055a3fd9b",
+      "answers": [
+        {
+          "playerId": "6af29672-048c-47e2-9820-7c60b4318daa",
+          "questionId": "5de2fcc1-ad0c-418a-94fc-fb5055a3fd9b",
+          "answerIndex": [
+            0
+          ],
+          "isCorrect": true,
+          "earnedScore": 1750,
+          "timeElapsed": 794
+        }
+      ]
+    },
+    {
+      "questionId": "78bb4650-faf0-47ca-a1ab-df48a89cc136",
+      "answers": [
+        {
+          "playerId": "6af29672-048c-47e2-9820-7c60b4318daa",
+          "questionId": "78bb4650-faf0-47ca-a1ab-df48a89cc136",
+          "answerIndex": [
+            0,
+            1,
+            2
+          ],
+          "isCorrect": true,
+          "earnedScore": 1740,
+          "timeElapsed": 2799
+        }
+      ]
+    },
+    {
+      "questionId": "c2443edf-dd04-424b-84ca-cd0b6ed1e89e",
+      "answers": [
+        {
+          "playerId": "6af29672-048c-47e2-9820-7c60b4318daa",
+          "questionId": "c2443edf-dd04-424b-84ca-cd0b6ed1e89e",
+          "answerIndex": [
+            1
+          ],
+          "isCorrect": false,
+          "earnedScore": 0,
+          "timeElapsed": 951
+        }
+      ]
+    }
+  ]
+},
+{
+  "_id": "b393f6b6-5e56-4afa-9b92-da7e48826297",
+  "hostId": "5c87459d-075a-42a3-8980-0b87d9d6cf03",
+  "quizId": "b540897f-703f-40b8-bfac-ca6d8f3d9ff3",
+  "sessionPin": "131939832",
+  "startedAt": {
+    "$date": "2026-01-16T00:58:40.766Z"
+  },
+  "completedAt": {
+    "$date": "2026-01-16T00:59:21.169Z"
+  },
+  "currentQuestionStartTime": {
+    "$date": "2026-01-16T00:59:06.701Z"
+  },
+  "sessionState": "end",
+  "leaderboard": [
+    {
+      "playerId": "cda68771-e81d-4098-8c4d-d9d62901e43b",
+      "nickname": "pepito",
+      "score": 0,
+      "rank": 1,
+      "previousRank": 1
+    }
+  ],
+  "progress": {
+    "currentQuestion": "101fc71c-6bc9-4fe5-b898-1fbeb111b062",
+    "previousQuestion": null,
+    "totalQuestions": 1,
+    "questionsAnswered": 1
+  },
+  "players": [
+    {
+      "playerId": "cda68771-e81d-4098-8c4d-d9d62901e43b",
+      "nickname": "pepito",
+      "score": 0,
+      "streak": 0,
+      "isGuest": false
+    }
+  ],
+  "playersAnswers": [
+    {
+      "questionId": "101fc71c-6bc9-4fe5-b898-1fbeb111b062",
+      "answers": []
+    }
+  ]
+},
+{
+  "_id": "5c786e4d-fbab-4315-89ec-f5ebdfa411d8",
+  "hostId": "5c87459d-075a-42a3-8980-0b87d9d6cf03",
+  "quizId": "a0db22a3-7f42-4e33-8025-afcd673d2d0e",
+  "sessionPin": "601252845",
+  "startedAt": {
+    "$date": "2026-01-16T01:00:25.234Z"
+  },
+  "completedAt": {
+    "$date": "2026-01-16T01:01:40.242Z"
+  },
+  "currentQuestionStartTime": {
+    "$date": "2026-01-16T01:01:27.899Z"
+  },
+  "sessionState": "end",
+  "leaderboard": [
+    {
+      "playerId": "cda68771-e81d-4098-8c4d-d9d62901e43b",
+      "nickname": "pepito",
+      "score": 1570,
+      "rank": 1,
+      "previousRank": 1
+    }
+  ],
+  "progress": {
+    "currentQuestion": "2320faf0-ee55-44f4-b55b-e23a3933ac4c",
+    "previousQuestion": "f793c3a9-f08a-4f87-885f-a2e30b1f735c",
+    "totalQuestions": 2,
+    "questionsAnswered": 2
+  },
+  "players": [
+    {
+      "playerId": "cda68771-e81d-4098-8c4d-d9d62901e43b",
+      "nickname": "pepito",
+      "score": 1570,
+      "streak": 1,
+      "isGuest": false
+    }
+  ],
+  "playersAnswers": [
+    {
+      "questionId": "f793c3a9-f08a-4f87-885f-a2e30b1f735c",
+      "answers": [
+        {
+          "playerId": "cda68771-e81d-4098-8c4d-d9d62901e43b",
+          "questionId": "f793c3a9-f08a-4f87-885f-a2e30b1f735c",
+          "answerIndex": [
+            0
+          ],
+          "isCorrect": true,
+          "earnedScore": 1570,
+          "timeElapsed": 4092
+        }
+      ]
+    },
+    {
+      "questionId": "2320faf0-ee55-44f4-b55b-e23a3933ac4c",
+      "answers": []
+    }
+  ]
+}]
