@@ -1,5 +1,3 @@
-import { EditUser } from "../../../src/lib/user/application/Parameter Objects/EditUser";
-import { DomainException } from "../../../src/lib/shared/exceptions/domain.exception";
 import { UserId } from "../../../src/lib/user/domain/valueObject/UserId";
 import { EditUserTestBuilder } from "./EditUserTestBuilder";
 import { EditUserMother } from "../domain/EditUserMother";

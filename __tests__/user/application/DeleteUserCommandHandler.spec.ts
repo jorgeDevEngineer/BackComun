@@ -1,4 +1,3 @@
-import { DomainException } from "../../../src/lib/shared/exceptions/domain.exception";
 import { DeleteUserTestBuilder } from "./DeleteUserTestBuilder";
 import { DeleteUserMother } from "../domain/DeleteUserMother";
 

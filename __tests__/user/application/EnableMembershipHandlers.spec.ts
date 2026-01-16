@@ -1,10 +1,6 @@
-import { User } from "../../../src/lib/user/domain/aggregate/User";
-import { DomainException } from "../../../src/lib/shared/exceptions/domain.exception";
-import { UserNotFoundException } from "../../../src/lib/user/application/exceptions/UserNotFoundException";
 import { UserId } from "../../../src/lib/user/domain/valueObject/UserId";
 import { EnableMembershipTestBuilder } from "./EnableMembershipTestBuilder";
 import { EnableMembershipMother } from "../domain/EnableMembershipMother";
-import { UserMother } from "../domain/UserMother";
 
 describe("Enable Membership Handlers", () => {
   let api: EnableMembershipTestBuilder;
