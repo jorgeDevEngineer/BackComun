@@ -1,29 +1,39 @@
-import { Group } from "../../domain/entity/Group";
-import { UserId } from "src/lib/user/domain/valueObject/UserId";
+import { mock, MockProxy } from 'jest-mock-extended';
+import { GroupRepository } from '../../domain/port/GroupRepository';
+import { TransferGroupAdminCommandHandler } from '../Handlers/commands/TransferGroupAdminCommandHandler';
+import { TransferGroupAdminCommand } from '../../application/parameterObjects/TransferGroupAdminCommand';
+import { Group } from '../../domain/entity/Group';
+import { Optional } from 'src/lib/shared/Type Helpers/Optional';
 
-export class GroupTestAPI {
-  private aggregate!: Group;
-  private capturedError: any;
+export class TransferAdminTestBuilder {
+    private repoMock: MockProxy<GroupRepository>;
+    private handler: TransferGroupAdminCommandHandler;
+    private lastResult: any;
 
-  public given(aggregate: Group): this {
-    this.aggregate = aggregate;
-    return this;
-  }
-
-  public whenAdminIsTransferred(requestedBy: string, newAdmin: string): this {
-    try {
-      this.aggregate.transferAdmin(
-        new UserId(requestedBy),
-        new UserId(newAdmin)
-      );
-    } catch (error) {
-      this.capturedError = error;
+    constructor() {
+        this.repoMock = mock<GroupRepository>();
+        this.handler = new TransferGroupAdminCommandHandler(this.repoMock);
     }
-    return this;
-  }
 
-  public thenItShouldFailWith(expectedMessage: string): void {
-    expect(this.capturedError).toBeDefined();
-    expect(this.capturedError.message).toBe(expectedMessage);
-  }
+    public givenGroupExists(group: Group): this {
+        // Configuramos el repo para que cuando busquen el grupo, devuelva el que creamos con el Mother
+        this.repoMock.findById.mockResolvedValue(new Optional(group));
+        return this;
+    }
+
+    public async whenTransferAdminIsExecuted(groupId: string, currentUserId: string, newAdminId: string): Promise<this> {
+        const command = new TransferGroupAdminCommand(groupId, currentUserId, newAdminId);
+        this.lastResult = await this.handler.execute(command);
+        return this;
+    }
+
+    public thenShouldFailWith(expectedMessage: string): void {
+        expect(this.lastResult.isLeft()).toBe(true);
+        // Accedemos al mensaje del error dentro del Either (Left)
+        expect(this.lastResult.getLeft().message).toContain(expectedMessage);
+    }
+
+    public thenGroupShouldBeSaved(): void {
+        expect(this.repoMock.save).toHaveBeenCalled();
+    }
 }
