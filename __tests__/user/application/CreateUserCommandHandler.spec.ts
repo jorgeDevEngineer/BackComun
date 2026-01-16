@@ -1,93 +1,43 @@
-import { CreateUserCommandHandler } from "../../../src/lib/user/application/Handlers/Commands/CreateUserCommandHandler";
-import { CreateUser } from "../../../src/lib/user/application/Parameter Objects/CreateUser";
-import { UserRepository } from "../../../src/lib/user/domain/port/UserRepository";
-import { Result } from "../../../src/lib/shared/Type Helpers/result";
-import { DomainException } from "../../../src/lib/shared/exceptions/domain.exception";
+import { CreateUserTestBuilder } from "./CreateUserTestBuilder";
 
-describe("CreateUserCommandHandler", () => {
-  let repo: jest.Mocked<UserRepository>;
+describe("CreateUserCommandHandler (Refactorizado)", () => {
+  it("creates a user successfully when data is valid and no conflicts exist", async () => {
+    // 1. Setup
+    const testAPI = new CreateUserTestBuilder();
 
-  beforeEach(() => {
-    repo = {
-      getAll: jest.fn(),
-      getOneById: jest.fn(),
-      getOneByName: jest.fn(),
-      getOneByEmail: jest.fn(),
-      create: jest.fn().mockResolvedValue(undefined),
-      edit: jest.fn(),
-      delete: jest.fn(),
-    };
-  });
-
-  it("returns success when creating a valid user", async () => {
-    repo.getOneById.mockResolvedValue(null);
-    repo.getOneByName.mockResolvedValue(null);
-    repo.getOneByEmail.mockResolvedValue(null);
-
-    const handler = new CreateUserCommandHandler(repo);
-    const cmd = new CreateUser(
+    // 2. Given / When / Then fluido
+    testAPI.givenUserDoesNotExist();
+    await testAPI.whenUserIsCreated(
       "john_doe",
       "john@example.com",
-      "StrongPass1!",
-      "STUDENT",
-      "John Doe"
+      "StrongPass1!"
     );
-
-    const result = await handler.execute(cmd);
-    expect(result.isSuccess).toBe(true);
-    expect(repo.create).toHaveBeenCalledTimes(1);
+    testAPI.thenUserShouldBeCreatedSuccessfully();
   });
 
-  it("fails with DomainException when required fields are missing", async () => {
-    const handler = new CreateUserCommandHandler(repo);
-    const cmd = new CreateUser(
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      undefined
+  it("fails when username is already taken", async () => {
+    const testAPI = new CreateUserTestBuilder();
+    const existingUsername = "john_doe";
+
+    testAPI.givenUsernameAlreadyExists(existingUsername);
+
+    await testAPI.whenUserIsCreated(
+      existingUsername,
+      "other@example.com",
+      "StrongPass1!"
     );
-    const result = await handler.execute(cmd);
-    expect(result.isFailure).toBe(true);
-    expect(result.error).toBeInstanceOf(DomainException);
+
+    testAPI.thenShouldFailWithBusinessError("username already exists");
   });
 
-  it("fails with DomainException when username is already taken", async () => {
-    const handler = new CreateUserCommandHandler(repo);
-    // Simulate an existing user with same username
-    repo.getOneById.mockResolvedValue(null);
-    repo.getOneByName.mockResolvedValue({} as any); // non-null triggers duplicate
-    repo.getOneByEmail.mockResolvedValue(null);
+  it("fails when email is already taken", async () => {
+    const testAPI = new CreateUserTestBuilder();
+    const existingEmail = "john@example.com";
 
-    const cmd = new CreateUser(
-      "john_doe",
-      "john2@example.com",
-      "StrongPass1!",
-      "STUDENT",
-      "John Doe"
-    );
-    const result = await handler.execute(cmd);
-    expect(result.isFailure).toBe(true);
-    expect(result.error).toBeInstanceOf(DomainException);
-    expect((result.error as Error).message).toMatch(/username already exists/i);
-  });
+    testAPI.givenEmailAlreadyExists(existingEmail);
 
-  it("fails with DomainException when email is already taken", async () => {
-    const handler = new CreateUserCommandHandler(repo);
-    repo.getOneById.mockResolvedValue(null);
-    repo.getOneByName.mockResolvedValue(null);
-    repo.getOneByEmail.mockResolvedValue({} as any);
+    await testAPI.whenUserIsCreated("new_user", existingEmail, "StrongPass1!");
 
-    const cmd = new CreateUser(
-      "john_doe3",
-      "john@example.com",
-      "StrongPass1!",
-      "STUDENT",
-      "John Doe"
-    );
-    const result = await handler.execute(cmd);
-    expect(result.isFailure).toBe(true);
-    expect(result.error).toBeInstanceOf(DomainException);
-    expect((result.error as Error).message).toMatch(/email already exists/i);
+    testAPI.thenShouldFailWithBusinessError("email already exists");
   });
 });

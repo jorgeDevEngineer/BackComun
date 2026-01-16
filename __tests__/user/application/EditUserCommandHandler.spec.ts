@@ -1,157 +1,57 @@
-import { EditUserCommandHandler } from "../../../src/lib/user/application/Handlers/Commands/EditUserCommandHandler";
 import { EditUser } from "../../../src/lib/user/application/Parameter Objects/EditUser";
-import { UserRepository } from "../../../src/lib/user/domain/port/UserRepository";
-import { User } from "../../../src/lib/user/domain/aggregate/User";
-import { UserName } from "../../../src/lib/user/domain/valueObject/UserName";
-import { UserEmail } from "../../../src/lib/user/domain/valueObject/UserEmail";
-import { UserHashedPassword } from "../../../src/lib/user/domain/valueObject/UserHashedPassword";
-import { UserType } from "../../../src/lib/user/domain/valueObject/UserType";
-import { UserPlainName } from "../../../src/lib/user/domain/valueObject/UserPlainName";
-import { UserDescription } from "../../../src/lib/user/domain/valueObject/UserDescription";
-import { Result } from "../../../src/lib/shared/Type Helpers/result";
 import { DomainException } from "../../../src/lib/shared/exceptions/domain.exception";
-import * as bcrypt from "bcrypt";
 import { UserId } from "../../../src/lib/user/domain/valueObject/UserId";
+import { EditUserTestBuilder } from "./EditUserTestBuilder";
+import { EditUserMother } from "../domain/EditUserMother";
 
-const makeUser = async (overrides: Partial<User> = {}) => {
-  const base = new User(
-    new UserName("john_doe"),
-    new UserEmail("john@example.com"),
-    new UserHashedPassword(await bcrypt.hash("StrongPass1!", 12)),
-    new UserType("STUDENT" as any),
-    undefined,
-    undefined,
-    new UserPlainName("John"),
-    new UserDescription("desc")
-  );
-  return Object.assign(base, overrides);
-};
+// Refactored to use EditUserTestBuilder and mothers; remove legacy helpers.
 
 describe("EditUserCommandHandler", () => {
-  let repo: jest.Mocked<UserRepository>;
-
+  let api: EditUserTestBuilder;
   beforeEach(() => {
-    repo = {
-      getAll: jest.fn(),
-      getOneById: jest.fn(),
-      getOneByName: jest.fn(),
-      getOneByEmail: jest.fn(),
-      create: jest.fn(),
-      edit: jest.fn().mockResolvedValue(undefined),
-      delete: jest.fn(),
-    };
+    api = new EditUserTestBuilder();
   });
 
   it("fails when targetUserId is missing", async () => {
-    const handler = new EditUserCommandHandler(repo);
-    const cmd = new EditUser(
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      undefined
-    );
-    const result = await handler.execute(cmd);
-    expect(result.isFailure).toBe(true);
-    expect(result.error).toBeInstanceOf(DomainException);
+    const cmd = EditUserMother.minimal(undefined as unknown as string);
+    await api.whenUserIsEdited(cmd);
+    api.thenShouldFailWithDomainError();
   });
 
   it("fails when user does not exist", async () => {
-    const handler = new EditUserCommandHandler(repo);
-    repo.getOneById.mockResolvedValue(null);
-    const cmd = new EditUser(
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      UserId.generateId().value
-    );
-    const result = await handler.execute(cmd);
-    expect(result.isFailure).toBe(true);
-    expect(result.error).toBeInstanceOf(Error);
-    expect(result.error?.name ?? "").toContain("UserNotFound");
+    api.givenUserDoesNotExist();
+    const cmd = EditUserMother.minimal(UserId.generateId().value);
+    await api.whenUserIsEdited(cmd);
+    api.thenShouldFailNotFound();
   });
 
   it("fails with DomainException when changing to a taken username", async () => {
-    const handler = new EditUserCommandHandler(repo);
-    const existing = await makeUser();
-    repo.getOneById.mockResolvedValue(existing);
-    repo.getOneByName.mockResolvedValue({
-      id: { value: "other-user-id" },
-    } as any);
-    const cmd = new EditUser(
-      "taken_name",
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      existing.id.value
-    );
-    const result = await handler.execute(cmd);
-    expect(result.isFailure).toBe(true);
-    expect(result.error).toBeInstanceOf(DomainException);
+    const existing = await api.givenExistingUser();
+    api.givenUsernameTaken();
+    const cmd = EditUserMother.withUsername(existing.id.value, "taken_name");
+    await api.whenUserIsEdited(cmd);
+    api.thenShouldFailWithDomainError(/belongs to another user/i);
   });
 
   it("fails when new password provided but current password missing", async () => {
-    const handler = new EditUserCommandHandler(repo);
-    const existing = await makeUser();
-    repo.getOneById.mockResolvedValue(existing);
-
-    const cmd = new EditUser(
-      undefined,
-      undefined,
+    const existing = await api.givenExistingUser();
+    const cmd = EditUserMother.withPasswordChange(
+      existing.id.value,
       undefined,
       "NewPass1!",
-      "NewPass1!",
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      existing.id.value
+      "NewPass1!"
     );
-    const result = await handler.execute(cmd);
-    expect(result.isFailure).toBe(true);
-    expect((result.error as Error).message).toMatch(
-      /current password is required/i
-    );
+    await api.whenUserIsEdited(cmd);
+    api.thenShouldFailWithError(/current password is required/i);
   });
 
   it("succeeds when editing simple fields without conflicts", async () => {
-    const handler = new EditUserCommandHandler(repo);
-    const existing = await makeUser();
-    repo.getOneById.mockResolvedValue(existing);
-    repo.getOneByName.mockResolvedValue(null);
-    repo.getOneByEmail.mockResolvedValue(null);
-
-    const cmd = new EditUser(
-      undefined,
-      "newmail@example.com",
-      undefined,
-      undefined,
-      undefined,
-      "New Name",
-      "New desc",
-      undefined,
-      "DARK",
-      existing.id.value
+    const existing = await api.givenExistingUser();
+    const cmd = EditUserMother.withEmail(
+      existing.id.value,
+      "newmail@example.com"
     );
-    const result = await handler.execute(cmd);
-    expect(result.isSuccess).toBe(true);
-    expect(repo.edit).toHaveBeenCalledTimes(1);
+    await api.whenUserIsEdited(cmd);
+    api.thenShouldSucceed();
   });
 });
