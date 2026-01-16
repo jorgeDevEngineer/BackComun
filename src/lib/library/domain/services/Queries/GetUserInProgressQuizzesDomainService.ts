@@ -6,8 +6,6 @@ import { User } from "src/lib/user/domain/aggregate/User";
 import { UserRepository } from "src/lib/user/domain/port/UserRepository";
 import { Either } from "src/lib/shared/Type Helpers/Either";
 import { DomainException } from "../../../../shared/exceptions/DomainException";
-import { NotInProgressQuizzesException } from "../../../../shared/exceptions/NotInProgressQuizzesException";
-import { QuizzesNotFoundException } from "../../../../shared/exceptions/QuizzesNotFoundException";
 import { UserNotFoundException } from "../../../../shared/exceptions/UserNotFoundException";
 import { QuizRepository } from "../../port/QuizRepository";
 import { SinglePlayerGameRepository } from "../../port/SinglePlayerRepository";
@@ -39,17 +37,11 @@ export class GetUserInProgressQuizzesDomainService {
   > {
     const [inProgressGames, totalCount] =
       await this.singlePlayerRepo.findInProgressGames(userId, criteria);
-    if (inProgressGames.length === 0) {
-      return Either.makeLeft(new NotInProgressQuizzesException());
-    }
 
     const quizzesIds = inProgressGames.map((game) =>
       QuizId.of(game.getQuizId().value)
     );
     const quizzes = await this.quizRepo.findByIds(quizzesIds, criteria);
-    if (quizzes.length === 0) {
-      return Either.makeLeft(new QuizzesNotFoundException());
-    }
 
     const quizAuthors: User[] = [];
     for (const quiz of quizzes) {
