@@ -1,8 +1,8 @@
 import { mock, MockProxy } from 'jest-mock-extended';
-import { GroupRepository } from '../../domain/port/GroupRepository';
-import { JoinGroupByInvitationCommandHandler } from '../Handlers/commands/JoinGroupByInvitationCommandHandler';
-import { JoinGroupByInvitationCommand } from '../../application/parameterObjects/JoinGroupByInvitationCommand';
-import { Group } from '../../domain/entity/Group';
+import { GroupRepository } from '../../../../src/lib/groups/domain/port/GroupRepository';
+import { JoinGroupByInvitationCommandHandler } from '../../../../src/lib/groups/application/Handlers/commands/JoinGroupByInvitationCommandHandler';
+import { JoinGroupByInvitationCommand } from '../../../../src/lib/groups/application/parameterObjects/JoinGroupByInvitationCommand';
+import { Group } from '../../../../src/lib/groups/domain/entity/Group';
 import { Optional } from 'src/lib/shared/Type Helpers/Optional';
 
 export class JoinGroupTestBuilder {

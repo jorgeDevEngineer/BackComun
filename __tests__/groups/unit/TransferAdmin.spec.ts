@@ -1,5 +1,5 @@
-import { TransferAdminTestBuilder } from "../../src/lib/groups/application/test/TrasnsferAdminTestBuilder";
-import { GroupMother } from "../../src/lib/groups/domain/test/GroupMotherBuilder";
+import { TransferAdminTestBuilder } from "../support/builders/TrasnsferAdminTestBuilder";
+import { GroupMother } from "../support/mothers/GroupMotherBuilder";
 
 describe('Transferir el administrador de un grupo', () => {
   const api = new TransferAdminTestBuilder();
@@ -11,12 +11,10 @@ describe('Transferir el administrador de un grupo', () => {
 
     const group = GroupMother.aGroupWithAdminAndMember(ADMIN_REAL, NUEVO_ADMIN).build();
 
-    // 1. Arrange & Act
     await api
         .givenGroupExists(group)
         .whenTransferAdminIsExecuted(group.id.value, IMPOSTOR, NUEVO_ADMIN);
 
-    // 2. Assert (Ahora api ya tiene el resultado guardado)
     api.thenShouldFailWith("Solo el administrador del grupo puede transferir");
   });
 
@@ -26,12 +24,10 @@ describe('Transferir el administrador de un grupo', () => {
 
     const group = GroupMother.aGroup().withAdmin(ADMIN_ACTUAL).build();
 
-    // Importante: usar await aquí
     await api
       .givenGroupExists(group)
       .whenTransferAdminIsExecuted(group.id.value, ADMIN_ACTUAL, NUEVO_ADMIN_FUEREÑO);
       
     api.thenShouldFailWith("is not a member of group"); 
-    // Nota: El mensaje debe coincidir con el error 'UserNotMemberOfGroupError' de tu Handler
   });
 });

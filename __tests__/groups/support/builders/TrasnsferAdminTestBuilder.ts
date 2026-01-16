@@ -1,8 +1,8 @@
 import { mock, MockProxy } from 'jest-mock-extended';
-import { GroupRepository } from '../../domain/port/GroupRepository';
-import { TransferGroupAdminCommandHandler } from '../Handlers/commands/TransferGroupAdminCommandHandler';
-import { TransferGroupAdminCommand } from '../../application/parameterObjects/TransferGroupAdminCommand';
-import { Group } from '../../domain/entity/Group';
+import { GroupRepository } from '../../../../src/lib/groups/domain/port/GroupRepository';
+import { TransferGroupAdminCommandHandler } from '../../../../src/lib/groups/application/Handlers/commands/TransferGroupAdminCommandHandler';
+import { TransferGroupAdminCommand } from '../../../../src/lib/groups/application/parameterObjects/TransferGroupAdminCommand';
+import { Group } from '../../../../src/lib/groups/domain/entity/Group';
 import { Optional } from 'src/lib/shared/Type Helpers/Optional';
 
 export class TransferAdminTestBuilder {
@@ -16,7 +16,6 @@ export class TransferAdminTestBuilder {
     }
 
     public givenGroupExists(group: Group): this {
-        // Configuramos el repo para que cuando busquen el grupo, devuelva el que creamos con el Mother
         this.repoMock.findById.mockResolvedValue(new Optional(group));
         return this;
     }
@@ -29,7 +28,6 @@ export class TransferAdminTestBuilder {
 
     public thenShouldFailWith(expectedMessage: string): void {
         expect(this.lastResult.isLeft()).toBe(true);
-        // Accedemos al mensaje del error dentro del Either (Left)
         expect(this.lastResult.getLeft().message).toContain(expectedMessage);
     }
 
