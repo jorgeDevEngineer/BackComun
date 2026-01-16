@@ -99,8 +99,6 @@ export class DynamicSinglePlayerGameRepository
         },
       };
 
-      console.log("MongoDB llega a singlePlayer");
-
       // Aplicar Criterios
       const { filter, options } = this.mongoCriteriaApplier.apply(
         baseFilter,

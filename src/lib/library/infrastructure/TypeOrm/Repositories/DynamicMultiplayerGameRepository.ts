@@ -67,7 +67,7 @@ export class DynamicMultiplayerGameRepository
 
       const params = {
         filter: {
-          sessionState: "end",
+          sessionState: "end", // usa el mismo valor que está en el enum de producción
           "players.playerId": playerId.getValue(),
         },
       };
@@ -83,22 +83,22 @@ export class DynamicMultiplayerGameRepository
       return [sessions, total];
     } catch (error) {
       // 🔹 Postgres
-      let qb = this.sessionRepository.createQueryBuilder("multiplayerSessions");
-
       console.log(
         "Falling back to Postgres for completed multiplayer sessions"
       );
+
+      let qb = this.sessionRepository.createQueryBuilder("multiplayerSessions");
 
       qb.andWhere(`multiplayerSessions.sessionState = :status`, {
         status: "end",
       });
 
-      // ✅ Usar JOIN LATERAL para descomponer players
+      // castear la columna JSON a JSONB
       qb.andWhere(
         `
         EXISTS (
           SELECT 1
-          FROM jsonb_array_elements("multiplayerSessions"."players"::jsonb) AS elem
+          FROM jsonb_array_elements(("multiplayerSessions"."players")::jsonb) AS elem
           WHERE elem->>'playerId' = :playerId
         )
       `,
