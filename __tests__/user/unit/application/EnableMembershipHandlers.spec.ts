@@ -1,6 +1,6 @@
-import { UserId } from "../../../src/lib/user/domain/valueObject/UserId";
-import { EnableMembershipTestBuilder } from "./EnableMembershipTestBuilder";
-import { EnableMembershipMother } from "../domain/EnableMembershipMother";
+import { UserId } from "../../../../src/lib/user/domain/valueObject/UserId";
+import { EnableMembershipTestBuilder } from "../../support/builders/EnableMembershipTestBuilder";
+import { EnableMembershipMother } from "../../support/mothers/EnableMembershipMother";
 
 describe("Enable Membership Handlers", () => {
   let api: EnableMembershipTestBuilder;

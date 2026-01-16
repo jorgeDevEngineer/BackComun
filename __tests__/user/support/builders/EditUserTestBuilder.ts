@@ -1,11 +1,11 @@
-import { EditUserCommandHandler } from "../../../src/lib/user/application/Handlers/Commands/EditUserCommandHandler";
-import { EditUser } from "../../../src/lib/user/application/Parameter Objects/EditUser";
-import { UserRepository } from "../../../src/lib/user/domain/port/UserRepository";
-import { Result } from "../../../src/lib/shared/Type Helpers/result";
-import { DomainException } from "../../../src/lib/shared/exceptions/domain.exception";
-import { User } from "../../../src/lib/user/domain/aggregate/User";
-import { UserMother } from "../domain/UserMother";
-import { UserId } from "../../../src/lib/user/domain/valueObject/UserId";
+import { EditUserCommandHandler } from "../../../../src/lib/user/application/Handlers/Commands/EditUserCommandHandler";
+import { EditUser } from "../../../../src/lib/user/application/Parameter Objects/EditUser";
+import { UserRepository } from "../../../../src/lib/user/domain/port/UserRepository";
+import { Result } from "../../../../src/lib/shared/Type Helpers/result";
+import { DomainException } from "../../../../src/lib/shared/exceptions/domain.exception";
+import { User } from "../../../../src/lib/user/domain/aggregate/User";
+import { UserMother } from "../mothers/UserMother";
+import { UserId } from "../../../../src/lib/user/domain/valueObject/UserId";
 
 export class EditUserTestBuilder {
   private repo: jest.Mocked<UserRepository>;

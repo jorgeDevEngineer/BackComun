@@ -1,4 +1,4 @@
-import { DeleteUser } from "../../../src/lib/user/application/Parameter Objects/DeleteUser";
+import { DeleteUser } from "../../../../src/lib/user/application/Parameter Objects/DeleteUser";
 
 export class DeleteUserMother {
   static withId(id: string): DeleteUser {

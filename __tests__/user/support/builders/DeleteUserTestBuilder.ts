@@ -1,8 +1,8 @@
-import { DeleteUserCommandHandler } from "../../../src/lib/user/application/Handlers/Commands/DeleteUserCommandHandler";
-import { DeleteUser } from "../../../src/lib/user/application/Parameter Objects/DeleteUser";
-import { UserRepository } from "../../../src/lib/user/domain/port/UserRepository";
-import { Result } from "../../../src/lib/shared/Type Helpers/result";
-import { DomainException } from "../../../src/lib/shared/exceptions/domain.exception";
+import { DeleteUserCommandHandler } from "../../../../src/lib/user/application/Handlers/Commands/DeleteUserCommandHandler";
+import { DeleteUser } from "../../../../src/lib/user/application/Parameter Objects/DeleteUser";
+import { UserRepository } from "../../../../src/lib/user/domain/port/UserRepository";
+import { Result } from "../../../../src/lib/shared/Type Helpers/result";
+import { DomainException } from "../../../../src/lib/shared/exceptions/domain.exception";
 
 export class DeleteUserTestBuilder {
   private repo: jest.Mocked<UserRepository>;

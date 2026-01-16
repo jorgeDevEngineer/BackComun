@@ -1,5 +1,5 @@
-import { DeleteUserTestBuilder } from "./DeleteUserTestBuilder";
-import { DeleteUserMother } from "../domain/DeleteUserMother";
+import { DeleteUserTestBuilder } from "../../support/builders/DeleteUserTestBuilder";
+import { DeleteUserMother } from "../../support/mothers/DeleteUserMother";
 
 describe("DeleteUserCommandHandler", () => {
   let api: DeleteUserTestBuilder;

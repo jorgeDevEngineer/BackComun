@@ -1,5 +1,5 @@
-import { EnablePremiumMembership } from "../../../src/lib/user/application/Parameter Objects/EnablePremiumMembership";
-import { EnableFreeMembership } from "../../../src/lib/user/application/Parameter Objects/EnableFreeMembership";
+import { EnablePremiumMembership } from "../../../../src/lib/user/application/Parameter Objects/EnablePremiumMembership";
+import { EnableFreeMembership } from "../../../../src/lib/user/application/Parameter Objects/EnableFreeMembership";
 
 export class EnableMembershipMother {
   static premiumWithId(id: string): EnablePremiumMembership {

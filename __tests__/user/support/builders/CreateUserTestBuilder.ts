@@ -1,9 +1,9 @@
-import { CreateUserCommandHandler } from "../../../src/lib/user/application/Handlers/Commands/CreateUserCommandHandler";
-import { CreateUser } from "../../../src/lib/user/application/Parameter Objects/CreateUser";
-import { UserRepository } from "../../../src/lib/user/domain/port/UserRepository";
-import { Result } from "../../../src/lib/shared/Type Helpers/result";
-import { DomainException } from "../../../src/lib/shared/exceptions/domain.exception";
-import { UserMother } from "../domain/UserMother"; // Asegúrate que la ruta al Mother sea correcta
+import { CreateUserCommandHandler } from "../../../../src/lib/user/application/Handlers/Commands/CreateUserCommandHandler";
+import { CreateUser } from "../../../../src/lib/user/application/Parameter Objects/CreateUser";
+import { UserRepository } from "../../../../src/lib/user/domain/port/UserRepository";
+import { Result } from "../../../../src/lib/shared/Type Helpers/result";
+import { DomainException } from "../../../../src/lib/shared/exceptions/domain.exception";
+import { UserMother } from "../mothers/UserMother"; // Asegúrate que la ruta al Mother sea correcta
 
 export class CreateUserTestBuilder {
   private repo: jest.Mocked<UserRepository>;

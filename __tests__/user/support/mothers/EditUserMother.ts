@@ -1,4 +1,4 @@
-import { EditUser } from "../../../src/lib/user/application/Parameter Objects/EditUser";
+import { EditUser } from "../../../../src/lib/user/application/Parameter Objects/EditUser";
 
 export class EditUserMother {
   static minimal(targetUserId: string): EditUser {

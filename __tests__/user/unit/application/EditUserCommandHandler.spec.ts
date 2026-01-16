@@ -1,6 +1,6 @@
-import { UserId } from "../../../src/lib/user/domain/valueObject/UserId";
-import { EditUserTestBuilder } from "./EditUserTestBuilder";
-import { EditUserMother } from "../domain/EditUserMother";
+import { UserId } from "../../../../src/lib/user/domain/valueObject/UserId";
+import { EditUserTestBuilder } from "../../support/builders/EditUserTestBuilder";
+import { EditUserMother } from "../../support/mothers/EditUserMother";
 
 // Refactored to use EditUserTestBuilder and mothers; remove legacy helpers.
 

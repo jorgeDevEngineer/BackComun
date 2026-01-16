@@ -1,13 +1,13 @@
-import { User } from "../../../src/lib/user/domain/aggregate/User";
-import { UserName } from "../../../src/lib/user/domain/valueObject/UserName";
-import { UserEmail } from "../../../src/lib/user/domain/valueObject/UserEmail";
-import { UserHashedPassword } from "../../../src/lib/user/domain/valueObject/UserHashedPassword";
-import { UserType } from "../../../src/lib/user/domain/valueObject/UserType";
-import { UserPlainName } from "../../../src/lib/user/domain/valueObject/UserPlainName";
-import { UserDescription } from "../../../src/lib/user/domain/valueObject/UserDescription";
+import { User } from "../../../../src/lib/user/domain/aggregate/User";
+import { UserName } from "../../../../src/lib/user/domain/valueObject/UserName";
+import { UserEmail } from "../../../../src/lib/user/domain/valueObject/UserEmail";
+import { UserHashedPassword } from "../../../../src/lib/user/domain/valueObject/UserHashedPassword";
+import { UserType } from "../../../../src/lib/user/domain/valueObject/UserType";
+import { UserPlainName } from "../../../../src/lib/user/domain/valueObject/UserPlainName";
+import { UserDescription } from "../../../../src/lib/user/domain/valueObject/UserDescription";
 // Asumo que UserId se genera automáticamente o se pasa opcionalmente,
 // pero para recrear un usuario existente necesitamos simular un ID.
-import { UserId } from "../../../src/lib/user/domain/valueObject/UserId";
+import { UserId } from "../../../../src/lib/user/domain/valueObject/UserId";
 
 export class UserMother {
   private static VALID_BCRYPT_HASH = "$2b$" + "a".repeat(56);

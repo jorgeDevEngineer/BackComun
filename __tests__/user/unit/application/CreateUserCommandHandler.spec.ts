@@ -1,4 +1,4 @@
-import { CreateUserTestBuilder } from "./CreateUserTestBuilder";
+import { CreateUserTestBuilder } from "../../support/builders/CreateUserTestBuilder";
 
 describe("CreateUserCommandHandler (Refactorizado)", () => {
   it("creates a user successfully when data is valid and no conflicts exist", async () => {

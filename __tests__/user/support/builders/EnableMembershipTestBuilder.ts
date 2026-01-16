@@ -1,13 +1,13 @@
-import { EnablePremiumMembershipCommandHandler } from "../../../src/lib/user/application/Handlers/Commands/EnablePremiumMembershipCommandHandler";
-import { EnableFreeMembershipCommandHandler } from "../../../src/lib/user/application/Handlers/Commands/EnableFreeMembershipCommandHandler";
-import { EnablePremiumMembership } from "../../../src/lib/user/application/Parameter Objects/EnablePremiumMembership";
-import { EnableFreeMembership } from "../../../src/lib/user/application/Parameter Objects/EnableFreeMembership";
-import { UserRepository } from "../../../src/lib/user/domain/port/UserRepository";
-import { Result } from "../../../src/lib/shared/Type Helpers/result";
-import { DomainException } from "../../../src/lib/shared/exceptions/domain.exception";
-import { User } from "../../../src/lib/user/domain/aggregate/User";
-import { UserMother } from "../domain/UserMother";
-import { UserNotFoundException } from "../../../src/lib/user/application/exceptions/UserNotFoundException";
+import { EnablePremiumMembershipCommandHandler } from "../../../../src/lib/user/application/Handlers/Commands/EnablePremiumMembershipCommandHandler";
+import { EnableFreeMembershipCommandHandler } from "../../../../src/lib/user/application/Handlers/Commands/EnableFreeMembershipCommandHandler";
+import { EnablePremiumMembership } from "../../../../src/lib/user/application/Parameter Objects/EnablePremiumMembership";
+import { EnableFreeMembership } from "../../../../src/lib/user/application/Parameter Objects/EnableFreeMembership";
+import { UserRepository } from "../../../../src/lib/user/domain/port/UserRepository";
+import { Result } from "../../../../src/lib/shared/Type Helpers/result";
+import { DomainException } from "../../../../src/lib/shared/exceptions/domain.exception";
+import { User } from "../../../../src/lib/user/domain/aggregate/User";
+import { UserMother } from "../mothers/UserMother";
+import { UserNotFoundException } from "../../../../src/lib/user/application/exceptions/UserNotFoundException";
 
 export class EnableMembershipTestBuilder {
   private repo: jest.Mocked<UserRepository>;
