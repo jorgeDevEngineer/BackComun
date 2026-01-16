@@ -190,7 +190,7 @@ export class GroupsController {
     return this.handleResult(result);
   }
 
-  @Post(":id/invitation")
+  @Post(":id/invitations")
   async generateInvitation(@Param("id") id: string,@Headers('authorization') authHeader: string 
 ) {
     const currentUserId = await this.getCurrentUserId(authHeader);
