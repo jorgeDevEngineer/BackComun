@@ -96,8 +96,8 @@ export class TypeOrmMassiveNotificationRepository implements MassiveNotification
     } catch (error) {
       // 2. Si MongoDB falla, usa PostgreSQL como fallback
       console.log(
-        "MongoDB connection not available, falling back to PostgreSQL for sendNotification operation.",
-        error
+        "MongoDB connection not available, falling back to PostgreSQL for sendNotification operation: ",
+        error.message
       );
 
       const entity = this.pgRepository.create({
@@ -201,8 +201,8 @@ export class TypeOrmMassiveNotificationRepository implements MassiveNotification
     } catch (error) {
       // 2. Si MongoDB falla, usa PostgreSQL como fallback
       console.log(
-        "MongoDB connection not available, falling back to PostgreSQL for searchUsers operation.",
-        error
+        "MongoDB connection not available, falling back to PostgreSQL for searchUsers operation: ",
+        error.message
       );
 
       const qb = this.pgRepository.createQueryBuilder("user");
