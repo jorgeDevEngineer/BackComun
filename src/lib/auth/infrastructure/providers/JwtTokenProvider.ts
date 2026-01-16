@@ -1,6 +1,7 @@
 import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { ITokenProvider } from "../../application/providers/ITokenProvider";
+import { AuthTokenPayload } from "../../application/parameterObjects/TokenPayload";
 
 @Injectable()
 export class JwtTokenProvider implements ITokenProvider {
@@ -12,7 +13,7 @@ export class JwtTokenProvider implements ITokenProvider {
     return this.jwtService.sign(payload);
   }
 
-  async validateToken(token: string): Promise<Record<string, any> | null> {
+  async validateToken(token: string): Promise<AuthTokenPayload | null> {
     if (this.revoked.has(token)) return null;
     try {
       return this.jwtService.verify(token);
@@ -27,7 +28,7 @@ export class JwtTokenProvider implements ITokenProvider {
 
   async getPayloadFromAuthHeader(
     authHeader: string
-  ): Promise<Record<string, any>> {
+  ): Promise<AuthTokenPayload> {
     const token = authHeader?.replace(/^Bearer\s+/i, "");
     if (!token) {
       throw new UnauthorizedException("Token required");
@@ -36,7 +37,7 @@ export class JwtTokenProvider implements ITokenProvider {
     if (!payload) {
       throw new UnauthorizedException("Invalid token");
     }
-    return payload;
+    return payload as AuthTokenPayload;
   }
 
   async getUserIdFromAuthHeader(authHeader: string): Promise<string> {

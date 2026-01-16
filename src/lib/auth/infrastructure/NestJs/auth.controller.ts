@@ -27,7 +27,7 @@ import { GetOneUserById } from "src/lib/user/application/Parameter Objects/GetOn
 import { ITokenProvider } from "../../application/providers/ITokenProvider";
 import { IAssetUrlResolver } from "src/lib/shared/application/providers/IAssetUrlResolver";
 import { UserNotFoundException } from "src/lib/user/application/exceptions/UserNotFoundException";
-import { TokenPayload } from "src/lib/auth/application/Parameter Objects/TokenPayload";
+import { TokenPayload } from "src/lib/auth/application/parameterObjects/TokenPayload";
 
 @Controller("auth")
 export class AuthController {
