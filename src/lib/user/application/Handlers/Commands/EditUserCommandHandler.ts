@@ -21,6 +21,7 @@ import { EditUser } from "../../Parameter Objects/EditUser";
 import { Result } from "src/lib/shared/Type Helpers/result";
 import { UserPassword } from "../../../domain/valueObject/UserPassword";
 import * as bcrypt from "bcrypt";
+import { DomainException } from "src/lib/shared/exceptions/domain.exception";
 
 export class EditUserCommandHandler
   implements IHandler<EditUser, Result<void>>
@@ -28,6 +29,11 @@ export class EditUserCommandHandler
   constructor(private readonly userRepository: UserRepository) {}
 
   async execute(command: EditUser): Promise<Result<void>> {
+    if (!command.targetUserId) {
+      return Result.fail(
+        new DomainException("Missing required parameter: targetUserId")
+      );
+    }
     const existing = await this.userRepository.getOneById(
       new UserId(command.targetUserId)
     );
@@ -57,7 +63,7 @@ export class EditUserCommandHandler
         userWithSameUserName.id.value !== command.targetUserId
       ) {
         return Result.fail(
-          new Error("That name already belongs to another user")
+          new DomainException("That name already belongs to another user")
         );
       }
       try {
@@ -78,7 +84,7 @@ export class EditUserCommandHandler
         userWithSameEmail.id.value !== command.targetUserId
       ) {
         return Result.fail(
-          new Error("That email already belongs to another user")
+          new DomainException("That email already belongs to another user")
         );
       }
     }

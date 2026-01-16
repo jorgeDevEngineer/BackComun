@@ -80,13 +80,6 @@ export class UserController {
     return result.getValue()!;
   }
 
-  handleBadRequestResult<T>(result: Result<T>): T {
-    if (result.isFailure) {
-      throw new BadRequestException(result.error.message);
-    }
-    return result.getValue()!;
-  }
-
   private addAvatarUrlToUser(userObj: any) {
     if (!userObj) return userObj;
 
@@ -125,6 +118,15 @@ export class UserController {
 
   @Post("register")
   async register(@Body() body: Create) {
+    if (
+      !body.username ||
+      !body.email ||
+      !body.password ||
+      !body.type ||
+      !body.name
+    ) {
+      throw new BadRequestException("Missing required fields");
+    }
     const createUser = new CreateUser(
       body.username,
       body.email,
@@ -133,7 +135,7 @@ export class UserController {
       body.name
     );
     const result = await this.createUserCommandHandler.execute(createUser);
-    this.handleBadRequestResult(result);
+    this.handleResult(result);
     const createdUser = await this.getOneUserByUserName.execute(
       new GetOneUserByUserName(body.username)
     );

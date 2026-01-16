@@ -17,7 +17,7 @@ import { UserId as UserModuleId } from "src/lib/user/domain/valueObject/UserId";
 import { UserId as KahootUserId } from "src/lib/kahoot/domain/valueObject/Quiz";
 
 export class GetGroupLeaderboardQueryHandler
-  implements IHandler<GetGroupLeaderboardQuery, Either<DomainException, GetGroupLeaderboardResponseDto>>
+  implements IHandler<GetGroupLeaderboardQuery, Either<DomainException, GetGroupLeaderboardResponseDto[]>>
 {
   constructor(
     private readonly groupRepository: GroupRepository,
@@ -25,7 +25,7 @@ export class GetGroupLeaderboardQueryHandler
     @Inject('UserRepository') private readonly userRepository: UserRepository 
   ) {}
 
-  async execute(query: GetGroupLeaderboardQuery): Promise<Either<DomainException, GetGroupLeaderboardResponseDto>> {
+  async execute(query: GetGroupLeaderboardQuery): Promise<Either<DomainException, GetGroupLeaderboardResponseDto[]>> {
     
     const groupId = GroupId.of(query.groupId);
     const currentUserId = new UserModuleId(query.currentUserId);
@@ -87,13 +87,15 @@ export class GetGroupLeaderboardQueryHandler
     }
 
     const plain = group.toPlainObject(); 
-    const items = plain.members.map((m) => ({
-      userId: m.userId,
-      name: userNamesMap.get(m.userId) || m.userId, 
-      completedQuizzes: Number(m.completedQuizzes ?? 0),
-      totalPoints: totalPointsByUser.get(m.userId) ?? 0,
-      position: 0,
-    }));
+    const items: GetGroupLeaderboardResponseDto[] = plain.members.map((m) =>{
+      return{
+        userId: m.userId,
+        name: userNamesMap.get(m.userId) || m.userId, 
+        completedQuizzes: Number(m.completedQuizzes ?? 0),
+        totalPoints: totalPointsByUser.get(m.userId) ?? 0,
+        position: 0,
+      }
+    });
 
     // Ordenar
     items.sort((a, b) => {
@@ -108,6 +110,6 @@ export class GetGroupLeaderboardQueryHandler
 
     items.forEach((x, i) => (x.position = i + 1));
 
-    return Either.makeRight({ leaderboard: items });
+    return Either.makeRight(items );
   }
 }
